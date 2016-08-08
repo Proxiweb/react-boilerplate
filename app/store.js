@@ -3,9 +3,13 @@
  */
 
 import { createStore, applyMiddleware, compose } from 'redux';
-import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
+
+// import * as storage from 'redux-storage';
+// import createSessionStorageEngine from 'redux-storage-engine-sessionstorage';
+// import { LOGIN_SUCCESS, LOGOUT } from 'containers/Login/constants';
+
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -15,8 +19,12 @@ export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
+  // const sessionStorageEngine = createSessionStorageEngine('redux');
+  // const storageMiddleware = storage.createMiddleware(sessionStorageEngine, [], [LOGIN_SUCCESS, LOGOUT]);
+
   const middlewares = [
     sagaMiddleware,
+    // storageMiddleware,
     routerMiddleware(history),
   ];
 
@@ -27,7 +35,7 @@ export default function configureStore(initialState = {}, history) {
 
   const store = createStore(
     createReducer(),
-    fromJS(initialState),
+    initialState,
     compose(...enhancers)
   );
 

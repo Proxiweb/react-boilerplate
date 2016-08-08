@@ -34,6 +34,30 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/votre-compte',
+      getComponent(location, cb) {
+        System.import('containers/CompteUtilisateur')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/login',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Login/index'),
+          System.import('containers/Login/sagas'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component, sagas]) => {
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

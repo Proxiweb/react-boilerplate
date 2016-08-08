@@ -27,6 +27,10 @@ import { translationMessages } from './i18n';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/sanitize.css';
+import '!!style-loader!css-loader!../vendors/css/bootstrap.min.css';
+import '!!style-loader!css-loader!../vendors/css/react-select.min.css';
+import '!!style-loader!css-loader!../vendors/css/font-awesome.min.css';
+
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
