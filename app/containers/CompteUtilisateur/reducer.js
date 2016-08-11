@@ -8,30 +8,31 @@ import {
   LOGIN_START,
   LOGIN_ERROR,
   LOGIN_SUCCESS,
-  LOAD_DATAS,
   LOGOUT,
 } from 'containers/Login/constants';
 
 import update from 'react-addons-update';
+import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
 
 const initialState = {
   auth: false,
   loading: false,
   error: false,
+  token: null,
 };
 
-function compteUtilisateurReducer(state = initialState, action) {
+const sessionStorageKey = 'user';
+
+function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey, initialState), action) {
   switch (action.type) {
     case LOGIN_START:
-      return update(state, { error: { $set: false }, loading: { $set: true } });
+      return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: true } }));
     case LOGIN_ERROR:
-      return update(state, { error: { $set: action.error.message }, loading: { $set: false } });
+      return storeState(sessionStorageKey, update(state, { error: { $set: action.error.message }, loading: { $set: false } }));
     case LOGOUT:
-      return update(state, { auth: { $set: false } });
+      return storeState(sessionStorageKey, { ...initialState });
     case LOGIN_SUCCESS:
-      return update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.user } });
-    case LOAD_DATAS:
-      return action.datas;
+      return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.user }, token: { $set: action.token } }));
     default:
       return state;
   }

@@ -36,10 +36,11 @@ export function logout() {
   };
 }
 
-export function loginSuccess(user, redirectPathname = null) {
+export function loginSuccess(cnx, redirectPathname = null) {
   return {
     type: LOGIN_SUCCESS,
-    user,
+    user: cnx.user,
+    token: cnx.token,
     redirectPathname,
   };
 }

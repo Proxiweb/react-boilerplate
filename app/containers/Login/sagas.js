@@ -13,12 +13,14 @@ export function* loginSaga() {
   while(true) { // eslint-disable-line
     const action = yield take(LOGIN_START);
 
-    const user = yield call(request, `/api/login?username=${action.username}&password=${action.password}`);
-    if (!user.err) {
-      yield put(loginSuccess(user.data, action.redirectPathname));
+    const cnx = yield call(request, `/api/login?username=${action.username}&password=${action.password}`);
+    if (!cnx.err) {
+      yield put(loginSuccess(cnx.data, action.redirectPathname));
     } else {
-      yield put(loginError(user.err));
+      yield put(loginError(cnx.err));
     }
+
+    yield call(request, '/api/datas', { headers: { Authorization: `Bearer ${cnx.data.token}` } });
   }
 }
 

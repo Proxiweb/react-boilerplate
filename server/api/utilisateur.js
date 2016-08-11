@@ -1,6 +1,19 @@
 const Utilisateur = require(`${__dirname}/../models/utilisateur`);
 const thinky = require(`${__dirname}/../models/util/thinky`);
 const Errors = thinky.Errors;
+const config = require('getconfig');
+const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
+
+function generateToken(user) {
+  const u = {
+    email: user.email,
+    id: user.id,
+    roles: user.roles,
+  };
+  const token = jwt.sign(u, config.jwtSecret, { expiresIn: 60 * 60 * 24 });
+  return token;
+}
 
 module.exports = (router) => {
   router.get('/login', (req, res) => {
@@ -18,10 +31,17 @@ module.exports = (router) => {
     //     res.status(403).send({ statusText: 'Indentifiants incorrects' });
     //   });
     if (req.query.username === 'test@free.fr' && req.query.password === 'azerty') {
-      res.send({ username: 'test@free.fr', password: 'azerty' });
+      const user = { username: 'test@free.fr', email: 'test@free.fr', id: 1, roles: ['USER', 'ADMIN'] };
+      const token = generateToken(user);
+      res.send({ user, token });
     } else {
       res.status(403).send({ statusText: 'Indentifiants incorrects' });
     }
+  });
+
+  router.get('/datas', expressJwt({ secret: config.jwtSecret }), (req, res) => {
+    console.log(req.user.roles);
+    res.send({ msg: 'ok' });
   });
 
   router.get('/googleLogin', (req, res) => {
