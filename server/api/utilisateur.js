@@ -39,8 +39,7 @@ module.exports = (router) => {
     }
   });
 
-  router.get('/datas', expressJwt({ secret: config.jwtSecret }), (req, res) => {
-    console.log(req.user.roles);
+  router.get('/loadDatas1/:id', expressJwt({ secret: config.jwtSecret }), (req, res) => {
     res.send({ msg: 'ok' });
   });
 

@@ -1,4 +1,4 @@
-import { take, call, put } from 'redux-saga/effects';
+import { take, call, put, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import request from 'utils/request';
 import { LOGIN_START, LOGIN_SUCCESS, LOGOUT, GOOGLE_LOGIN_START } from './constants';
@@ -6,7 +6,6 @@ import { LOGIN_START, LOGIN_SUCCESS, LOGOUT, GOOGLE_LOGIN_START } from './consta
 import {
   loginSuccess,
   loginError,
-  loadDatas,
 } from './actions';
 
 export function* loginSaga() {
@@ -46,15 +45,6 @@ export function* onLoginSuccess() {
   }
 }
 
-export function* loadSessionStorage() {
-  while(true) { // eslint-disable-line
-    const action = yield take('REDUX_STORAGE_LOAD');
-    if (action.payload.commandeUtilisateur) {
-      yield put(loadDatas(action.payload.compteUtilisateur));
-    }
-  }
-}
-
 export function* onLogout() {
   while(true) {  // eslint-disable-line
     yield take(LOGOUT);
@@ -68,5 +58,4 @@ export default [
   googleLoginSaga,
   onLogout,
   onLoginSuccess,
-  loadSessionStorage,
 ];

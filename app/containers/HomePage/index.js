@@ -9,17 +9,32 @@
  * the linting exception.
  */
 
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
+import { loadDatas1Start } from './actions';
 
-export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
+  static propTypes = {
+    loadDatas1: PropTypes.func.isRequired,
+  }
 
   render() {
     return (
       <h1>
         <FormattedMessage {...messages.header} />
+        <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
       </h1>
     );
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    loadDatas1: (id) => dispatch(loadDatas1Start(id)),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(HomePage);

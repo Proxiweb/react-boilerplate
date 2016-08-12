@@ -9,7 +9,6 @@ import {
  LOGIN_ERROR,
  LOGIN_SUCCESS,
  GOOGLE_LOGIN_START,
- LOAD_DATAS,
  LOGOUT,
 } from './constants';
 
@@ -49,12 +48,5 @@ export function loginError(message) {
   return {
     type: LOGIN_ERROR,
     error: message,
-  };
-}
-
-export function loadDatas(datas) {
-  return {
-    type: LOAD_DATAS,
-    datas,
   };
 }

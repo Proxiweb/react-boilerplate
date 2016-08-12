@@ -8,6 +8,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router';
 import { logout } from '../Login/actions';
 import selectCompteUtilisateur, { selectCommande } from './selectors';
 import moment from 'moment';
@@ -26,7 +27,10 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
     return (
       <div className={`container ${styles.compteUtilisateur}`}>
         <div className="row">
-          <div className="col-md-12 text-right withMarginTop">
+          <div className="col-md-6 text-left withMarginTop">
+            <Link to="/">Home</Link>
+          </div>
+          <div className="col-md-6 text-right withMarginTop">
             <button
               className="btn btn-default"
               onClick={this.props.logout}

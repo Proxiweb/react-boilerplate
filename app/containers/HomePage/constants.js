@@ -1,0 +1,3 @@
+export const ASYNC_LOAD_DATAS_1_START = 'app/Homepage/ASYNC_LOAD_DATAS_1_START';
+export const ASYNC_LOAD_DATAS_1_SUCCESS = 'app/Homepage/ASYNC_LOAD_DATAS_1_SUCCESS';
+export const ASYNC_LOAD_DATAS_1_ERROR = 'app/Homepage/ASYNC_LOAD_DATAS_1_ERROR';
