@@ -13,28 +13,49 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
-import { loadDatas1Start } from './actions';
+import { loadDatas1Start, loadDatas2Start } from './actions';
+import styles from './styles.css';
+import MessageBox from 'components/MessageBox';
+import { selectAsyncDatas1, selectAsyncDatas2 } from './selectors';
 
 class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     loadDatas1: PropTypes.func.isRequired,
+    loadDatas2: PropTypes.func.isRequired,
+    asyncDatas1: PropTypes.object.isRequired,
+    asyncDatas2: PropTypes.object.isRequired,
   }
 
   render() {
+    const { asyncDatas1, asyncDatas2 } = this.props;
     return (
-      <h1>
-        <FormattedMessage {...messages.header} />
-        <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
-      </h1>
+      <div className="row text-center">
+        <h1>
+          <FormattedMessage {...messages.header} />
+        </h1>
+        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+          <MessageBox asyncState={asyncDatas1} />
+          <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
+        </div>
+        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+          <MessageBox asyncState={asyncDatas2} />
+          <button onClick={() => this.props.loadDatas2(1)} className="btn btn-primary">Load Datas 2</button>
+        </div>
+      </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-    loadDatas1: (id) => dispatch(loadDatas1Start(id)),
-  };
-}
+const mapStateToProps = (state) => ({
+  asyncDatas1: selectAsyncDatas1(state),
+  asyncDatas2: selectAsyncDatas2(state),
+});
 
-export default connect(null, mapDispatchToProps)(HomePage);
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  loadDatas1: (id) => dispatch(loadDatas1Start(id)),
+  loadDatas2: (id) => dispatch(loadDatas2Start(id)),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

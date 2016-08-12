@@ -171,7 +171,8 @@
       "express",
       "ip",
       "minimist",
-      "sanitize.css"
+      "sanitize.css",
+      "bootstrap-css-only"
     ],
     "include": [
       "core-js",
@@ -183,6 +184,7 @@
     "babel-polyfill": "6.13.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
+    "bootstrap-css-only": "^3.3.6",
     "chalk": "1.1.3",
     "compression": "1.6.2",
     "express": "4.14.0",
@@ -216,6 +218,7 @@
     "redux-storage-engine-sessionstorage": "^1.0.2",
     "reselect": "2.5.3",
     "sanitize.css": "4.1.0",
+    "superagent": "^2.1.0",
     "thinky": "^2.3.4",
     "warning": "^3.0.0",
     "whatwg-fetch": "1.0.0"

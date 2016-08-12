@@ -35,12 +35,23 @@ module.exports = (router) => {
       const token = generateToken(user);
       res.send({ user, token });
     } else {
-      res.status(403).send({ statusText: 'Indentifiants incorrects' });
+      res.status(401).send({ statusText: 'Indentifiants incorrects' });
     }
   });
 
   router.get('/loadDatas1/:id', expressJwt({ secret: config.jwtSecret }), (req, res) => {
-    res.send({ msg: 'ok' });
+    res.send(req.user);
+  });
+
+  router.get('/loadDatas2/:id', expressJwt({ secret: config.jwtSecret }), (req, res, next) => {
+    setTimeout(() => {
+      if (req.user.roles.indexOf('SUPER_ADMIN') === -1) {
+        res.status(403).send({ error: 'Droits insuffisants' });
+        return next();
+      }
+      res.send(req.user);
+      return next();
+    }, 5000);
   });
 
   router.get('/googleLogin', (req, res) => {

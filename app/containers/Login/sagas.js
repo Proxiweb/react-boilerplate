@@ -1,46 +1,45 @@
-import { take, call, put, takeEvery } from 'redux-saga/effects';
+import { take, call, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
-import request from 'utils/request';
-import { LOGIN_START, LOGIN_SUCCESS, LOGOUT, GOOGLE_LOGIN_START } from './constants';
+import { get } from 'utils/apiClient';
+import { findActionType } from 'utils/asyncSagaConstants';
+import { loginConst, LOGOUT, GOOGLE_LOGIN_START } from './constants';
 
 import {
   loginSuccess,
   loginError,
 } from './actions';
 
-export function* loginSaga() {
-  while(true) { // eslint-disable-line
-    const action = yield take(LOGIN_START);
-
-    const cnx = yield call(request, `/api/login?username=${action.username}&password=${action.password}`);
-    if (!cnx.err) {
-      yield put(loginSuccess(cnx.data, action.redirectPathname));
-    } else {
-      yield put(loginError(cnx.err));
-    }
-
-    yield call(request, '/api/datas', { headers: { Authorization: `Bearer ${cnx.data.token}` } });
-  }
-}
+// export function* loginSaga() {
+//   while(true) { // eslint-disable-line
+//     const action = yield take(LOGIN_START);
+//
+//     const response = yield call(get, `/api/login?username=${action.username}&password=${action.password}`);
+//     if (!response.err) {
+//       yield put(loginSuccess(response.datas, action.redirectPathname));
+//     } else {
+//       yield put(loginError(response.err));
+//     }
+//   }
+// }
 
 export function* googleLoginSaga() {
   while(true) { // eslint-disable-line
     const action = yield take(GOOGLE_LOGIN_START);
-    const user = yield call(request, `/api/googleLogin?id=${action.datas.El}&email=${action.datas.Ka.hg}`);
-    if (!user.err) {
-      yield put(loginSuccess(user.data, action.redirectPathname));
+    const response = yield call(get, `/api/googleLogin?id=${action.datas.El}&email=${action.datas.Ka.hg}`);
+    if (!response.err) {
+      yield put(loginSuccess(response.datas, action.redirectPathname));
     } else {
-      yield put(loginError(user.err));
+      yield put(loginError(response.err));
     }
   }
 }
 
 export function* onLoginSuccess() {
   while(true) { // eslint-disable-line
-    const action = yield take(LOGIN_SUCCESS);
+    const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
 
-    if (action.redirectPathname) {
-      yield put(push(action.redirectPathname));
+    if (action.req.redirectPathname) {
+      yield put(push(action.req.redirectPathname));
     }
   }
 }
@@ -54,7 +53,6 @@ export function* onLogout() {
 
 // All sagas to be loaded
 export default [
-  loginSaga,
   googleLoginSaga,
   onLogout,
   onLoginSuccess,

@@ -22,15 +22,15 @@ import useScroll from 'react-router-scroll';
 import LanguageProvider from 'containers/LanguageProvider';
 import configureStore from './store';
 
+// Import global saga
+import globalSagas from 'containers/App/sagas';
+
 // Import i18n messages
 import { translationMessages } from './i18n';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/sanitize.css';
-import '!!style-loader!css-loader!../vendors/css/bootstrap.min.css';
-import '!!style-loader!css-loader!../vendors/css/react-select.min.css';
-import '!!style-loader!css-loader!../vendors/css/font-awesome.min.css';
-
+import 'bootstrap-css-only/css/bootstrap.min.css';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -38,6 +38,9 @@ import '!!style-loader!css-loader!../vendors/css/font-awesome.min.css';
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
+
+// starting globals sagas
+globalSagas.map(store.runSaga);
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState

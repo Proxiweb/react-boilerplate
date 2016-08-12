@@ -5,18 +5,16 @@
  */
 
 import {
- LOGIN_START,
- LOGIN_ERROR,
- LOGIN_SUCCESS,
+ loginConst as lc,
  GOOGLE_LOGIN_START,
  LOGOUT,
 } from './constants';
 
 export function login(username, password, redirectPathname = null) {
   return {
-    type: LOGIN_START,
-    username,
-    password,
+    type: lc.ASYNC_LOGIN_START,
+    url: '/login',
+    query: { username, password },
     redirectPathname,
   };
 }
@@ -34,19 +32,19 @@ export function logout() {
     type: LOGOUT,
   };
 }
-
-export function loginSuccess(cnx, redirectPathname = null) {
-  return {
-    type: LOGIN_SUCCESS,
-    user: cnx.user,
-    token: cnx.token,
-    redirectPathname,
-  };
-}
-
-export function loginError(message) {
-  return {
-    type: LOGIN_ERROR,
-    error: message,
-  };
-}
+//
+// export function loginSuccess(cnx, redirectPathname = null) {
+//   return {
+//     type: LOGIN_SUCCESS,
+//     user: cnx.user,
+//     token: cnx.token,
+//     redirectPathname,
+//   };
+// }
+//
+// export function loginError(message) {
+//   return {
+//     type: LOGIN_ERROR,
+//     error: message,
+//   };
+// }
