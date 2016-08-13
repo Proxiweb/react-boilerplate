@@ -12,18 +12,47 @@
  */
 
 import React from 'react';
+import { connect } from 'react-redux';
+import Navbar from 'react-bootstrap/lib/Navbar';
+import { IndexLink } from 'react-router';
+import { Nav, NavItem } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import styles from './styles.css';
 
-export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
     children: React.PropTypes.node,
+    user: React.PropTypes.node,
   };
 
   render() {
+    const { user } = this.props;
+    console.log(user);
     return (
       <div className="container">
-        {React.Children.toArray(this.props.children)}
+        <Navbar fixedTop className="hidden-print">
+          <Navbar.Header>
+            <Navbar.Brand>
+              <IndexLink to="/" activeStyle={{ color: 'black' }}>
+                <span>Relais ProxiWeb</span>
+              </IndexLink>
+            </Navbar.Brand>
+          </Navbar.Header>
+
+          <Navbar.Collapse eventKey={0}>
+            <Nav navbar pullRight>
+              { user && <LinkContainer to="/votre-compte"><NavItem eventKey={5}>Votre compte</NavItem></LinkContainer>}
+              { !user && <LinkContainer to="/login"><NavItem eventKey={5}>Login</NavItem></LinkContainer>}
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <div className={styles.mainContent}>
+          {React.Children.toArray(this.props.children)}
+        </div>
       </div>
     );
   }
 }
+
+export default connect(state => ({ user: state.compteUtilisateur.auth }))(App);

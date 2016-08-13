@@ -7,3 +7,7 @@
 .container {
   display: block;
 }
+
+.mainContent {
+  padding-top: 70px;
+}

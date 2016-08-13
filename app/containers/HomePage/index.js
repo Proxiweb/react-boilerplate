@@ -16,6 +16,8 @@ import messages from './messages';
 import { loadDatas1Start, loadDatas2Start } from './actions';
 import styles from './styles.css';
 import MessageBox from 'components/MessageBox';
+import LocaleToggle from 'containers/LocaleToggle';
+
 import { selectAsyncDatas1, selectAsyncDatas2 } from './selectors';
 
 class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
@@ -40,6 +42,9 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
         <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
           <MessageBox asyncState={asyncDatas2} />
           <button onClick={() => this.props.loadDatas2(1)} className="btn btn-primary">Load Datas 2</button>
+        </div>
+        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+          <LocaleToggle />
         </div>
       </div>
     );

@@ -5,9 +5,7 @@
  */
 
 import {
-  LOGIN_START,
-  LOGIN_ERROR,
-  LOGIN_SUCCESS,
+  loginConst as c,
   LOGOUT,
 } from 'containers/Login/constants';
 
@@ -25,14 +23,14 @@ const sessionStorageKey = 'user';
 
 function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey, initialState), action) {
   switch (action.type) {
-    case LOGIN_START:
+    case c.ASYNC_LOGIN_START:
       return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: true } }));
-    case LOGIN_ERROR:
+    case c.ASYNC_LOGIN_ERROR:
       return storeState(sessionStorageKey, update(state, { error: { $set: action.error.message }, loading: { $set: false } }));
+    case c.ASYNC_LOGIN_SUCCESS:
+      return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.datas.user }, token: { $set: action.datas.token } }));
     case LOGOUT:
       return storeState(sessionStorageKey, { ...initialState });
-    case LOGIN_SUCCESS:
-      return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.user }, token: { $set: action.token } }));
     default:
       return state;
   }
