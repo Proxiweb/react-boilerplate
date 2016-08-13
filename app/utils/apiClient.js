@@ -9,7 +9,11 @@ export function get(url, headers = {}, query = {}) {
     .set(headers)
     .end((err, res) => {
       if (err) {
-        reject({ message: JSON.parse(res.text) });
+        try {
+          reject({ message: JSON.parse(res.text) });
+        } catch (e) {
+          reject({ message: res.text });
+        }
       }
       resolve({ datas: res.body });
     }));

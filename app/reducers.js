@@ -11,6 +11,8 @@ import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import compteUtilisateur from 'containers/CompteUtilisateur/reducer';
 import global from 'containers/App/reducer';
 
+import { reducer as form } from 'redux-form';
+
 /*
  * routeReducer
  *
@@ -47,5 +49,6 @@ export default function createReducer(asyncReducers) {
     language: languageProviderReducer,
     ...asyncReducers,
     compteUtilisateur,
+    form,
   });
 }
