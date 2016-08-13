@@ -11,7 +11,7 @@ import {
 } from './constants';
 
 const initialState = {
-  errors: {}
+  errors: {},
 };
 
 function addError(state, scope, msg) {

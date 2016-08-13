@@ -214,14 +214,12 @@
     "redux": "3.5.2",
     "redux-immutable": "3.0.6",
     "redux-saga": "0.11.0",
-    "redux-storage": "^4.1.0",
-    "redux-storage-engine-sessionstorage": "^1.0.2",
+    "redux-form": "^6.0.0-rc.4",
     "reselect": "2.5.3",
     "sanitize.css": "4.1.0",
     "superagent": "^2.1.0",
     "thinky": "^2.3.4",
-    "warning": "^3.0.0",
-    "whatwg-fetch": "1.0.0"
+    "warning": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
