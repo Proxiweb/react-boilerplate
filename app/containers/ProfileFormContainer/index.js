@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ProfileForm from 'components/ProfileForm';
-import { connect } from 'react-redux';
-// import { extractProfile } from 'containers/CompteUtilisateur/selectors';
-
-const ProfileFormConnected = connect()(ProfileForm);
+import submit from './submit';
 
 export default class ProfileFormContainer extends React.Component {
+  static propTypes = {
+    profile: PropTypes.object,
+    afterSubmit: PropTypes.func.isRequired,
+  }
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -13,9 +14,10 @@ export default class ProfileFormContainer extends React.Component {
 
   handleSubmit(datas) {
     console.log(datas);
+    this.props.afterSubmit();
   }
 
   render() {
-    return <ProfileFormConnected onSubmit={this.handleSubmit} />;
+    return <ProfileForm onSubmit={submit} initialValues={this.props.profile} />;
   }
 }

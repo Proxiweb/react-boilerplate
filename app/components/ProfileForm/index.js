@@ -27,22 +27,15 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
     const {
       handleSubmit,
     } = this.props;
-
     return (
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className="row">
-          <div className={'col-md-6 col-md-offset-3'}>
-            <h3 className={styles.formHeader}>Vos coordonnées</h3>
-          </div>
-          <div className="col-sm-6">
+          <div className="col-sm-12">
             <div className="row">
-              <Field name="id" type="hidden" component={PureInput} />
               <Field cols="6" name="nom" type="text" component={PureInput} label="Nom" className={`form-control ${styles.upper}`} />
               <Field cols="6" name="prenom" type="text" component={PureInput} label="Prénom" className={`form-control ${styles.capit}`} />
             </div>
           </div>
-        </div>
-        <div className={`${styles.formFooter} row`}>
           <div className="col-md-4 col-md-offset-4">
             <button type="submit" className="btn btn-submit btn-block btn-lg btn-primary"><i className="fa fa-check"></i> Valider</button>
           </div>
@@ -52,11 +45,11 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
   }
 }
 
-const mainForm = reduxForm({
-  form: 'main',
-  asyncValidate,
-  asyncBlurFields: ['nom'],
+const profileForm = reduxForm({
+  form: 'profile',
+  // asyncValidate,
+  // asyncBlurFields: ['nom'],
   // validate,
 })(ProfileForm);
 
-export default mainForm;
+export default profileForm;

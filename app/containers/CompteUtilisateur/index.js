@@ -7,16 +7,16 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { logout } from '../Login/actions';
-import selectCompteUtilisateur from './selectors';
+import { selectProfile } from './selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
 import styles from './styles.css';
 
 export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: PropTypes.object,
-    compteUtilisateur: PropTypes.object.isRequired,
-    commande: PropTypes.object,
+    profile: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
+    selectProfile: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -34,7 +34,8 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
   }
 
   render() {
-    const { auth } = this.props.compteUtilisateur;
+    // const { profile } = this.props.profile;
+    const profile = { nom: 'GUYOMARCH', prenom: 'Régis' };
     return (
       <div className={`container ${styles.compteUtilisateur}`}>
         <div className="row">
@@ -49,11 +50,10 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
         </div>
         {this.state.edit && (<div>
           <button className="btn btn-default" onClick={this.toggleState}>Quitter edition</button>
-          <input type="text" value={auth.email} className="form-control" />
+          <ProfileFormContainer profile={profile} afterSubmit={this.toggleState} />
         </div>)}
         {!this.state.edit && (<div>
           <button className="btn btn-default" onClick={this.toggleState}>Modifier</button>
-          <ProfileFormContainer />
         </div>)}
       </div>
     );
@@ -61,7 +61,7 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
 }
 
 const mapStateToProps = (state) => ({
-  compteUtilisateur: selectCompteUtilisateur(state),
+  profile: selectProfile(state),
 });
 
 function mapDispatchToProps(dispatch) {

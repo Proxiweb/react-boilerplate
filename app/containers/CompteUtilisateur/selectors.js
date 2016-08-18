@@ -14,12 +14,12 @@ const selectCompteUtilisateurDomain = state => state.compteUtilisateur;
  * Default selector used by CompteUtilisateur
  */
 
-const selectCompteUtilisateur = createSelector(
+export const selectCompteUtilisateur = createSelector(
   selectCompteUtilisateurDomain,
   (substate) => substate.auth
 );
 
-export const extractProfile = createSelector(
+export const selectProfile = createSelector(
   selectCompteUtilisateur,
   (auth) => ({ nom: auth.nom, prenom: auth.prenom })
 );

@@ -54,6 +54,10 @@ module.exports = (router) => {
     }, 5000);
   });
 
+  router.get('/utilisateurs', (req, res) => {
+    setTimeout(() => res.status(200).send({ nom: 'pas cool' }), 1000);
+  });
+
   router.get('/googleLogin', (req, res) => {
     Utilisateur
       .get(req.query.id)
