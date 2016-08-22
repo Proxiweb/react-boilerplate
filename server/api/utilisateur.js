@@ -11,7 +11,7 @@ function generateToken(user) {
     id: user.id,
     roles: user.roles,
   };
-  const token = jwt.sign(u, config.jwtSecret, { expiresIn: 60 * 60 * 24 });
+  const token = jwt.sign(u, config.jwtSecret, { expiresIn: 60 }); // * 60 * 24
   return token;
 }
 

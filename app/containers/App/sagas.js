@@ -1,5 +1,6 @@
 import { take, call, put, select } from 'redux-saga/effects';
 import { get } from 'utils/apiClient';
+import { logout, setAuthErrorMsg } from 'containers/Login/actions';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
 
@@ -7,7 +8,7 @@ export function* apiFetcherSaga() {
   while (true) { // eslint-disable-line
     const action = yield take('*');
 
-    if (action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {  //  format xxx/xxx/ASYNC_UNE_ACTION_START
+    if (action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {  //  format xxx/xxx/ASYNC_[UNE_ACTION]_START
       const actionSuffix = action.type.split('/');
       const actionTypeSplt = actionSuffix[2].split('_');
 
@@ -31,7 +32,12 @@ export function* apiFetcherSaga() {
         const res = yield call(get, `/api/${url}`, headers, query);
         yield put(assign({ type: success, datas: res.datas, req: omit(action, 'type'), msgPending, msgSuccess, msgError }));
       } catch (exception) {
-        yield put(assign({ type: err, msgPending, msgSuccess, msgError: (msgError || exception.message.error) }));
+        if (exception.message && exception.message.error === 'La session a expirée') {
+          yield put(logout('/login'));
+          yield put(setAuthErrorMsg('La session a expirée, veuillez vous re-connecter'));
+        } else {
+          yield put(assign({ type: err, msgPending, msgSuccess, msgError: (msgError || exception.message.error) }));
+        }
       }
     }
   }

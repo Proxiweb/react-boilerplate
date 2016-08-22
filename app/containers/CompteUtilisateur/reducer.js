@@ -7,6 +7,7 @@
 import {
   loginConst as c,
   LOGOUT,
+  SET_ERR_MSG,
 } from 'containers/Login/constants';
 
 import update from 'react-addons-update';
@@ -31,6 +32,8 @@ function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey,
       return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.datas.user }, token: { $set: action.datas.token } }));
     case LOGOUT:
       return storeState(sessionStorageKey, { ...initialState });
+    case SET_ERR_MSG:
+      return storeState(sessionStorageKey, update(state, { error: { $set: action.message } }));
     default:
       return state;
   }

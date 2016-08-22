@@ -8,6 +8,7 @@ import {
  loginConst as lc,
  GOOGLE_LOGIN_START,
  LOGOUT,
+ SET_ERR_MSG,
 } from './constants';
 
 export function login(username, password, redirectPathname = null) {
@@ -27,11 +28,20 @@ export function googleLogin(googleLoginResponse, redirectPathname = null) {
   };
 }
 
-export function logout() {
+export function logout(redirectPathname = null) {
   return {
     type: LOGOUT,
+    redirectPathname,
   };
 }
+
+export function setAuthErrorMsg(message) {
+  return {
+    type: SET_ERR_MSG,
+    message,
+  };
+}
+
 //
 // export function loginSuccess(cnx, redirectPathname = null) {
 //   return {

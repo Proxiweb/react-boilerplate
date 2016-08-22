@@ -17,6 +17,13 @@ app.use(bodyParser.json());
 
 app.use('/api', routes);
 
+app.use((err, req, res, next) => {  // eslint-disable-line
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send({ error: 'La session a expirée' });
+  }
+  res.status(500).send('Something broke!');
+});
+
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {
   outputPath: resolve(process.cwd(), 'build'),

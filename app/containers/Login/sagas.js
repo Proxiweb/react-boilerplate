@@ -22,17 +22,17 @@ import {
 //   }
 // }
 
-export function* googleLoginSaga() {
-  while(true) { // eslint-disable-line
-    const action = yield take(GOOGLE_LOGIN_START);
-    const response = yield call(get, `/api/googleLogin?id=${action.datas.El}&email=${action.datas.Ka.hg}`);
-    if (!response.err) {
-      yield put(loginSuccess(response.datas, action.redirectPathname));
-    } else {
-      yield put(loginError(response.err));
-    }
-  }
-}
+// export function* googleLoginSaga() {
+//   while(true) { // eslint-disable-line
+//     const action = yield take(GOOGLE_LOGIN_START);
+//     const response = yield call(get, `/api/googleLogin?id=${action.datas.El}&email=${action.datas.Ka.hg}`);
+//     if (!response.err) {
+//       yield put(loginSuccess(response.datas, action.redirectPathname));
+//     } else {
+//       yield put(loginError(response.err));
+//     }
+//   }
+// }
 
 export function* onLoginSuccess() {
   while(true) { // eslint-disable-line
@@ -46,14 +46,14 @@ export function* onLoginSuccess() {
 
 export function* onLogout() {
   while(true) {  // eslint-disable-line
-    yield take(LOGOUT);
-    yield put(push('/'));
+    const action = yield take(LOGOUT);
+    yield put(push(action.redirectPathname || '/'));
   }
 }
 
 // All sagas to be loaded
 export default [
-  googleLoginSaga,
+  // googleLoginSaga,
   onLogout,
   onLoginSuccess,
 ];
