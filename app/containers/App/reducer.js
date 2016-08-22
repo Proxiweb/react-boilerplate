@@ -29,8 +29,9 @@ function globalReducer(state = initialState, action) {
     case ADD_ERROR:
       return addError(state, action.scope, action.msg);
     case CLEAR_SCOPE: {
+      const { scope } = action;
       const maj = {};
-      maj[scope] = { $set: []};
+      maj[scope] = { $set: [] };
       return update(state, maj);
     }
     default:

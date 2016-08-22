@@ -35,7 +35,7 @@ module.exports = (router) => {
       const token = generateToken(user);
       res.send({ user, token });
     } else {
-      res.status(401).send({ statusText: 'Indentifiants incorrects' });
+      res.status(401).send({ error: 'Indentifiants incorrects' });
     }
   });
 

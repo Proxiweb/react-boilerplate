@@ -21,12 +21,12 @@ const initialState = {
 
 const sessionStorageKey = 'user';
 
-function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey, initialState), action) {
+function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey, initialState, { error: false, loading: false }), action) {
   switch (action.type) {
     case c.ASYNC_LOGIN_START:
       return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: true } }));
     case c.ASYNC_LOGIN_ERROR:
-      return storeState(sessionStorageKey, update(state, { error: { $set: action.error.message }, loading: { $set: false } }));
+      return storeState(sessionStorageKey, update(state, { error: { $set: action.msgError }, loading: { $set: false } }));
     case c.ASYNC_LOGIN_SUCCESS:
       return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.datas.user }, token: { $set: action.datas.token } }));
     case LOGOUT:
