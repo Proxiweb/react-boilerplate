@@ -40,8 +40,12 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
           <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
         </div>
         <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <MessageBox asyncState={asyncDatas2} />
-          <button onClick={() => this.props.loadDatas2(1)} className="btn btn-primary">Load Datas 2</button>
+          <button
+            onClick={() => this.props.loadDatas2(1)}
+            className="btn btn-primary"
+          >
+            <span>{ !asyncDatas2.pending && 'Load Datas 2'} { asyncDatas2.pending && 'loading...' }</span>
+          </button>
         </div>
         <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
           <LocaleToggle />

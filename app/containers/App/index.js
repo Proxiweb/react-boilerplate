@@ -18,6 +18,7 @@ import { IndexLink } from 'react-router';
 import { Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import styles from './styles.css';
+import ReduxNotifications from 'containers/Notifications';
 
 class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -28,28 +29,30 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
 
   render() {
     const { user } = this.props;
-    console.log(user);
     return (
-      <div className="container">
-        <Navbar fixedTop className="hidden-print">
-          <Navbar.Header>
-            <Navbar.Brand>
-              <IndexLink to="/" activeStyle={{ color: 'black' }}>
-                <span>Relais ProxiWeb</span>
-              </IndexLink>
-            </Navbar.Brand>
-          </Navbar.Header>
+      <div>
+        <div className="container">
+          <Navbar fixedTop className="hidden-print">
+            <Navbar.Header>
+              <Navbar.Brand>
+                <IndexLink to="/" activeStyle={{ color: 'black' }}>
+                  <span>Relais ProxiWeb</span>
+                </IndexLink>
+              </Navbar.Brand>
+            </Navbar.Header>
 
-          <Navbar.Collapse eventKey={0}>
-            <Nav navbar pullRight>
-              { user && <LinkContainer to="/votre-compte"><NavItem eventKey={5}>Votre compte</NavItem></LinkContainer>}
-              { !user && <LinkContainer to="/login"><NavItem eventKey={5}>Login</NavItem></LinkContainer>}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <div className={styles.mainContent}>
-          {React.Children.toArray(this.props.children)}
+            <Navbar.Collapse eventKey={0}>
+              <Nav navbar pullRight>
+                { user && <LinkContainer to="/votre-compte"><NavItem eventKey={5}>Votre compte</NavItem></LinkContainer>}
+                { !user && <LinkContainer to="/login"><NavItem eventKey={5}>Login</NavItem></LinkContainer>}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <div className={styles.mainContent}>
+            {React.Children.toArray(this.props.children)}
+          </div>
         </div>
+        <ReduxNotifications />
       </div>
     );
   }

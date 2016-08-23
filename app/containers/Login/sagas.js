@@ -4,10 +4,10 @@ import { get } from 'utils/apiClient';
 import { findActionType } from 'utils/asyncSagaConstants';
 import { loginConst, LOGOUT, GOOGLE_LOGIN_START } from './constants';
 
-import {
-  loginSuccess,
-  loginError,
-} from './actions';
+// import {
+//   loginSuccess,
+//   loginError,
+// } from './actions';
 
 // export function* loginSaga() {
 //   while(true) { // eslint-disable-line
