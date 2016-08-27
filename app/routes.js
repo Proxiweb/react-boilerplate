@@ -60,6 +60,26 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/commandes',
+      name: 'commande',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Commande/reducer'),
+          System.import('containers/Commande/sagas'),
+          System.import('containers/Commande'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('commandes', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

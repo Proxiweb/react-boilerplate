@@ -45,6 +45,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
               <Nav navbar pullRight>
                 { user && <LinkContainer to="/votre-compte"><NavItem eventKey={5}>Votre compte</NavItem></LinkContainer>}
                 { !user && <LinkContainer to="/login"><NavItem eventKey={5}>Login</NavItem></LinkContainer>}
+                <LinkContainer to="/commandes"><NavItem eventKey={6}>Commandes</NavItem></LinkContainer>
               </Nav>
             </Navbar.Collapse>
           </Navbar>

@@ -36,7 +36,6 @@ function homepageReducer(state = initialState, action) {
     case c.ASYNC_LOAD_DATAS_2_SUCCESS:
       return update(state, { datas2: { asyncStatus: { $set: { pending: false, error: false, success: true, message: action.msgSuccess } }, datas: { $set: action.datas } } });
     case c.ASYNC_LOAD_DATAS_2_ERROR:
-      console.log(action);
       return update(state, { datas2: { asyncStatus: { $set: { pending: false, error: true, success: false, message: action.msgError } } } });
     default:
       return state;

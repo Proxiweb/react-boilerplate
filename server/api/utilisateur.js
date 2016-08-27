@@ -15,6 +15,117 @@ function generateToken(user) {
   return token;
 }
 
+const datas = {
+  commandes: [
+    {
+      id: 1,
+      date: '2016-06-01',
+      terminee: true,
+      commandeUtilisateurs: [
+        {
+          id: 1,
+          utilisateur: {
+            id: 1,
+            pseudo: 'regisg',
+          },
+          contenus: [
+            {
+              id: 1,
+              offreId: 6,
+              offre: {
+                id: 6,
+                prix: 1,
+                produitId: 1,
+                produit: {
+                  id: 1,
+                  nom: 'courgette',
+                },
+              },
+              quantite: 2,
+            },
+          ],
+        },
+        {
+          id: 2,
+          utilisateur: {
+            id: 3,
+            pseudo: 'sonia',
+          },
+          contenus: [
+            {
+              id: 2,
+              offreId: 5,
+              offre: {
+                id: 5,
+                prix: 4,
+                produitId: 5,
+                produit: {
+                  id: 5,
+                  nom: 'tomate',
+                },
+              },
+              quantite: 5,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 2,
+      date: '2016-06-08',
+      terminee: true,
+      commandeUtilisateurs: [
+        {
+          id: 3,
+          utilisateur: {
+            id: 1,
+            pseudo: 'regisg',
+          },
+          contenus: [
+            {
+              id: 3,
+              offreId: 6,
+              offre: {
+                id: 6,
+                prix: 1,
+                produitId: 1,
+                produit: {
+                  id: 1,
+                  nom: 'courgette',
+                },
+              },
+              quantite: 1,
+            },
+          ],
+        },
+        {
+          id: 4,
+          utilisateur: {
+            id: 2,
+            pseudo: 'marcel',
+          },
+          contenus: [
+            {
+              id: 4,
+              offreId: 7,
+              offre: {
+                id: 7,
+                prix: 1.5,
+                produitId: 8,
+                produit: {
+                  id: 8,
+                  nom: 'pomme',
+                },
+              },
+              quantite: 5,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 module.exports = (router) => {
   router.get('/login', (req, res) => {
     // Utilisateur
@@ -49,10 +160,20 @@ module.exports = (router) => {
         res.status(403).send({ error: 'Droits insuffisants' });
         return next();
       }
-      res.send(req.user);
+      res.send(datas);
       return next();
     }, 5000);
   });
+
+  router.get('/commandes/:page', expressJwt({ secret: config.jwtSecret }), (req, res, next) => {
+    if (req.user.roles.indexOf('USER') === -1) {
+      res.status(403).send({ error: 'Droits insuffisants' });
+      return next();
+    }
+    res.send({ commandes: [datas.commandes[req.params.page]] });
+    return next();
+  });
+
 
   router.get('/utilisateurs', (req, res) => {
     setTimeout(() => res.status(200).send({ nom: 'pas cool' }), 1000);
