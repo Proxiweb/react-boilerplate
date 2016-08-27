@@ -43,7 +43,7 @@ export function* apiFetcherSaga() {
           yield put(logout('/login'));
         } else {
           yield put(assign({ type: err, msgPending, msgSuccess, msgError: (msgError || exception.message.error) }));
-          yield put(Notifications.success({
+          yield put(Notifications.error({
             title: 'Erreur',
             message: msgError || exception.message.error,
             // autoDismiss: 7,
