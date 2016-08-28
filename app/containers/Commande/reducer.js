@@ -18,6 +18,23 @@ const initialState = {
   error: null,
 };
 
+const ajouter = (state, action) => {
+  const contenu = state.datas.entities.commandeContenu[action.contenuId];
+
+  return update(state, {
+    datas: {
+      entities: {
+        commandeContenu: {
+          [action.contenuId]:
+          { quantite:
+            { $set: contenu.quantite + action.quantite },
+          },
+        },
+      },
+    },
+  });
+};
+
 function commandeReducer(state = initialState, action) {
   switch (action.type) {
     case c.ASYNC_LOAD_COMMANDES_START:
@@ -26,6 +43,8 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDE));
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
+    case c.AJOUTER:
+      return ajouter(state, action);
     default:
       return state;
   }

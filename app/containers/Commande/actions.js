@@ -12,3 +12,9 @@ export const loadCommandes = (page) => ({
   msgPending: 'Chargement commandes',
   msgSuccess: 'Commandes chargées',
 });
+
+export const ajouter = (contenuId, qte) => ({
+  type: c.AJOUTER,
+  contenuId,
+  quantite: qte,
+});

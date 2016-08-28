@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import intersection from 'lodash.intersection';
+import merge from 'lodash.merge';
 /**
  * Direct selector to the commande state domain
  */
@@ -19,19 +19,43 @@ export const selectCommandes = () => createSelector(
   (substate) => substate.datas.entities.commandes
 );
 
-export const selectCommandesUtilisateur = (utilisateurId) => createSelector(
+export const selectResults = () => createSelector(
   selectCommandeDomain(),
-  (substate) => {
-    const entities = substate.datas.entities;
-    if (!entities.commandeUtilisateur) return null;
+  (substate) => substate.datas.result
+);
 
-    const commandeUtilisateurs = entities.commandeUtilisateur.filter(cu => cu.utilisateur.id === utilisateurId);
-    const commandes = entities.commande.filter(cmde => intersection(cmde.commandeUtilisateurs, commandeUtilisateurs).length !== 0);
+export const selectCommandesDatas = () => createSelector(
+  selectCommandeDomain(),
+  selectResults(),
+  (substate, result) => {
+    const { commande, commandeUtilisateur, commandeContenu, utilisateur, offre, produit } = substate.datas.entities;
+    if (!commande) return null;
 
-    return commandes.map(commande => ({
-      ...commande,
-      commandeUtilisateurs: commande.commandeUtilisateurs.map(cu => entities.commandeUtilisateur.filter(cut => cut.id === cu.id)),
-    }));
+    return result
+      .map(id => commande[id])
+        .map(cmde => ({
+          ...cmde,
+          commandeUtilisateurs: cmde.commandeUtilisateurs.map(
+            id => commandeUtilisateur[id]
+          ).map(cu => ({
+            ...cu,
+            utilisateur: utilisateur[cu.utilisateur],
+            contenus: cu.contenus.map(id => commandeContenu[id])
+                        .map(cont => ({
+                          ...cont,
+                          offre: merge(offre[cont.offre], { produit: produit[offre[cont.offre].produit] }),
+                        })),
+          })),
+        })
+      );
+  }
+);
+
+export const selectCommandesUtilisateur = (utilisateurId) => createSelector(
+  selectCommandesDatas(),
+  (commandes) => {
+    if (!commandes) return null;
+    return commandes.filter(commande => commande.commandeUtilisateurs.find(cu => cu.utilisateur.id === utilisateurId));
   }
 );
 

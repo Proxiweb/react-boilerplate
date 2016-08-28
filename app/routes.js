@@ -76,6 +76,24 @@ export default function createRoutes(store) {
           injectSagas(sagas.default);
           renderRoute(component);
         });
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/stellar',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Stellar/reducer'),
+          System.import('containers/Stellar/sagas'),
+          System.import('containers/Stellar/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('stellar', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
 
         importModules.catch(errorLoading);
       },

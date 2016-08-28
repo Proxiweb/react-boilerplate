@@ -1,8 +1,8 @@
-import { take, call, put } from 'redux-saga/effects';
+import { take, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
-import { get } from 'utils/apiClient';
+// import { get } from 'utils/apiClient';
 import { findActionType } from 'utils/asyncSagaConstants';
-import { loginConst, LOGOUT, GOOGLE_LOGIN_START } from './constants';
+import { loginConst, LOGOUT } from './constants';
 
 // import {
 //   loginSuccess,
