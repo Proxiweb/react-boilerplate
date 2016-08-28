@@ -175,6 +175,20 @@ module.exports = (router) => {
   });
 
 
+  // https://lobstr.co/new/federation
+  router.get('/federation', (req, res, next) => {
+    if (req.query.q === 'polo@gmail.com*proxiweb.fr' && req.query.type === 'name') {
+      res.send({
+        stellar_address: 'polo@gmail.com*proxiweb.fr',
+        account_id: 'GA3MATOBMSMSEQQKQWVOJRVJGPYCOEHD2DUMIONL75EZDSHCLHFYXTFY',
+      });
+    } else {
+      res.status(404).send();
+    }
+    return next();
+  });
+
+
   router.get('/utilisateurs', (req, res) => {
     setTimeout(() => res.status(200).send({ nom: 'pas cool' }), 1000);
   });
