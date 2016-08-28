@@ -223,6 +223,7 @@
     "redux-saga": "0.11.0",
     "reselect": "2.5.3",
     "sanitize.css": "4.1.0",
+    "stellar-sdk": "^0.5.1",
     "superagent": "^2.1.0",
     "thinky": "^2.3.4",
     "warning": "3.0.0"
