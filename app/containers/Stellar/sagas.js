@@ -60,8 +60,9 @@ export function* lookupSaga() {
   while(1) { // eslint-disable-line
     const action = yield take(FEDERATION);
     try {
-      const adresse = yield call(api.fedLookup, action.payload.name);
-      yield put(fedLookupSuccess(adresse));
+      const { fedId } = action.payload;
+      const address = yield call(api.fedLookup, fedId);
+      yield put(fedLookupSuccess(address, fedId));
     } catch (err) {
       yield put(fedLookupError(err));
     }

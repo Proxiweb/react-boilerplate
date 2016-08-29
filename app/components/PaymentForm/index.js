@@ -1,9 +1,12 @@
 import React, { Component, PropTypes } from 'react';
+import StellarSdk from 'stellar-sdk';
+
 export default class PaymentForm extends Component {
   static propTypes = {
     pay: PropTypes.func.isRequired,
     stellarKeys: PropTypes.object.isRequired,
     balances: PropTypes.array.isRequired,
+    contacts: PropTypes.array.isRequired,
     fedLookup: PropTypes.func.isRequired,
   }
 
@@ -11,6 +14,25 @@ export default class PaymentForm extends Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.getContact = this.getContact.bind(this);
+    this.state = {
+      errors: null,
+      accountId: null,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.contacts.length > nextProps.contacts.length) {
+      const newContact = this.getContact(this.dest.value);
+      if (newContact) {
+        this.dest.value = newContact.accountId;
+      }
+    }
+  }
+
+  getContact() {
+    const id = this.dest.value;
+    return this.props.contacts.find(contact => contact.acountId === id || contact.fedId === id);
   }
 
   handleSubmit(evt) {
@@ -23,9 +45,17 @@ export default class PaymentForm extends Component {
     }
   }
 
+
   handleBlur() {
-    if (this.dest.value.indexOf('*') !== -1) {
-      this.props.fedLookup(this.dest.value);
+    const contact = this.getContact();
+    if (!contact) {
+      if (this.dest.value.indexOf('*') !== -1) {
+        this.props.fedLookup(this.dest.value);
+      } else if (!StellarSdk.Keypair.isValidPublicKey(this.dest.value)) {
+        this.setState({ error: 'Cette adresse n\'est pas valide' });
+      }
+    } else {
+      this.dest.value = contact.accountId;
     }
   }
 
@@ -33,7 +63,8 @@ export default class PaymentForm extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="form-group">
-          <input type="text" onBlur={this.handleBlur} className="form-control" placeholder="destination address" ref={(node) => { this.dest = node; }} defaultValue="regisg*lobstr.co" /> {/** GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI**/}
+          <input type="text" onBlur={this.handleBlur} className="form-control" placeholder="destination address" ref={(node) => { this.dest = node; }} defaultValue={this.state.accountId || 'regisg*lobstr.co'} /> {/** GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI**/}
+          {this.state.error && <div className="text-danger">{this.state.error}</div>}
         </div>
         <div className="form-group">
           <select ref={(node) => { this.currency = node; }} className="form-control" defaultValue="XLM">

@@ -77,14 +77,14 @@ export const paid = (res) => ({
   payload: { res },
 });
 
-export const fedLookup = (name) => ({
+export const fedLookup = (fedId) => ({
   type: FEDERATION,
-  payload: { name },
+  payload: { fedId },
 });
 
-export const fedLookupSuccess = (accountId) => ({
+export const fedLookupSuccess = (accountId, fedId) => ({
   type: FEDERATION_SUCCESS,
-  payload: { accountId },
+  payload: { accountId, fedId },
 });
 
 export const fedLookupError = (err) => ({

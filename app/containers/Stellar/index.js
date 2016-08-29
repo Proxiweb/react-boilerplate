@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadAccount, trust, pay, fedLookup } from './actions';
+import { loadAccount, trust as trustAction, pay, fedLookup } from './actions';
 import TrustForm from 'components/TrustForm';
 import PaymentForm from 'components/PaymentForm';
 
@@ -32,7 +32,8 @@ class StellarMain extends Component { // eslint-disable-line
   }
 
   render() {
-    const { account } = this.props;
+    const { account, lookup, trust } = this.props;
+    const { stellarKeys, balances, contacts } = account;
     return (<div>
       <form className="form form-inline text-right">
         <div className="form-group">
@@ -53,13 +54,14 @@ class StellarMain extends Component { // eslint-disable-line
             </ul>
           </div>
         )}
-      { this.state.action === 'show_trust' && <TrustForm stellarKeys={this.props.account.stellarKeys} trust={this.props.trust} />}
+      { this.state.action === 'show_trust' && <TrustForm stellarKeys={stellarKeys} trust={trust} />}
       { this.state.action === 'show_payment' && (
         <PaymentForm
           stellarKeys={this.props.account.stellarKeys}
-          pay={this.props.pay}
-          fedLookup={this.props.lookup}
-          balances={this.props.account.balances}
+          pay={pay}
+          fedLookup={lookup}
+          balances={balances}
+          contacts={contacts}
         />)}
     </div>);
   }
@@ -67,7 +69,7 @@ class StellarMain extends Component { // eslint-disable-line
 
 const mapDispatchToProps = (dispatch) => ({
   loadAccount: (accountId) => dispatch(loadAccount(accountId)),
-  trust: (currencyCode, maxTrust, issuer, stellarKeys) => dispatch(trust(currencyCode, maxTrust, issuer, stellarKeys)),
+  trust: (currencyCode, maxTrust, issuer, stellarKeys) => dispatch(trustAction(currencyCode, maxTrust, issuer, stellarKeys)),
   pay: (dest, currency, currencyIssuer, amount, stellarKeys) => dispatch(pay(dest, currency, currencyIssuer, amount, stellarKeys)),
   lookup: (name) => dispatch(fedLookup(name)),
 });
