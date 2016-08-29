@@ -2,13 +2,21 @@ import request from 'superagent';
 import StellarSdk from 'stellar-sdk';
 import toml from 'toml';
 
-StellarSdk.Network.useTestNetwork();
-
-const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+const getServer = (env) => {
+  switch (env) {
+    case 'test':
+      StellarSdk.Network.useTestNetwork();
+      return new StellarSdk.Server('https://horizon-testnet.stellar.org');
+    case 'public':
+    default:
+      StellarSdk.Network.usePublicNetwork();
+      return new StellarSdk.Server('https://horizon.stellar.org');
+  }
+};
 
 const loadAccount =
-  (accountId) => new Promise((resolve, reject) =>
-    server
+  (env, accountId) => new Promise((resolve, reject) =>
+    getServer(env)
       .accounts()
       .accountId(accountId)
       .call()
@@ -19,8 +27,8 @@ const loadAccount =
       .catch(err => reject(err))
   );
 
-const loadPayments = (accountId) => new Promise((resolve, reject) =>
-  server
+const loadPayments = (env, accountId) => new Promise((resolve, reject) =>
+  getServer(env)
     .payments()
     .forAccount(accountId)
     .order('desc')
@@ -29,8 +37,8 @@ const loadPayments = (accountId) => new Promise((resolve, reject) =>
     .catch(err => reject(err))
 );
 
-const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
-  server
+const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
+  getServer(env)
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()
@@ -51,8 +59,8 @@ const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((reso
     .catch(err => reject(err));
 });
 
-const pay = (destination, currency, currencyIssuer, amount, stellarKeys) => new Promise((resolve, reject) => {
-  server
+const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) => new Promise((resolve, reject) => {
+  getServer(env)
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()

@@ -22,17 +22,18 @@ export default class PaymentForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.contacts.length > nextProps.contacts.length) {
-      const newContact = this.getContact(this.dest.value);
+    if (this.props.contacts.length < nextProps.contacts.length) {
+      const newContact = this.getContact(nextProps.contacts);
       if (newContact) {
         this.dest.value = newContact.accountId;
       }
     }
   }
 
-  getContact() {
+  getContact(contactList = null) {
     const id = this.dest.value;
-    return this.props.contacts.find(contact => contact.acountId === id || contact.fedId === id);
+    const contacts = contactList || this.props.contacts;
+    return contacts.find(contact => contact.acountId === id || contact.fedId === id);
   }
 
   handleSubmit(evt) {

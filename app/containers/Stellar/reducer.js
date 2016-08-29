@@ -11,7 +11,7 @@ import {
 } from './constants';
 
 const initialState = {
-  network: 'test', // test | public
+  env: 'test', // test | public
   stellarKeys: {
     accountId: 'GCRN5SVVM72CYTBS3RM4GNDYBJFXR23DW6MRJZKDUQFAFIWNSGJDCAOV',
     secret: 'SAEWX3BJ2SXHWPULBS7SZJ7R5KJ6WDNPORQP5256KA7XD36LOCPRJ2ZD',

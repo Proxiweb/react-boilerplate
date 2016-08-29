@@ -1,8 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { loadAccount, trust as trustAction, pay, fedLookup } from './actions';
 import TrustForm from 'components/TrustForm';
 import PaymentForm from 'components/PaymentForm';
+
+import {
+  selectContacts,
+  default as selectStellarDomain,
+} from './selectors';
 
 class StellarMain extends Component { // eslint-disable-line
   static propTypes = {
@@ -11,6 +17,7 @@ class StellarMain extends Component { // eslint-disable-line
     trust: PropTypes.func.isRequired,
     pay: PropTypes.func.isRequired,
     lookup: PropTypes.func.isRequired,
+    contacts: PropTypes.array.isRequired,
   }
 
   constructor(props, context) {
@@ -74,6 +81,9 @@ const mapDispatchToProps = (dispatch) => ({
   lookup: (name) => dispatch(fedLookup(name)),
 });
 
-const mapStateToProps = (state) => ({ account: state.stellar });
+const mapStateToProps = createStructuredSelector({
+  account: selectStellarDomain(),
+  contacts: selectContacts(),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(StellarMain);
