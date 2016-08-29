@@ -8,3 +8,6 @@ export const TRUST_SUCCESS = 'stellar/TRUST_SUCCESS';
 export const PAY = 'stellar/PAY';
 export const PAY_ERROR = 'stellar/PAY_ERROR';
 export const PAY_SUCCESS = 'stellar/PAY_SUCCESS';
+export const FEDERATION = 'stellar/FEDERATION';
+export const FEDERATION_SUCCESS = 'stellar/FEDERATION_SUCCESS';
+export const FEDERATION_ERROR = 'stellar/FEDERATION_ERROR';

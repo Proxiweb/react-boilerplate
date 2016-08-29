@@ -1,6 +1,18 @@
 import { take, put, call } from 'redux-saga/effects';
-import { LOAD_ACCOUNT, TRUST, PAY } from './constants';
-import { loadAccount, loadAccountError, accountLoaded, paymentsLoaded, trustError, trusted, paid, payError } from './actions';
+import { LOAD_ACCOUNT, TRUST, PAY, FEDERATION } from './constants';
+import {
+  loadAccount,
+  loadAccountError,
+  accountLoaded,
+  paymentsLoaded,
+  trustError,
+  trusted,
+  paid,
+  payError,
+  fedLookupSuccess,
+  fedLookupError,
+} from './actions';
+
 import api from 'utils/stellarApi';
 
 export function* loadAccountSaga() {
@@ -44,7 +56,20 @@ export function* paySaga() {
   }
 }
 
+export function* lookupSaga() {
+  while(1) { // eslint-disable-line
+    const action = yield take(FEDERATION);
+    try {
+      const adresse = yield call(api.fedLookup, action.payload.name);
+      yield put(fedLookupSuccess(adresse));
+    } catch (err) {
+      yield put(fedLookupError(err));
+    }
+  }
+}
+
 export default [
+  lookupSaga,
   paySaga,
   loadAccountSaga,
   trustSaga,

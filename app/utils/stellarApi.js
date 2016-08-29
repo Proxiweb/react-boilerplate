@@ -1,4 +1,7 @@
+import request from 'superagent';
 import StellarSdk from 'stellar-sdk';
+import toml from 'toml';
+
 StellarSdk.Network.useTestNetwork();
 
 const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
@@ -70,8 +73,36 @@ const pay = (destination, currency, currencyIssuer, amount, stellarKeys) => new 
     .catch(err => reject(err));
 });
 
+const fedLookup = (name) => new Promise((resolve, reject) => {
+  const hostname = name.split('*')[1];
+  return request
+    .get(`https://${hostname}/.well-known/stellar.toml`)
+    .end((err, resp) => {
+      if (err) {
+        reject(err);
+      }
+      const configJSON = toml.parse(resp.text);
+      const fedServer = configJSON.FEDERATION_SERVER;
+      return request
+        .get(`${fedServer}?q=${name}&type=name`)
+        .type('text/plain')
+        .end((error, response) => {
+          if (error) {
+            reject(error);
+          }
+
+          if (!response.body.account_id) {
+            reject();
+          }
+
+          resolve(response.body.account_id);
+        });
+    });
+});
+
 
 module.exports = {
+  fedLookup,
   pay,
   trust,
   loadAccount,

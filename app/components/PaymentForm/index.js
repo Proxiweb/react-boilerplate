@@ -4,11 +4,13 @@ export default class PaymentForm extends Component {
     pay: PropTypes.func.isRequired,
     stellarKeys: PropTypes.object.isRequired,
     balances: PropTypes.array.isRequired,
+    fedLookup: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   handleSubmit(evt) {
@@ -21,11 +23,17 @@ export default class PaymentForm extends Component {
     }
   }
 
+  handleBlur() {
+    if (this.dest.value.indexOf('*') !== -1) {
+      this.props.fedLookup(this.dest.value);
+    }
+  }
+
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="form-group">
-          <input type="text" className="form-control" placeholder="destination address" ref={(node) => { this.dest = node; }} defaultValue="GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI" />
+          <input type="text" onBlur={this.handleBlur} className="form-control" placeholder="destination address" ref={(node) => { this.dest = node; }} defaultValue="regisg*lobstr.co" /> {/** GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI**/}
         </div>
         <div className="form-group">
           <select ref={(node) => { this.currency = node; }} className="form-control" defaultValue="XLM">
@@ -38,6 +46,12 @@ export default class PaymentForm extends Component {
         </div>
         <div className="form-group">
           <input type="number" className="form-control" placeholder="montant" ref={(node) => { this.amount = node; }} />
+        </div>
+        <div className="form-group">
+          <input type="text" className="form-control" placeholder="memo" ref={(node) => { this.memo = node; }} />
+        </div>
+        <div className="form-group">
+          <input type="text" className="form-control" placeholder="destinationTag" ref={(node) => { this.destinationTag = node; }} />
         </div>
         <button className="btn btn-primary btn-block" type="submit">PAYER</button>
       </form>

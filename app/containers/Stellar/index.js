@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadAccount, trust, pay } from './actions';
+import { loadAccount, trust, pay, fedLookup } from './actions';
 import TrustForm from 'components/TrustForm';
 import PaymentForm from 'components/PaymentForm';
 
@@ -10,6 +10,7 @@ class StellarMain extends Component { // eslint-disable-line
     loadAccount: PropTypes.func.isRequired,
     trust: PropTypes.func.isRequired,
     pay: PropTypes.func.isRequired,
+    lookup: PropTypes.func.isRequired,
   }
 
   constructor(props, context) {
@@ -53,7 +54,13 @@ class StellarMain extends Component { // eslint-disable-line
           </div>
         )}
       { this.state.action === 'show_trust' && <TrustForm stellarKeys={this.props.account.stellarKeys} trust={this.props.trust} />}
-      { this.state.action === 'show_payment' && <PaymentForm stellarKeys={this.props.account.stellarKeys} pay={this.props.pay} balances={this.props.account.balances} />}
+      { this.state.action === 'show_payment' && (
+        <PaymentForm
+          stellarKeys={this.props.account.stellarKeys}
+          pay={this.props.pay}
+          fedLookup={this.props.lookup}
+          balances={this.props.account.balances}
+        />)}
     </div>);
   }
 }
@@ -62,6 +69,7 @@ const mapDispatchToProps = (dispatch) => ({
   loadAccount: (accountId) => dispatch(loadAccount(accountId)),
   trust: (currencyCode, maxTrust, issuer, stellarKeys) => dispatch(trust(currencyCode, maxTrust, issuer, stellarKeys)),
   pay: (dest, currency, currencyIssuer, amount, stellarKeys) => dispatch(pay(dest, currency, currencyIssuer, amount, stellarKeys)),
+  lookup: (name) => dispatch(fedLookup(name)),
 });
 
 const mapStateToProps = (state) => ({ account: state.stellar });

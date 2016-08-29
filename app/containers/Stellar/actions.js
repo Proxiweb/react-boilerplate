@@ -9,6 +9,9 @@ import {
   PAY,
   PAY_SUCCESS,
   PAY_ERROR,
+  FEDERATION,
+  FEDERATION_SUCCESS,
+  FEDERATION_ERROR,
 } from './constants';
 
 export const loadAccount = (accountId) => ({
@@ -72,4 +75,19 @@ export const payError = (err) => ({
 export const paid = (res) => ({
   type: PAY_SUCCESS,
   payload: { res },
+});
+
+export const fedLookup = (name) => ({
+  type: FEDERATION,
+  payload: { name },
+});
+
+export const fedLookupSuccess = (accountId) => ({
+  type: FEDERATION_SUCCESS,
+  payload: { accountId },
+});
+
+export const fedLookupError = (err) => ({
+  type: FEDERATION_ERROR,
+  payload: { err },
 });
