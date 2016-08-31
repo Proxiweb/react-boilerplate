@@ -1,5 +1,6 @@
 /* eslint-disable global-require */
 const express = require('express');
+const proxy = require('express-http-proxy');
 const path = require('path');
 const compression = require('compression');
 const pkg = require(path.resolve(process.cwd(), 'package.json'));

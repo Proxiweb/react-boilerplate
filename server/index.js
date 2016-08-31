@@ -15,7 +15,16 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// if (argv.proxy) {
+  // const pxhost = process.env.npm_config_pxhost || '127.0.0.1';
+  // const pxport = process.env.npm_config_pxport || '3312';
+  //
+  // console.log(`proxy sur http://${pxhost}:${pxport}`); // eslint-disable-line
+  //
+  // app.use('/api', proxy(`http://${pxhost}:${pxport}/`));
+// } else {
 app.use('/api', routes);
+// }
 
 app.use((err, req, res, next) => {  // eslint-disable-line
   if (err.name === 'UnauthorizedError') {
