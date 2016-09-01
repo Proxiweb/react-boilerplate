@@ -1,5 +1,6 @@
 /* eslint-disable global-require */
 const express = require('express');
+const proxy = require('express-http-proxy');
 const path = require('path');
 const compression = require('compression');
 const pkg = require(path.resolve(process.cwd(), 'package.json'));
@@ -16,6 +17,13 @@ const addDevMiddlewares = (app, webpackConfig) => {
     silent: true,
     stats: 'errors-only',
   });
+
+  const pxhost = process.env.npm_config_pxhost || '127.0.0.1';
+  const pxport = process.env.npm_config_pxport || '3312';
+
+  console.log(`proxy sur http://${pxhost}:${pxport}`); // eslint-disable-line
+
+  app.use('/api', proxy(`http://${pxhost}:${pxport}/`));
 
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
