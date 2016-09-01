@@ -1,5 +1,5 @@
 import { take, call, put, select } from 'redux-saga/effects';
-import { get } from 'utils/apiClient';
+import apiClient from 'utils/apiClient';
 import Notifications from 'react-notification-system-redux';
 import { logout } from 'containers/Login/actions';
 import omit from 'lodash/omit';
@@ -13,7 +13,7 @@ export function* apiFetcherSaga() {
       const actionSuffix = action.type.split('/');
       const actionTypeSplt = actionSuffix[2].split('_');
 
-      const {actionType, url, ...datas} = action;  // eslint-disable-line
+      const {actionType, url, ...rest} = action;  // eslint-disable-line
       const sfx = `${actionSuffix[0]}/${actionSuffix[1]}/`;
 
       actionTypeSplt.pop();
@@ -28,9 +28,12 @@ export function* apiFetcherSaga() {
       const headers = state.compteUtilisateur.token ? { Authorization: `Bearer ${state.compteUtilisateur.token}` } : {};
       const { msgPending, msgSuccess, msgError } = action;
       const query = action.query || {};
+      const datas = action.datas || {};
+      const method = action.method || 'get';
+      const options = { query, datas, headers, method };
 
       try {
-        const res = yield call(get, `/api/${url}`, headers, query);
+        const res = yield call(apiClient[method], `/api/${url}`, options);
         yield put(assign({ type: success, datas: res.datas, req: omit(action, 'type'), msgPending, msgSuccess, msgError }));
       } catch (exception) {
         if (exception.message && exception.message.error === 'La session a expirée') {

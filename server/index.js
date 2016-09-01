@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('./logger');
-const routes = require('./api');
+// const routes = require('./api');
 
 const argv = require('minimist')(process.argv.slice(2));
 const setup = require('./middlewares/frontendMiddleware');
@@ -23,7 +23,7 @@ app.use(bodyParser.json());
   //
   // app.use('/api', proxy(`http://${pxhost}:${pxport}/`));
 // } else {
-app.use('/api', routes);
+// app.use('/api', routes);
 // }
 
 app.use((err, req, res, next) => {  // eslint-disable-line

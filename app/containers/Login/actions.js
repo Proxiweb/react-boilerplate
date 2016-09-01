@@ -14,8 +14,9 @@ import {
 export function login(username, password, redirectPathname = null) {
   return {
     type: lc.ASYNC_LOGIN_START,
-    url: '/login',
-    query: { username, password },
+    url: 'login',
+    method: 'post',
+    datas: { username, password },
     redirectPathname,
   };
 }

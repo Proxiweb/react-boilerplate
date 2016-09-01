@@ -1,12 +1,12 @@
 import request from 'superagent';
 
 
-export function get(url, headers = {}, query = {}) {
+export function get(url, options = { headers: {}, query: {} }) {
   return new Promise((resolve, reject) => request
     .get(url)
-    .query(query)
+    .query(options.query)
     .type('application/json')
-    .set(headers)
+    .set(options.headers)
     .end((err, res) => {
       if (err) {
         try {
@@ -19,12 +19,12 @@ export function get(url, headers = {}, query = {}) {
     }));
 }
 
-export function post(url, datas, headers = {}) {
+export function post(url, options = { headers: {}, query: {}, datas: {} }) {
   return new Promise((resolve, reject) => request
     .post(url)
     .type('application/json')
-    .set(headers)
-    .send(datas)
+    .set(options.headers)
+    .send(options.datas)
     .end((err, res) => {
       if (err) {
         try {
@@ -36,3 +36,8 @@ export function post(url, datas, headers = {}) {
       resolve({ datas: res.body });
     }));
 }
+
+export default {
+  post,
+  get,
+};

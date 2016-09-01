@@ -223,6 +223,7 @@
     "redux-form": "^6.0.0-rc.4",
     "redux-immutable": "3.0.7",
     "redux-saga": "0.11.0",
+    "redux-socket.io": "^1.2.0",
     "reselect": "2.5.3",
     "sanitize.css": "4.1.0",
     "stellar-sdk": "^0.5.1",
