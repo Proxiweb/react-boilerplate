@@ -1,7 +1,9 @@
 /* eslint-disable global-require */
 const express = require('express');
 const httpProxy = require('http-proxy');
+const proxy2 = require('express-http-proxy');
 const path = require('path');
+const logger = require('../logger');
 const compression = require('compression');
 const pkg = require(path.resolve(process.cwd(), 'package.json'));
 
@@ -65,15 +67,22 @@ const addProdMiddlewares = (app, options) => {
  */
 module.exports = (app, options) => {
   const isProd = process.env.NODE_ENV === 'production';
-  const targetUrl = `http://${pxhost}:${pxport}`;
+  const targetUrl = `http://${pxhost}:${pxport}/`;
 
-  console.log(`proxy sur ${targetUrl}`); // eslint-disable-line
+  console.log(`Proxy sur ${targetUrl}`); // eslint-disable-line
   const proxy = httpProxy.createProxyServer({
     target: targetUrl,
     ws: true,
   });
 
-  app.use('/api', (req, res) => proxy.web(req, res, { target: targetUrl }));
+  proxy.on('error', (e) => {
+    if (e.code === 'ECONNREFUSED') {
+      logger.error('Erreur de connection avec le backend');
+    }
+  });
+
+
+  app.use('/api', proxy2(targetUrl));
   app.use('/ws', (req, res) => proxy.web(req, res, { target: `${targetUrl}/ws` }));
 
   if (isProd) {

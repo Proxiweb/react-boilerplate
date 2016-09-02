@@ -195,6 +195,7 @@
     "fontfaceobserver": "2.0.1",
     "getconfig": "^3.0.0",
     "history": "3.0.0",
+    "http-proxy": "^1.14.0",
     "immutable": "3.8.1",
     "intl": "1.2.4",
     "invariant": "2.2.1",
