@@ -1,8 +1,12 @@
 /* eslint-disable global-require */
 const express = require('express');
+const httpProxy = require('http-proxy');
 const path = require('path');
 const compression = require('compression');
 const pkg = require(path.resolve(process.cwd(), 'package.json'));
+
+const pxhost = process.env.npm_config_pxhost || '127.0.0.1';
+const pxport = process.env.npm_config_pxport || '3312';
 
 // Dev middleware
 const addDevMiddlewares = (app, webpackConfig) => {
@@ -61,6 +65,16 @@ const addProdMiddlewares = (app, options) => {
  */
 module.exports = (app, options) => {
   const isProd = process.env.NODE_ENV === 'production';
+  const targetUrl = `http://${pxhost}:${pxport}`;
+
+  console.log(`proxy sur ${targetUrl}`); // eslint-disable-line
+  const proxy = httpProxy.createProxyServer({
+    target: targetUrl,
+    ws: true,
+  });
+
+  app.use('/api', (req, res) => proxy.web(req, res, { target: targetUrl }));
+  app.use('/ws', (req, res) => proxy.web(req, res, { target: `${targetUrl}/ws` }));
 
   if (isProd) {
     addProdMiddlewares(app, options);
@@ -68,6 +82,7 @@ module.exports = (app, options) => {
     const webpackConfig = require('../../internals/webpack/webpack.dev.babel');
     addDevMiddlewares(app, webpackConfig);
   }
+
 
   return app;
 };

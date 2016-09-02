@@ -1,31 +1,48 @@
 import { Schema, arrayOf } from 'normalizr';
 
-const commande = new Schema('commande');
-const commandeUtilisateur = new Schema('commandeUtilisateur');
-const utilisateur = new Schema('utilisateur');
-const commandeContenu = new Schema('commandeContenu');
-const offre = new Schema('offre');
-const produit = new Schema('produit');
+const commandes = new Schema('commandes');
+// const commandeUtilisateurs = new Schema('commandeUtilisateurs');
+// const utilisateurs = new Schema('utilisateurs');
+const fournisseurs = new Schema('fournisseurs');
+const commandeContenus = new Schema('commandeContenus');
+const offres = new Schema('offres');
+const livraisons = new Schema('livraisons');
+const relais = new Schema('relais');
+const produits = new Schema('produits');
 
-offre.define({
-  produit,
+
+// commandeUtilisateur.define({
+//   utilisateur,
+//   contenus: arrayOf(commandeContenu),
+// });
+
+livraisons.define({
+  relai: relais,
 });
 
-commandeContenu.define({
-  offre,
+offres.define({
+  commandeContenus: arrayOf(commandeContenus),
 });
 
-commandeUtilisateur.define({
-  utilisateur,
-  contenus: arrayOf(commandeContenu),
+produits.define({
+  offres: arrayOf(offres),
 });
 
-commande.define({
-  commandeUtilisateurs: arrayOf(commandeUtilisateur),
+fournisseurs.define({
+  produits: arrayOf(produits),
+});
+
+commandes.define({
+  fournisseurs: arrayOf(fournisseurs),
+  livraisons: arrayOf(livraisons),
 });
 
 export const schemas = {
-  COMMANDE_UTILISATEUR: commandeUtilisateur,
-  COMMANDE_CONTENU: commandeContenu,
-  COMMANDE: commande,
+  RELAIS: relais,
+  FOURNISSEURS: fournisseurs,
+  PRODUITS: produits,
+  COMMANDE_CONTENUS: commandeContenus,
+  COMMANDES: commandes,
+  OFFRES: offres,
+  LIVRAISONS: livraisons,
 };

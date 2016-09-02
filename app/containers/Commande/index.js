@@ -7,40 +7,62 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
+// import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
-import { selectAsyncState, selectCommandesUtilisateur } from './selectors'; // selectCommandesUtilisateur
+import { selectAsyncState, selectCommandes, nombreAchats } from './selectors'; // selectCommandesUtilisateur
 import styles from './styles.css';
 
-import { loadCommandes, ajouter } from './actions';
+import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './actions';
 
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    commandes: PropTypes.array.isRequired,
+    commandes: PropTypes.object.isRequired,
+    quantiteAchetee: PropTypes.number.isRequired,
     asyncState: PropTypes.object.isRequired,
     loadCommandes: PropTypes.func.isRequired,
+    loadCommande: PropTypes.func.isRequired,
     ajouter: PropTypes.func.isRequired,
   }
 
+  constructor(props) {
+    super(props);
+    this.selectCommande = this.selectCommande.bind(this);
+    this.state = {
+      commandeSelected: null,
+    };
+  }
+
+  selectCommande(id) {
+    this.setState({ commandeSelected: id });
+  }
+
   render() {
-    const { asyncState, commandes } = this.props;
-    if (commandes && commandes.length > 0) {
+    const { asyncState, commandes, loadCommande, quantiteAchetee } = this.props;
+    if (commandes && Object.keys(commandes).length > 0) {
       return (
-        <div>
-          {commandes.map(
-            commande =>
-              commande
-                .commandeUtilisateurs
-                .filter(cu => cu.utilisateur.id === 2)
-                .map(cu => cu.contenus.map(cont => (
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => this.props.ajouter(cont.id, 1)}
-                  >
-                    Ajouter ({cont.quantite})
-                  </button>)
-                ))
-            )}
-        </div>);
+        <div className="row">
+          <div className="col-md-6">
+            <ul>
+              {Object.keys(commandes).filter(key => !commandes[key].terminee).sort(key => !commandes[key].noCommande).map(
+                (key, idx) =>
+                  <li key={idx}>
+                    <button
+                      className="btn btn-default"
+                      onClick={() => this.selectCommande(commandes[key].id)}
+                    >
+                      {commandes[key].noCommande}
+                    </button>
+                    {' '}<button onClick={() => loadCommande(commandes[key].id)} className="btn btn-primary">Charger...</button>
+                  </li>
+                )}
+            </ul>
+          </div>
+          <div className="col-md-6">
+            {this.state.commandeSelected && <h1>{commandes[this.state.commandeSelected].noCommande}</h1>}
+            {this.state.commandeSelected && <h2>{ quantiteAchetee }</h2>}
+          </div>
+        </div>
+      );
     }
 
     return (
@@ -75,7 +97,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
 const mapStateToProps = createStructuredSelector({
   // commandes: selectCommandesUtilisateur(1),
-  commandes: selectCommandesUtilisateur(2),
+  commandes: selectCommandes(),
+  quantiteAchetee: nombreAchats('3b98ddd3-4b59-4d84-9ecc-e2f11297a033'),
   asyncState: selectAsyncState(),
 });
 
@@ -83,6 +106,7 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     loadCommandes: (page) => dispatch(loadCommandes(page)),
+    loadCommande: (id) => dispatch(loadCommandeAction(id)),
     ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),
   };
 }

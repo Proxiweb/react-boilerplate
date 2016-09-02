@@ -5,6 +5,8 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
+import createSocketIoMiddleware from 'redux-socket.io';
+import io from 'socket.io-client/socket.io';
 
 // import * as storage from 'redux-storage';
 // import createSessionStorageEngine from 'redux-storage-engine-sessionstorage';
@@ -14,6 +16,9 @@ import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 const devtools = window.devToolsExtension || (() => noop => noop);
+
+const socket = io('', { path: '/ws' });
+const socketIoMiddleware = createSocketIoMiddleware(socket, 'SERVER/');
 
 export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
@@ -26,6 +31,7 @@ export default function configureStore(initialState = {}, history) {
     sagaMiddleware,
     // storageMiddleware,
     routerMiddleware(history),
+    socketIoMiddleware,
   ];
 
   const enhancers = [

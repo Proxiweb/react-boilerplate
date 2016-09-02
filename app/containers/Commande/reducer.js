@@ -40,7 +40,7 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_COMMANDES_START:
       return update(state, { pending: { $set: true } });
     case c.ASYNC_LOAD_COMMANDES_SUCCESS: {
-      const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDE));
+      const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDES));
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
     case c.AJOUTER:
