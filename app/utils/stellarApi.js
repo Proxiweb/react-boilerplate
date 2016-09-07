@@ -52,7 +52,7 @@ const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise(
         .build();
       transaction.sign(StellarSdk.Keypair.fromSeed(stellarKeys.secret));
 
-      return server.submitTransaction(transaction)
+      return getServer(env).submitTransaction(transaction)
           .then(transactionResult => resolve(transactionResult))
           .catch(err => reject(err));
     })
@@ -74,7 +74,7 @@ const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) =>
         }))
         .build();
       transaction.sign(StellarSdk.Keypair.fromSeed(stellarKeys.secret));
-      return server.submitTransaction(transaction)
+      return getServer(env).submitTransaction(transaction)
           .then(transactionResult => resolve(transactionResult))
           .catch(err => reject(err));
     })

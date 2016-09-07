@@ -20,8 +20,8 @@ class StellarMain extends Component { // eslint-disable-line
     contacts: PropTypes.array.isRequired,
   }
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.handleChangeAction = this.handleChangeAction.bind(this);
     this.state = {
       action: 'show_balance',

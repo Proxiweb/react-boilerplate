@@ -24,6 +24,7 @@ export default class LoginForm extends Component {
     login: PropTypes.func.isRequired,
     googleLogin: PropTypes.func.isRequired,
     onSuccessRedirect: PropTypes.string,
+    user: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -62,7 +63,7 @@ export default class LoginForm extends Component {
                 <input type="password" className="form-control" ref="password" style={{ width: '100%' }} />
               </div>
               <div className="text-center withMarginTop">
-                <button className="btn btn-primary" type="submit">Se connecter</button>
+                <button className="btn btn-primary" type="submit">Se connecter{this.props.user.loading && ' ...'}</button>
               </div>
             </div>
           </form>

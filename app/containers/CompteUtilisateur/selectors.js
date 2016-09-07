@@ -23,3 +23,8 @@ export const selectProfile = createSelector(
   selectCompteUtilisateur,
   (auth) => ({ nom: auth.nom, prenom: auth.prenom })
 );
+
+export const selectLoading = createSelector(
+  selectCompteUtilisateurDomain,
+  (substate) => substate.loading
+);

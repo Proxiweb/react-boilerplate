@@ -3,7 +3,6 @@ import {
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
   LOAD_ACCOUNT,
-  LOAD_PAYMENTS,
   LOAD_PAYMENTS_SUCCESS,
   PAY,
   TRUST,
@@ -43,7 +42,6 @@ function syncContact(state, payload) {
 
 const stellarReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_PAYMENTS:
     case TRUST:
     case PAY:
     case LOAD_ACCOUNT:

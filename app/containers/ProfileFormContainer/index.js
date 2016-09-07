@@ -12,8 +12,7 @@ export default class ProfileFormContainer extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(datas) {
-    console.log(datas);
+  handleSubmit() {
     this.props.afterSubmit();
   }
 

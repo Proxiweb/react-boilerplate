@@ -61,7 +61,7 @@ export default function createRoutes(store) {
       },
     }, {
       path: '/commandes',
-      name: 'commande',
+      name: 'commandes',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('containers/Commande/reducer'),
@@ -78,6 +78,33 @@ export default function createRoutes(store) {
         });
         importModules.catch(errorLoading);
       },
+      childRoutes: [{
+        path: ':commandeId',
+        name: 'commande',
+        getComponent(nextState, cb) {
+          System.import('containers/CommandeEdit')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+        childRoutes: [{
+          path: 'typeProduits/:typeProduitId',
+          name: 'typeProduits',
+          getComponent(nextState, cb) {
+            System.import('containers/CommandeEdit')
+              .then(loadModule(cb))
+              .catch(errorLoading);
+          },
+          childRoutes: [{
+            path: 'produits/:produitId',
+            name: 'produits',
+            getComponent(nextState, cb) {
+              System.import('containers/CommandeEdit')
+                .then(loadModule(cb))
+                .catch(errorLoading);
+            },
+          }],
+        }],
+      }],
     }, {
       path: '/stellar',
       getComponent(location, cb) {

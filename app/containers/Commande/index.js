@@ -7,7 +7,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-// import { Link } from 'react-router';
+import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import { selectAsyncState, selectCommandes, nombreAchats } from './selectors'; // selectCommandesUtilisateur
 import styles from './styles.css';
@@ -22,6 +22,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     loadCommandes: PropTypes.func.isRequired,
     loadCommande: PropTypes.func.isRequired,
     ajouter: PropTypes.func.isRequired,
+    children: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -41,25 +42,23 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-3">
             <ul>
               {Object.keys(commandes).filter(key => !commandes[key].terminee).sort(key => !commandes[key].noCommande).map(
                 (key, idx) =>
                   <li key={idx}>
-                    <button
-                      className="btn btn-default"
-                      onClick={() => this.selectCommande(commandes[key].id)}
-                    >
+                    <Link to={`/commandes/${key}`}>
                       {commandes[key].noCommande}
-                    </button>
+                    </Link>
                     {' '}<button onClick={() => loadCommande(commandes[key].id)} className="btn btn-primary">Charger...</button>
                   </li>
                 )}
             </ul>
           </div>
-          <div className="col-md-6">
+          <div className="col-md-9">
             {this.state.commandeSelected && <h1>{commandes[this.state.commandeSelected].noCommande}</h1>}
             {this.state.commandeSelected && <h2>{ quantiteAchetee }</h2>}
+            {this.props.children}
           </div>
         </div>
       );
