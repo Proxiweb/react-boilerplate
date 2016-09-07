@@ -90,7 +90,6 @@ export const selectOffresByProduit = () => createSelector(
   selectOffres(),
   (produits, produitId, offres) => {
     if (!produitId || !produits) return null;
-    console.log('select!');
     return produits
             .find(pdt => pdt.id === produitId)
             .offres
