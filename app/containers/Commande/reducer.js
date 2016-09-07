@@ -8,6 +8,8 @@ import c from './constants';
 import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
 import merge from 'lodash.merge';
+import omit from 'lodash.omit';
+// import assign from 'lodash.assign';
 
 const initialState = {
   pending: false,
@@ -45,6 +47,23 @@ function commandeReducer(state = initialState, action) {
     }
     case c.AJOUTER:
       return ajouter(state, action);
+    case c.NOUVEL_ACHAT: {
+      const nCommandeContenus = { ...state.datas.entities.commandeContenus, [action.datas.id]: action.datas };
+      return update(state, {
+        datas: { entities: { commandeContenus: { $set: nCommandeContenus } } },
+      });
+    }
+    case c.SUPPRESSION_ACHAT: {
+      const nCommandeContenus = omit(state.datas.entities.commandeContenus, action.datas.id);
+      return update(state, {
+        datas: { entities: { commandeContenus: { $set: nCommandeContenus } } },
+      });
+    }
+    case c.MODIF_ACHAT: {
+      return update(state, {
+        datas: { entities: { commandeContenus: { $set: { ...state.datas.entities.commandeContenus, [action.datas.id]: action.datas } } } },
+      });
+    }
     default:
       return state;
   }

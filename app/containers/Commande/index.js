@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
-import { selectAsyncState, selectCommandes, nombreAchats } from './selectors'; // selectCommandesUtilisateur
+import { selectAsyncState, selectCommandes } from './selectors'; // selectCommandesUtilisateur
 import styles from './styles.css';
 
 import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './actions';
@@ -38,7 +38,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   }
 
   render() {
-    const { asyncState, commandes, loadCommande, quantiteAchetee } = this.props;
+    const { asyncState, commandes, loadCommande } = this.props;
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
@@ -57,7 +57,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
           </div>
           <div className="col-md-9">
             {this.state.commandeSelected && <h1>{commandes[this.state.commandeSelected].noCommande}</h1>}
-            {this.state.commandeSelected && <h2>{ quantiteAchetee }</h2>}
             {this.props.children}
           </div>
         </div>
@@ -97,7 +96,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 const mapStateToProps = createStructuredSelector({
   // commandes: selectCommandesUtilisateur(1),
   commandes: selectCommandes(),
-  quantiteAchetee: nombreAchats('3b98ddd3-4b59-4d84-9ecc-e2f11297a033'),
   asyncState: selectAsyncState(),
 });
 

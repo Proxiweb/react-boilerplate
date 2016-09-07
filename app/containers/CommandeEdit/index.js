@@ -11,8 +11,11 @@ import { Link } from 'react-router';
 import {
   selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
+  computeNombreCommandeContenus,
   selectOffresByProduit,
+  selectNombreAcheteurs,
   selectParams,
+  selectQuantiteOffresAchetees,
 } from 'containers/Commande/selectors';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
@@ -24,7 +27,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   static propTypes = {
     typeProduits: PropTypes.array.isRequired,
     produits: PropTypes.array,
+    contenus: PropTypes.number,
+    quantiteOffresAchetees: PropTypes.array,
     offres: PropTypes.array,
+    acheteurs: PropTypes.number,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
   }
@@ -40,7 +46,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   }
 
   render() {
-    const { typeProduits, produits, offres, params } = this.props;
+    const { typeProduits, produits, acheteurs, quantiteOffresAchetees, params, contenus } = this.props;
     const { commandeId, typeProduitId } = params;
     return (
       <div className={styles.commandeEdit}>
@@ -55,18 +61,25 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           { typeProduits && typeProduits.map((type, index) => <option key={index} value={type.id}>{type.nom}</option>)}
         </select>
         {produits && (
-          <ul>
-            {
-              produits.map((pdt, idx) => (
-                <li key={idx}>
-                  <Link to={`/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${pdt.id}`}>{pdt.nom}</Link>
-                </li>))
-            }
-          </ul>
+          <div>
+            <ul>
+              {
+                produits.map((pdt, idx) => (
+                  <li key={idx}>
+                    <Link to={`/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${pdt.id}`}>{pdt.nom}</Link>
+                  </li>))
+              }
+            </ul>
+          </div>
         )}
-        {offres && (<ul>
-          {offres.map((offre, idx) => <li key={idx}>{offre.id}</li>)}
-        </ul>)}
+        {quantiteOffresAchetees && (
+          <div>
+            <ul>
+              {quantiteOffresAchetees.map((offre, idx) => <li key={idx}>{offre.id} : {offre.quantiteTotal}</li>)}
+            </ul>
+          </div>
+        )}
+        { acheteurs && <h1>{acheteurs} - { contenus }</h1>}
       </div>
     );
   }
@@ -76,6 +89,9 @@ const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
   offres: selectOffresByProduit(),
+  acheteurs: selectNombreAcheteurs(),
+  quantiteOffresAchetees: selectQuantiteOffresAchetees(),
+  contenus: computeNombreCommandeContenus(),
   params: selectParams(),
 });
 

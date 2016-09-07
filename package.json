@@ -204,6 +204,7 @@
     "lodash": "^4.15.0",
     "lodash.intersection": "^4.4.0",
     "lodash.merge": "^4.6.0",
+    "lodash.omit": "^4.5.0",
     "lodash.uniq": "^4.5.0",
     "moment": "^2.14.1",
     "normalizr": "^2.2.1",

@@ -16,6 +16,13 @@ import {
 
 import api from 'utils/stellarApi';
 
+export function* logger() {
+  while (1) { // eslint-disable-line
+    const action = yield take('*');
+    console.log({action, state: select()}); // eslint-disable-line
+  }
+}
+
 export function* loadAccountSaga() {
   while(1) { // eslint-disable-line
     const action = yield take(LOAD_ACCOUNT);
@@ -74,6 +81,7 @@ export function* lookupSaga() {
 }
 
 export default [
+  logger,
   lookupSaga,
   paySaga,
   loadAccountSaga,

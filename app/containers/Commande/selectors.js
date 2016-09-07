@@ -10,18 +10,14 @@ const selectCommandeId = () => (state, props) => props.params.commandeId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
 
-/**
- * Other specific selectors
- */
-
-
-/**
- * Default selector used by Commande
- */
-
 export const selectCommandes = () => createSelector(
-  selectCommandeDomain(),
+  [selectCommandeDomain()],
   (substate) => substate.datas.entities.commandes
+);
+
+export const selectCommandeContenus = () => createSelector(
+  selectCommandeDomain(),
+  (substate) => substate.datas.entities.commandeContenus
 );
 
 export const selectFournisseurs = () => createSelector(
@@ -97,54 +93,37 @@ export const selectOffresByProduit = () => createSelector(
   }
 );
 
-export const nombreAchats = () => createSelector(
-  selectCommandeDomain(),
-  (substate) => {
-    if (!substate.datas.entities.commandeContenus) return null;
-    const contenus = substate.datas.entities.commandeContenus;
+export const selectQuantiteOffresAchetees = () => createSelector(
+  [selectOffresByProduit(), selectCommandeContenus(), selectCommandeId()],
+  (offres, commandeContenus, commandeId) => {
+    if (!commandeContenus || !offres) return null;
+    return offres.map(offre => ({
+      ...offre,
+      quantiteTotal: Object.keys(commandeContenus)
+                      .map(key => commandeContenus[key])
+                      .filter(contenu => contenu.offreId === offre.id && contenu.commandeId === commandeId)
+                      .reduce((memo, contenu) => memo + contenu.quantite, 0),
+    }));
+  }
+);
+
+export const selectNombreAcheteurs = () => createSelector(
+  [selectCommandes(), selectCommandeContenus(), selectCommandeId()],
+  (commandes, commandeContenus, commandeId) => {
+    if (!commandeContenus || !commandeId) return null;
     return uniq(
-      Object.keys(contenus)
-        .filter(key => contenus[key].commandeId === '3b98ddd3-4b59-4d84-9ecc-e2f11297a033')
-        .map(key => contenus[key])
+      Object.keys(commandeContenus)
+        .filter(key => commandeContenus[key].commandeId === commandeId)
+        .map(key => commandeContenus[key])
       , 'utilisateurId'
     ).length;
   }
 );
 
-// export const selectCommandes = () => createSelector(
-//   selectCommandeDomain(),
-//   selectResults(),
-//   (substate, result) => {
-//     const { commande, commandeUtilisateur, commandeContenu, utilisateur, offre, produit } = substate.datas.entities;
-//     if (!commande) return null;
-//
-//     return result
-//       .map(id => commande[id])
-//         .map(cmde => ({
-//           ...cmde,
-//           commandeUtilisateurs: cmde.commandeUtilisateurs.map(
-//             id => commandeUtilisateur[id]
-//           ).map(cu => ({
-//             ...cu,
-//             utilisateur: utilisateur[cu.utilisateur],
-//             contenus: cu.contenus.map(id => commandeContenu[id])
-//                         .map(cont => ({
-//                           ...cont,
-//                           offre: merge(offre[cont.offre], { produit: produit[offre[cont.offre].produit] }),
-//                         })),
-//           })),
-//         })
-//       );
-//   }
-// );
-
-// export const selectCommandesUtilisateur = (utilisateurId) => createSelector(
-//   selectCommandesDatas(),
-//   (commandes) => {
-//     if (!commandes) return null;
-//     return commandes.filter(commande => commande.commandeUtilisateurs.find(cu => cu.utilisateur.id === utilisateurId));
-//   }
-// );
+export const computeNombreCommandeContenus = () => createSelector(
+  selectCommandeContenus(),
+  (commandeContenus) => Object.keys(commandeContenus).length
+);
 
 export const selectAsyncState = () => createSelector(
   selectCommandeDomain(),
