@@ -64,7 +64,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     }
 
     return (
-      <div className={styles.commande}>
+      <div className={`${styles.commande} row`}>
         <Helmet
           title="Commande"
           meta={[

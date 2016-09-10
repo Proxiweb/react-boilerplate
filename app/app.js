@@ -20,6 +20,7 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import useScroll from 'react-router-scroll';
 import LanguageProvider from 'containers/LanguageProvider';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import configureStore from './store';
 
 // Import global saga
@@ -30,7 +31,8 @@ import { translationMessages } from './i18n';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/sanitize.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'flexboxgrid';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -41,7 +43,7 @@ const store = configureStore(initialState, browserHistory);
 
 // starting globals sagas
 globalSagas.map(store.runSaga);
-
+injectTapEventPlugin();
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState
 // must be provided for resolving how to retrieve the "route" in the state
@@ -63,15 +65,17 @@ const render = (translatedMessages) => {
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={translatedMessages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
-            // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
+          <MuiThemeProvider>
+            <Router
+              history={history}
+              routes={rootRoute}
+              render={
+                // Scroll to top when going to a new page, imitating default browser
+                // behaviour
+                applyRouterMiddleware(useScroll())
+              }
+            />
+          </MuiThemeProvider>
       </LanguageProvider>
     </Provider>,
     document.getElementById('app')

@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import GoogleLogin from 'react-google-login';
 import styles from './styles.css';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 const testDatas = {
   El: '118310941698171104056',
@@ -41,8 +43,8 @@ export default class LoginForm extends Component {
   handleFormSubmit(event) {
     event.preventDefault();
     this.props.login(
-      this.refs.username.value,
-      this.refs.password.value,
+      this.username.getValue(),
+      this.password.getValue(),
       this.props.onSuccessRedirect
     );
   }
@@ -54,17 +56,9 @@ export default class LoginForm extends Component {
           <h3 className={styles.formHeader}>Déjà client ?</h3>
           <form className="form form-inline" onSubmit={this.handleFormSubmit}>
             <div className="col-md-6 col-md-offset-3">
-              <div className="form-group">
-                <label>Identifiant</label>
-                <input type="text" className="form-control" ref="username" autoFocus style={{ width: '100%' }} />
-              </div>
-              <div className="form-group">
-                <label>Mot de passe</label>
-                <input type="password" className="form-control" ref="password" style={{ width: '100%' }} />
-              </div>
-              <div className="text-center withMarginTop">
-                <button className="btn btn-primary" type="submit">Se connecter{this.props.user.loading && ' ...'}</button>
-              </div>
+                <TextField hintText="Identifiant" floatingLabelText="Identifiant" ref={ (node) => this.username = node}/>
+                <TextField hintText="Mot de passe" floatingLabelText="Mot de passe" ref={ (node) => this.password = node} type="password" />
+                <RaisedButton primary label="Se connecter" type="submit" />
             </div>
           </form>
         </div>
