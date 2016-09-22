@@ -9,7 +9,23 @@
 }
 
 .mainContent {
-  padding-top: 70px;
+  padding-top: 20px;
+}
+
+:global .with-margin-top {
+    margin-top: 20px;
+}
+
+:global .with-margin-bottom {
+    margin-bottom: 10px;
+}
+
+:global .text-center {
+    text-align: center;
+}
+
+:global .text-right {
+    text-align: right;
 }
 
 body {

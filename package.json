@@ -105,6 +105,7 @@
     },
     "rules": {
       "arrow-parens": ["error", "always"],
+      "indent": ["error", 2],
       "arrow-body-style": [
         2,
         "as-needed"

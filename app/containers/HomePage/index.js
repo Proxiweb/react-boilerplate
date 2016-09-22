@@ -32,7 +32,7 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
     const { asyncDatas1, asyncDatas2 } = this.props;
     return (
       <div className="row text-center">
-        <div className="col-md-12 text-center">
+        <div className={`col-md-12 ${styles.commandes}`}>
           <h1>
             <FormattedMessage {...messages.header} />
           </h1>

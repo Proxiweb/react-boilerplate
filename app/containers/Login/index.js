@@ -20,7 +20,7 @@ export class Login extends React.Component { // eslint-disable-line react/prefer
 
   render() {
     return (
-      <div className={`container ${styles.login}`}>
+      <div className={`${styles.login}`}>
         <LoginForm {...this.props} onSuccessRedirect="/votre-compte" />
         {this.props.user.loading && (
           <div className="row start-md">

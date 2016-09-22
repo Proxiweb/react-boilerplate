@@ -1,16 +1,12 @@
-/*
- *
- * Commande
- *
- */
-
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
+import Offre from 'components/Offre';
 import { selectAsyncState, selectCommandes } from './selectors'; // selectCommandesUtilisateur
 import styles from './styles.css';
+import choux from './choux.jpg';
 
 import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './actions';
 
@@ -47,10 +43,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               {Object.keys(commandes).filter(key => !commandes[key].terminee).sort(key => !commandes[key].noCommande).map(
                 (key, idx) =>
                   <li key={idx}>
-                    <Link to={`/commandes/${key}`}>
-                      {commandes[key].noCommande}
-                    </Link>
-                    {' '}<button onClick={() => loadCommande(commandes[key].id)} className="btn btn-primary">Charger...</button>
+                    <Link to={`/commandes/${key}`}>{commandes[key].noCommande}</Link>
+                  {' '}<button onClick={() => loadCommande(commandes[key].id)} className="btn btn-primary">Charger...</button>
                   </li>
                 )}
             </ul>
@@ -64,37 +58,176 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     }
 
     return (
-      <div className={`${styles.commande} row`}>
-        <Helmet
-          title="Commande"
-          meta={[
-            { name: 'description', content: 'Description of Commande' },
-          ]}
-        />
-        <h1>Commandes</h1>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <button
-            onClick={() => this.props.loadCommandes(0)}
-            className="btn btn-primary"
-          >
-            <span>{ !asyncState.pending && 'Charger les commandes, page 0'} { asyncState.pending && 'loading...' }</span>
-          </button>
+      <div>
+        <div className={`${styles.commande} row`}>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={100}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <div className="col-md-4 with-margin-bottom">
+            <Offre
+              nom="Choux à la crème 3/12"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav={false}
+            />
+          </div>
+          <Helmet
+            title="Commande"
+            meta={[
+              { name: 'description', content: 'Description of Commande' },
+            ]}
+          />
+        { false && (
+          <div>
+            <h1>Commandes</h1>
+            <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+              <button
+                onClick={() => this.props.loadCommandes(0)}
+                className="btn btn-primary"
+              >
+                <span>{ !asyncState.pending && 'Charger les commandes, page 0'} { asyncState.pending && 'loading...' }</span>
+              </button>
+            </div>
+            <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+              <button
+                onClick={() => this.props.loadCommandes(1)}
+                className="btn btn-primary"
+              >
+                <span>{ !asyncState.pending && 'Charger les commandes, page 1'} { asyncState.pending && 'loading...' }</span>
+              </button>
+            </div>
+          </div>
+        )}
         </div>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <button
-            onClick={() => this.props.loadCommandes(1)}
-            className="btn btn-primary"
-          >
-            <span>{ !asyncState.pending && 'Charger les commandes, page 1'} { asyncState.pending && 'loading...' }</span>
-          </button>
-        </div>
-      </div>
-    );
+      </div>);
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  // commandes: selectCommandesUtilisateur(1),
   commandes: selectCommandes(),
   asyncState: selectAsyncState(),
 });

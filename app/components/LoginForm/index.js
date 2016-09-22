@@ -55,10 +55,12 @@ export default class LoginForm extends Component {
         <div className={`col-md-6 ${styles.paddedHoriz}`}>
           <h3 className={styles.formHeader}>Déjà client ?</h3>
           <form className="form form-inline" onSubmit={this.handleFormSubmit}>
-            <div className="col-md-6 col-md-offset-3">
+            <div className="col-md-6 col-md-offset-3 text-center">
                 <TextField hintText="Identifiant" floatingLabelText="Identifiant" ref={ (node) => this.username = node}/>
                 <TextField hintText="Mot de passe" floatingLabelText="Mot de passe" ref={ (node) => this.password = node} type="password" />
-                <RaisedButton primary label="Se connecter" type="submit" />
+                <div className="with-margin-top">
+                    <RaisedButton primary label="Se connecter" type="submit" />
+                </div>
             </div>
           </form>
         </div>
