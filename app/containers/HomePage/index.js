@@ -57,6 +57,7 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
   }
 }
 
+
 const mapStateToProps = (state) => ({
   asyncDatas1: selectAsyncDatas1(state),
   asyncDatas2: selectAsyncDatas2(state),

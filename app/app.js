@@ -18,10 +18,24 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import useScroll from 'react-router-scroll';
+
+import FontFaceObserver from 'fontfaceobserver';
+import { useScroll } from 'react-router-scroll';
+import configureStore from './store';
+
+const openSansObserver = new FontFaceObserver('Open Sans', {});
+import styles from 'containers/App/styles.css';
+// When Open Sans is loaded, add a font-family using Open Sans to the body
+openSansObserver.load().then(() => {
+  document.body.classList.add(styles.fontLoaded);
+}, () => {
+  document.body.classList.remove(styles.fontLoaded);
+});
+
+
+// Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import configureStore from './store';
 
 // Import global saga
 import globalSagas from 'containers/App/sagas';
@@ -60,25 +74,24 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
-
-const render = (translatedMessages) => {
+const render = (messages) => {
   ReactDOM.render(
     <Provider store={store}>
-      <LanguageProvider messages={translatedMessages}>
-          <MuiThemeProvider>
-            <Router
-              history={history}
-              routes={rootRoute}
-              render={
-                // Scroll to top when going to a new page, imitating default browser
-                // behaviour
-                applyRouterMiddleware(useScroll())
-              }
-            />
-          </MuiThemeProvider>
+      <LanguageProvider messages={messages}>
+        <MuiThemeProvider>
+          <Router
+            history={history}
+            routes={rootRoute}
+            render={
+              // Scroll to top when going to a new page, imitating default browser
+              // behaviour
+              applyRouterMiddleware(useScroll())
+            }
+          />
+        </MuiThemeProvider>
       </LanguageProvider>
     </Provider>,
-    document.getElementById('app')
+    document.getElementById('app'),
   );
 };
 
