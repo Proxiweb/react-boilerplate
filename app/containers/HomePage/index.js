@@ -32,11 +32,11 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
     const { asyncDatas1, asyncDatas2 } = this.props;
     return (
       <div className="row text-center">
-         <div className="col-md-12 text-center">
-             <h1>
-                 <FormattedMessage {...messages.header} />
-             </h1>
-         </div>
+        <div className="col-md-12 text-center">
+          <h1>
+            <FormattedMessage {...messages.header} />
+          </h1>
+        </div>
         <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
           <MessageBox asyncState={asyncDatas1} />
           <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
