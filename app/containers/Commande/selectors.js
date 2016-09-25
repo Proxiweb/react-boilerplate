@@ -4,11 +4,12 @@ import uniq from 'lodash.uniq';
 /**
  * Direct selector to the commande state domain
  */
-const selectCommandeDomain = () => state => state.commandes;
+const selectCommandeDomain = () => (state) => state.commandes;
 export const selectParams = () => (state, props) => props.params;
 const selectCommandeId = () => (state, props) => props.params.commandeId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
+const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';
 
 export const selectCommandes = () => createSelector(
   [selectCommandeDomain()],
@@ -23,7 +24,7 @@ export const selectCommandeContenus = () => createSelector(
 export const selectFournisseurs = () => createSelector(
   selectCommandeDomain(),
   (substate) => Object.keys(substate.datas.entities.fournisseurs)
-                  .map(key => substate.datas.entities.fournisseurs[key])
+                  .map((key) => substate.datas.entities.fournisseurs[key])
                   .filter((fourn) => fourn.visible)
 );
 
@@ -42,11 +43,26 @@ export const selectOffres = () => createSelector(
   (substate) => substate.datas.entities.offres
 );
 
+export const selectOffresRelais = () => createSelector(
+  selectOffres(),
+  selectRelaisId(),
+  (offres, relaisId) => {
+    if (!offres) return null;
+    const map = Object.keys(offres)
+      .filter((key) => {
+        return offres[key].active && offres[key].relaiId === relaisId;
+      })
+      .map((key) => offres[key]);
+    return map;
+  }
+);
+
 export const selectResults = () => createSelector(
   selectCommandeDomain(),
   (substate) => substate.datas.result
 );
 
+/* tous les produits de ma commandes */
 export const selectCommandeProduits = () => createSelector(
   selectCommandes(),
   selectCommandeId(),
@@ -56,52 +72,66 @@ export const selectCommandeProduits = () => createSelector(
     if (!commandeId) return null;
     const fournisseursCommande = commandes[commandeId].fournisseurs;
     return Object.keys(produits)
-            .filter(key => fournisseursCommande.indexOf(produits[key].fournisseurId) !== -1)
-            .map(key => produits[key])
-            .filter(pdt => pdt.enStock);
+            .filter((key) => fournisseursCommande.indexOf(produits[key].fournisseurId) !== -1)
+            .map((key) => produits[key])
+            .filter((pdt) => pdt.enStock);
   }
 );
 
+/* tous les types produits de la commande */
 export const selectCommandeTypesProduits = () => createSelector(
   selectCommandeProduits(),
   selectTypesProduits(),
   (produits, typeProduits) => {
     if (!produits) return null;
-    return uniq(produits.map(pdt => pdt.typeProduitId)).map(id => typeProduits[id]);
+    return uniq(produits.map((pdt) => pdt.typeProduitId)).map((id) => typeProduits[id]);
   }
 );
 
+/* les produits pour un typedeProduit donné */
 export const selectCommandeProduitsByTypeProduit = () => createSelector(
   selectCommandeProduits(),
   selectTypeProduitId(),
   (produits, typeProduitId) => {
     if (!typeProduitId || !produits) return null;
-    return produits.filter(pdt => pdt.typeProduitId === typeProduitId);
+    return produits.filter((pdt) => pdt.typeProduitId === typeProduitId);
   }
 );
 
+/* un produit */
+export const selectProduit = () => createSelector(
+    selectCommandeProduitsByTypeProduit(),
+    selectProduitId(),
+    (produits, produitId) => (produits ? produits.find((pdt) => pdt.produitId === produitId) : null)
+);
+
+/* les offres d'un produit */
 export const selectOffresByProduit = () => createSelector(
-  selectCommandeProduitsByTypeProduit(),
-  selectProduitId(),
-  selectOffres(),
-  (produits, produitId, offres) => {
-    if (!produitId || !produits) return null;
-    return produits
-            .find(pdt => pdt.id === produitId)
-            .offres
-            .map(offreId => offres[offreId]);
+  selectProduit(),
+  selectOffresRelais(),
+  (produit, offres) => {
+    if (!produit || !offres) return null;
+    return offres.filter((offre) => offre.produitId === produit.id);
   }
 );
+
+//
+// export const selectedTypeProduct = () => createSelector(
+//     selectTypeProduitId(),
+//     selectCommandeTypesProduits(),
+//     (typeProduitId, typesProduits) => (typesProduits && typeProduitId ? typesProduits.find((type) => type.id === typeProduitId) : null)
+// );
 
 export const selectQuantiteOffresAchetees = () => createSelector(
   [selectOffresByProduit(), selectCommandeContenus(), selectCommandeId()],
   (offres, commandeContenus, commandeId) => {
     if (!commandeContenus || !offres) return null;
-    return offres.map(offre => ({
+
+    return offres.map((offre) => ({
       ...offre,
       quantiteTotal: Object.keys(commandeContenus)
-                      .map(key => commandeContenus[key])
-                      .filter(contenu => contenu.offreId === offre.id && contenu.commandeId === commandeId)
+                      .map((key) => commandeContenus[key])
+                      .filter((contenu) => contenu.offreId === offre.id && contenu.commandeId === commandeId)
                       .reduce((memo, contenu) => memo + contenu.quantite, 0),
     }));
   }
@@ -113,8 +143,8 @@ export const selectNombreAcheteurs = () => createSelector(
     if (!commandeContenus || !commandeId) return null;
     return uniq(
       Object.keys(commandeContenus)
-        .filter(key => commandeContenus[key].commandeId === commandeId)
-        .map(key => commandeContenus[key])
+        .filter((key) => commandeContenus[key].commandeId === commandeId)
+        .map((key) => commandeContenus[key])
       , 'utilisateurId'
     ).length;
   }

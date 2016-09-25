@@ -5,7 +5,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import { orange800, green500, cyan500 } from 'material-ui/styles/colors';
 
 const offre = ({ imageSrc, nom, tarif, prct, fav }) => (
-  <Card>
+  <Card style={{ marginBottom: 20 }}>
     <CardHeader
       title={nom}
       subtitle={tarif}
@@ -44,7 +44,6 @@ const offre = ({ imageSrc, nom, tarif, prct, fav }) => (
 offre.propTypes = {
   imageSrc: PropTypes.string.isRequired,
   nom: PropTypes.string.isRequired,
-  subtitle: PropTypes.string.isRequired,
   prct: PropTypes.number.isRequired,
   fav: PropTypes.bool.isRequired,
   tarif: PropTypes.string.isRequired,

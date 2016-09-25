@@ -51,7 +51,7 @@ export default class LoginForm extends Component {
 
   render() {
     return (
-      <div className="row">
+      <div className={`row ${styles.login}`}>
         <div className={`col-md-6 ${styles.paddedHoriz}`}>
           <h3 className={styles.formHeader}>Déjà client ?</h3>
           <form className="form form-inline" onSubmit={this.handleFormSubmit}>

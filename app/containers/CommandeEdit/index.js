@@ -6,6 +6,8 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import {
@@ -33,6 +35,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     acheteurs: PropTypes.number,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
+    selectedTypeProduct: PropTypes.object,
   }
 
   constructor(props) {
@@ -40,9 +43,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange() {
+  handleChange(event, index, value) {
     const { params } = this.props;
-    this.props.pushState(`/commandes/${params.commandeId}/typeProduits/${this.select.value}`);
+    this.props.pushState(`/commandes/${params.commandeId}/typeProduits/${value}`);
   }
 
   render() {
@@ -56,10 +59,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <FormattedMessage {...messages.header} />
-        <select className="form-control" onChange={this.handleChange} ref={(node) => { this.select = node; }}>
-          { typeProduits && typeProduits.map((type, index) => <option key={index} value={type.id}>{type.nom}</option>)}
-        </select>
+        <h1><FormattedMessage {...messages.header} /></h1>
+        <SelectField value={typeProduitId} onChange={this.handleChange}>
+          { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
+        </SelectField>
         {produits && (
           <div>
             <ul>
@@ -75,7 +78,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         {quantiteOffresAchetees && (
           <div>
             <ul>
-              {quantiteOffresAchetees.map((offre, idx) => <li key={idx}>{offre.id} : {offre.quantiteTotal}</li>)}
+              {quantiteOffresAchetees.map((offre, idx) => {
+                const produit = produits.find((pdt) => pdt.id === offre.produitId);
+                return <li key={idx}>{produit.nom} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}</li>;
+              })}
             </ul>
           </div>
         )}
@@ -88,6 +94,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
+  // selectedTypeProduct: selectedTypeProduct(),
   offres: selectOffresByProduit(),
   acheteurs: selectNombreAcheteurs(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),

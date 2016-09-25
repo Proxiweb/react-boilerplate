@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import RaisedButton from 'material-ui/RaisedButton';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
@@ -40,11 +41,11 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
         <div className="row">
           <div className="col-md-3">
             <ul>
-              {Object.keys(commandes).filter(key => !commandes[key].terminee).sort(key => !commandes[key].noCommande).map(
+              {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
                 (key, idx) =>
-                  <li key={idx}>
+                  <li key={idx} styles={styles.commande}>
                     <Link to={`/commandes/${key}`}>{commandes[key].noCommande}</Link>
-                  {' '}<button onClick={() => loadCommande(commandes[key].id)} className="btn btn-primary">Charger...</button>
+                  {' '}<RaisedButton label="Charger..." onClick={() => loadCommande(commandes[key].id)}></RaisedButton>
                   </li>
                 )}
             </ul>
@@ -57,10 +58,10 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       );
     }
 
-    return (
+    return (selectOffresByProduit
       <div>
         <div className={`${styles.commande} row`}>
-          <div className="col-md-4 with-margin-bottom">
+          {false && <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -68,8 +69,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -77,8 +76,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={100}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -86,8 +83,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -95,8 +90,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -104,8 +97,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
+          </div>}
+          {false && <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -113,8 +106,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -122,8 +113,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -131,8 +120,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -140,8 +127,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -149,8 +134,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
+          </div>}
+          {false && <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -158,8 +143,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -167,8 +150,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -176,8 +157,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -185,8 +164,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
-          <div className="col-md-4 with-margin-bottom">
             <Offre
               nom="Choux à la crème 3/12"
               tarif="1.05 € au lieu de 1.25 €"
@@ -194,14 +171,14 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav={false}
             />
-          </div>
+          </div>}
           <Helmet
             title="Commande"
             meta={[
               { name: 'description', content: 'Description of Commande' },
             ]}
           />
-        { false && (
+        { true && (
           <div>
             <h1>Commandes</h1>
             <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>

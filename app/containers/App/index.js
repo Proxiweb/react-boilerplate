@@ -50,14 +50,14 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
     const unloggedHide = !user ? { display: 'none' } : {};
     const loggedHide = user ? { display: 'none' } : {};
     return (
-      <div>
+      <div className={styles.allContent}>
         <Toolbar>
           <ToolbarGroup firstChild>
             <DropDownMenu value={this.state.value} onChange={this.handleChange} iconStyle={{ fill: 'black' }}>
-              <MenuItem value={1} primaryText="Accueil" containerElement={<Link to="/" />} />
-              <MenuItem value={2} primaryText="Commandes" containerElement={<Link to="/commandes" />} />
-              <MenuItem value={3} primaryText="Login" containerElement={<Link to="/login" />} style={loggedHide} />
-              <MenuItem value={4} primaryText="Votre compte" containerElement={<Link to="/votre-compte" />} style={unloggedHide} />
+              <MenuItem value={1} primaryText="Accueil" containerElement={<Link to="/">Login</Link>} />
+              <MenuItem value={2} primaryText="Commandes" containerElement={<Link to="/commandes">Commandes</Link>} />
+              <MenuItem value={3} primaryText="Login" containerElement={<Link to="/login">Login</Link>} style={loggedHide} />
+              <MenuItem value={4} primaryText="Votre compte" containerElement={<Link to="/votre-compte">Votre compte</Link>} style={unloggedHide} />
               <MenuItem value={6} primaryText="Active Voice" />
               <MenuItem value={7} primaryText="Active Text" />
             </DropDownMenu>
@@ -87,4 +87,4 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
   }
 }
 
-export default connect(state => ({ user: state.compteUtilisateur.auth }))(App);
+export default connect((state) => ({ user: state.compteUtilisateur.auth }))(App);
