@@ -56,10 +56,10 @@ export const selectOffresRelais = () => createSelector(
   selectRelaisId(),
   (offres, relaisId) => {
     if (!offres) return null;
-    const map = Object.keys(offres)
-      .filter((key) => offres[key].active && offres[key].relaiId === relaisId)
-      .map((key) => offres[key]);
-    return map;
+    return Object.keys(offres).filter((key) => {
+      // console.log('offres', offres[key].relaiId, relaisId);
+      return offres[key].active && offres[key].relaiId === relaisId;
+    });
   }
 );
 
@@ -125,9 +125,12 @@ export const selectProduit = () => createSelector(
 export const selectOffresByProduit = () => createSelector(
   selectProduit(),
   selectOffresRelais(),
-  (produit, offres) => {
+  selectOffres(),
+  (produit, offresRelais, offres) => {
     if (!produit || !offres) return null;
-    return offres.filter((offre) => offre.produitId === produit.id);
+    return offresRelais
+            .filter((key) => offres[key].produitId === produit.id)
+            .map((key) => offres[key]);
   }
 );
 

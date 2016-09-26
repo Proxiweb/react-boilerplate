@@ -3,10 +3,29 @@
  * CommandeEdit reducer
  *
  */
-
+import update from 'react-addons-update';
+import findIndex from 'lodash.findindex';
 import {
-  DEFAULT_ACTION,
+  AJOUTER,
+  SUPPRIMER,
 } from './constants';
+
+
+const ajouter = (state, offre) => {
+  const idx = findIndex(state.contenus, { offreId: offre.offreId });
+
+  if (idx === -1) {
+    return update(state, { contenus: { $push: [offre] } });
+  }
+
+  const nQte = state.contenus[idx].quantite + 1;
+  return update(state, { contenus: { [idx]: { quantite: { $set: nQte } } } });
+};
+
+const supprimer = (state, offreId) => {
+  const newContenus = state.contenus.filter((cont) => cont.offreId !== offreId);
+  return update(state, { contenus: { $set: newContenus } });
+};
 
 const initialState = {
   commandeId: null,
@@ -18,12 +37,15 @@ const initialState = {
   prestationRelai: null,
   recolteFond: null,
   utilisateurId: null,
+  contenus: [],
 };
 
 function commandeEditReducer(state = initialState, action) {
   switch (action.type) {
-    case DEFAULT_ACTION:
-      return state;
+    case AJOUTER:
+      return ajouter(state, action.payload.offre);
+    case SUPPRIMER:
+      return supprimer(state, action.payload.offreId);
     default:
       return state;
   }

@@ -4,4 +4,5 @@
  *
  */
 
-export const DEFAULT_ACTION = 'app/CommandeEdit/DEFAULT_ACTION';
+export const AJOUTER = 'app/CommandeEdit/AJOUTER';
+export const SUPPRIMER = 'app/CommandeEdit/SUPPRIMER';

@@ -45,7 +45,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
                 (key, idx) =>
                   <li key={idx} styles={styles.commande}>
                     <Link to={`/commandes/${key}`}>{commandes[key].noCommande}</Link>
-                  {' '}<RaisedButton label="Charger..." onClick={() => loadCommande(commandes[key].id)}></RaisedButton>
+                  {' '}<RaisedButton label="Charger..." onClick={() => loadCommande(commandes[key].id)} />
                   </li>
                 )}
             </ul>

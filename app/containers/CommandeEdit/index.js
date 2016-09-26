@@ -8,21 +8,26 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import {
   selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
   computeNombreCommandeContenus,
+  selectOffres,
   selectOffresByProduit,
   selectNombreAcheteurs,
   selectParams,
   selectQuantiteOffresAchetees,
   selectUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
+import { selectCommande } from './selectors';
+import { ajouter, supprimer } from './actions';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import { FormattedMessage } from 'react-intl';
+import DetailCommande from 'components/DetailCommande';
 import messages from './messages';
 import styles from './styles.css';
 
@@ -32,12 +37,16 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     produits: PropTypes.array,
     contenus: PropTypes.number,
     quantiteOffresAchetees: PropTypes.array,
-    offres: PropTypes.array,
+    offres: PropTypes.object.isRequired,
+    // offresRelais: PropTypes.object.isRequired,
     acheteurs: PropTypes.number,
     pushState: PropTypes.func.isRequired,
+    ajouter: PropTypes.func.isRequired,
+    supprimer: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     selectedTypeProduct: PropTypes.object,
     commandeUtilisateur: PropTypes.object,
+    commande: PropTypes.commande,
   }
 
   constructor(props) {
@@ -51,7 +60,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   }
 
   render() {
-    const { typeProduits, produits, acheteurs, quantiteOffresAchetees, params, commandeUtilisateur } = this.props;
+    const { typeProduits, produits, acheteurs, quantiteOffresAchetees, params, commande, offres, supprimer } = this.props;
     const { commandeId, typeProduitId } = params;
     return (
       <div className={styles.commandeEdit}>
@@ -82,13 +91,17 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             <ul>
               {quantiteOffresAchetees.map((offre, idx) => {
                 const produit = produits.find((pdt) => pdt.id === offre.produitId);
-                return <li key={idx}>{produit.nom} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}</li>;
+                return (<li key={idx}>
+                  {produit.nom} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
+                  <RaisedButton onClick={() => this.props.ajouter({ offreId: offre.id, quantite: 1 })} label="Ajouter" />
+                </li>);
               })}
             </ul>
           </div>
         )}
         { acheteurs && <h1>{acheteurs}</h1>}
-        { !commandeUtilisateur && <h1>Panier vide</h1>}
+        { (!commande || commande.contenus.length === 0) && <h1>Panier vide</h1>}
+        { commande && commande.contenus.length > 0 && <DetailCommande contenus={commande.contenus} offres={offres} supprimer={supprimer} />}
       </div>
     );
   }
@@ -98,12 +111,13 @@ const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
   // selectedTypeProduct: selectedTypeProduct(),
-  offres: selectOffresByProduit(),
+  offres: selectOffres(),
   acheteurs: selectNombreAcheteurs(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),
-  // contenus: computeNombreCommandeContenus(),
+  // offresRelais: selectOffresRelais(),
   commandeUtilisateur: selectUtilisateurCommandeUtilisateur(),
   params: selectParams(),
+  commande: selectCommande(),
 });
 
 
@@ -111,6 +125,8 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: (url) => dispatch(push(url)),
+    ajouter: (offre) => dispatch(ajouter(offre)),
+    supprimer: (offreId) => dispatch(supprimer(offreId)),
   };
 }
 

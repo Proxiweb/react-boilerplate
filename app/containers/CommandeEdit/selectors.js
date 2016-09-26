@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the commandeEdit state domain
  */
-const selectCommandeEditDomain = () => state => state.get('commandeEdit');
+const selectCommandeEditDomain = () => (state) => state.commande;
 
 /**
  * Other specific selectors
@@ -14,12 +14,12 @@ const selectCommandeEditDomain = () => state => state.get('commandeEdit');
  * Default selector used by CommandeEdit
  */
 
-const selectCommandeEdit = () => createSelector(
+export const selectCommande = () => createSelector(
   selectCommandeEditDomain(),
-  (substate) => substate.toJS()
+  (substate) => substate
 );
 
-export default selectCommandeEdit;
+export default selectCommande;
 export {
   selectCommandeEditDomain,
 };
