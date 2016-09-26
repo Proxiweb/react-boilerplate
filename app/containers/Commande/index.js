@@ -58,7 +58,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       );
     }
 
-    return (selectOffresByProduit
+    return (
       <div>
         <div className={`${styles.commande} row`}>
           {false && <div className="col-md-4 with-margin-bottom">

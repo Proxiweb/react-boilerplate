@@ -6,6 +6,7 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { logout } from '../Login/actions';
 import { selectProfile } from './selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
@@ -60,8 +61,8 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
   }
 }
 
-const mapStateToProps = (state) => ({
-  profile: selectProfile(state),
+const mapStateToProps = createStructuredSelector({
+  profile: selectProfile(),
 });
 
 function mapDispatchToProps(dispatch) {

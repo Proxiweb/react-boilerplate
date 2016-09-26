@@ -82,9 +82,21 @@ export default function createRoutes(store) {
         path: ':commandeId',
         name: 'commande',
         getComponent(nextState, cb) {
-          System.import('containers/CommandeEdit')
-            .then(loadModule(cb))
-            .catch(errorLoading);
+          const importModules = Promise.all([
+            System.import('containers/CommandeEdit/reducer'),
+            System.import('containers/CommandeEdit/sagas'),
+            System.import('containers/CommandeEdit/index'),
+          ]);
+
+          const renderRoute = loadModule(cb);
+
+          importModules.then(([reducer, sagas, component]) => {
+            injectReducer('comande', reducer.default);
+            injectSagas(sagas.default);
+            renderRoute(component);
+          });
+
+          importModules.catch(errorLoading);
         },
         childRoutes: [{
           path: 'typeProduits/:typeProduitId',

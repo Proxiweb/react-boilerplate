@@ -1,7 +1,7 @@
 import { Schema, arrayOf } from 'normalizr';
 
 const commandes = new Schema('commandes');
-// const commandeUtilisateurs = new Schema('commandeUtilisateurs');
+const commandeUtilisateurs = new Schema('commandeUtilisateurs');
 // const utilisateurs = new Schema('utilisateurs');
 const fournisseurs = new Schema('fournisseurs');
 const commandeContenus = new Schema('commandeContenus');
@@ -12,18 +12,18 @@ const produits = new Schema('produits');
 const typeProduits = new Schema('typeProduits');
 
 
-// commandeUtilisateur.define({
-//   utilisateur,
-//   contenus: arrayOf(commandeContenu),
-// });
+commandeUtilisateurs.define({
+  // utilisateur,
+  contenus: arrayOf(commandeContenus),
+});
 
 livraisons.define({
   relai: relais,
 });
 
-offres.define({
-  commandeContenus: arrayOf(commandeContenus),
-});
+// offres.define({
+//   commandeContenus: arrayOf(commandeContenus),
+// });
 
 produits.define({
   offres: arrayOf(offres),
@@ -35,6 +35,7 @@ fournisseurs.define({
 });
 
 commandes.define({
+  commandeUtilisateurs: arrayOf(commandeUtilisateurs),
   fournisseurs: arrayOf(fournisseurs),
   livraisons: arrayOf(livraisons),
 });
@@ -43,6 +44,7 @@ export const schemas = {
   RELAIS: relais,
   FOURNISSEURS: fournisseurs,
   PRODUITS: produits,
+  COMMANDE_UTILISATEURS: commandeUtilisateurs,
   COMMANDE_CONTENUS: commandeContenus,
   COMMANDES: commandes,
   OFFRES: offres,

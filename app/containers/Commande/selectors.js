@@ -1,6 +1,9 @@
 import { createSelector } from 'reselect';
 // import merge from 'lodash.merge';
 import uniq from 'lodash.uniq';
+import flatten from 'lodash.flatten';
+
+import { selectUtilisateurId } from '../CompteUtilisateur/selectors';
 /**
  * Direct selector to the commande state domain
  */
@@ -14,6 +17,11 @@ const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';
 export const selectCommandes = () => createSelector(
   [selectCommandeDomain()],
   (substate) => substate.datas.entities.commandes
+);
+
+export const selectCommandesUtilisateurs = () => createSelector(
+  selectCommandeDomain(),
+  (substate) => substate.datas.entities.commandeUtilisateurs
 );
 
 export const selectCommandeContenus = () => createSelector(
@@ -49,9 +57,7 @@ export const selectOffresRelais = () => createSelector(
   (offres, relaisId) => {
     if (!offres) return null;
     const map = Object.keys(offres)
-      .filter((key) => {
-        return offres[key].active && offres[key].relaiId === relaisId;
-      })
+      .filter((key) => offres[key].active && offres[key].relaiId === relaisId)
       .map((key) => offres[key]);
     return map;
   }
@@ -88,6 +94,16 @@ export const selectCommandeTypesProduits = () => createSelector(
   }
 );
 
+/* les commandesUtilisateurs de la commande */
+export const selectCommandeCommandeUtilisateurs = () => createSelector(
+  selectCommandesUtilisateurs(),
+  selectCommandeId(),
+  (commandesUtilisateurs, commandeId) =>
+    Object.keys(commandesUtilisateurs)
+      .filter((key) => commandesUtilisateurs[key].commandeId === commandeId)
+      .map((key) => commandesUtilisateurs[key])
+);
+
 /* les produits pour un typedeProduit donné */
 export const selectCommandeProduitsByTypeProduit = () => createSelector(
   selectCommandeProduits(),
@@ -102,7 +118,7 @@ export const selectCommandeProduitsByTypeProduit = () => createSelector(
 export const selectProduit = () => createSelector(
     selectCommandeProduitsByTypeProduit(),
     selectProduitId(),
-    (produits, produitId) => (produits ? produits.find((pdt) => pdt.produitId === produitId) : null)
+    (produits, produitId) => (produits ? produits.find((pdt) => pdt.id === produitId) : null)
 );
 
 /* les offres d'un produit */
@@ -122,29 +138,46 @@ export const selectOffresByProduit = () => createSelector(
 //     (typeProduitId, typesProduits) => (typesProduits && typeProduitId ? typesProduits.find((type) => type.id === typeProduitId) : null)
 // );
 
-export const selectQuantiteOffresAchetees = () => createSelector(
-  [selectOffresByProduit(), selectCommandeContenus(), selectCommandeId()],
-  (offres, commandeContenus, commandeId) => {
-    if (!commandeContenus || !offres) return null;
+/* commandesContenus de la commande */
+export const selectCommandeCommandeContenus = () => createSelector(
+  [selectCommandeCommandeUtilisateurs()],
+  (commandesUtilisateurs) => flatten(commandesUtilisateurs.map((cu) => cu.contenus))
+);
 
+
+export const selectQuantiteOffresAchetees = () => createSelector(
+  [selectOffresByProduit(), selectCommandeCommandeContenus(), selectCommandeContenus()],
+  (offres, commandeCommandeContenus, commandeContenus) => {
+    if (!commandeCommandeContenus || !offres) return null;
     return offres.map((offre) => ({
       ...offre,
-      quantiteTotal: Object.keys(commandeContenus)
+      quantiteTotal: commandeCommandeContenus
                       .map((key) => commandeContenus[key])
-                      .filter((contenu) => contenu.offreId === offre.id && contenu.commandeId === commandeId)
+                      .filter((contenu) => contenu && contenu.offreId === offre.id)
                       .reduce((memo, contenu) => memo + contenu.quantite, 0),
     }));
   }
 );
 
+
+export const selectUtilisateurCommandeUtilisateur = () => createSelector(
+  [selectCommandeCommandeUtilisateurs(), selectUtilisateurId()],
+  (commandeCommandeUtilisateurs, utilisateurId) =>
+    commandeCommandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId)
+);
+
 export const selectNombreAcheteurs = () => createSelector(
-  [selectCommandes(), selectCommandeContenus(), selectCommandeId()],
-  (commandes, commandeContenus, commandeId) => {
-    if (!commandeContenus || !commandeId) return null;
+  [selectCommandeCommandeUtilisateurs(), selectCommandeContenus()],
+  (commandeCommandeContenus, commandeContenus) => {
+    if (!commandeContenus) return null;
+    if (commandeCommandeContenus.length === 0) return 0;
     return uniq(
-      Object.keys(commandeContenus)
-        .filter((key) => commandeContenus[key].commandeId === commandeId)
-        .map((key) => commandeContenus[key])
+      commandeCommandeContenus
+        .map((contId) => commandeContenus[contId])
+        .map((cont) => {
+          if (!cont) return {};
+          return cont.utilisateurId;
+        })
       , 'utilisateurId'
     ).length;
   }

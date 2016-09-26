@@ -18,6 +18,7 @@ import {
   selectNombreAcheteurs,
   selectParams,
   selectQuantiteOffresAchetees,
+  selectUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
@@ -36,6 +37,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     selectedTypeProduct: PropTypes.object,
+    commandeUtilisateur: PropTypes.object,
   }
 
   constructor(props) {
@@ -49,7 +51,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   }
 
   render() {
-    const { typeProduits, produits, acheteurs, quantiteOffresAchetees, params, contenus } = this.props;
+    const { typeProduits, produits, acheteurs, quantiteOffresAchetees, params, commandeUtilisateur } = this.props;
     const { commandeId, typeProduitId } = params;
     return (
       <div className={styles.commandeEdit}>
@@ -85,7 +87,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </ul>
           </div>
         )}
-        { acheteurs && <h1>{acheteurs} - { contenus }</h1>}
+        { acheteurs && <h1>{acheteurs}</h1>}
+        { !commandeUtilisateur && <h1>Panier vide</h1>}
       </div>
     );
   }
@@ -98,7 +101,8 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffresByProduit(),
   acheteurs: selectNombreAcheteurs(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),
-  contenus: computeNombreCommandeContenus(),
+  // contenus: computeNombreCommandeContenus(),
+  commandeUtilisateur: selectUtilisateurCommandeUtilisateur(),
   params: selectParams(),
 });
 
