@@ -78,43 +78,42 @@ export default function createRoutes(store) {
         });
         importModules.catch(errorLoading);
       },
+    }, {
+      path: '/commandes/:commandeId',
+      name: 'commande',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/CommandeEdit/reducer'),
+          System.import('containers/CommandeEdit/sagas'),
+          System.import('containers/CommandeEdit/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('commande', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
       childRoutes: [{
-        path: ':commandeId',
-        name: 'commande',
+        path: 'typeProduits/:typeProduitId',
+        name: 'typeProduits',
         getComponent(nextState, cb) {
-          const importModules = Promise.all([
-            System.import('containers/CommandeEdit/reducer'),
-            System.import('containers/CommandeEdit/sagas'),
-            System.import('containers/CommandeEdit/index'),
-          ]);
-
-          const renderRoute = loadModule(cb);
-
-          importModules.then(([reducer, sagas, component]) => {
-            injectReducer('commande', reducer.default);
-            injectSagas(sagas.default);
-            renderRoute(component);
-          });
-
-          importModules.catch(errorLoading);
+          System.import('containers/CommandeEdit')
+            .then(loadModule(cb))
+            .catch(errorLoading);
         },
         childRoutes: [{
-          path: 'typeProduits/:typeProduitId',
-          name: 'typeProduits',
+          path: 'produits/:produitId',
+          name: 'produits',
           getComponent(nextState, cb) {
             System.import('containers/CommandeEdit')
               .then(loadModule(cb))
               .catch(errorLoading);
           },
-          childRoutes: [{
-            path: 'produits/:produitId',
-            name: 'produits',
-            getComponent(nextState, cb) {
-              System.import('containers/CommandeEdit')
-                .then(loadModule(cb))
-                .catch(errorLoading);
-            },
-          }],
         }],
       }],
     }, {

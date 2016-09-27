@@ -230,6 +230,7 @@
     "lodash.intersection": "^4.4.0",
     "lodash.merge": "^4.6.0",
     "lodash.omit": "^4.5.0",
+    "lodash.round": "^4.0.4",
     "lodash.uniq": "^4.5.0",
     "material-ui": "^0.15.4",
     "minimist": "1.2.0",

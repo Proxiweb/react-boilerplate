@@ -78,7 +78,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
             </IconMenu>
           </ToolbarGroup>
         </Toolbar>
-        <div className={`${styles.mainContent} container`}>
+        <div className={`${styles.mainContent} container-fluid`}>
           {React.Children.toArray(this.props.children)}
         </div>
         <ReduxNotifications />

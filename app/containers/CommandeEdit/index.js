@@ -17,6 +17,7 @@ import {
   computeNombreCommandeContenus,
   selectOffres,
   selectOffresByProduit,
+  selectProduits,
   selectNombreAcheteurs,
   selectParams,
   selectQuantiteOffresAchetees,
@@ -46,6 +47,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     params: PropTypes.object.isRequired,
     selectedTypeProduct: PropTypes.object,
     commandeUtilisateur: PropTypes.object,
+    produitsById: PropTypes.object,
     commande: PropTypes.commande,
   }
 
@@ -60,17 +62,17 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   }
 
   render() {
-    const { typeProduits, produits, acheteurs, quantiteOffresAchetees, params, commande, offres, supprimer } = this.props;
+    const { typeProduits, produits, produitsById, acheteurs, quantiteOffresAchetees, params, commande, offres, supprimer } = this.props;
     const { commandeId, typeProduitId } = params;
     return (
-      <div className={styles.commandeEdit}>
+      <div className={`${styles.commandeEdit} row`}>
         <Helmet
           title="CommandeEdit"
           meta={[
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <h1><FormattedMessage {...messages.header} /></h1>
+      <div className="col-md-2">
         <SelectField value={typeProduitId} onChange={this.handleChange}>
           { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
         </SelectField>
@@ -82,26 +84,38 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                   <li key={idx}>
                     <Link to={`/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${pdt.id}`}>{pdt.nom}</Link>
                   </li>))
-              }
+                }
             </ul>
           </div>
-        )}
-        {quantiteOffresAchetees && (
-          <div>
-            <ul>
-              {quantiteOffresAchetees.map((offre, idx) => {
-                const produit = produits.find((pdt) => pdt.id === offre.produitId);
-                return (<li key={idx}>
-                  {produit.nom} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
-                  <RaisedButton onClick={() => this.props.ajouter({ offreId: offre.id, quantite: 1 })} label="Ajouter" />
-                </li>);
-              })}
-            </ul>
-          </div>
-        )}
-        { acheteurs && <h1>{acheteurs}</h1>}
-        { (!commande || commande.contenus.length === 0) && <h1>Panier vide</h1>}
-        { commande && commande.contenus.length > 0 && <DetailCommande contenus={commande.contenus} offres={offres} supprimer={supprimer} />}
+          )}
+        </div>
+        <div className="col-md-5">
+          {quantiteOffresAchetees && (
+            <div>
+              <ul>
+                {quantiteOffresAchetees.map((offre, idx) => {
+                  const produit = produits.find((pdt) => pdt.id === offre.produitId);
+                  return (<li key={idx}>
+                    {produit.nom} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
+                    <RaisedButton onClick={() => this.props.ajouter({ offreId: offre.id, quantite: 1 })} label="Ajouter" />
+                  </li>);
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
+        <div className="col-md-5">
+          { acheteurs && <h1>{acheteurs}</h1>}
+          { (!commande || commande.contenus.length === 0) && <h1>Panier vide</h1>}
+          { commande && commande.contenus.length > 0 && (
+            <DetailCommande
+              contenus={commande.contenus}
+              offres={offres}
+              produits={produitsById}
+              supprimer={supprimer}
+            />
+          )}
+        </div>
       </div>
     );
   }
@@ -113,6 +127,7 @@ const mapStateToProps = createStructuredSelector({
   // selectedTypeProduct: selectedTypeProduct(),
   offres: selectOffres(),
   acheteurs: selectNombreAcheteurs(),
+  produitsById: selectProduits(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),
   // offresRelais: selectOffresRelais(),
   commandeUtilisateur: selectUtilisateurCommandeUtilisateur(),
