@@ -18,12 +18,28 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import useScroll from 'react-router-scroll';
-import LanguageProvider from 'containers/LanguageProvider';
+
+import FontFaceObserver from 'fontfaceobserver';
+import { useScroll } from 'react-router-scroll';
 import configureStore from './store';
+
+import LanguageProvider from 'containers/LanguageProvider';
 
 // Import global saga
 import globalSagas from 'containers/App/sagas';
+
+// Observe loading of Open Sans (to remove open sans, remove the <link> tag in
+// When Open Sans is loaded, add a font-family using Open Sans to the body
+// the index.html file and this observer)
+openSansObserver.load().then(() => {
+  document.body.classList.add(styles.fontLoaded);
+}, () => {
+  document.body.classList.remove(styles.fontLoaded);
+});
+
+import styles from 'containers/App/styles.css';
+const openSansObserver = new FontFaceObserver('Open Sans', {});
+
 
 // Import i18n messages
 import { translationMessages } from './i18n';
@@ -38,6 +54,15 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
+
+// If you use Redux devTools extension, since v2.0.1, they added an
+// `updateStore`, so any enhancers that change the store object
+// could be used with the devTools' store.
+// As this boilerplate uses Redux & Redux-Saga, the `updateStore` is needed
+// if you want to `take` actions in your Sagas, dispatched from devTools.
+if (window.devToolsExtension) {
+  window.devToolsExtension.updateStore(store);
+}
 
 // starting globals sagas
 globalSagas.map(store.runSaga);
@@ -58,11 +83,10 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
-
-const render = (translatedMessages) => {
+const render = (messages) => {
   ReactDOM.render(
     <Provider store={store}>
-      <LanguageProvider messages={translatedMessages}>
+      <LanguageProvider messages={messages}>
         <Router
           history={history}
           routes={rootRoute}

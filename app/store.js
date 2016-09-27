@@ -15,7 +15,7 @@ import io from 'socket.io-client/socket.io';
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
-const devtools = window.devToolsExtension || (() => noop => noop);
+const devtools = window.devToolsExtension || (() => (noop) => noop);
 
 const socket = io('', { path: '/ws' });
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'SERVER/');
