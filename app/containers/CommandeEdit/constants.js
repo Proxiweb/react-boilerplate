@@ -3,6 +3,13 @@
  * CommandeEdit constants
  *
  */
+import assign from 'lodash/assign';
+import generateConstants from 'utils/asyncSagaConstants';
 
-export const AJOUTER = 'app/CommandeEdit/AJOUTER';
-export const SUPPRIMER = 'app/CommandeEdit/SUPPRIMER';
+const AJOUTER_OFFRE = 'app/CommandeEdit/AJOUTER_OFFRE';
+const SUPPRIMER_OFFRE = 'app/CommandeEdit/SUPPRIMER_OFFRE';
+const LOAD_COMMANDE = 'app/CommandeEdit/LOAD_COMMANDE';
+
+const commandeConst = generateConstants('app/CommandeEdit', 'sauvegarder');
+
+export default assign(commandeConst, { AJOUTER_OFFRE, SUPPRIMER_OFFRE, LOAD_COMMANDE });

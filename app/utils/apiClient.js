@@ -37,7 +37,26 @@ export function post(url, options = { headers: {}, query: {}, datas: {} }) {
     }));
 }
 
+export function put(url, options = { headers: {}, query: {}, datas: {} }) {
+  return new Promise((resolve, reject) => request
+    .put(url)
+    .type('application/json')
+    .set(options.headers)
+    .send(options.datas)
+    .end((err, res) => {
+      if (err) {
+        try {
+          reject({ message: JSON.parse(res.text) });
+        } catch (e) {
+          reject({ message: res.text });
+        }
+      }
+      resolve({ datas: res.body });
+    }));
+}
+
 export default {
   post,
   get,
+  put,
 };

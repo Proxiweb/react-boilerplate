@@ -28,6 +28,10 @@
     text-align: right;
 }
 
+:global .padded-horiz {
+  padding: 0 20;
+}
+
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: rgb(185, 199, 221);
