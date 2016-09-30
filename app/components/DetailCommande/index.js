@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
+import styles from './styles.css';
 export default class DetailCommande extends Component { // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.array.isRequired,
@@ -21,7 +22,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
       return memo + ((offre.prix + offre.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0)));
     }, 0) / 100;
     return (
-      <Table selectable={false} multiSelectable={false}>
+      <Table selectable={false} multiSelectable={false} className={styles.bordered}>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn tooltip="Désignation" style={{ paddingLeft: 10, width: 290, paddingRight: 10 }}>Désignation</TableHeaderColumn>
@@ -44,7 +45,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
               {(parseInt((offre.prix + offre.recolteFond), 10) / 100).toFixed(2)}
             </TableRowColumn>
             <TableRowColumn style={{ textAlign: 'right', width: 30, paddingLeft: 5, paddingRight: 5 }}>{contenu.quantite}</TableRowColumn>
-            <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2)}</TableRowColumn>
+            <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
             {!readOnly && (<TableRowColumn style={{ width: 50 }}>
               <button onClick={() => supprimer(contenu.offreId)} style={{ cursor: 'pointer' }}>
                 x

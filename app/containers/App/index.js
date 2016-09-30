@@ -30,7 +30,7 @@ import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-
 class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: React.PropTypes.node,
-    user: React.PropTypes.node,
+    user: React.PropTypes.object,
   };
 
   constructor(props) {

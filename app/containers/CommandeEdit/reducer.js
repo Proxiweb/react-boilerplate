@@ -30,6 +30,7 @@ const initialState = {
   dateLivraison: null,
   datePaiement: null,
   livraisonId: null,
+  plageHoraire: null,
   modifiee: false,
   montant: null,
   prestationRelai: null,
@@ -46,6 +47,7 @@ function commandeEditReducer(state = initialState, action) {
   switch (action.type) {
     case c.AJOUTER_OFFRE:
       return ajouter(state, action.payload.offre);
+
     case c.SUPPRIMER_OFFRE:
       return supprimer(state, action.payload.offreId);
 
@@ -54,6 +56,11 @@ function commandeEditReducer(state = initialState, action) {
 
     case c.LOAD_COMMANDE:
       return { ...state, ...action.payload.datas };
+
+    case c.SET_DISTRIBUTION: {
+      const { plageHoraire, livraisonId } = action.payload;
+      return { ...state, plageHoraire, livraisonId };
+    }
     default:
       return state;
   }

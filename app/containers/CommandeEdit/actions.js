@@ -35,3 +35,10 @@ export function load(datas) {
     payload: { datas },
   };
 }
+
+export function setDistibution(plageHoraire, livraisonId) {
+  return {
+    type: c.SET_DISTRIBUTION,
+    payload: { plageHoraire, livraisonId },
+  };
+}

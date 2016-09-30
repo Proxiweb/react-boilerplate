@@ -1,0 +1,21 @@
+.distributionSelected {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.validation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.distriItem {
+  flex: 3;
+}
+
+.distriButton {
+  flex: 1;
+}

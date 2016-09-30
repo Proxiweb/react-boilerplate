@@ -13,13 +13,11 @@ import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './ac
 
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    commandes: PropTypes.object.isRequired,
-    quantiteAchetee: PropTypes.number.isRequired,
+    commandes: PropTypes.object,
     asyncState: PropTypes.object.isRequired,
     loadCommandes: PropTypes.func.isRequired,
     loadCommande: PropTypes.func.isRequired,
-    ajouter: PropTypes.func.isRequired,
-    children: PropTypes.object.isRequired,
+    children: PropTypes.object,
   }
 
   constructor(props) {
@@ -43,7 +41,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             <ul>
               {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
                 (key, idx) =>
-                  <li key={idx} styles={styles.commande}>
+                  <li key={idx} className={styles.commande}>
                     <Link to={`/commandes/${key}`}>{commandes[key].noCommande}</Link>
                   {' '}<RaisedButton label="Charger..." onClick={() => loadCommande(commandes[key].id)} />
                   </li>

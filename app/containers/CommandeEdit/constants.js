@@ -8,8 +8,9 @@ import generateConstants from 'utils/asyncSagaConstants';
 
 const AJOUTER_OFFRE = 'app/CommandeEdit/AJOUTER_OFFRE';
 const SUPPRIMER_OFFRE = 'app/CommandeEdit/SUPPRIMER_OFFRE';
+const SET_DISTRIBUTION = 'app/CommandeEdit/SET_DISTRIBUTION';
 const LOAD_COMMANDE = 'app/CommandeEdit/LOAD_COMMANDE';
 
 const commandeConst = generateConstants('app/CommandeEdit', 'sauvegarder');
 
-export default assign(commandeConst, { AJOUTER_OFFRE, SUPPRIMER_OFFRE, LOAD_COMMANDE });
+export default assign(commandeConst, { AJOUTER_OFFRE, SUPPRIMER_OFFRE, LOAD_COMMANDE, SET_DISTRIBUTION });

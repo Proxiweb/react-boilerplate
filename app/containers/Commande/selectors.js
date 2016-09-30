@@ -41,6 +41,16 @@ export const selectFournisseurs = () => createSelector(
                   .filter((fourn) => fourn.visible)
 );
 
+export const selectFournisseursCommande = () => createSelector(
+  selectCommandes(),
+  selectCommandeId(),
+  selectFournisseursIds(),
+  (commandes, commandeId, fournisseursIds) => {
+    if (!commandeId || !commandes || !fournisseursIds) return null;
+    return Object.keys(commandes[commandeId].fournisseurs).map((key) => fournisseursIds[key]);
+  }
+);
+
 export const selectProduits = () => createSelector(
   selectCommandeDomain(),
   (substate) => substate.datas.entities.produits
@@ -157,6 +167,17 @@ export const selectOffresByProduit = () => createSelector(
     return offresRelais
             .filter((key) => offres[key].produitId === produit.id)
             .map((key) => offres[key]);
+  }
+);
+
+/* le fournisseur d'un produit */
+export const selectFournisseurProduit = () => createSelector(
+  selectProduit(),
+  selectFournisseursIds(),
+  (produit, fournisseursIds) => {
+    if (!produit) return null;
+    console.log('ici');
+    return fournisseursIds[produit.fournisseurId];
   }
 );
 

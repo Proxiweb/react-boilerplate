@@ -1,3 +1,7 @@
 .commandeEdit { /* stylelint-disable */
     background-color: '#FFF',
 }
+
+.active {
+  background-color: red;
+}

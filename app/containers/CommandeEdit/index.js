@@ -11,10 +11,11 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import { List, ListItem } from 'material-ui/List';
 import Helmet from 'react-helmet';
-import assign from 'lodash/assign';
 import {
   selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
+  selectCommandeProduits,
+  selectFournisseurProduit,
   computeNombreCommandeContenus,
   selectOffres,
   selectOffresByProduit,
@@ -27,12 +28,11 @@ import {
 } from 'containers/Commande/selectors';
 import { selectCommande } from './selectors';
 import { selectUtilisateurId } from 'containers/CompteUtilisateur/selectors';
-import { ajouter, supprimer, sauvegarder, load} from './actions';
+import { ajouter, supprimer, sauvegarder, load, setDistibution } from './actions';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import { FormattedMessage } from 'react-intl';
-import DetailCommande from 'components/DetailCommande';
-import LivraisonSelector from 'components/LivraisonSelector';
+import OrderValidate from 'components/OrderValidate';
 import messages from './messages';
 import styles from './styles.css';
 
@@ -40,7 +40,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   static propTypes = {
     typeProduits: PropTypes.array.isRequired,
     produits: PropTypes.array,
-    contenus: PropTypes.number,
+    commandeProduits: PropTypes.array.isRequired,
     quantiteOffresAchetees: PropTypes.array,
     livraisons: PropTypes.array,
     offres: PropTypes.object.isRequired,
@@ -49,13 +49,14 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     ajouter: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     sauvegarder: PropTypes.func.isRequired,
+    setDistibution: PropTypes.func.isRequired,
 
     load: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    selectedTypeProduct: PropTypes.object,
     commandeUtilisateur: PropTypes.object,
     produitsById: PropTypes.object,
-    commande: PropTypes.commande,
+    commande: PropTypes.object,
+    fournisseur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
   }
 
@@ -63,21 +64,23 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.navigateTo = this.navigateTo.bind(this);
-    this.selectionnePlageHoraire = this.selectionnePlageHoraire.bind(this);
-    this.state = { view: 'panier' };
   }
 
   componentDidMount() {
-    const { commandeUtilisateur } = this.props;
+    const { commandeUtilisateur, typeProduits, commandeProduits, params } = this.props;
+    const { commandeId } = params;
     if (commandeUtilisateur) {
       this.props.load(commandeUtilisateur);
     }
-  }
 
-  selectionnePlageHoraire(plageHoraire, livraisonId) {
-    const { commande } = this.props;
-    this.props.sauvegarder(assign(commande, { plageHoraire, livraisonId }));
-    this.setState({ view: 'panier' });
+    // sélectionner le premier produit du premier type
+    const premierTypeProduit = typeProduits.length ? typeProduits[0] : null;
+    if (premierTypeProduit) {
+      const pdts = commandeProduits.filter((prod) => prod.typeProduitId === premierTypeProduit.id);
+      if (pdts && pdts.length) {
+        this.props.pushState(`/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}`);
+      }
+    }
   }
 
   handleChange(event, index, value) {
@@ -98,27 +101,15 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       quantiteOffresAchetees,
       params,
       commande,
+      fournisseur,
       offres,
       supprimer, // eslint-disable-line
       utilisateurId,
       livraisons,
     } = this.props;
 
-    const { typeProduitId, commandeId } = params;
-    const { view } = this.state;
+    const { typeProduitId, commandeId, produitId } = params;
 
-    const testLivraisons = [
-      {
-        id: '802744c6-2d16-4517-aa43-0edbfcf35c8c',
-        debut: '2016-09-30T14:00.000',
-        fin: '2016-09-30T19:00.000+00:00',
-      },
-      {
-        id: '900744c6-2d16-4517-aa43-0edbfcf35c8c',
-        debut: '2016-10-01T10:00.000+00:00',
-        fin: '2016-10-01T12:00.000+00:00',
-      },
-    ];
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
@@ -127,25 +118,34 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-      <div className="col-md-2">
-        <SelectField
-          value={typeProduitId}
-          onChange={this.handleChange}
-          iconStyle={{ fill: 'black' }}
-          underlineStyle={{ borderColor: 'black' }}
-          style={{ width: '100%' }}
-        >
-          { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
-        </SelectField>
-        {produits && (
-          <List>
-              {produits.map((pdt, idx) => <ListItem key={idx} onClick={() => this.navigateTo(pdt.id)}>{pdt.nom}</ListItem>)}
-          </List>
-          )}
+        <div className="col-md-2">
+          <SelectField
+            value={typeProduitId}
+            onChange={this.handleChange}
+            iconStyle={{ fill: 'black' }}
+            underlineStyle={{ borderColor: 'black' }}
+            style={{ width: '100%' }}
+          >
+            { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
+          </SelectField>
+          {produits && (
+            <List>
+                {produits.map((pdt, idx) => (
+                  <ListItem
+                    key={idx}
+                    onClick={() => this.navigateTo(pdt.id)}
+                    style={produitId && pdt.id === produitId ? { backgroundColor: 'red' } : {}}
+                  >
+                    {pdt.nom}
+                  </ListItem>
+                ))}
+            </List>
+            )}
         </div>
         <div className="col-md-5">
           {quantiteOffresAchetees && (
             <div>
+              <p>{fournisseur && fournisseur.nom}</p>
               <ul>
                 {quantiteOffresAchetees.map((offre, idx) => {
                   const produit = produits.find((pdt) => pdt.id === offre.produitId);
@@ -162,46 +162,19 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           )}
         </div>
         <div className="col-md-5">
-          { (!commande || commande.contenus.length === 0) && <h1>Panier vide</h1>}
-          { view === 'distribution' && (
-            <LivraisonSelector
-              livraisons={testLivraisons}
-              plageHoraire={commande.plageHoraire}
-              livraisonId={commande.livraisonId}
-              selectionnePlageHoraire={this.selectionnePlageHoraire}
-            />) }
-          { view === 'panier' && commande && commande.contenus.length > 0 && (
-            <DetailCommande
-              contenus={commande.contenus}
+          { (!commande || commande.contenus.length === 0) ?
+            <h1>Panier vide</h1> :
+            <OrderValidate
+              commande={commande}
+              commandeId={commandeId}
+              utilisateurId={utilisateurId}
+              sauvegarder={this.props.sauvegarder}
+              supprimer={this.props.supprimer}
+              setDistibution={this.props.setDistibution}
+              produitsById={produitsById}
               offres={offres}
-              produits={produitsById}
-              supprimer={supprimer}
-              readOnly={typeof commande.id !== 'undefined'}
             />
-          )}
-          {commande && (!commande.id || commande.modifiee) && (
-            <RaisedButton
-              label="Valider le panier"
-              style={{ marginTop: 20 }}
-              onClick={() => this.props.sauvegarder(assign(commande, { commandeId, utilisateurId }))}
-            />)}
-          {view === 'panier' && commande && commande.id && !commande.modifiee && commande.livraisonId && (
-            <div>
-              <span>{commande.livraisonId} </span>
-              <RaisedButton
-                label="Modifier"
-                style={{ marginTop: 20 }}
-                onClick={() => this.setState({ view: 'distribution' })}
-              />
-            </div>
-          )}
-          {commande && commande.id && !commande.modifiee && !commande.livraisonId && (
-            <RaisedButton
-              label="Choisissez le jour de distribution"
-              style={{ marginTop: 20 }}
-              onClick={() => this.setState({ view: 'distribution' })}
-            />
-          )}
+          }
         </div>
       </div>
     );
@@ -211,6 +184,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
+  commandeProduits: selectCommandeProduits(),
   // selectedTypeProduct: selectedTypeProduct(),
   offres: selectOffres(),
   produitsById: selectProduits(),
@@ -222,6 +196,7 @@ const mapStateToProps = createStructuredSelector({
   commandeUtilisateur: selectUtilisateurCommandeUtilisateur(), // commande utilisateur existante
   commande: selectCommande(), // commande courante en cours d'édition
   livraisons: selectCommandeLivraisons(),
+  fournisseur: selectFournisseurProduit(),
 });
 
 
@@ -233,6 +208,7 @@ function mapDispatchToProps(dispatch) {
     ajouter: (offre) => dispatch(ajouter(offre)),
     supprimer: (offreId) => dispatch(supprimer(offreId)),
     sauvegarder: (datas) => dispatch(sauvegarder(datas)),
+    setDistibution: (livraisonId, plageHoraire) => dispatch(setDistibution(livraisonId, plageHoraire)),
   };
 }
 
