@@ -54,7 +54,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
         <Toolbar>
           <ToolbarGroup firstChild>
             <DropDownMenu value={this.state.value} onChange={this.handleChange} iconStyle={{ fill: 'black' }}>
-              <MenuItem value={1} primaryText="Accueil" containerElement={<Link to="/">Login</Link>} />
+              <MenuItem value={1} primaryText="/stellar" containerElement={<Link to="/stellar">Login</Link>} />
               <MenuItem value={2} primaryText="Commandes" containerElement={<Link to="/commandes">Commandes</Link>} />
               <MenuItem value={3} primaryText="Login" containerElement={<Link to="/login">Login</Link>} style={loggedHide} />
               <MenuItem value={4} primaryText="Votre compte" containerElement={<Link to="/votre-compte">Votre compte</Link>} style={unloggedHide} />
