@@ -41,16 +41,6 @@ export const selectFournisseurs = () => createSelector(
                   .filter((fourn) => fourn.visible)
 );
 
-export const selectFournisseursCommande = () => createSelector(
-  selectCommandes(),
-  selectCommandeId(),
-  selectFournisseursIds(),
-  (commandes, commandeId, fournisseursIds) => {
-    if (!commandeId || !commandes || !fournisseursIds) return null;
-    return Object.keys(commandes[commandeId].fournisseurs).map((key) => fournisseursIds[key]);
-  }
-);
-
 export const selectProduits = () => createSelector(
   selectCommandeDomain(),
   (substate) => substate.datas.entities.produits
@@ -85,17 +75,35 @@ export const selectResults = () => createSelector(
   (substate) => substate.datas.result
 );
 
-/* tous les produits de ma commandes */
-export const selectCommandeProduits = () => createSelector(
+/* la commande */
+export const selectCommande = () => createSelector(
   selectCommandes(),
   selectCommandeId(),
+  (commandes, commandeId) => {
+    if (!commandes || !commandeId) return null;
+    return commandes[commandeId];
+  }
+);
+
+/* les fournisseurs de la commande */
+export const selectFournisseursCommande = () => createSelector(
+  selectCommande(),
+  selectFournisseursIds(),
+  (commande, fournisseursIds) => {
+    if (!commande || !fournisseursIds) return null;
+    return Object.keys(commande.fournisseurs).map((key) => fournisseursIds[key]);
+  }
+);
+
+/* tous les produits de ma commandes */
+export const selectCommandeProduits = () => createSelector(
+  selectCommande(),
   selectFournisseursIds(),
   selectProduits(),
-  (commandes, commandeId, fournisseursIds, produits) => {
-    if (!commandeId) return null;
-    const fournisseursCommande = commandes[commandeId].fournisseurs;
+  (commande, fournisseursIds, produits) => {
+    if (!commande || !produits) return null;
     return Object.keys(produits)
-            .filter((key) => fournisseursCommande.indexOf(produits[key].fournisseurId) !== -1)
+            .filter((key) => commande.fournisseurs.indexOf(produits[key].fournisseurId) !== -1)
             .filter((key) => fournisseursIds[produits[key].fournisseurId].visible)
             .map((key) => produits[key])
             .filter((pdt) => pdt.enStock);
@@ -103,11 +111,10 @@ export const selectCommandeProduits = () => createSelector(
 );
 
 export const selectCommandeLivraisonsIds = () => createSelector(
-  selectCommandes(),
-  selectCommandeId(),
-  (commandes, commandeId) => {
-    if (!commandes || !commandeId) return null;
-    return commandes[commandeId].livraisons;
+  selectCommande(),
+  (commande) => {
+    if (!commande) return null;
+    return commande.livraisons;
   }
 );
 
@@ -176,7 +183,6 @@ export const selectFournisseurProduit = () => createSelector(
   selectFournisseursIds(),
   (produit, fournisseursIds) => {
     if (!produit) return null;
-    console.log('ici');
     return fournisseursIds[produit.fournisseurId];
   }
 );

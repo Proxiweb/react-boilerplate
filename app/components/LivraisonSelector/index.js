@@ -30,8 +30,8 @@ export default class LivraisonSelector extends Component {
 
   render() {
     const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons } = this.props;
-    return (<div className="row"><div className="col-md-8 col-md-offset-2">{livraisons.map((livr) => (
-      <List>
+    return (<div className="row"><div className="col-md-8 col-md-offset-2">{livraisons.map((livr, idx1) => (
+      <List key={idx1}>
         <Subheader>{moment(livr.debut).format('dddd Do MMMM')}</Subheader>
         {buildHoursRanges(livr.debut, livr.fin).map((data, idx) => (
           <ListItem onClick={() => selectionnePlageHoraire(idx, livr.id)} key={idx} >

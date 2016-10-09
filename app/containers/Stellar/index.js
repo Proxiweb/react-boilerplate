@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { loadAccount, trust as trustAction, pay, fedLookup } from './actions';
-import TrustForm from 'components/TrustForm';
-import PaymentForm from 'components/PaymentForm';
+import TrustForm from '../../components/TrustForm';
+import PaymentForm from '../../components/PaymentForm';
 
 import {
   selectContacts,

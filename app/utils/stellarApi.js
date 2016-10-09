@@ -20,11 +20,11 @@ const loadAccount =
       .accounts()
       .accountId(accountId)
       .call()
-      .then(accountResult => resolve({
+      .then((accountResult) => resolve({
         balances: accountResult.balances,
         sequence: accountResult.sequence,
       }))
-      .catch(err => reject(err))
+      .catch((err) => reject(err))
   );
 
 const loadPayments = (env, accountId) => new Promise((resolve, reject) =>
@@ -33,8 +33,8 @@ const loadPayments = (env, accountId) => new Promise((resolve, reject) =>
     .forAccount(accountId)
     .order('desc')
     .call()
-    .then(payments => resolve(payments.records))
-    .catch(err => reject(err))
+    .then((payments) => resolve(payments.records))
+    .catch((err) => reject(err))
 );
 
 const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
@@ -42,7 +42,7 @@ const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise(
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()
-    .then(account => {
+    .then((account) => {
       const userAccount = new StellarSdk.Account(stellarKeys.accountId, account.sequence);
       const transaction = new StellarSdk.TransactionBuilder(userAccount)
         .addOperation(StellarSdk.Operation.changeTrust({
@@ -53,10 +53,10 @@ const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise(
       transaction.sign(StellarSdk.Keypair.fromSeed(stellarKeys.secret));
 
       return getServer(env).submitTransaction(transaction)
-          .then(transactionResult => resolve(transactionResult))
-          .catch(err => reject(err));
+          .then((transactionResult) => resolve(transactionResult))
+          .catch((err) => reject(err));
     })
-    .catch(err => reject(err));
+    .catch((err) => reject(err));
 });
 
 const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) => new Promise((resolve, reject) => {
@@ -64,7 +64,7 @@ const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) =>
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()
-    .then(account => {
+    .then((account) => {
       const userAccount = new StellarSdk.Account(stellarKeys.accountId, account.sequence);
       const transaction = new StellarSdk.TransactionBuilder(userAccount)
         .addOperation(StellarSdk.Operation.payment({
@@ -75,10 +75,10 @@ const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) =>
         .build();
       transaction.sign(StellarSdk.Keypair.fromSeed(stellarKeys.secret));
       return getServer(env).submitTransaction(transaction)
-          .then(transactionResult => resolve(transactionResult))
-          .catch(err => reject(err));
+          .then((transactionResult) => resolve(transactionResult))
+          .catch((err) => reject(err));
     })
-    .catch(err => reject(err));
+    .catch((err) => reject(err));
 });
 
 const fedLookup = (name) => new Promise((resolve, reject) => {
@@ -107,7 +107,6 @@ const fedLookup = (name) => new Promise((resolve, reject) => {
         });
     });
 });
-
 
 module.exports = {
   fedLookup,

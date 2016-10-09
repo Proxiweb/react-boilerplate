@@ -18,6 +18,11 @@ export const selectCompteUtilisateur = () => createSelector(
   (substate) => substate.auth
 );
 
+export const selectPayments = () => createSelector(
+  selectCompteUtilisateurDomain(),
+  (substate) => substate.payments
+);
+
 export const selectUtilisateurId = () => createSelector(
   [selectCompteUtilisateur()],
   (auth) => (auth ? auth.id : undefined)

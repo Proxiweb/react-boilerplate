@@ -19,7 +19,6 @@ import {
   computeNombreCommandeContenus,
   selectOffres,
   selectOffresByProduit,
-  selectProduits,
   selectNombreAcheteurs,
   selectParams,
   selectCommandeLivraisons,
@@ -67,7 +66,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   }
 
   componentDidMount() {
-    const { commandeUtilisateur, typeProduits, commandeProduits, params } = this.props;
+    const { commandeUtilisateur, typeProduits, commandeProduits, params, utilisateurId } = this.props;
+
+    if (!utilisateurId) {
+      this.props.pushState('/login');
+    }
+
     const { commandeId } = params;
     if (commandeUtilisateur) {
       this.props.load(commandeUtilisateur);
@@ -108,8 +112,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       livraisons,
     } = this.props;
 
-    const { typeProduitId, commandeId, produitId } = params;
+    if (!utilisateurId) return null;
 
+    const { typeProduitId, commandeId, produitId } = params;
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
@@ -144,18 +149,19 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         </div>
         <div className="col-md-5">
           {quantiteOffresAchetees && (
-            <div>
-              <p>{fournisseur && fournisseur.nom}</p>
+            <div className={styles.offres}>
+              <div>{fournisseur && fournisseur.nom}</div>
               <ul>
                 {quantiteOffresAchetees.map((offre, idx) => {
                   const produit = produits.find((pdt) => pdt.id === offre.produitId);
-                  return (<li key={idx}>
-                    {produit.nom} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
+                  const etatStock = offre.stock !== null && offre.stock === 0 ? 'horsStock' : 'enStock';
+                  return (<li key={idx}><span className={styles[etatStock]}>
+                    {produit.nom}{offre.stock !== null ? `(${offre.stock})` : ''} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
                     {!commande.id && (<RaisedButton
                       onClick={() => this.props.ajouter({ offreId: offre.id, quantite: 1, commandeId, utilisateurId })}
                       label="Ajouter"
                     />)}
-                  </li>);
+                  </span></li>);
                 })}
               </ul>
             </div>

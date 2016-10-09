@@ -1,8 +1,12 @@
-import { take, put } from 'redux-saga/effects';
+import { take, put, call, cancelled, fork } from 'redux-saga/effects';
+import { eventChannel, END } from 'redux-saga';
 import { push } from 'react-router-redux';
 // import { get } from 'utils/apiClient';
-import { findActionType } from 'utils/asyncSagaConstants';
+import { findActionType } from '../../utils/asyncSagaConstants';
 import { loginConst, LOGOUT } from './constants';
+import { addEffect } from './actions';
+// import api from '../../utils/stellarApi';
+import StellarSdk from 'stellar-sdk';
 
 // import {
 //   loginSuccess,
@@ -33,13 +37,48 @@ import { loginConst, LOGOUT } from './constants';
 //     }
 //   }
 // }
+//
+function effects(accountId) {
+  const server = new StellarSdk.Server('https://horizon.stellar.org');
+  return eventChannel((emitter) => { // eslint-disable-line
+    return server
+      .effects()
+      .forAccount(accountId)
+      .order('desc')
+      .stream({
+        onmessage: (txResponse) => txResponse
+                                    .operation()
+                                    .then((op) => {
+                                      op.transaction()
+                                        .then((trx) => {
+                                          emitter({ op, trx });
+                                        });
+                                    }),
+        onerror: () => {},
+      });
+  });
+}
 
 export function* onLoginSuccess() {
   while(true) { // eslint-disable-line
     const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
-
+    yield fork(listenStellarOnLoginSuccess, action.datas.user.stellarKeys.adresse);
     if (action.req.redirectPathname) {
       yield put(push(action.req.redirectPathname));
+    }
+  }
+}
+
+export function* listenStellarOnLoginSuccess(accountId) {
+  const chan = yield call(effects, accountId);
+  try {
+    while(true) { // eslint-disable-line
+      const effect = yield take(chan);
+      yield put(addEffect(effect));
+    }
+  } finally {
+    if (yield cancelled()) {
+      chan.close();
     }
   }
 }

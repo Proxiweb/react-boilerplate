@@ -8,14 +8,16 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { logout } from '../Login/actions';
-import { selectProfile } from './selectors';
+import { selectProfile, selectPayments } from './selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
+import ListePaiements from 'components/ListePaiements';
 import styles from './styles.css';
 
 export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: PropTypes.object,
     profile: PropTypes.object.isRequired,
+    payments: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
     selectProfile: PropTypes.func.isRequired,
   }
@@ -56,6 +58,7 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
         {!this.state.edit && (<div>
           <button className="btn btn-default" onClick={this.toggleState}>Modifier</button>
         </div>)}
+        {this.props.payments.length > 0 && <ListePaiements paiements={this.props.payments} />}
       </div>
     );
   }
@@ -63,6 +66,7 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
 
 const mapStateToProps = createStructuredSelector({
   profile: selectProfile(),
+  payments: selectPayments(),
 });
 
 function mapDispatchToProps(dispatch) {

@@ -9,6 +9,7 @@ import {
  GOOGLE_LOGIN_START,
  LOGOUT,
  SET_ERR_MSG,
+ ADD_EFFECT,
 } from './constants';
 
 export function login(username, password, redirectPathname = null) {
@@ -40,6 +41,13 @@ export function setAuthErrorMsg(message) {
   return {
     type: SET_ERR_MSG,
     message,
+  };
+}
+
+export function addEffect(effect) {
+  return {
+    type: ADD_EFFECT,
+    payload: { ...effect },
   };
 }
 

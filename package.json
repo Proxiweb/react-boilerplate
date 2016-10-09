@@ -97,7 +97,8 @@
     "plugins": [
       "redux-saga",
       "react",
-      "jsx-a11y"
+      "jsx-a11y",
+      "import"
     ],
     "parserOptions": {
       "ecmaVersion": 6,
@@ -126,6 +127,7 @@
         2,
         "always-multiline"
       ],
+      "import/extensions": 1,
       "import/imports-first": 0,
       "import/newline-after-import": 0,
       "import/no-dynamic-require": 0,
@@ -240,7 +242,7 @@
     "lodash.uniq": "^4.5.0",
     "material-ui": "^0.15.4",
     "minimist": "1.2.0",
-    "moment": "^2.14.1",
+    "moment": "^2.15.1",
     "normalizr": "^2.2.1",
     "react": "15.3.2",
     "react-addons-update": "^15.3.0",

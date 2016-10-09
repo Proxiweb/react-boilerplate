@@ -10,7 +10,6 @@ import LoginForm from '../../components/LoginForm';
 import { login, googleLogin } from './actions';
 import styles from './styles.css';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import StellarSdk from 'stellar-sdk';
 
 export class Login extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -20,13 +19,6 @@ export class Login extends React.Component { // eslint-disable-line react/prefer
   }
 
   render() {
-    // const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    // server.accounts()
-    //     .accountId('GBMKEUYMIVFEVXWPY7MQVP6IRGEYNWHANXM7YXV46OBIFTCBAKVFHOI7')
-    //     .call()
-    //     .then((account) => {
-    //         console.log(account);
-    //     });
     return (
       <div className={`${styles.login}`}>
         <LoginForm {...this.props} onSuccessRedirect="/votre-compte" />

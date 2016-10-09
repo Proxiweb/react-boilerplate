@@ -24,6 +24,11 @@ const supprimer = (state, offreId) => {
   return update(state, { contenus: { $set: newContenus }, modifiee: { $set: true } });
 };
 
+const majTarifs = (state, totaux) => {
+  const { totalCommande, partDistribution } = totaux;
+  return update(state, { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } });
+};
+
 const initialState = {
   id: undefined,
   commandeId: null,
@@ -61,6 +66,9 @@ function commandeEditReducer(state = initialState, action) {
       const { plageHoraire, livraisonId } = action.payload;
       return { ...state, plageHoraire, livraisonId };
     }
+
+    case c.MODIFIE_TOTAUX:
+      return majTarifs(state, totaux);
     default:
       return state;
   }

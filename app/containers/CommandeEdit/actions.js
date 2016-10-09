@@ -42,3 +42,11 @@ export function setDistibution(plageHoraire, livraisonId) {
     payload: { plageHoraire, livraisonId },
   };
 }
+
+export function modifieTotaux(totaux) {
+  const { totalCommande, partDistribution } = totaux;
+  return {
+    type: c.MODIFIE_TOTAUX,
+    payload: { totalCommande, partDistribution },
+  };
+}

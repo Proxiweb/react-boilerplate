@@ -15,10 +15,6 @@ const testDatas = {
     hg: 'regisg@gmail.com',
   },
 };
-//
-// const responseGoogle = (response) => {
-//   console.log(response);
-// };
 
 export default class LoginForm extends Component {
 
