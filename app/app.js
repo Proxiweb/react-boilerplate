@@ -24,7 +24,7 @@ import { useScroll } from 'react-router-scroll';
 import configureStore from './store';
 
 const openSansObserver = new FontFaceObserver('Open Sans', {});
-import styles from 'containers/App/styles.css';
+import styles from './containers/App/styles.css';
 // When Open Sans is loaded, add a font-family using Open Sans to the body
 openSansObserver.load().then(() => {
   document.body.classList.add(styles.fontLoaded);
@@ -34,11 +34,11 @@ openSansObserver.load().then(() => {
 
 
 // Import Language Provider
-import LanguageProvider from 'containers/LanguageProvider';
+import LanguageProvider from './containers/LanguageProvider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // Import global saga
-import globalSagas from 'containers/App/sagas';
+import globalSagas from './containers/App/sagas';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
@@ -61,13 +61,13 @@ injectTapEventPlugin();
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState
 // must be provided for resolving how to retrieve the "route" in the state
-import { selectLocationState } from 'containers/App/selectors';
+import { selectLocationState } from './containers/App/selectors';
 const history = syncHistoryWithStore(browserHistory, store, {
   selectLocationState: selectLocationState(),
 });
 
 // Set up the router, wrapping all Routes in the App component
-import App from 'containers/App';
+import App from './containers/App';
 import createRoutes from './routes';
 const rootRoute = {
   component: App,

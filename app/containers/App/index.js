@@ -58,7 +58,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
               <MenuItem value={2} primaryText="Commandes" containerElement={<Link to="/commandes">Commandes</Link>} />
               <MenuItem value={3} primaryText="Login" containerElement={<Link to="/login">Login</Link>} style={loggedHide} />
               <MenuItem value={4} primaryText="Votre compte" containerElement={<Link to="/votre-compte">Votre compte</Link>} style={unloggedHide} />
-              <MenuItem value={6} primaryText="Active Voice" />
+              <MenuItem value={6} primaryText="Stellar" containerElement={<Link to="/stellar">Stellar</Link>}/>
               <MenuItem value={7} primaryText="Active Text" />
             </DropDownMenu>
           </ToolbarGroup>

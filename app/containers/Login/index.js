@@ -6,7 +6,7 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import LoginForm from 'components/LoginForm';
+import LoginForm from '../../components/LoginForm';
 import { login, googleLogin } from './actions';
 import styles from './styles.css';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
