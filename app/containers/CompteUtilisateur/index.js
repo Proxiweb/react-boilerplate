@@ -15,11 +15,9 @@ import styles from './styles.css';
 
 export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    children: PropTypes.object,
     profile: PropTypes.object.isRequired,
-    payments: PropTypes.object.isRequired,
+    payments: PropTypes.array.isRequired,
     logout: PropTypes.func.isRequired,
-    selectProfile: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -58,7 +56,7 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
         {!this.state.edit && (<div>
           <button className="btn btn-default" onClick={this.toggleState}>Modifier</button>
         </div>)}
-        {this.props.payments.length > 0 && <ListePaiements paiements={this.props.payments} />}
+        {this.props.payments && this.props.payments.length > 0 && <ListePaiements paiements={this.props.payments} />}
       </div>
     );
   }

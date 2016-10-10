@@ -1,11 +1,21 @@
 import { take, put, call, cancelled, fork } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
 import { push } from 'react-router-redux';
-// import { get } from 'utils/apiClient';
 import { findActionType } from '../../utils/asyncSagaConstants';
 import { loginConst, LOGOUT } from './constants';
 import { addEffect } from './actions';
-// import api from '../../utils/stellarApi';
+
+import {
+  accountLoaded,
+  loadAccountError,
+} from '../CompteUtilisateur/actions';
+
+import {
+  LOAD_ACCOUNT,
+} from '../CompteUtilisateur/constants';
+
+import api from '../../utils/stellarApi';
+
 import StellarSdk from 'stellar-sdk';
 
 // import {
@@ -62,14 +72,15 @@ function effects(accountId) {
 export function* onLoginSuccess() {
   while(true) { // eslint-disable-line
     const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
-    yield fork(listenStellarOnLoginSuccess, action.datas.user.stellarKeys.adresse);
+    yield fork(loadAccountSaga, action.datas.user.stellarKeys.adresse);
+    yield fork(listenStellarPaymentsOnLoginSuccess, action.datas.user.stellarKeys.adresse);
     if (action.req.redirectPathname) {
       yield put(push(action.req.redirectPathname));
     }
   }
 }
 
-export function* listenStellarOnLoginSuccess(accountId) {
+export function* listenStellarPaymentsOnLoginSuccess(accountId) {
   const chan = yield call(effects, accountId);
   try {
     while(true) { // eslint-disable-line
@@ -80,6 +91,16 @@ export function* listenStellarOnLoginSuccess(accountId) {
     if (yield cancelled()) {
       chan.close();
     }
+  }
+}
+
+export function* loadAccountSaga(accountId) {
+  const env = 'public'; // yield select(selectEnv());
+  try {
+    const account = yield call(api.loadAccount, env, accountId);
+    yield put(accountLoaded(account));
+  } catch (err) {
+    yield put(loadAccountError(err));
   }
 }
 

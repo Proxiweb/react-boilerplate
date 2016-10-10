@@ -20,7 +20,12 @@ export const selectCompteUtilisateur = () => createSelector(
 
 export const selectPayments = () => createSelector(
   selectCompteUtilisateurDomain(),
-  (substate) => substate.payments
+  (substate) => substate.payments.datas
+);
+
+export const selectPaymentsPagingToken = () => createSelector(
+  selectCompteUtilisateurDomain(),
+  (substate) => substate.payments.pagingToken
 );
 
 export const selectUtilisateurId = () => createSelector(

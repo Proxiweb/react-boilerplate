@@ -13,6 +13,11 @@ import {
   ADD_EFFECT,
 } from 'containers/Login/constants';
 
+import {
+  LOAD_ACCOUNT_ERROR,
+  LOAD_ACCOUNT_SUCCESS,
+} from './constants';
+
 import update from 'react-addons-update';
 import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
 
@@ -21,25 +26,36 @@ const initialState = {
   loading: false,
   error: false,
   token: null,
-  payments: [],
+  paging_token: null,
+  payments: {
+    datas: [],
+    paging_token: null,
+  },
+  balances: [],
 };
 
 
 const sessionStorageKey = 'user';
 
 const majComptes = (state, datas) => {
-  const { op, trx } = datas;
+  const { op, trx, id, paging_token } = datas;
   if (op.type !== 'payment' || op.asset_type === 'native') return state;
   const type = op.source_account === state.auth.stellarKeys.adresse ? 'debit' : 'credit';
   const payment = {
+    id,
     type,
     montant: round(parseFloat(op.amount), 2),
     date: trx.created_at,
     memo: trx.memo_type === 'text' ? trx.memo : null,
-    paging_token: op.paging_token,
   };
 
-  return update(state, { payments: { $push: [payment] } });
+  // memo greatest paging_token
+  const currentPaginToken = state.payments.pagingToken || paging_token; // eslint-disable-line
+  const pagingToken =  currentPaginToken && currentPaginToken < paging_token ? // eslint-disable-line
+                          paging_token : // eslint-disable-line
+                          currentPaginToken;
+
+  return update(state, { payments: { datas: { $push: [payment] }, pagingToken: { $set: pagingToken } } });
 };
 
 function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey, initialState, { error: false, loading: false }), action) {
@@ -56,6 +72,12 @@ function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey,
       return storeState(sessionStorageKey, update(state, { error: { $set: action.message } }));
     case ADD_EFFECT:
       return majComptes(state, action.payload);
+    case LOAD_ACCOUNT_SUCCESS: {
+      const { balances, sequence } = action.payload.account;
+      return { ...state, balances, sequence, pending: false };
+    }
+    case LOAD_ACCOUNT_ERROR:
+      return { ...state, error: action.payload.err, pending: false };
     default:
       return state;
   }
