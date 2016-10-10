@@ -38,12 +38,13 @@ const initialState = {
 const sessionStorageKey = 'user';
 
 const majComptes = (state, datas) => {
-  const { op, trx, id, paging_token } = datas;
-  if (op.type !== 'payment' || op.asset_type === 'native') return state;
-  const type = op.source_account === state.auth.stellarKeys.adresse ? 'debit' : 'credit';
+  const { op, trx } = datas;
+  const { id, paging_token, type, asset_type, source_account } = op;
+  if (type !== 'payment' || asset_type === 'native') return state; // eslint-disable-line
+  const typeOp = source_account === state.auth.stellarKeys.adresse ? 'debit' : 'credit'; // eslint-disable-line
   const payment = {
     id,
-    type,
+    type: typeOp,
     montant: round(parseFloat(op.amount), 2),
     date: trx.created_at,
     memo: trx.memo_type === 'text' ? trx.memo : null,
