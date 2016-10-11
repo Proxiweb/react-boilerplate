@@ -9,6 +9,8 @@ export default class DetailCommande extends Component { // eslint-disable-line
     produits: PropTypes.object.isRequired,
     supprimer: PropTypes.func.isRequired,
     readOnly: PropTypes.bool.isRequired,
+    montant: PropTypes.string.isRequired,
+    recolteFond: PropTypes.string.isRequired,
   }
 
   static defaultProps = {
@@ -16,11 +18,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
   }
 
   render() {
-    const { offres, produits, contenus, supprimer, readOnly } = this.props;
-    const totalCommande = contenus.reduce((memo, contenu) => {
-      const offre = offres[contenu.offreId];
-      return memo + ((offre.prix + offre.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0)));
-    }, 0) / 100;
+    const { offres, produits, contenus, supprimer, readOnly, montant, recolteFond } = this.props;
     return (
       <Table selectable={false} multiSelectable={false} className={styles.bordered}>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -33,30 +31,33 @@ export default class DetailCommande extends Component { // eslint-disable-line
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
-      {contenus.map((contenu, idx) => {
-        const offre = offres[contenu.offreId];
-        return (
-          <TableRow key={idx} selectable={false}>
-            <TableRowColumn style={{ width: 290, paddingLeft: 10, paddingRight: 10 }}>
-              {produits[offre.produitId].nom}{` ${offre.description || ''}`}
-            {offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}
-            </TableRowColumn>
-            <TableRowColumn style={{ width: 60, textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>
-              {(parseInt((offre.prix + offre.recolteFond), 10) / 100).toFixed(2)}
-            </TableRowColumn>
-            <TableRowColumn style={{ textAlign: 'right', width: 30, paddingLeft: 5, paddingRight: 5 }}>{contenu.quantite}</TableRowColumn>
-            <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
-            {!readOnly && (<TableRowColumn style={{ width: 50 }}>
-              <button onClick={() => supprimer(contenu.offreId)} style={{ cursor: 'pointer' }}>
-                x
-              </button>
-            </TableRowColumn>)}
-          </TableRow>
-        ); })
-      }
+          {contenus.map((contenu, idx) => {
+            const offre = offres[contenu.offreId];
+            return (
+              <TableRow key={idx} selectable={false}>
+                <TableRowColumn style={{ width: 290, paddingLeft: 10, paddingRight: 10 }}>
+                  {produits[offre.produitId].nom}{` ${offre.description || ''}`}
+                  {offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}
+                </TableRowColumn>
+                <TableRowColumn style={{ width: 60, textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>
+                  {(parseInt((offre.prix + offre.recolteFond), 10) / 100).toFixed(2)}
+                </TableRowColumn>
+                <TableRowColumn style={{ textAlign: 'right', width: 30, paddingLeft: 5, paddingRight: 5 }}>{contenu.quantite}</TableRowColumn>
+                <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
+                {!readOnly && (<TableRowColumn style={{ width: 50 }}>
+                  <button onClick={() => supprimer(contenu.offreId)} style={{ cursor: 'pointer' }}>
+                    x
+                  </button>
+                </TableRowColumn>)}
+              </TableRow>
+            ); })
+          }
           <TableRow>
             <TableRowColumn colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</TableRowColumn>
-            <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>{totalCommande}</TableRowColumn>
+            <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>{montant}</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn colSpan="4" style={{ textAlign: 'center' }}>Le total de {montant} € inclus <span style={{ fontWeight: 'bold' }}>{recolteFond} €</span> pour la prestation de distribution</TableRowColumn>
           </TableRow>
         </TableBody>
       </Table>

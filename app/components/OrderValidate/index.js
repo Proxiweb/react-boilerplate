@@ -94,6 +94,8 @@ export default class OrderValidate extends Component {
     const { offres, commande, produitsById, supprimer } = this.props;
     return (<DetailCommande
       contenus={commande.contenus}
+      montant={commande.montant.toFixed(2)}
+      recolteFond={commande.recolteFond.toFixed(2)}
       offres={offres}
       produits={produitsById}
       supprimer={supprimer}
