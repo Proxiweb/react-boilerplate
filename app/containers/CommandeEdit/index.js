@@ -16,6 +16,7 @@ import {
   selectCommandeTypesProduits,
   selectCommandeProduits,
   selectFournisseurProduit,
+  selectProduits,
   computeNombreCommandeContenus,
   selectOffres,
   selectOffresByProduit,

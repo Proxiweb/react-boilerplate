@@ -68,7 +68,7 @@ function commandeEditReducer(state = initialState, action) {
     }
 
     case c.MODIFIE_TOTAUX:
-      return majTarifs(state, totaux);
+      return majTarifs(state, action.payload);
     default:
       return state;
   }
