@@ -19,7 +19,8 @@ import {
 } from './constants';
 
 import update from 'react-addons-update';
-import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
+import { LOAD } from 'redux-storage'
+// import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
 
 const initialState = {
   auth: false,
@@ -35,7 +36,7 @@ const initialState = {
 };
 
 
-const sessionStorageKey = 'user';
+// const sessionStorageKey = 'user';
 
 const majComptes = (state, datas) => {
   const { op, trx } = datas;
@@ -59,24 +60,26 @@ const majComptes = (state, datas) => {
   return update(state, { payments: { datas: { $push: [payment] }, pagingToken: { $set: pagingToken } } });
 };
 
-function compteUtilisateurReducer(state = getStateFromStorage(sessionStorageKey, initialState, { error: false, loading: false }), action) {
+function compteUtilisateurReducer(state = initialState, action) {
   switch (action.type) {
     case c.ASYNC_LOGIN_START:
-      return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: true } }));
+      return update(state, { error: { $set: false }, loading: { $set: true } });
     case c.ASYNC_LOGIN_ERROR:
-      return storeState(sessionStorageKey, update(state, { error: { $set: action.msgError }, loading: { $set: false } }));
+      return update(state, { error: { $set: action.msgError }, loading: { $set: false } });
     case c.ASYNC_LOGIN_SUCCESS:
-      return storeState(sessionStorageKey, update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.datas.user }, token: { $set: action.datas.token } }));
+      return update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: action.datas.user }, token: { $set: action.datas.token } });
     case LOGOUT:
-      return storeState(sessionStorageKey, { ...initialState });
+      return { ...initialState };
     case SET_ERR_MSG:
-      return storeState(sessionStorageKey, update(state, { error: { $set: action.message } }));
+      return update(state, { error: { $set: action.message } });
     case ADD_EFFECT:
       return majComptes(state, action.payload);
     case LOAD_ACCOUNT_SUCCESS: {
       const { balances, sequence } = action.payload.account;
       return { ...state, balances, sequence, pending: false };
     }
+    case LOAD:
+      return action.payload.compteUtilisateur;
     case LOAD_ACCOUNT_ERROR:
       return { ...state, error: action.payload.err, pending: false };
     default:

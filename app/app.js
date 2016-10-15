@@ -19,6 +19,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
+import * as storage from 'redux-storage';
 
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
@@ -59,6 +60,13 @@ const store = configureStore(initialState, browserHistory);
 // starting globals sagas
 globalSagas.map(store.runSaga);
 injectTapEventPlugin();
+
+// Initialize redux-storage
+const load = storage.createLoader(store.engine);
+load(store)
+    .then((newState) => console.log('Loaded state:', newState))
+    .catch(() => console.log('Failed to load previous state'));
+
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState
 // must be provided for resolving how to retrieve the "route" in the state
