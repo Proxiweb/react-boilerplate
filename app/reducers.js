@@ -10,6 +10,7 @@ import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import { reducer as notifications } from 'react-notification-system-redux';
 
 import compteUtilisateur from 'containers/CompteUtilisateur/reducer';
+import commandes from 'containers/Commande/reducer';
 import global from 'containers/App/reducer';
 
 import { reducer as form } from 'redux-form';
@@ -50,6 +51,7 @@ export default function createReducer(asyncReducers) {
     language: languageProviderReducer,
     ...asyncReducers,
     compteUtilisateur,
+    commandes,
     notifications,
     form,
   });

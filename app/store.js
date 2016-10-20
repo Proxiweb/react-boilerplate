@@ -9,7 +9,8 @@ import createSocketIoMiddleware from 'redux-socket.io';
 
 import * as storage from 'redux-storage';
 import createEngine from 'redux-storage-engine-localstorage';
-// import filter from 'redux-storage-decorator-filter';
+import debounce from 'redux-storage-decorator-debounce';
+import filter from 'redux-storage-decorator-filter';
 
 import io from 'socket.io-client/socket.io';
 
@@ -28,7 +29,13 @@ export default function configureStore(initialState = {}, history) {
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
   // const sessionStorageEngine = createSessionStorageEngine('redux');
-  const engine = createEngine('proxiweb');
+  const engine = debounce(
+    filter(
+      createEngine('proxiweb'),
+      ['compteUtilisateur', 'commande']
+    ),
+    1500
+  );
   const storageMiddleware = storage.createMiddleware(engine);
 
   const middlewares = [

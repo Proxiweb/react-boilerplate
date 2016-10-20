@@ -24,17 +24,17 @@ export class Login extends React.Component { // eslint-disable-line react/prefer
         <LoginForm {...this.props} onSuccessRedirect="/votre-compte" />
         {this.props.user.loading && (
           <div className="row start-md">
-              <div className="col-md-12">
-                  <div style={{ margin: 'auto' }}>
-                      <RefreshIndicator
-                        size={40}
-                        left={260}
-                        top={10}
-                        status="loading"
-                        style={{ display: 'inline-block', position: 'relative' }}
-                      />
-                  </div>
+            <div className="col-md-12">
+              <div style={{ margin: 'auto' }}>
+                <RefreshIndicator
+                  size={40}
+                  left={260}
+                  top={10}
+                  status="loading"
+                  style={{ display: 'inline-block', position: 'relative' }}
+                />
               </div>
+            </div>
           </div>
         )}
       </div>

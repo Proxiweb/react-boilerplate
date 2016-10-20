@@ -19,7 +19,7 @@ import {
 } from './constants';
 
 import update from 'react-addons-update';
-import { LOAD } from 'redux-storage'
+import { LOAD } from 'redux-storage';
 // import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
 
 const initialState = {
@@ -27,10 +27,9 @@ const initialState = {
   loading: false,
   error: false,
   token: null,
-  paging_token: null,
   payments: {
     datas: [],
-    paging_token: null,
+    pagingToken: null,
   },
   balances: [],
 };
@@ -79,7 +78,7 @@ function compteUtilisateurReducer(state = initialState, action) {
       return { ...state, balances, sequence, pending: false };
     }
     case LOAD:
-      return action.payload.compteUtilisateur;
+      return action.payload.compteUtilisateur || state;
     case LOAD_ACCOUNT_ERROR:
       return { ...state, error: action.payload.err, pending: false };
     default:

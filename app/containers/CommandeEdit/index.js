@@ -17,18 +17,17 @@ import {
   selectCommandeProduits,
   selectFournisseurProduit,
   selectProduits,
-  computeNombreCommandeContenus,
   selectOffres,
-  selectOffresByProduit,
-  selectNombreAcheteurs,
   selectParams,
   selectCommandeLivraisons,
   selectQuantiteOffresAchetees,
   selectUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
+import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
 import { selectUtilisateurId } from 'containers/CompteUtilisateur/selectors';
 import { ajouter, supprimer, sauvegarder, load, setDistibution } from './actions';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import { FormattedMessage } from 'react-intl';
@@ -50,6 +49,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     supprimer: PropTypes.func.isRequired,
     sauvegarder: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
+    loadCommandes: PropTypes.func.isRequired,
 
     load: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
@@ -73,13 +73,18 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       this.props.pushState('/login');
     }
 
+    if (!commandeProduits) {
+      this.props.loadCommandes();
+      return;
+    }
+
     const { commandeId } = params;
     if (commandeUtilisateur) {
       this.props.load(commandeUtilisateur);
     }
 
     // sélectionner le premier produit du premier type
-    const premierTypeProduit = typeProduits.length ? typeProduits[0] : null;
+    const premierTypeProduit = typeProduits && typeProduits.length ? typeProduits[0] : null;
     if (premierTypeProduit) {
       const pdts = commandeProduits.filter((prod) => prod.typeProduitId === premierTypeProduit.id);
       if (pdts && pdts.length) {
@@ -116,6 +121,23 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (!utilisateurId) return null;
 
     const { typeProduitId, commandeId, produitId } = params;
+    if (!typeProduits) {
+      return (
+        <div className={`${styles.commandeEdit} row`}>
+          <div className="col-md-12">
+            <div style={{ margin: 'auto', width: '40px' }}>
+              <RefreshIndicator
+                size={40}
+                left={0}
+                top={10}
+                status="loading"
+                style={{ display: 'inline-block', position: 'relative' }}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
@@ -125,7 +147,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           ]}
         />
         <div className="col-md-2">
-          <SelectField
+          {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
             iconStyle={{ fill: 'black' }}
@@ -133,18 +155,18 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             style={{ width: '100%' }}
           >
             { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
-          </SelectField>
+          </SelectField>}
           {produits && (
             <List>
-                {produits.map((pdt, idx) => (
-                  <ListItem
-                    key={idx}
-                    onClick={() => this.navigateTo(pdt.id)}
-                    style={produitId && pdt.id === produitId ? { backgroundColor: 'red' } : {}}
-                  >
-                    {pdt.nom}
-                  </ListItem>
-                ))}
+              {produits.map((pdt, idx) => (
+                <ListItem
+                  key={idx}
+                  onClick={() => this.navigateTo(pdt.id)}
+                  style={produitId && pdt.id === produitId ? { backgroundColor: 'red' } : {}}
+                >
+                  {pdt.nom}
+                </ListItem>
+              ))}
             </List>
             )}
         </div>
@@ -169,7 +191,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           )}
         </div>
         <div className="col-md-5">
-          { (!commande || commande.contenus.length === 0) ?
+          { (!commande || commande.contenus.length === 0 || !offres) ?
             <h1>Panier vide</h1> :
             <OrderValidate
               commande={commande}
@@ -192,12 +214,9 @@ const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
   commandeProduits: selectCommandeProduits(),
-  // selectedTypeProduct: selectedTypeProduct(),
   offres: selectOffres(),
   produitsById: selectProduits(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),
-  // offresRelais: selectOffresRelais(),
-  // commandeUtilisateur: selectUtilisateurCommandeUtilisateur(),
   utilisateurId: selectUtilisateurId(),
   params: selectParams(),
   commandeUtilisateur: selectUtilisateurCommandeUtilisateur(), // commande utilisateur existante
@@ -215,6 +234,7 @@ function mapDispatchToProps(dispatch) {
     ajouter: (offre) => dispatch(ajouter(offre)),
     supprimer: (offreId) => dispatch(supprimer(offreId)),
     sauvegarder: (datas) => dispatch(sauvegarder(datas)),
+    loadCommandes: () => dispatch(loadCommandes()),
     setDistibution: (livraisonId, plageHoraire) => dispatch(setDistibution(livraisonId, plageHoraire)),
   };
 }

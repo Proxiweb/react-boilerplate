@@ -94,6 +94,11 @@ export function* listenStellarPaymentsOnLoginSuccess(accountId) {
   }
 }
 
+// 2 a 10
+// 1 mona 25
+// 1 mona 10
+
+
 export function* loadAccountSaga(accountId) {
   const env = 'public'; // yield select(selectEnv());
   try {

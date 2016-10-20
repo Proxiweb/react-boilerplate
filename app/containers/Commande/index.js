@@ -1,11 +1,19 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
+import CommandePanel from 'components/CommandePanel';
 import Offre from 'components/Offre';
-import { selectAsyncState, selectCommandes } from './selectors'; // selectCommandesUtilisateur
+import {
+  selectAsyncState,
+  selectCommandes,
+  selectTypesProduits,
+  selectFournisseurs,
+  selectProduits } from './selectors';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 import choux from './choux.jpg';
 
@@ -14,18 +22,44 @@ import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './ac
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
+    produits: PropTypes.object,
+    fournisseurs: PropTypes.array,
+    typesProduits: PropTypes.object,
     asyncState: PropTypes.object.isRequired,
     loadCommandes: PropTypes.func.isRequired,
     loadCommande: PropTypes.func.isRequired,
-    children: PropTypes.object,
+    pushState: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.selectCommande = this.selectCommande.bind(this);
+    this.getCommandeInfos = this.getCommandeInfos.bind(this);
     this.state = {
       commandeSelected: null,
     };
+  }
+
+  componentDidMount() {
+    const { commandes, loadCommandes } = this.props; // eslint-disable-line
+    if (!commandes) {
+      loadCommandes();
+    }
+  }
+
+  getCommandeInfos(id) {
+    const { produits, commandes, typesProduits, fournisseurs } = this.props;
+    const commande = commandes[id];
+    return commande.fournisseurs
+      .filter((frnId) => fournisseurs.find((frn) => frn.id === frnId))
+      .map((frnId) =>
+          Object.keys(produits)
+            .filter((pdtId) => produits[pdtId].visible)
+            .find(
+              (pdtId) => produits[pdtId].fournisseurId === frnId && produits[pdtId].visible
+            ))
+            .map((pdtId) => produits[pdtId].typeProduitId)
+              .map((typePdtId) => typesProduits[typePdtId].nom);
   }
 
   selectCommande(id) {
@@ -33,24 +67,65 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   }
 
   render() {
-    const { asyncState, commandes, loadCommande } = this.props;
+    const { asyncState, commandes } = this.props;
+    const self = this;
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
           <div className="col-md-3">
+            <h5>Commandes flash</h5>
             <ul>
               {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
-                (key, idx) =>
-                  <li key={idx} className={styles.commande}>
-                    <Link to={`/commandes/${key}`}>{commandes[key].noCommande}</Link>
-                  {' '}<RaisedButton label="Charger..." onClick={() => loadCommande(commandes[key].id)} />
-                  </li>
+                (key, idx) => {
+                  const infos = self.getCommandeInfos(key);
+                  return (
+                    <CommandePanel
+                      nom={infos ? infos.join(', ') : null}
+                      tarif="1.05 € au lieu de 1.25 €"
+                      prct={100}
+                      fav={false}
+                      key={idx}
+                      commandeId={`${key}`}
+                      clickHandler={() => this.props.pushState(`/commandes/${key}`)}
+                    />
+                  );
+                }
                 )}
             </ul>
           </div>
-          <div className="col-md-9">
-            {this.state.commandeSelected && <h1>{commandes[this.state.commandeSelected].noCommande}</h1>}
-            {this.props.children}
+          <div className="col-md-3">
+            <h5>Cette semaine</h5>
+          </div>
+          <div className="col-md-3">
+            <h5>La semaine prochaine</h5>
+          </div>
+          <div className="col-md-3">
+            <h5>La semaine suivante</h5>
+            <Offre
+              nom="Fromages & charcuterie"
+              tarif="1.05 € au lieu de 1.25 €"
+              imageSrc={choux}
+              prct={40}
+              fav
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (!commandes) {
+      return (
+        <div className={`${styles.commandeEdit} row`}>
+          <div className="col-md-12">
+            <div style={{ margin: 'auto', width: '40px' }}>
+              <RefreshIndicator
+                size={40}
+                left={0}
+                top={10}
+                status="loading"
+                style={{ display: 'inline-block', position: 'relative' }}
+              />
+            </div>
           </div>
         </div>
       );
@@ -176,27 +251,27 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               { name: 'description', content: 'Description of Commande' },
             ]}
           />
-        { true && (
-          <div>
-            <h1>Commandes</h1>
-            <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-              <button
-                onClick={() => this.props.loadCommandes(0)}
-                className="btn btn-primary"
-              >
-                <span>{ !asyncState.pending && 'Charger les commandes, page 0'} { asyncState.pending && 'loading...' }</span>
-              </button>
+          { true && (
+            <div>
+              <h1>Commandes</h1>
+              <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+                <button
+                  onClick={() => this.props.loadCommandes(0)}
+                  className="btn btn-primary"
+                >
+                  <span>{ !asyncState.pending && 'Charger les commandes, page 0'} { asyncState.pending && 'loading...' }</span>
+                </button>
+              </div>
+              <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
+                <button
+                  onClick={() => this.props.loadCommandes(1)}
+                  className="btn btn-primary"
+                >
+                  <span>{ !asyncState.pending && 'Charger les commandes, page 1'} { asyncState.pending && 'loading...' }</span>
+                </button>
+              </div>
             </div>
-            <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-              <button
-                onClick={() => this.props.loadCommandes(1)}
-                className="btn btn-primary"
-              >
-                <span>{ !asyncState.pending && 'Charger les commandes, page 1'} { asyncState.pending && 'loading...' }</span>
-              </button>
-            </div>
-          </div>
-        )}
+          )}
         </div>
       </div>);
   }
@@ -204,6 +279,9 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
 const mapStateToProps = createStructuredSelector({
   commandes: selectCommandes(),
+  produits: selectProduits(),
+  fournisseurs: selectFournisseurs(),
+  typesProduits: selectTypesProduits(),
   asyncState: selectAsyncState(),
 });
 
@@ -212,6 +290,7 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     loadCommandes: (page) => dispatch(loadCommandes(page)),
     loadCommande: (id) => dispatch(loadCommandeAction(id)),
+    pushState: (url) => dispatch(push(url)),
     ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),
   };
 }
