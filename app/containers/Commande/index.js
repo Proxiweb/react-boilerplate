@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import RaisedButton from 'material-ui/RaisedButton';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import CommandePanel from 'components/CommandePanel';
+import uniq from 'lodash.uniq';
 import Offre from 'components/Offre';
 import {
   selectAsyncState,
-  selectCommandes,
+  selectRelaisId,
+  selectCommandesRelais,
   selectTypesProduits,
   selectFournisseurs,
   selectProduits } from './selectors';
@@ -22,12 +22,12 @@ import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './ac
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
+    relaiId: PropTypes.string,
     produits: PropTypes.object,
     fournisseurs: PropTypes.array,
     typesProduits: PropTypes.object,
     asyncState: PropTypes.object.isRequired,
     loadCommandes: PropTypes.func.isRequired,
-    loadCommande: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
   }
 
@@ -67,7 +67,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   }
 
   render() {
-    const { asyncState, commandes } = this.props;
+    const { asyncState, commandes, relaiId } = this.props;
     const self = this;
     if (commandes && Object.keys(commandes).length > 0) {
       return (
@@ -80,13 +80,13 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
                   const infos = self.getCommandeInfos(key);
                   return (
                     <CommandePanel
-                      nom={infos ? infos.join(', ') : null}
+                      nom={infos ? uniq(infos).join(', ') : null}
                       tarif="1.05 € au lieu de 1.25 €"
                       prct={100}
                       fav={false}
                       key={idx}
                       commandeId={`${key}`}
-                      clickHandler={() => this.props.pushState(`/commandes/${key}`)}
+                      clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
                     />
                   );
                 }
@@ -278,7 +278,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandes: selectCommandes(),
+  commandes: selectCommandesRelais(),
+  relaiId: selectRelaisId(),
   produits: selectProduits(),
   fournisseurs: selectFournisseurs(),
   typesProduits: selectTypesProduits(),

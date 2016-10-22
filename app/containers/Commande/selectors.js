@@ -10,9 +10,10 @@ import { selectUtilisateurId } from '../CompteUtilisateur/selectors';
 const selectCommandeDomain = () => (state) => state.commandes || null;
 export const selectParams = () => (state, props) => props.params;
 const selectCommandeId = () => (state, props) => props.params.commandeId;
+export const selectRelaisId = () => (state, props) => props.params.relaiId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
-const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';
+// const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';
 
 const getModel = (substate, name) => {
   try {
@@ -69,6 +70,29 @@ export const selectOffres = () => createSelector(
 export const selectLivraisons = () => createSelector(
   selectCommandeDomain(),
   (substate) => getModel(substate, 'livraisons')
+);
+
+export const selectCommandesRelais = () => createSelector(
+  selectCommandes(),
+  selectLivraisons(),
+  selectRelaisId(),
+  (commandes, livraisons, relaiId) => {
+    if (!commandes || !livraisons || !relaiId) return null;
+    const cmdesRelais = {};
+    Object.keys(commandes)
+      .filter((commandeId) => {
+        let inRelais = false;
+        commandes[commandeId].livraisons.forEach((cmdeLivr) => {
+          if (livraisons[cmdeLivr].relaiId === relaiId) {
+            inRelais = true;
+          }
+        });
+        return inRelais;
+      }).forEach((commandeId) => {
+        cmdesRelais[commandeId] = commandes[commandeId];
+      });
+    return cmdesRelais;
+  }
 );
 
 export const selectOffresRelais = () => createSelector(

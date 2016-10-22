@@ -58,6 +58,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commande: PropTypes.object,
     fournisseur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
+    relaiId: PropTypes.string.isRequired,
   }
 
   constructor(props) {
@@ -78,7 +79,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       return;
     }
 
-    const { commandeId } = params;
+    const { commandeId, relaiId } = params;
     if (commandeUtilisateur) {
       this.props.load(commandeUtilisateur);
     }
@@ -88,19 +89,19 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (premierTypeProduit) {
       const pdts = commandeProduits.filter((prod) => prod.typeProduitId === premierTypeProduit.id);
       if (pdts && pdts.length) {
-        this.props.pushState(`/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}`);
+        this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}`);
       }
     }
   }
 
   handleChange(event, index, value) {
-    const { params } = this.props;
-    this.props.pushState(`/commandes/${params.commandeId}/typeProduits/${value}`);
+    const { commandeId, relaiId } = this.props.params;
+    this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}`);
   }
 
   navigateTo(productId) {
-    const { commandeId, typeProduitId } = this.props.params;
-    this.props.pushState(`/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
+    const { commandeId, typeProduitId, relaiId } = this.props.params;
+    this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
   }
 
   render() {

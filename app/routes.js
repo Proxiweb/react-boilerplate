@@ -60,7 +60,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/commandes',
+      path: '/relais/:relaiId/commandes',
       name: 'commandes',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
@@ -78,7 +78,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/commandes/:commandeId',
+      path: '/relais/:relaiId/commandes/:commandeId',
       name: 'commande',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
