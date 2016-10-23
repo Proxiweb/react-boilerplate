@@ -40,6 +40,7 @@ class Notifications extends Component { // eslint-disable-line
     const colors = {
       error: { backgroundColor: '#B43133', color: 'white' },
       success: { backgroundColor: '#7DB646', color: 'black' },
+      info: { backgroundColor: '#000', color: 'white' },
     };
     return (
       <Snackbar
