@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 // import { Nav, NavItem } from 'react-bootstrap';
 import styles from './styles.css';
-import ReduxNotifications from 'containers/Notifications';
+import Notifications from 'containers/Notifications';
 
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -82,7 +82,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
         <div className={`${styles.mainContent} container-fluid`}>
           {React.Children.toArray(this.props.children)}
         </div>
-        <ReduxNotifications />
+        <Notifications />
       </div>
     );
   }

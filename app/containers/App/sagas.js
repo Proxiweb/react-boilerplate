@@ -1,6 +1,6 @@
 import { take, call, put, select } from 'redux-saga/effects';
 import apiClient from 'utils/apiClient';
-import Notifications from 'react-notification-system-redux';
+import { addMessage } from 'containers/App/actions';
 import { logout } from 'containers/Login/actions';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
@@ -37,17 +37,17 @@ export function* apiFetcherSaga() {
         yield put(assign({ type: success, datas: res.datas, req: omit(action, 'type'), msgPending, msgSuccess, msgError }));
       } catch (exception) {
         if (exception.message && exception.message.error === 'La session a expirée') {
-          yield put(Notifications.error({
-            title: 'Session expirée',
-            message: 'La session a expirée, veuillez vous re-connecter',
+          yield put(addMessage({
+            type: 'error',
+            text: 'La session a expirée, veuillez vous re-connecter',
           }));
           yield put(assign({ type: err, msgPending, msgSuccess, msgError: 'La session a expirée, veuillez vous re-connecter' }));
           yield put(logout('/login'));
         } else {
           yield put(assign({ type: err, msgPending, msgSuccess, msgError: (msgError || exception.message.error), exception: { ...exception } }));
-          yield put(Notifications.error({
-            title: 'Erreur',
-            message: msgError || exception.message.error,
+          yield put(addMessage({
+            type: 'error',
+            text: msgError || exception.message.message,
           }));
         }
       }

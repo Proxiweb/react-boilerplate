@@ -4,39 +4,28 @@
  *
  */
 import update from 'react-addons-update';
+import uuid from 'node-uuid';
 
 import {
-  ADD_ERROR,
-  CLEAR_SCOPE,
+  ADD_MESSAGE,
+  REMOVE_MESSAGE,
 } from './constants';
 
 const initialState = {
-  errors: {},
+  messages: [],
 };
 
-function addError(state, scope, msg) {
-  const maj = {};
-  if (state.errors[scope].length) {
-    maj[scope] = { $push: [msg] };
-  } else {
-    maj[scope] = { $set: [msg] };
-  }
-  return update(state, maj);
-}
 
-function globalReducer(state = initialState, action) {
+function notificationsReducer(state = initialState, action) {
   switch (action.type) {
-    case ADD_ERROR:
-      return addError(state, action.scope, action.msg);
-    case CLEAR_SCOPE: {
-      const { scope } = action;
-      const maj = {};
-      maj[scope] = { $set: [] };
-      return update(state, maj);
+    case ADD_MESSAGE:
+      return update(state, { messages: { $push: [{ ...action.payload.message, id: uuid.v4() }] } });
+    case REMOVE_MESSAGE: {
+      return update(state, { messages: { $set: state.messages.filter((not) => not.id !== action.payload.id) } });
     }
     default:
       return state;
   }
 }
 
-export default globalReducer;
+export default notificationsReducer;

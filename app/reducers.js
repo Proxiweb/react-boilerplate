@@ -7,7 +7,6 @@ import { combineReducers } from 'redux';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import update from 'react-addons-update';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
-import { reducer as notifications } from 'react-notification-system-redux';
 
 import compteUtilisateur from 'containers/CompteUtilisateur/reducer';
 import commandes from 'containers/Commande/reducer';
@@ -52,7 +51,6 @@ export default function createReducer(asyncReducers) {
     ...asyncReducers,
     compteUtilisateur,
     commandes,
-    notifications,
     form,
   });
 }

@@ -9,21 +9,20 @@
  */
 
 import {
- ADD_ERROR,
- CLEAR_SCOPE,
+ ADD_MESSAGE,
+ REMOVE_MESSAGE,
 } from './constants';
 
-export function addError(scope, msg) {
+export function addMessage(message) {
   return {
-    type: ADD_ERROR,
-    scope,
-    msg,
+    type: ADD_MESSAGE,
+    payload: { message },
   };
 }
 
-export function clearScope(scope) {
+export function removeMessage(id) {
   return {
-    type: CLEAR_SCOPE,
-    scope,
+    type: REMOVE_MESSAGE,
+    payload: { id },
   };
 }
