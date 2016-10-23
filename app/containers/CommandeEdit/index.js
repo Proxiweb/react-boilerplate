@@ -32,6 +32,7 @@ import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import { FormattedMessage } from 'react-intl';
 import OrderValidate from 'components/OrderValidate';
+import DetailOffres from 'components/DetailOffres';
 import messages from './messages';
 import styles from './styles.css';
 
@@ -172,24 +173,16 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             )}
         </div>
         <div className="col-md-5">
-          {quantiteOffresAchetees && (
-            <div className={styles.offres}>
-              <div>{fournisseur && fournisseur.nom}</div>
-              <ul>
-                {quantiteOffresAchetees.map((offre, idx) => {
-                  const produit = produits.find((pdt) => pdt.id === offre.produitId);
-                  const etatStock = offre.stock !== null && offre.stock === 0 ? 'horsStock' : 'enStock';
-                  return (<li key={idx}><span className={styles[etatStock]}>
-                    {produit.nom}{offre.stock !== null ? `(${offre.stock})` : ''} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
-                    {!commande.id && (<RaisedButton
-                      onClick={() => this.props.ajouter({ offreId: offre.id, quantite: 1, commandeId, utilisateurId })}
-                      label="Ajouter"
-                    />)}
-                  </span></li>);
-                })}
-              </ul>
-            </div>
-          )}
+          {quantiteOffresAchetees &&
+            <DetailOffres
+              offres={quantiteOffresAchetees}
+              utilisateurId={utilisateurId}
+              fournisseur={fournisseur}
+              produits={produits}
+              commandeId={commandeId}
+              ajouter={this.props.ajouter}
+            />
+          }
         </div>
         <div className="col-md-5">
           { (!commande || commande.contenus.length === 0 || !offres) ?
