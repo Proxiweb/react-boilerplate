@@ -35,6 +35,7 @@
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color: rgb(185, 199, 221);
+  margin: 0;
 }
 
 body.fontLoaded {

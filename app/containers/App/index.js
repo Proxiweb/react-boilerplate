@@ -11,81 +11,103 @@
 * the linting exception.
 */
 
-import React from 'react';
+import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 // import Navbar from 'react-bootstrap/lib/Navbar';
 import { Link } from 'react-router';
 // import { Nav, NavItem } from 'react-bootstrap';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
-
+import { push } from 'react-router-redux';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
+import Close from 'material-ui/svg-icons/navigation/close';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 
-class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
+const getDrawerHeaderStyle = (context) => {
+  const {
+    appBar,
+  } = context.muiTheme;
+  return {
+    color: 'white',
+    backgroundColor: appBar.color,
+    height: appBar.height,
+    fontSize: 24,
+    paddingTop: 0,
+    lineHeight: `${appBar.height}px`,
+  };
+};
+
+class App extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    children: React.PropTypes.node,
-    user: React.PropTypes.object,
+    children: PropTypes.node,
+    user: PropTypes.object,
+    pushState: PropTypes.func,
+  };
+
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      value: 1,
+      drawerOpen: false,
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event, index, value) {
-    this.setState({ value });
+  toggleDrawer = () => {
+    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
   }
+
+  closeDrawer = () => {
+    console.log('close');
+    this.setState({ ...this.state, drawerOpen: false });
+  }
+
+  navigateTo = (url) => {
+    console.log(url);
+    this.closeDrawer();
+    this.props.pushState(url);
+  }
+
+  buildMenuItem = (label, url) => <MenuItem primaryText={label} onTouchTap={() => this.navigateTo(url)} containerElement={<Link to={url}>{label}</Link>} />;
 
   render() {
     const { user } = this.props;
-    const unloggedHide = !user ? { display: 'none' } : {};
-    const loggedHide = user ? { display: 'none' } : {};
-
     return (
       <div className={styles.allContent}>
-        <Toolbar>
-          <ToolbarGroup firstChild>
-            <DropDownMenu value={this.state.value} onChange={this.handleChange} iconStyle={{ fill: 'black' }}>
-              <MenuItem value={1} primaryText="Home" containerElement={<Link to="/stellar">Home</Link>} />
-              <MenuItem value={2} primaryText="Commandes" containerElement={<Link to={`/relais/${user ? user.relaiId : ''}/commandes`}>Commandes</Link>} style={unloggedHide} />
-              <MenuItem value={3} primaryText="Login" containerElement={<Link to="/login">Login</Link>} style={loggedHide} />
-              <MenuItem value={4} primaryText="Votre compte" containerElement={<Link to="/votre-compte">Votre compte</Link>} style={unloggedHide} />
-              <MenuItem value={6} primaryText="Stellar" containerElement={<Link to="/stellar">Stellar</Link>} />
-              <MenuItem value={7} primaryText="Active Text" />
-            </DropDownMenu>
-          </ToolbarGroup>
-          <ToolbarGroup>
-            <ToolbarTitle text="Options" />
-            <FontIcon className="muidocs-icon-custom-sort" />
-            <ToolbarSeparator />
-            <IconMenu
-              iconButtonElement={
-                <IconButton touch>
-                  <NavigationExpandMoreIcon />
-                </IconButton>
-              }
-            >
-              <MenuItem primaryText="Download" />
-              <MenuItem primaryText="More Info" />
-            </IconMenu>
-          </ToolbarGroup>
-        </Toolbar>
+        <AppBar
+          title="ProxiWeb"
+          docked={false}
+          iconClassNameRight="muidocs-icon-navigation-expand-more"
+          onLeftIconButtonTouchTap={this.toggleDrawer}
+        />
         <div className={`${styles.mainContent} container-fluid`}>
           {React.Children.toArray(this.props.children)}
         </div>
+        <Drawer open={this.state.drawerOpen} onRequestChange={this.closeDrawer}>
+          <MenuItem primaryText="Menu" rightIcon={<Close />} onTouchTap={this.closeDrawer} style={getDrawerHeaderStyle(this.context)} />
+          {this.buildMenuItem('Accueil', '/')}
+          {user && user.relaiId && this.buildMenuItem('Commandes', `/relais/${user.relaiId}/commandes`)}
+          {this.buildMenuItem('Stellar', '/stellar')}
+          {user && this.buildMenuItem('Votre compte', '/votre-compte')}
+          {!user && this.buildMenuItem('Connexion', '/login')}
+        </Drawer>
         <Notifications />
       </div>
     );
   }
 }
 
-export default connect((state) => ({ user: state.compteUtilisateur.auth }))(App);
+const mapDispatchToProps = (dispatch) => ({
+  pushState: (url) => dispatch(push(url)),
+});
+
+export default connect((state) => ({ user: state.compteUtilisateur.auth }), mapDispatchToProps)(App);
