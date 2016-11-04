@@ -1,14 +1,21 @@
 import { take, put, call, cancelled, fork } from 'redux-saga/effects';
 import { eventChannel, END } from 'redux-saga';
+import moment from 'moment';
 import { push } from 'react-router-redux';
 import { findActionType } from '../../utils/asyncSagaConstants';
 import { loginConst, LOGOUT } from './constants';
 import { addEffect } from './actions';
 
+import { addMessage } from 'containers/App/actions';
+
 import {
   accountLoaded,
   loadAccountError,
-} from '../CompteUtilisateur/actions';
+} from 'containers/CompteUtilisateur/actions';
+
+import {
+  selectPayments
+} from 'containers/CompteUtilisateur/selectors';
 
 import {
   LOAD_ACCOUNT,
@@ -48,12 +55,12 @@ import StellarSdk from 'stellar-sdk';
 //   }
 // }
 //
-function effects(accountId) {
-  const server = new StellarSdk.Server('https://horizon.stellar.org');
+function effects() { // accountId
+  const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
   return eventChannel((emitter) => { // eslint-disable-line
     return server
       .effects()
-      .forAccount(accountId)
+      .forAccount('GAPRF7NV7D2HBXZCLTT4G6U3I4BAF2YYZZCWQ7NIBOBMOD6CZGW6RLQJ')
       .order('desc')
       .stream({
         onmessage: (txResponse) => txResponse
@@ -61,10 +68,11 @@ function effects(accountId) {
                                     .then((op) => {
                                       op.transaction()
                                         .then((trx) => {
+                                          console.log('new trx', trx);
                                           emitter({ op, trx });
                                         });
                                     }),
-        onerror: () => {},
+        onerror: (err) => console.log(err),
       });
   });
 }
@@ -73,25 +81,31 @@ export function* onLoginSuccess() {
   while(true) { // eslint-disable-line
     const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
     yield fork(loadAccountSaga, action.datas.user.stellarKeys.adresse);
-    yield fork(listenStellarPaymentsOnLoginSuccess, action.datas.user.stellarKeys.adresse);
     if (action.req.redirectPathname) {
       yield put(push(action.req.redirectPathname));
     }
   }
 }
 
-export function* listenStellarPaymentsOnLoginSuccess(accountId) {
-  const chan = yield call(effects, accountId);
-  try {
+export function* listenStellarPaymentsOnLoginSuccess() {
+  const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
+  const channel = effects(action.datas.user.stellarKeys.adresse);
+  // const chan = yield call(effects, accountId);
+  // try {
     while(true) { // eslint-disable-line
-      const effect = yield take(chan);
+      const effect = yield take(channel);
       yield put(addEffect(effect));
+      // const since = moment().diff(moment(effect.trx.created_at), 'minutes');
+      // if (since < 2) {
+      //   yield put(addMessage({ type: 'success', text: 'nouveau paiement' }));
+      // }
     }
-  } finally {
-    if (yield cancelled()) {
-      chan.close();
-    }
-  }
+  // }
+  // finally {
+  //   if (yield cancelled()) {
+  //     chan.close();
+  //   }
+  // }
 }
 
 // 2 a 10
@@ -121,4 +135,5 @@ export default [
   // googleLoginSaga,
   onLogout,
   onLoginSuccess,
+  listenStellarPaymentsOnLoginSuccess,
 ];

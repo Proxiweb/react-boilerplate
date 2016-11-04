@@ -40,7 +40,13 @@ const initialState = {
 const majComptes = (state, datas) => {
   const { op, trx } = datas;
   const { id, paging_token, type, asset_type, source_account } = op;
-  if (type !== 'payment' || asset_type === 'native') return state; // eslint-disable-line
+
+  // // si le paiement a déjà été enregistré
+  // if (state.payments.datas.find((payment) => payment.id === id)) {
+  //   return state;
+  // }
+
+  // if (type !== 'payment' || asset_type === 'native') return state; // eslint-disable-line
   const typeOp = source_account === state.auth.stellarKeys.adresse ? 'debit' : 'credit'; // eslint-disable-line
   const payment = {
     id,
