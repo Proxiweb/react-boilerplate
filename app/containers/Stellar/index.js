@@ -44,7 +44,7 @@ class StellarMain extends Component { // eslint-disable-line
     return (<div>
       <form className="form form-inline text-right">
         <div className="form-group">
-          <select ref={node => { this.action = node; }} onChange={this.handleChangeAction} defaultValue="show_balance">
+          <select ref={(node) => { this.action = node; }} onChange={this.handleChangeAction} defaultValue="show_balance">
             <option value="show_balance">Seulement les comptes</option>
             <option value="show_trust">Trust</option>
             <option value="show_contacts">Contacts</option>

@@ -28,6 +28,11 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
     asyncDatas2: PropTypes.object.isRequired,
   }
 
+  constructor(props) {
+    super(props);
+    this.state = { effecs: [] };
+  }
+
   render() {
     const { asyncDatas1, asyncDatas2 } = this.props;
     return (

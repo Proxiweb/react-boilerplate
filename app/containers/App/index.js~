@@ -1,0 +1,27 @@
+<Toolbar>
+  <ToolbarGroup firstChild>
+    <DropDownMenu value={this.state.value} onChange={this.handleChange} iconStyle={{ fill: 'black' }}>
+      <MenuItem value={1} primaryText="Home" containerElement={<Link to="/">Home</Link>} />
+      <MenuItem value={2} primaryText="Commandes" containerElement={<Link to={`/relais/${user ? user.relaiId : ''}/commandes`}>Commandes</Link>} style={unloggedHide} />
+      <MenuItem value={3} primaryText="Login" containerElement={<Link to="/login">Login</Link>} style={loggedHide} />
+      <MenuItem value={4} primaryText="Votre compte" containerElement={<Link to="/votre-compte">Votre compte</Link>} style={unloggedHide} />
+      <MenuItem value={6} primaryText="Stellar" containerElement={<Link to="/stellar">Stellar</Link>} />
+      <MenuItem value={7} primaryText="Active Text" />
+    </DropDownMenu>
+  </ToolbarGroup>
+  <ToolbarGroup>
+    <ToolbarTitle text="Options" />
+    <FontIcon className="muidocs-icon-custom-sort" />
+    <ToolbarSeparator />
+    <IconMenu
+      iconButtonElement={
+        <IconButton touch>
+          <NavigationExpandMoreIcon />
+        </IconButton>
+      }
+    >
+      <MenuItem primaryText="Download" />
+      <MenuItem primaryText="More Info" />
+    </IconMenu>
+  </ToolbarGroup>
+</Toolbar>

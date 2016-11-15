@@ -20,6 +20,7 @@ import {
 
 import update from 'react-addons-update';
 import { LOAD } from 'redux-storage';
+import moment from 'moment';
 // import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
 
 const initialState = {
@@ -53,6 +54,7 @@ const majComptes = (state, datas) => {
     type: typeOp,
     montant: round(parseFloat(op.amount), 2),
     date: trx.created_at,
+    dateUnix: moment(trx.created_at).unix(),
     memo: trx.memo_type === 'text' ? trx.memo : null,
   };
 
@@ -62,7 +64,7 @@ const majComptes = (state, datas) => {
                           paging_token : // eslint-disable-line
                           currentPaginToken;
 
-  return update(state, { payments: { datas: { $push: [payment] }, pagingToken: { $set: pagingToken } } });
+  return update(state, { payments: { datas: { $set: [payment].concat(state.payments.datas) }, pagingToken: { $set: pagingToken } } });
 };
 
 function compteUtilisateurReducer(state = initialState, action) {

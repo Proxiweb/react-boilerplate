@@ -44,11 +44,12 @@ import globalSagas from './containers/App/sagas';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
-
-// Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
-import 'sanitize.css/sanitize.css';
-import 'flexboxgrid';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+
+// flexboxgrid
+import 'flexboxgrid/css/flexboxgrid.css';
+// react-data-grid
+import 'react-virtualized/styles.css';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -59,7 +60,6 @@ const store = configureStore(initialState, browserHistory);
 
 // starting globals sagas
 globalSagas.map(store.runSaga);
-injectTapEventPlugin();
 
 // Initialize redux-storage
 const load = storage.createLoader(store.engine);
@@ -84,6 +84,7 @@ const rootRoute = {
 };
 
 const render = (messages) => {
+  injectTapEventPlugin();
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>

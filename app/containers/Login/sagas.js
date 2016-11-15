@@ -61,14 +61,12 @@ function effects() { // accountId
     return server
       .effects()
       .forAccount('GAPRF7NV7D2HBXZCLTT4G6U3I4BAF2YYZZCWQ7NIBOBMOD6CZGW6RLQJ')
-      .order('desc')
       .stream({
         onmessage: (txResponse) => txResponse
                                     .operation()
                                     .then((op) => {
                                       op.transaction()
                                         .then((trx) => {
-                                          console.log('new trx', trx);
                                           emitter({ op, trx });
                                         });
                                     }),
@@ -90,28 +88,15 @@ export function* onLoginSuccess() {
 export function* listenStellarPaymentsOnLoginSuccess() {
   const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
   const channel = effects(action.datas.user.stellarKeys.adresse);
-  // const chan = yield call(effects, accountId);
-  // try {
-    while(true) { // eslint-disable-line
-      const effect = yield take(channel);
-      yield put(addEffect(effect));
-      // const since = moment().diff(moment(effect.trx.created_at), 'minutes');
-      // if (since < 2) {
-      //   yield put(addMessage({ type: 'success', text: 'nouveau paiement' }));
-      // }
+  while(true) { // eslint-disable-line
+    const effect = yield take(channel);
+    yield put(addEffect(effect));
+    const since = moment().diff(moment(effect.trx.created_at), 'minutes');
+    if (since < 2) {
+      yield put(addMessage({ type: 'success', text: 'nouveau paiement' }));
     }
-  // }
-  // finally {
-  //   if (yield cancelled()) {
-  //     chan.close();
-  //   }
-  // }
+  }
 }
-
-// 2 a 10
-// 1 mona 25
-// 1 mona 10
-
 
 export function* loadAccountSaga(accountId) {
   const env = 'public'; // yield select(selectEnv());

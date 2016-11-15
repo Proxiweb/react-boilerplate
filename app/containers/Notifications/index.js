@@ -16,22 +16,6 @@ class Notifications extends Component { // eslint-disable-line
     this.state = {
       open: false,
     };
-    this.server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    this.server
-      .effects()
-      .forAccount('GAPRF7NV7D2HBXZCLTT4G6U3I4BAF2YYZZCWQ7NIBOBMOD6CZGW6RLQJ')
-      .order('desc')
-      .stream({
-        onmessage: (txResponse) => txResponse
-                                    .operation()
-                                    .then((op) => {
-                                      op.transaction()
-                                        .then((trx) => {
-                                          console.log('new trx', trx);
-                                        });
-                                    }),
-        onerror: (err) => console.log(err),
-      });
   }
 
   componentWillReceiveProps(nextProps) {
