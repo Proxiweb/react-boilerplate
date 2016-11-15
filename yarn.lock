@@ -7448,7 +7448,7 @@ react-side-effect@1.0.2:
   dependencies:
     fbjs "0.1.0-alpha.10"
 
-react-tap-event-plugin@^1.0.0:
+react-tap-event-plugin:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-tap-event-plugin/-/react-tap-event-plugin-1.0.0.tgz#7a248505a9e9abecc352b2dab313d17685c51adf"
   dependencies:
