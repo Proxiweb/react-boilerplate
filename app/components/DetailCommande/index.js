@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
+import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import styles from './styles.css';
 export default class DetailCommande extends Component { // eslint-disable-line
   static propTypes = {
@@ -20,7 +20,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
   render() {
     const { offres, produits, contenus, supprimer, readOnly, montant, recolteFond } = this.props;
     return (
-      <Table selectable={false} multiSelectable={false} className={styles.bordered}>
+      <Table selectable={false} multiSelectable={false} className={styles.bordered} height={200} fixedFooter>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn tooltip="Désignation" style={{ paddingLeft: 10, width: 290, paddingRight: 10 }}>Désignation</TableHeaderColumn>
@@ -52,6 +52,8 @@ export default class DetailCommande extends Component { // eslint-disable-line
               </TableRow>
             ); })
           }
+        </TableBody>
+        <TableFooter>
           <TableRow>
             <TableRowColumn colSpan="3" style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</TableRowColumn>
             <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10, fontWeight: 'bold' }}>{montant}</TableRowColumn>
@@ -59,7 +61,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
           <TableRow>
             <TableRowColumn colSpan="4" style={{ textAlign: 'center' }}>Le total de {montant} € inclus <span style={{ fontWeight: 'bold' }}>{recolteFond} €</span> pour la prestation de distribution</TableRowColumn>
           </TableRow>
-        </TableBody>
+        </TableFooter>
       </Table>
     );
   }

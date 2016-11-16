@@ -9,7 +9,7 @@ import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
 import merge from 'lodash.merge';
 import omit from 'lodash.omit';
-// import assign from 'lodash.assign';
+import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
   pending: false,
@@ -99,6 +99,10 @@ function commandeReducer(state = initialState, action) {
       return majNouvelAchat(state, action.datas);
     case 'ws/OFFRE_MODIF_STOCK':
       return update(state, { datas: { entities: { offres: { [action.datas.id]: { stock: { $set: action.datas.stock } } } } } });
+    case REHYDRATE: {
+      const incoming = action.payload.commande;
+      return { ...state, ...incoming };
+    }
     default:
       return state;
   }

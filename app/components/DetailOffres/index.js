@@ -41,7 +41,7 @@ export default class DetailOffres extends Component {
               return (
                 <li key={idx}>
                   <span className={styles[etatStock]}>
-                    {produit.nom}{offre.stock !== null ? `(${offre.stock})` : ''} {offre.description} ({parseInt(offre.poids / 1000, 10)}g) : {offre.quantiteTotal}
+                    {produit.nom}{offre.stock !== null ? `(${offre.stock})` : ''} {offre.description} ({parseInt(offre.poids / 1000, 10)}g)
                     <RaisedButton
                       onClick={() => ajouter({ offreId: offre.id, quantite: 1, commandeId, utilisateurId })}
                       label="Ajouter"

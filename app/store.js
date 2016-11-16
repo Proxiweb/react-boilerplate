@@ -6,15 +6,16 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createSocketIoMiddleware from 'redux-socket.io';
+import { autoRehydrate } from 'redux-persist';
 
-import * as storage from 'redux-storage';
-import createEngine from 'redux-storage-engine-localstorage';
-import debounce from 'redux-storage-decorator-debounce';
-import filter from 'redux-storage-decorator-filter';
+// import * as storage from 'redux-storage';
+// import createEngine from 'redux-storage-engine-localstorage';
+// import debounce from 'redux-storage-decorator-debounce';
+// import filter from 'redux-storage-decorator-filter';
 
 import io from 'socket.io-client/socket.io';
 
-import { ADD_EFFECT } from 'containers/Login/constants';
+// import { ADD_EFFECT } from 'containers/Login/constants';
 
 import createReducer from './reducers';
 
@@ -29,18 +30,18 @@ export default function configureStore(initialState = {}, history) {
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
   // const sessionStorageEngine = createSessionStorageEngine('redux');
-  const engine = debounce(
-    filter(
-      createEngine('proxiweb'),
-      ['compteUtilisateur', 'commande']
-    ),
-    1500
-  );
-  const storageMiddleware = storage.createMiddleware(engine);
+  // const engine = debounce(
+  //   filter(
+  //     createEngine('proxiweb'),
+  //     ['compteUtilisateur', 'commande']
+  //   ),
+  //   1500
+  // );
+  // const storageMiddleware = storage.createMiddleware(engine);
 
   const middlewares = [
     sagaMiddleware,
-    storageMiddleware,
+    // storageMiddleware,
     routerMiddleware(history),
     socketIoMiddleware,
   ];
@@ -48,17 +49,18 @@ export default function configureStore(initialState = {}, history) {
   const enhancers = [
     applyMiddleware(...middlewares),
     devtools(),
+    autoRehydrate(),
   ];
 
   const store = createStore(
-    storage.reducer(createReducer()),
+    createReducer(),
     initialState,
     compose(...enhancers)
   );
 
   // Create hook for async sagas
   store.runSaga = sagaMiddleware.run;
-  store.engine = engine;
+
 
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */

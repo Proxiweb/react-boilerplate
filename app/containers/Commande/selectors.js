@@ -243,7 +243,7 @@ export const selectCommandeCommandeContenus = () => createSelector(
 export const selectQuantiteOffresAchetees = () => createSelector(
   [selectOffresByProduit(), selectCommandeCommandeContenus(), selectCommandeContenus()],
   (offres, commandeCommandeContenus, commandeContenus) => {
-    if (!commandeCommandeContenus || !offres || commandeContenus) return null;
+    if (!commandeCommandeContenus || !offres || !commandeContenus) return null;
     return offres.map((offre) => ({
       ...offre,
       quantiteTotal: commandeCommandeContenus

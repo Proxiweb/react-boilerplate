@@ -19,6 +19,7 @@ export class Login extends React.Component { // eslint-disable-line react/prefer
   }
 
   render() {
+    console.log(this.props.user);
     return (
       <div className={`${styles.login}`}>
         <LoginForm {...this.props} onSuccessRedirect="/votre-compte" />

@@ -19,7 +19,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import * as storage from 'redux-storage';
+import { persistStore } from 'redux-persist';
 
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
@@ -58,14 +58,14 @@ import 'react-virtualized/styles.css';
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
 
+persistStore(store, {
+  whitelist: ['compteUtilisateur', 'commande'],
+  debounce: 1500,
+  keyPrefix: 'pw',
+});
+
 // starting globals sagas
 globalSagas.map(store.runSaga);
-
-// Initialize redux-storage
-const load = storage.createLoader(store.engine);
-load(store)
-    .then((newState) => console.log('Loaded state:', newState))
-    .catch(() => console.log('Failed to load previous state'));
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState

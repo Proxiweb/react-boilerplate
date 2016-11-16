@@ -8,7 +8,6 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
 import { List, ListItem } from 'material-ui/List';
 import Helmet from 'react-helmet';
 import {
@@ -148,7 +147,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <div className="col-md-2">
+        <div className="col-md-2 col-xs-12">
           {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
@@ -164,7 +163,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                 <ListItem
                   key={idx}
                   onClick={() => this.navigateTo(pdt.id)}
-                  style={produitId && pdt.id === produitId ? { backgroundColor: 'red' } : {}}
+                  style={produitId && pdt.id === produitId ? { backgroundColor: 'red', color: 'white' } : {}}
                 >
                   {pdt.nom}
                 </ListItem>
@@ -172,7 +171,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </List>
             )}
         </div>
-        <div className="col-md-5">
+        <div className="col-md-5 col-xs-12">
           {quantiteOffresAchetees &&
             <DetailOffres
               offres={quantiteOffresAchetees}
@@ -184,7 +183,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             />
           }
         </div>
-        <div className="col-md-5">
+        <div className="col-md-5 col-xs-12">
           { (!commande || commande.contenus.length === 0 || !offres) ?
             <h1>Panier vide</h1> :
             <OrderValidate

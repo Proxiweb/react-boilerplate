@@ -2,7 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import ExpandMore from 'material-ui/svg-icons/navigation/expand-more';
+import {List, ListItem} from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import Badge from 'material-ui/Badge';
 
 export default class Logged extends Component {
   static propTypes = {
@@ -23,14 +26,38 @@ export default class Logged extends Component {
       <IconMenu
         {...this.props}
         iconButtonElement={
-          <IconButton><ExpandMore /></IconButton>
+          <Badge
+            badgeContent={4}
+            secondary
+          >
+            <CommunicationChatBubble />
+          </Badge>
         }
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        {user && <MenuItem {...this.props} primaryText="Commandes" value={`/relais/${user.relaiId}/commandes`} />}
-        <MenuItem {...this.props} primaryText="Votre Compte" value="/votre-compte" />
-        <MenuItem {...this.props} primaryText="Sign out" />
+      <List>
+        <ListItem
+          primaryText="Brendan Lim"
+          rightIcon={<CommunicationChatBubble />}
+        />
+        <ListItem
+          primaryText="Eric Hoffman"
+          rightIcon={<CommunicationChatBubble />}
+        />
+        <ListItem
+          primaryText="Grace Ng"
+          rightIcon={<CommunicationChatBubble />}
+        />
+        <ListItem
+          primaryText="Kerem Suer"
+          rightIcon={<CommunicationChatBubble />}
+        />
+        <ListItem
+          primaryText="Raquel Parrado"
+          rightIcon={<CommunicationChatBubble />}
+        />
+      </List>
       </IconMenu>
     );
   }

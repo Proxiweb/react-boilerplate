@@ -20,7 +20,7 @@ export default class ListePaiements extends Component { // eslint-disable-line
   render() {
     const { paiements } = this.props;
     return (
-      <Table selectable={false} multiSelectable={false} className={styles.bordered}>
+      <Table selectable={false} multiSelectable={false} className={styles.bordered} height={600}>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn tooltip="Crédit">Crédit</TableHeaderColumn>

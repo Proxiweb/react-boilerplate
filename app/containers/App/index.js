@@ -19,7 +19,6 @@ import { Link } from 'react-router';
 // import { Nav, NavItem } from 'react-bootstrap';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
-import { push } from 'react-router-redux';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -27,12 +26,12 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import Close from 'material-ui/svg-icons/navigation/close';
+
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
-import AppBar from 'material-ui/AppBar';
 import AppMainDrawer from 'containers/AppMainDrawer';
+
 
 import Logged from 'components/Logged';
 import Login from 'components/Login';
@@ -104,21 +103,13 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             onSelect={this.navigateTo}
             onChangeList={this.handleChangeList}
             user={user}
-            onRequestChangeNavDrawer={this.handleOnRequestChangeNavDrawer}
-            header={<MenuItem primaryText="Menu" rightIcon={<Close />} onTouchTap={this.closeDrawer} style={getDrawerHeaderStyle(this.context)} />}
+            onRequestChange={(open) => this.setState({ drawerOpen: open })}
+            header={<MenuItem primaryText="Menu" style={getDrawerHeaderStyle(this.context)} />}
           />
         </AppBar>
         <div className={`${styles.mainContent} container-fluid`}>
           {React.Children.toArray(this.props.children)}
         </div>
-        <Drawer open={this.state.drawerOpen} onRequestChange={this.closeDrawer}>
-          <MenuItem primaryText="Menu" rightIcon={<Close />} onTouchTap={this.closeDrawer} style={getDrawerHeaderStyle(this.context)} />
-          {this.buildMenuItem('Accueil', '/')}
-          {user && user.relaiId && this.buildMenuItem('Commandes', `/relais/${user.relaiId}/commandes`)}
-          {this.buildMenuItem('Stellar', '/stellar')}
-          {user && this.buildMenuItem('Votre compte', '/votre-compte')}
-          {!user && this.buildMenuItem('Connexion', '/login')}
-        </Drawer>
         <Notifications />
       </div>
     );

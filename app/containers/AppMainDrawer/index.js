@@ -14,16 +14,16 @@ const SelectableList = makeSelectable(List);
 export default class AppMainDrawer extends Component {
   static propTypes = {
     onSelect: PropTypes.func.isRequired,
-    onRequestChangeNavDrawer: PropTypes.func.isRequired,
+    onRequestChange: PropTypes.func.isRequired,
     onChangeList: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     header: PropTypes.node.isRequired,
     user: PropTypes.object,
   }
   render() {
-    const { open, header, onRequestChangeNavDrawer, onChangeList, user } = this.props;
+    const { open, header, onRequestChange, onChangeList, user } = this.props;
     return (
-      <Drawer open={open} docked={false} onRequestChange={onRequestChangeNavDrawer}>
+      <Drawer open={open} docked={false} onRequestChange={onRequestChange}>
         {header}
         <SelectableList
           value={location.pathname}

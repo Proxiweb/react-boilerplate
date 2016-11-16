@@ -21,7 +21,7 @@ import {
 import update from 'react-addons-update';
 import { LOAD } from 'redux-storage';
 import moment from 'moment';
-// import { getStateFromStorage, storeState } from 'utils/sessionStorageManager';
+import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
   auth: false,
@@ -89,6 +89,10 @@ function compteUtilisateurReducer(state = initialState, action) {
       return action.payload.compteUtilisateur || state;
     case LOAD_ACCOUNT_ERROR:
       return { ...state, error: action.payload.err, pending: false };
+    case REHYDRATE: {
+      const incoming = action.payload.compteUtilisateur;
+      return { ...state, ...incoming };
+    }
     default:
       return state;
   }
