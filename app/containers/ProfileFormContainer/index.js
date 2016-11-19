@@ -1,22 +1,32 @@
 import React, { PropTypes } from 'react';
 import ProfileForm from 'components/ProfileForm';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import submit from './submit';
 
-export default class ProfileFormContainer extends React.Component {
+class ProfileFormContainer extends React.Component {
   static propTypes = {
-    profile: PropTypes.object,
-    afterSubmit: PropTypes.func.isRequired,
-  }
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    profile: PropTypes.object.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
   }
 
-  handleSubmit() {
-    this.props.afterSubmit();
+  handleSubmit = (values) => {
+    console.log(values);
   }
 
   render() {
-    return <ProfileForm onSubmit={submit} initialValues={this.props.profile} />;
+    return (
+      <ProfileForm
+        initialValues={this.props.profile}
+        onSubmit={this.handleSubmit}
+      />
+      );
   }
 }
+
+const mapStateToProps = createStructuredSelector({
+  profile: selectCompteUtilisateur(),
+});
+
+export default connect(mapStateToProps)(ProfileFormContainer);

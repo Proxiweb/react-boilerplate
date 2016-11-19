@@ -36,9 +36,16 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/votre-compte',
+      path: '/users/:userId/profile',
       getComponent(location, cb) {
         System.import('containers/CompteUtilisateur')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/users/:userId/porte-monnaie',
+      getComponent(location, cb) {
+        System.import('containers/PorteMonnaie')
           .then(loadModule(cb))
           .catch(errorLoading);
       },

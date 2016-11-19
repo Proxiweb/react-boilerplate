@@ -5506,10 +5506,6 @@ lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
 
-lodash.isarray@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-4.0.0.tgz#2aca496b28c4ca6d726715313590c02e6ea34403"
-
 lodash.isempty@^4.2.1:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isempty/-/lodash.isempty-4.4.0.tgz#6f86cbedd8be4ec987be9aaf33c9684db1b31e7e"
@@ -5518,7 +5514,7 @@ lodash.isequal@^4.0.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.4.0.tgz#6295768e98e14dc15ce8d362ef6340db82852031"
 
-lodash.isfunction@^3.0.7, lodash.isfunction@^3.0.8:
+lodash.isfunction@^3.0.7:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/lodash.isfunction/-/lodash.isfunction-3.0.8.tgz#4db709fc81bc4a8fd7127a458a5346c5cdce2c6b"
 
@@ -5554,7 +5550,7 @@ lodash.memoize@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
-lodash.merge@^4.3.1, lodash.merge@^4.4.0, lodash.merge@^4.6.0:
+lodash.merge@^4.4.0, lodash.merge@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.0.tgz#69884ba144ac33fe699737a6086deffadd0f89c5"
 
@@ -7636,15 +7632,9 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "~0.1.0"
 
-reduce-reducers@^0.1.0:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-0.1.2.tgz#fa1b4718bc5292a71ddd1e5d839c9bea9770f14b"
-
-redux-actions@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/redux-actions/-/redux-actions-0.10.1.tgz#bb442ee37dd9643a94933e4071e089f435587135"
-  dependencies:
-    reduce-reducers "^0.1.0"
+redux-form-material-ui:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/redux-form-material-ui/-/redux-form-material-ui-4.1.0.tgz#7eae1a1ac390fdb5a5271fbadd82eb1e333e75d1"
 
 redux-form@^6.0.0-rc.4:
   version "6.1.1"
@@ -7682,10 +7672,6 @@ redux-socket.io@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/redux-socket.io/-/redux-socket.io-1.2.0.tgz#c89e2955c162bcbfc8b25255cef25dab08b0c8f6"
 
-redux-storage-decorator-debounce:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/redux-storage-decorator-debounce/-/redux-storage-decorator-debounce-1.1.1.tgz#8a4ebaca775792e1b7d604f7389ad56d075d47b3"
-
 redux-storage-decorator-filter@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/redux-storage-decorator-filter/-/redux-storage-decorator-filter-1.1.6.tgz#64b9b51877929f0edd3034c7a2d50a650825e81b"
@@ -7696,28 +7682,6 @@ redux-storage-decorator-filter@^1.1.6:
     lodash.reduce "^4.3.0"
     lodash.set "^4.0.0"
     lodash.unset "^4.1.0"
-
-redux-storage-engine-localstorage@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/redux-storage-engine-localstorage/-/redux-storage-engine-localstorage-1.1.2.tgz#d80bb109f36fcbdfffc77dd3e54be5f179f78f56"
-
-redux-storage-merger-simple@^1.0.2:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/redux-storage-merger-simple/-/redux-storage-merger-simple-1.0.3.tgz#921046a885e97beb36c938edbffa95d54b728ad3"
-  dependencies:
-    lodash.isarray "^4.0.0"
-    lodash.isobject "^3.0.2"
-    lodash.merge "^4.3.1"
-
-redux-storage@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/redux-storage/-/redux-storage-4.1.1.tgz#a23c0c1b546a26bc7d62193a4621203c7cee1104"
-  dependencies:
-    lodash.isfunction "^3.0.8"
-    lodash.isobject "^3.0.2"
-    loose-envify "^1.2.0"
-    redux-actions "^0.10.1"
-    redux-storage-merger-simple "^1.0.2"
 
 redux@3.6.0:
   version "3.6.0"

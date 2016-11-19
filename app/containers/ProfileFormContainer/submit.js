@@ -17,7 +17,7 @@ function submit(values, token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbC
   // });
   return sleep(1000) // simulate server latency
     .then(() => {
-      throw new SubmissionError({ nom: 'User does not exist', _error: 'Login failed!' });
+      throw new SubmissionError({ nomi: 'User does not exist', _error: 'Login failed!' });
     });
 }
 

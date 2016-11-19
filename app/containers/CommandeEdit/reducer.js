@@ -6,7 +6,6 @@
 import update from 'react-addons-update';
 import findIndex from 'lodash.findindex';
 import c from './constants';
-import { LOAD } from 'redux-storage';
 
 const ajouter = (state, offre) => {
   const idx = findIndex(state.contenus, { offreId: offre.offreId });
@@ -69,8 +68,6 @@ function commandeEditReducer(state = initialState, action) {
 
     case c.MODIFIE_TOTAUX:
       return majTarifs(state, action.payload);
-    case LOAD:
-      return action.payload.commande || state;
     default:
       return state;
   }

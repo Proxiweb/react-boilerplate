@@ -25,13 +25,9 @@ import FontIcon from 'material-ui/FontIcon';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
-import DropDownMenu from 'material-ui/DropDownMenu';
 
 import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
-
 
 import Logged from 'components/Logged';
 import Login from 'components/Login';
@@ -104,7 +100,13 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             onChangeList={this.handleChangeList}
             user={user}
             onRequestChange={(open) => this.setState({ drawerOpen: open })}
-            header={<MenuItem primaryText="Menu" style={getDrawerHeaderStyle(this.context)} />}
+            header={(
+              <MenuItem
+                primaryText="Menu"
+                rightIcon={<Close color="white" style={{ height: 40, width: 30 }} />}
+                onTouchTap={this.closeDrawer}
+                style={getDrawerHeaderStyle(this.context)}
+              />)}
           />
         </AppBar>
         <div className={`${styles.mainContent} container-fluid`}>

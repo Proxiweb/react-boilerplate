@@ -1,22 +1,26 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import Paper from 'material-ui/Paper';
+import {
+  TextField,
+} from 'redux-form-material-ui';
+
 import styles from './styles.css';
-// import validate from './validate';
-import PureInput from 'components/PureInput';
+import RaisedButton from 'material-ui/RaisedButton';
 import send from 'utils/send';
 
-const asyncValidate = (values) => new Promise((resolve, reject) => {
-  // si l'utilisateur est identifié, l'email ne doit pas être testé
-  if (values.id) resolve();
-
-  send({ url: '/api/checkMail', datas: { email: values.email } })
-    .then((res) => {
-      if (res.err) {
-        reject({ email: 'Cet email est déjà utilisé' });
-      }
-      resolve();
-    });
-});
+// const asyncValidate = (values) => new Promise((resolve, reject) => {
+//   // si l'utilisateur est identifié, l'email ne doit pas être testé
+//   if (values.id) resolve();
+//
+//   send({ url: '/api/checkMail', datas: { email: values.email } })
+//     .then((res) => {
+//       if (res.err) {
+//         reject({ email: 'Cet email est déjà utilisé' });
+//       }
+//       resolve();
+//     });
+// });
 
 class ProfileForm extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -24,22 +28,31 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
   }
 
   render() {
-    const {
-      handleSubmit,
-    } = this.props;
+    const { handleSubmit } = this.props;
     return (
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="row">
-              <Field cols="6" name="nom" type="text" component={PureInput} label="Nom" className={`form-control ${styles.upper}`} />
-              <Field cols="6" name="prenom" type="text" component={PureInput} label="Prénom" className={`form-control ${styles.capit}`} />
+      <form onSubmit={handleSubmit}>
+        <Paper zDepth={2} >
+          <div className="row">
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Nom" name="nom" component={TextField} />
+              <Field cols="6" floatingLabelText="Adresse" name="adresse" component={TextField} />
+              <Field cols="6" floatingLabelText="Code postal" name="codePostal" component={TextField} />
+              <Field cols="6" floatingLabelText="Télephone portable" name="telPortable" component={TextField} />
+              <Field cols="6" floatingLabelText="Adresse email" name="email" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Prénom" name="prenom" component={TextField} label="Prénom" />
+              <Field cols="6" floatingLabelText="Adresse complémentaire" name="adressComplementaire" component={TextField} />
+              <Field cols="6" floatingLabelText="Ville" name="ville" component={TextField} />
+              <Field cols="6" floatingLabelText="Télephone fixe" name="telFixe" component={TextField} />
+              <Field cols="6" floatingLabelText="Pseudo (si pas d'email)" name="pseudo" component={TextField} />
+            </div>
+            <div className="row center-md"></div>
+            <div className={`col-md-6 col-md-offset-3 ${styles.formFooter}`}>
+              <RaisedButton type="submit" label="Valider" primary fullWidth />
             </div>
           </div>
-          <div className="col-md-4 col-md-offset-4">
-            <button type="submit" className="btn btn-submit btn-block btn-lg btn-primary"><i className="fa fa-check"></i> Valider</button>
-          </div>
-        </div>
+        </Paper>
       </form>
     );
   }

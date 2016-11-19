@@ -19,7 +19,6 @@ import {
 } from './constants';
 
 import update from 'react-addons-update';
-import { LOAD } from 'redux-storage';
 import moment from 'moment';
 import { REHYDRATE } from 'redux-persist/constants';
 
@@ -85,13 +84,12 @@ function compteUtilisateurReducer(state = initialState, action) {
       const { balances, sequence } = action.payload.account;
       return { ...state, balances, sequence, pending: false };
     }
-    case LOAD:
-      return action.payload.compteUtilisateur || state;
+
     case LOAD_ACCOUNT_ERROR:
       return { ...state, error: action.payload.err, pending: false };
     case REHYDRATE: {
       const incoming = action.payload.compteUtilisateur;
-      return { ...state, ...incoming };
+      return { ...state, ...incoming, loading: false };
     }
     default:
       return state;

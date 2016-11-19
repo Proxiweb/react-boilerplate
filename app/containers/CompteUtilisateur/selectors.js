@@ -33,9 +33,9 @@ export const selectUtilisateurId = () => createSelector(
   (auth) => (auth ? auth.id : undefined)
 );
 
-export const selectProfile = () => createSelector(
-  [selectCompteUtilisateur()],
-  (auth) => ({ nom: auth.nom, prenom: auth.prenom })
+export const selectBalance = () => createSelector(
+  selectCompteUtilisateurDomain(),
+  (substate) => substate.balances[0],
 );
 
 export const selectLoading = () => createSelector(

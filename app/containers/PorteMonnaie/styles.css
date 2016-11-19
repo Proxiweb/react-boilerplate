@@ -1,0 +1,9 @@
+.porteMonnaie {
+  text-align: right;
+  font-size: 1.5em;
+}
+
+.solde {
+  font-size: 0.8em;
+  color: gray;
+}

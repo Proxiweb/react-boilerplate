@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
+import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import moment from 'moment';
+
 import styles from './styles.css';
 export default class ListePaiements extends Component { // eslint-disable-line
   static propTypes = {
@@ -20,12 +21,11 @@ export default class ListePaiements extends Component { // eslint-disable-line
   render() {
     const { paiements } = this.props;
     return (
-      <Table selectable={false} multiSelectable={false} className={styles.bordered} height={600}>
+      <Table selectable={false} multiSelectable={false} className={styles.bordered} height={350}>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn tooltip="Crédit">Crédit</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Débit">Débit</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Objet">Objet</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Opération" width="45" style={{ textAlign: 'center' }}>Opération</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Objet" width="240">Objet</TableHeaderColumn>
             <TableHeaderColumn tooltip="Date">Date</TableHeaderColumn>
           </TableRow>
         </TableHeader>
@@ -33,10 +33,9 @@ export default class ListePaiements extends Component { // eslint-disable-line
           {paiements.map((paiement, idx) => {
             const { type, montant, memo } = paiement;
             return (
-              <TableRow key={idx} selectable={false}>
-                <TableRowColumn style={{ textAlign: 'right' }}>{type === 'credit' && montant}</TableRowColumn>
-                <TableRowColumn style={{ textAlign: 'right' }}>{type === 'debit' && montant}</TableRowColumn>
-                <TableRowColumn>{memo}</TableRowColumn>
+              <TableRow key={idx} selectable={false} displayBorder>
+                <TableRowColumn width="45" style={{ textAlign: 'center' }}>{type === 'credit' ? `+${montant}` : `-${montant}`}</TableRowColumn>
+                <TableRowColumn width="240">{memo}</TableRowColumn>
                 <TableRowColumn>{moment(paiement.date).format('DD/MM/YYYY HH:mm')}</TableRowColumn>
               </TableRow>
             );
