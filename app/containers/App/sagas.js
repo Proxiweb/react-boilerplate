@@ -1,6 +1,6 @@
 import { take, call, put, select } from 'redux-saga/effects';
 import apiClient from 'utils/apiClient';
-import { addMessage } from 'containers/App/actions';
+import { addMessage, startGlobalPending, stopGlobalPending } from 'containers/App/actions';
 import { logout } from 'containers/Login/actions';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
@@ -8,7 +8,6 @@ import assign from 'lodash/assign';
 export function* apiFetcherSaga() {
   while (true) { // eslint-disable-line
     const action = yield take('*');
-
     if (action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {  //  format xxx/xxx/ASYNC_[UNE_ACTION]_START
       const actionSuffix = action.type.split('/');
       const actionTypeSplt = actionSuffix[2].split('_');
@@ -33,9 +32,15 @@ export function* apiFetcherSaga() {
       const options = { query, datas, headers, method };
 
       try {
+        yield put(startGlobalPending());
         const res = yield call(apiClient[method], `/api/${url}`, options);
         yield put(assign({ type: success, datas: res.datas, req: omit(action, 'type'), msgPending, msgSuccess, msgError }));
+        yield put(stopGlobalPending());
+        if (msgSuccess) {
+          yield put(addMessage({ type: 'success', text: msgSuccess }));
+        }
       } catch (exception) {
+        yield put(stopGlobalPending());
         if (exception.message && exception.message.error === 'La session a expirée') {
           yield put(addMessage({
             type: 'error',

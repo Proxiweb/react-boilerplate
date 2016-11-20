@@ -1,4 +1,6 @@
+
 import {
+  saveAccountConst,
   LOAD_ACCOUNT,
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
@@ -24,3 +26,16 @@ export const accountLoaded = (account) => ({
     account,
   },
 });
+
+export const saveAccount =
+  (
+    utilisateurId,
+    { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications },
+    msgSuccess = 'Profile sauvegardé'
+  ) => ({
+    type: saveAccountConst.ASYNC_SAVE_ACCOUNT_START,
+    url: `utilisateurs/${utilisateurId}`,
+    method: 'put',
+    datas: { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications },
+    msgSuccess,
+  });

@@ -11,6 +11,8 @@
 import {
  ADD_MESSAGE,
  REMOVE_MESSAGE,
+ GLOBAL_PENDING_START,
+ GLOBAL_PENDING_STOP,
 } from './constants';
 
 export function addMessage(message) {
@@ -26,3 +28,6 @@ export function removeMessage(id) {
     payload: { id },
   };
 }
+
+export const startGlobalPending = () => ({ type: GLOBAL_PENDING_START });
+export const stopGlobalPending = () => ({ type: GLOBAL_PENDING_STOP });

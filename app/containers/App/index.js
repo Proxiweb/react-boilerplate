@@ -22,6 +22,7 @@ import Notifications from 'containers/Notifications';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
@@ -51,6 +52,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
     user: PropTypes.object,
+    pending: PropTypes.bool.isRequired,
   }
 
   static contextTypes = {
@@ -85,7 +87,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   };
 
   render() {
-    const { user } = this.props;
+    const { user, pending } = this.props;
 
     return (
       <div className={styles.allContent}>
@@ -113,6 +115,17 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
           {React.Children.toArray(this.props.children)}
         </div>
         <Notifications />
+        {pending && (
+          <div style={{ position: 'absolute', top: 70, right: 265 }}>
+            <RefreshIndicator
+              size={40}
+              left={260}
+              top={10}
+              status="loading"
+              style={{ display: 'inline-block', position: 'relative' }}
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -122,4 +135,4 @@ const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
 });
 
-export default connect((state) => ({ user: state.compteUtilisateur.auth }), mapDispatchToProps)(App);
+export default connect((state) => ({ user: state.compteUtilisateur.auth, pending: state.global.pending }), mapDispatchToProps)(App);
