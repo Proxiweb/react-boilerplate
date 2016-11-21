@@ -16,6 +16,7 @@ export default class AppMainDrawer extends Component {
     open: PropTypes.bool.isRequired,
     header: PropTypes.node.isRequired,
     user: PropTypes.object,
+    logout: PropTypes.func.isRequired,
   }
   render() {
     const { open, header, onRequestChange, onChangeList, user } = this.props;
@@ -48,6 +49,12 @@ export default class AppMainDrawer extends Component {
           )}
           {user && <ListItem leftIcon={<HelpIcon />} primaryText="Aide" value={`/users/${user.id}/aide`} />}
           {!user && <ListItem primaryText="Connexion" value="/login" />}
+          {user && (
+            <ListItem
+              primaryText="Déconnexion"
+              onTouchTap={() => this.props.logout()}
+              value="/"
+            />)}
         </SelectableList>
       </Drawer>
     );

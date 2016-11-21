@@ -79,8 +79,11 @@ export function* onLoginSuccess() {
   while(true) { // eslint-disable-line
     const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
     yield fork(loadAccountSaga, action.datas.user.stellarKeys.adresse);
-    if (action.req.redirectPathname) {
-      yield put(push(action.req.redirectPathname));
+    const user = action.datas.user;
+    if (user.relaiId) {
+      yield put(push(`/relais/${user.relaiId}/commandes`));
+    } else {
+      yield put(push('/choix-relais'));
     }
   }
 }

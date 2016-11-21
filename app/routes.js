@@ -54,13 +54,11 @@ export default function createRoutes(store) {
       getComponent(location, cb) {
         const importModules = Promise.all([
           System.import('containers/Login/index'),
-          System.import('containers/Login/sagas'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component, sagas]) => {
-          injectSagas(sagas.default);
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 

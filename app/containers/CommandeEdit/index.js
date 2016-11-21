@@ -122,23 +122,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (!utilisateurId) return null;
 
     const { typeProduitId, commandeId, produitId } = params;
-    if (!typeProduits) {
-      return (
-        <div className={`${styles.commandeEdit} row`}>
-          <div className="col-md-12">
-            <div style={{ margin: 'auto', width: '40px' }}>
-              <RefreshIndicator
-                size={40}
-                left={0}
-                top={10}
-                status="loading"
-                style={{ display: 'inline-block', position: 'relative' }}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
+    if (!typeProduits) return null;
+
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet

@@ -41,7 +41,7 @@ export function* apiFetcherSaga() {
         }
       } catch (exception) {
         yield put(stopGlobalPending());
-        if (exception.message && exception.message.error === 'La session a expirée') {
+        if (exception.message && exception.message && exception.message.message === 'La session a expirée') {
           yield put(addMessage({
             type: 'error',
             text: 'La session a expirée, veuillez vous re-connecter',

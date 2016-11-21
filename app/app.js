@@ -41,6 +41,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // Import global saga
 import globalSagas from './containers/App/sagas';
+import loginSagas from './containers/Login/sagas';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
@@ -66,6 +67,7 @@ persistStore(store, {
 
 // starting globals sagas
 globalSagas.map(store.runSaga);
+loginSagas.map(store.runSaga);
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState

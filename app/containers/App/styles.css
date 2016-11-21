@@ -9,7 +9,8 @@
 }
 
 .mainContent {
-  padding-top: 20px;
+  padding-top: 2rem;
+  position: relative;
 }
 
 html,

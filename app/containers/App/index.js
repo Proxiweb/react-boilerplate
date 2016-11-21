@@ -23,6 +23,7 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import CircularProgress from 'material-ui/CircularProgress';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
@@ -30,6 +31,7 @@ import Close from 'material-ui/svg-icons/navigation/close';
 import AppBar from 'material-ui/AppBar';
 import AppMainDrawer from 'containers/AppMainDrawer';
 
+import { logout } from 'containers/Login/actions';
 import Logged from 'components/Logged';
 import Login from 'components/Login';
 
@@ -51,6 +53,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   static propTypes = {
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
     user: PropTypes.object,
     pending: PropTypes.bool.isRequired,
   }
@@ -102,6 +105,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             onChangeList={this.handleChangeList}
             user={user}
             onRequestChange={(open) => this.setState({ drawerOpen: open })}
+            logout={this.props.logout}
             header={(
               <MenuItem
                 primaryText="Menu"
@@ -116,15 +120,12 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
         </div>
         <Notifications />
         {pending && (
-          <div style={{ position: 'absolute', top: 70, right: 265 }}>
-            <RefreshIndicator
-              size={40}
-              left={260}
-              top={10}
-              status="loading"
-              style={{ display: 'inline-block', position: 'relative' }}
-            />
-          </div>
+          <CircularProgress
+            size={40}
+            color="white"
+            status="loading"
+            style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: '12px', left: '62px' }}
+          />
         )}
       </div>
     );
@@ -133,6 +134,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
 
 const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
+  logout: () => dispatch(logout()),
 });
 
 export default connect((state) => ({ user: state.compteUtilisateur.auth, pending: state.global.pending }), mapDispatchToProps)(App);
