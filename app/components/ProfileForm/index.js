@@ -25,10 +25,11 @@ import send from 'utils/send';
 class ProfileForm extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, pending } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <Paper zDepth={2} >
@@ -49,7 +50,7 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
             </div>
             <div className="row center-md"></div>
             <div className={`col-md-6 col-md-offset-3 ${styles.formFooter}`}>
-              <RaisedButton type="submit" label="Valider" primary fullWidth />
+              <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
             </div>
           </div>
         </Paper>

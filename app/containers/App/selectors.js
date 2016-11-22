@@ -1,6 +1,8 @@
 // selectLocationState expects a plain JS object for the routing state
 import isEqual from 'lodash/isEqual';
 
+export const selectPending = () => (state) => state.global.pending;
+
 const selectLocationState = () => {
   let prevRoutingState;
 

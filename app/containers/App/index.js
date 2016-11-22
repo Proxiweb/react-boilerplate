@@ -121,10 +121,10 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
         <Notifications />
         {pending && (
           <CircularProgress
-            size={40}
+            size={30}
             color="white"
             status="loading"
-            style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: '12px', left: '62px' }}
+            style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: '17px', left: '180px' }}
           />
         )}
       </div>
