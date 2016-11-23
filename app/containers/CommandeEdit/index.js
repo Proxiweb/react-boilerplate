@@ -25,14 +25,11 @@ import {
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
 import { selectUtilisateurId } from 'containers/CompteUtilisateur/selectors';
-import { ajouter, supprimer, sauvegarder, load, setDistibution } from './actions';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { ajouter, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
-import { FormattedMessage } from 'react-intl';
 import OrderValidate from 'components/OrderValidate';
 import DetailOffres from 'components/DetailOffres';
-import messages from './messages';
 import styles from './styles.css';
 
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -48,6 +45,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     ajouter: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     sauvegarder: PropTypes.func.isRequired,
+    annuler: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
     loadCommandes: PropTypes.func.isRequired,
 
@@ -157,9 +155,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             )}
         </div>
         <div className="col-md-5 col-xs-12">
-          {quantiteOffresAchetees &&
+          {quantiteOffresAchetees && typeProduits &&
             <DetailOffres
               offres={quantiteOffresAchetees}
+              typeProduits={typeProduits}
               utilisateurId={utilisateurId}
               fournisseur={fournisseur}
               produits={produits}
@@ -176,6 +175,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               commandeId={commandeId}
               utilisateurId={utilisateurId}
               sauvegarder={this.props.sauvegarder}
+              annuler={this.props.annuler}
               supprimer={this.props.supprimer}
               setDistibution={this.props.setDistibution}
               produitsById={produitsById}
@@ -212,6 +212,7 @@ function mapDispatchToProps(dispatch) {
     ajouter: (offre) => dispatch(ajouter(offre)),
     supprimer: (offreId) => dispatch(supprimer(offreId)),
     sauvegarder: (datas) => dispatch(sauvegarder(datas)),
+    annuler: (id) => dispatch(annuler(id)),
     loadCommandes: () => dispatch(loadCommandes()),
     setDistibution: (livraisonId, plageHoraire) => dispatch(setDistibution(livraisonId, plageHoraire)),
   };

@@ -14,5 +14,6 @@ const LOAD_COMMANDE = 'app/CommandeEdit/LOAD_COMMANDE';
 const MODIFIE_TOTAUX = 'app/CommandeEdit/MODIFIE_TOTAUX';
 
 const commandeConst = generateConstants('app/CommandeEdit', 'sauvegarder');
+const annulerConst = generateConstants('app/CommandeEdit', 'annuler');
 
-export default assign(commandeConst, { AJOUTER_OFFRE, SUPPRIMER_OFFRE, LOAD_COMMANDE, SET_DISTRIBUTION, CHANGE_DISTRIBUTION, MODIFIE_TOTAUX });
+export default assign(commandeConst, annulerConst, { AJOUTER_OFFRE, SUPPRIMER_OFFRE, LOAD_COMMANDE, SET_DISTRIBUTION, CHANGE_DISTRIBUTION, MODIFIE_TOTAUX });

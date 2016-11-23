@@ -5,3 +5,13 @@
   background-color: white;
   padding: 10px 10px;
 }
+
+.offre {
+  background-color: silver;
+  margin: 0 5px 5px 5px;
+  padding: 5px 0;
+}
+
+.offre div {
+  line-height: 33px;
+}

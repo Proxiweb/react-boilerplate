@@ -58,6 +58,9 @@ function commandeEditReducer(state = initialState, action) {
     case c.ASYNC_SAUVEGARDER_SUCCESS:
       return { ...state, ...action.datas, modifiee: false };
 
+    case c.ASYNC_ANNULER_SUCCESS:
+      return initialState;
+
     case c.LOAD_COMMANDE:
       return { ...state, ...action.payload.datas };
 

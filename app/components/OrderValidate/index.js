@@ -15,6 +15,7 @@ export default class OrderValidate extends Component {
     offres: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     sauvegarder: PropTypes.func.isRequired,
+    annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
   }
@@ -40,6 +41,7 @@ export default class OrderValidate extends Component {
     this.showDistribSelected = this.showDistribSelected.bind(this);
     this.showLivraisonSelector = this.showLivraisonSelector.bind(this);
     this.showDistribButton = this.showDistribButton.bind(this);
+    this.showCancel = this.showCancel.bind(this);
   }
 
   selectionnePlageHoraire(plageHoraire, livraisonId) {
@@ -113,6 +115,18 @@ export default class OrderValidate extends Component {
     />);
   }
 
+  showCancel() {
+    const { commande } = this.props;
+    return (
+      <RaisedButton
+        label="Annuler la commande"
+        secondary
+        style={{ marginTop: 20 }}
+        onClick={() => this.props.annuler(commande.id)}
+      />
+    );
+  }
+
   render() {
     const { commande } = this.props;
     const { view } = this.state;
@@ -122,6 +136,7 @@ export default class OrderValidate extends Component {
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
       {!commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}
       {commande.livraisonId && !commande.id && this.showValidate()}
+      {!commande.dateLivraison && commande.id && this.showCancel()}
     </div>);
   }
 }

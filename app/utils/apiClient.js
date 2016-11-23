@@ -112,9 +112,26 @@ export function patch(url, options = { headers: {}, query: {}, datas: {} }) {
     // }));
 }
 
+export function del(url, options = { headers: {}, query: {} }) {
+  return new Promise((resolve, reject) => axios
+    .delete(url, { headers: options.headers, params: options.query })
+    .then(() => {
+      resolve({ datas: {} });
+    })
+    .catch((error) => {
+      if (error.response) {
+        reject({ message: error.response.data });
+      } else {
+        console.log('Error', error.message);
+      }
+    }));
+}
+
+
 export default {
   post,
   get,
   put,
   patch,
+  del,
 };

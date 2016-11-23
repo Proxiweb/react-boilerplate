@@ -243,13 +243,16 @@ export const selectCommandeCommandeContenus = () => createSelector(
 export const selectQuantiteOffresAchetees = () => createSelector(
   [selectOffresByProduit(), selectCommandeCommandeContenus(), selectCommandeContenus()],
   (offres, commandeCommandeContenus, commandeContenus) => {
-    if (!commandeCommandeContenus || !offres || !commandeContenus) return null;
+    if (!offres) return null;
     return offres.map((offre) => ({
       ...offre,
-      quantiteTotal: commandeCommandeContenus
-                      .map((key) => commandeContenus[key])
-                      .filter((contenu) => contenu && contenu.offreId === offre.id)
-                      .reduce((memo, contenu) => memo + contenu.quantite, 0),
+      quantiteTotal: (commandeCommandeContenus && commandeContenus ?
+                        commandeCommandeContenus
+                          .map((key) => commandeContenus[key])
+                          .filter((contenu) => contenu && contenu.offreId === offre.id)
+                          .reduce((memo, contenu) => memo + contenu.quantite, 0) :
+                        0
+                     ),
     }));
   }
 );

@@ -15,6 +15,14 @@ export const sauvegarder = (datas) => ({
   datas,
 });
 
+export const annuler = (id) => ({
+  type: findActionType('annuler', c, 'START'),
+  url: `commande_utilisateurs/${id}`,
+  method: 'del',
+  msgPending: 'Annulation commande',
+  msgSuccess: 'Commande annulée',
+});
+
 export function ajouter(offre) {
   return {
     type: c.AJOUTER_OFFRE,
