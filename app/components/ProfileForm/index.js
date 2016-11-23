@@ -32,7 +32,7 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
     const { handleSubmit, pending } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <Paper zDepth={2} >
+        <Paper zDepth={2} style={{ padding: '1rem' }}>
           <div className="row">
             <div className="col-md-6">
               <Field cols="6" floatingLabelText="Nom" name="nom" component={TextField} />
@@ -48,9 +48,10 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
               <Field cols="6" floatingLabelText="Télephone fixe" name="telFixe" component={TextField} />
               <Field cols="6" floatingLabelText="Pseudo (si pas d'email)" name="pseudo" component={TextField} />
             </div>
-            <div className="row center-md"></div>
-            <div className={`col-md-6 col-md-offset-3 ${styles.formFooter}`}>
-              <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+            <div className="row center-md">
+              <div className={`col-md ${styles.formFooter}`}>
+                <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+              </div>
             </div>
           </div>
         </Paper>

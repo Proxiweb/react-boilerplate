@@ -18,8 +18,6 @@ class ProfileFormContainer extends React.Component {
 
   handleSubmit = (values) => {
     const saving = saveAccount(this.props.profile.id, values);
-    console.log(values);
-    console.log(saving);
     try {
       this.props.dispatch(saving);
     } catch (e) {
