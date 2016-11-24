@@ -8,7 +8,9 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
+import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
 import {
   selectCommandeProduitsByTypeProduit,
@@ -130,7 +132,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <div className="col-md-2 col-xs-12">
+        <div className="col-md-3 col-xs-12 col-md-offset-1">
           {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
@@ -154,7 +156,33 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </List>
             )}
         </div>
-        <div className="col-md-5 col-xs-12">
+        <div className="col-md-7 col-xs-12">
+          <MediaQuery query="(min-device-width: 1224px)">
+            <Card style={{ marginBottom: 20 }}>
+              <CardHeader
+                title={`Total panier : XX €`}
+                subtitle="6 produits"
+                actAsExpander
+                showExpandableButton
+              />
+              <CardText expandable>
+                { (!commande || commande.contenus.length === 0 || !offres) ?
+                  <h1>Panier vide</h1> :
+                  <OrderValidate
+                    commande={commande}
+                    commandeId={commandeId}
+                    utilisateurId={utilisateurId}
+                    sauvegarder={this.props.sauvegarder}
+                    annuler={this.props.annuler}
+                    supprimer={this.props.supprimer}
+                    setDistibution={this.props.setDistibution}
+                    produitsById={produitsById}
+                    offres={offres}
+                  />
+                }
+              </CardText>
+            </Card>
+          </MediaQuery>
           {quantiteOffresAchetees && typeProduits &&
             <DetailOffres
               offres={quantiteOffresAchetees}
@@ -167,22 +195,24 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             />
           }
         </div>
-        <div className="col-md-5 col-xs-12">
-          { (!commande || commande.contenus.length === 0 || !offres) ?
-            <h1>Panier vide</h1> :
-            <OrderValidate
-              commande={commande}
-              commandeId={commandeId}
-              utilisateurId={utilisateurId}
-              sauvegarder={this.props.sauvegarder}
-              annuler={this.props.annuler}
-              supprimer={this.props.supprimer}
-              setDistibution={this.props.setDistibution}
-              produitsById={produitsById}
-              offres={offres}
-            />
-          }
-        </div>
+        <MediaQuery query="(max-device-width: 1224px)">
+          <div className="col-md-5 col-xs-12">
+            { (!commande || commande.contenus.length === 0 || !offres) ?
+              <h1>Panier vide</h1> :
+              <OrderValidate
+                commande={commande}
+                commandeId={commandeId}
+                utilisateurId={utilisateurId}
+                sauvegarder={this.props.sauvegarder}
+                annuler={this.props.annuler}
+                supprimer={this.props.supprimer}
+                setDistibution={this.props.setDistibution}
+                produitsById={produitsById}
+                offres={offres}
+              />
+            }
+          </div>
+        </MediaQuery>
       </div>
     );
   }

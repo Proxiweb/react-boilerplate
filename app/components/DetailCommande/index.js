@@ -20,7 +20,13 @@ export default class DetailCommande extends Component { // eslint-disable-line
   render() {
     const { offres, produits, contenus, supprimer, readOnly, montant, recolteFond } = this.props;
     return (
-      <Table selectable={false} multiSelectable={false} className={styles.bordered} height={200} fixedFooter>
+      <Table
+        selectable={false}
+        multiSelectable={false}
+        className={styles.bordered}
+        height={contenus.length > 4 ? 200 : null}
+        fixedFooter
+      >
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn tooltip="Désignation" style={{ paddingLeft: 10, width: 290, paddingRight: 10 }}>Désignation</TableHeaderColumn>
