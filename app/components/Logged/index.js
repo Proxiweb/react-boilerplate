@@ -30,7 +30,7 @@ export default class Logged extends Component {
             badgeContent={4}
             secondary
           >
-            <CommunicationChatBubble />
+            <CommunicationChatBubble style={{ height: 15 }} />
           </Badge>
         }
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}

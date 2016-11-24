@@ -45,7 +45,6 @@ export default class DetailOffres extends Component {
             {!viewOffre && <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} />}
           </div>
         </div>
-        { !viewOffre && <p>Vue fournisseur</p>}
         { viewOffre && offres.map((offre, idx) => {
           const produit = produits.find((pdt) => pdt.id === offre.produitId);
           const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
