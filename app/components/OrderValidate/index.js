@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
+import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
 import assign from 'lodash/assign';
 
 import DetailCommande from 'components/DetailCommande';
@@ -75,8 +77,10 @@ export default class OrderValidate extends Component {
         />
         <RaisedButton
           label="Modifier"
+          primary
           onClick={() => this.setState({ view: 'distribution' })}
           className={styles.distriButton}
+          icon={<EditorIcon />}
         />
       </div>
     );
@@ -94,15 +98,17 @@ export default class OrderValidate extends Component {
 
   showDetailsCommande() {
     const { offres, commande, produitsById, supprimer } = this.props;
-    return (<DetailCommande
-      contenus={commande.contenus}
-      montant={commande.montant.toFixed(2)}
-      recolteFond={commande.recolteFond.toFixed(2)}
-      offres={offres}
-      produits={produitsById}
-      supprimer={supprimer}
-      readOnly={typeof commande.id !== 'undefined'}
-    />);
+    return (
+      <DetailCommande
+        contenus={commande.contenus}
+        montant={commande.montant.toFixed(2)}
+        recolteFond={commande.recolteFond.toFixed(2)}
+        offres={offres}
+        produits={produitsById}
+        supprimer={supprimer}
+        readOnly={commande.datePaiement}
+      />
+    );
   }
 
   showLivraisonSelector() {
@@ -118,12 +124,15 @@ export default class OrderValidate extends Component {
   showCancel() {
     const { commande } = this.props;
     return (
-      <RaisedButton
-        label="Annuler la commande"
-        secondary
-        style={{ marginTop: 20 }}
-        onClick={() => this.props.annuler(commande.id)}
-      />
+      <div style={{ textAlign: 'center' }}>
+        <RaisedButton
+          label="Annuler la commande"
+          secondary
+          style={{ marginTop: 20 }}
+          onClick={() => this.props.annuler(commande.id)}
+          icon={<TrashIcon />}
+        />
+      </div>
     );
   }
 

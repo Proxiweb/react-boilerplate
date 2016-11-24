@@ -8,7 +8,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
@@ -132,7 +132,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <div className="col-md-3 col-xs-12 col-md-offset-1">
+        <div className="col-sm-3 col-lg-2 col-xs-12">
           {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
@@ -156,12 +156,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </List>
             )}
         </div>
-        <div className="col-md-7 col-xs-12">
-          <MediaQuery query="(min-device-width: 1224px)">
+        <div className="col-md-7 col-xs-12 col-lg-5">
+          <MediaQuery query="(max-device-width: 1224px)">
             <Card style={{ marginBottom: 20 }}>
               <CardHeader
-                title={`Total panier : XX €`}
-                subtitle="6 produits"
+                title={`Panier : ${commande.montant} € - ${commande.contenus.length} produits`}
+                subtitle="Clickez ici pour valider la commande"
                 actAsExpander
                 showExpandableButton
               />
@@ -195,7 +195,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             />
           }
         </div>
-        <MediaQuery query="(max-device-width: 1224px)">
+        <MediaQuery query="(min-device-width: 1224px)">
           <div className="col-md-5 col-xs-12">
             { (!commande || commande.contenus.length === 0 || !offres) ?
               <h1>Panier vide</h1> :

@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
+import FlatButton from 'material-ui/FlatButton';
+import RemoveIcon from 'material-ui/svg-icons/content/remove';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import styles from './styles.css';
 export default class DetailCommande extends Component { // eslint-disable-line
@@ -32,8 +34,8 @@ export default class DetailCommande extends Component { // eslint-disable-line
             <TableHeaderColumn tooltip="Désignation" style={{ paddingLeft: 10, width: 290, paddingRight: 10 }}>Désignation</TableHeaderColumn>
             <TableHeaderColumn tooltip="Prix unitaire" style={{ width: 60, paddingLeft: 10, paddingRight: 10, textAlign: 'right' }}>Prix</TableHeaderColumn>
             <TableHeaderColumn tooltip="Quantité" style={{ width: 30, paddingLeft: 5, paddingRight: 5, textAlign: 'right' }}>Qté</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Total article" style={{ paddingLeft: 10, paddingRight: 80, textAlign: 'right' }}>Total</TableHeaderColumn>
-            {!readOnly && <TableHeaderColumn tooltip="Supprimer" style={{ display: 'none' }}></TableHeaderColumn>}
+            <TableHeaderColumn tooltip="Total article" style={{ paddingLeft: 10, paddingRight: 80, textAlign: 'center' }}>Total</TableHeaderColumn>
+            {!readOnly && <TableHeaderColumn tooltip="Supprimer">Supp</TableHeaderColumn>}
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
@@ -51,9 +53,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
                 <TableRowColumn style={{ textAlign: 'right', width: 30, paddingLeft: 5, paddingRight: 5 }}>{contenu.quantite}</TableRowColumn>
                 <TableRowColumn style={{ textAlign: 'right', paddingLeft: 10, paddingRight: 10 }}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
                 {!readOnly && (<TableRowColumn style={{ width: 50 }}>
-                  <button onClick={() => supprimer(contenu.offreId)} style={{ cursor: 'pointer' }}>
-                    x
-                  </button>
+                  <FlatButton onClick={() => supprimer(contenu.offreId)} icon={<RemoveIcon />} />
                 </TableRowColumn>)}
               </TableRow>
             ); })

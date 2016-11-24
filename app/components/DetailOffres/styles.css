@@ -4,6 +4,7 @@
 .offres {
   background-color: white;
   padding: 10px 10px;
+  height: 100%;
 }
 
 .offre {
@@ -14,4 +15,8 @@
 
 .offre div {
   line-height: 33px;
+}
+
+.fournisseurSwitch {
+  text-align: right;
 }
