@@ -8,6 +8,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Paper from 'material-ui/Paper';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import MediaQuery from 'components/MediaQuery';
@@ -63,6 +64,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
   constructor(props) {
     super(props);
+    this.state = {
+      panierExpanded: false,
+    };
     this.handleChange = this.handleChange.bind(this);
     this.navigateTo = this.navigateTo.bind(this);
   }
@@ -104,6 +108,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
   }
 
+  toggleState = () => {
+    this.setState({ panierExpanded: !this.state.panierExpanded });
+  }
+
   render() {
     const {
       typeProduits,
@@ -119,10 +127,14 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       livraisons,
     } = this.props;
 
+    const { panierExpanded } = this.state;
+
     if (!utilisateurId) return null;
 
     const { typeProduitId, commandeId, produitId } = params;
     if (!typeProduits) return null;
+
+    const nbreProduits = commande.contenus.length;
 
     return (
       <div className={`${styles.commandeEdit} row`}>
@@ -132,7 +144,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <div className="col-sm-3 col-lg-2 col-xs-12">
+        <div className="col-sm-4 col-lg-3 col-lg-offset-1 col-xs-12 col-md-4">
           {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
@@ -156,14 +168,14 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </List>
             )}
         </div>
-        <div className="col-md-7 col-xs-12 col-lg-5">
-          <MediaQuery query="(max-device-width: 1224px)">
-            <Card style={{ marginBottom: 20 }}>
+        <div className="col-md-7 col-xs-12 col-lg-7">
+          <MediaQuery query="(min-device-width: 1224px)">
+            <Card style={{ marginBottom: 20 }} onExpandChange={this.toggleState}>
               <CardHeader
-                title={`Panier : ${commande.montant} € - ${commande.contenus.length} produits`}
-                subtitle="Clickez ici pour valider la commande"
-                actAsExpander
-                showExpandableButton
+                title={<span>Panier : <strong>{commande.montant || 0} €</strong> - {nbreProduits} produits</span>}
+                subtitle={nbreProduits ? 'Cliquez ici pour valider la commande' : ''}
+                actAsExpander={nbreProduits > 0}
+                showExpandableButton={nbreProduits > 0}
               />
               <CardText expandable>
                 { (!commande || commande.contenus.length === 0 || !offres) ?
@@ -183,19 +195,19 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               </CardText>
             </Card>
           </MediaQuery>
-          {quantiteOffresAchetees && typeProduits &&
+          {quantiteOffresAchetees && typeProduits && !panierExpanded &&
             <DetailOffres
               offres={quantiteOffresAchetees}
               typeProduits={typeProduits}
               utilisateurId={utilisateurId}
               fournisseur={fournisseur}
-              produits={produits}
+              produit={produitsById[params.produitId]}
               commandeId={commandeId}
               ajouter={this.props.ajouter}
             />
           }
         </div>
-        <MediaQuery query="(min-device-width: 1224px)">
+        <MediaQuery query="(max-device-width: 1224px)">
           <div className="col-md-5 col-xs-12">
             { (!commande || commande.contenus.length === 0 || !offres) ?
               <h1>Panier vide</h1> :

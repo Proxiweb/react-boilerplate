@@ -1,4 +1,29 @@
 .bordered {
-  border: solid 1px silver;
+  border: solid 1px gray;
   box-shadow: 2px 2px 2px silver;
+  background-color: silver;
+}
+
+.bigCol {
+  padding-left: 10;
+  width: 60%;
+  padding-right: 10;
+}
+
+.vbigCol {
+  padding-left: 10;
+  width: 60%;
+  padding-right: 10;
+}
+
+.smallCol {
+  width: 10%;
+  padding-left: 10;
+  padding-right: 10;
+  text-align: center;
+}
+
+.colTotal {
+  width: 150px;
+  text-align: right;
 }

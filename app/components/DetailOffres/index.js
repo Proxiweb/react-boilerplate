@@ -8,7 +8,7 @@ import styles from './styles.css';
 export default class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array.isRequired,
-    produits: PropTypes.array.isRequired,
+    produit: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     fournisseur: PropTypes.object.isRequired,
@@ -25,7 +25,8 @@ export default class DetailOffres extends Component {
 
   render() {
     const { viewOffre } = this.state;
-    const { offres, ajouter, fournisseur, utilisateurId, commandeId, produits, typeProduits } = this.props;
+    const { offres, ajouter, fournisseur, utilisateurId, commandeId, produit, typeProduits } = this.props;
+
     return (
       <div className={styles.offres}>
         <div className="row">
@@ -37,16 +38,15 @@ export default class DetailOffres extends Component {
             />
           </div>
           <div className="col-md-6">
-            {viewOffre && <img src={`https://proxiweb.fr/${produits[0].photo}`} alt={produits[0].nom} style={{ width: '100%', height: 'auto' }} />}
-            {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produits[0].nom} style={{ width: '100%', height: 'auto' }} />}
+            {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={{ width: '100%', height: 'auto' }} />}
+            {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto' }} />}
           </div>
           <div className="col-md-6">
-            {viewOffre && <p dangerouslySetInnerHTML={{ __html: produits[0].description }} />}
+            {viewOffre && <p dangerouslySetInnerHTML={{ __html: produit.description }} />}
             {!viewOffre && <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} />}
           </div>
         </div>
         { viewOffre && offres.map((offre, idx) => {
-          const produit = produits.find((pdt) => pdt.id === offre.produitId);
           const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
           const etatStock = offre.stock !== null && offre.stock === 0 ? 'horsStock' : 'enStock';
           return (
