@@ -4,6 +4,7 @@ import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import PersonIcon from 'material-ui/svg-icons/social/person';
+import TestIcon from 'material-ui/svg-icons/action/settings';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import HelpIcon from 'material-ui/svg-icons/action/help';
 const SelectableList = makeSelectable(List);
@@ -44,6 +45,18 @@ export default class AppMainDrawer extends Component {
                 <ListItem primaryText="Notifications" value={`/users/${user.id}/notifications`} />,
                 <ListItem primaryText="Historique" value={`/users/${user.id}/commandes`} />,
                 <ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />,
+              ]}
+            />
+          )}
+          {user && user.roles.includes('ADMIN') && (
+            <ListItem
+              primaryText="Admin Proxiweb"
+              primaryTogglesNestedList
+              leftIcon={<TestIcon />}
+              nestedItems={[
+                <ListItem primaryText="Relais" value="/relais" />,
+                <ListItem primaryText="Commandes" value="commandes" />,
+                <ListItem primaryText="Logs" value="logs" />,
               ]}
             />
           )}

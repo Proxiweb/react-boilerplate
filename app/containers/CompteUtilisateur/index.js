@@ -18,9 +18,9 @@ import styles from './styles.css';
 export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <div className={`container ${styles.compteUtilisateur}`}>
-        <div className="row center-xs">
-          <div className="col-md-8">
+      <div className={`${styles.compteUtilisateur}`}>
+        <div className="row center-lg">
+          <div className="col-lg-6">
             <Tabs>
               <Tab label="Profil">
                 <ProfileFormContainer afterSubmit={this.toggleState} />

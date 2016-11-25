@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 import AddShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
 import AffichePrix from 'components/AffichePrix';
 import styles from './styles.css';
@@ -51,12 +52,12 @@ export default class DetailOffres extends Component {
           const etatStock = offre.stock !== null && offre.stock === 0 ? 'horsStock' : 'enStock';
           return (
             <div key={idx} className={`row ${styles.offre}`}>
-              <div className="col-md-4">
+              <div className="col-md-4 col-lg-3">
                 <span className={styles[etatStock]}>
                   {produit.nom}{offre.stock !== null ? `(${offre.stock})` : ''} {offre.description}
                 </span>
               </div>
-              <div className="col-md-5">
+              <div className="col-md-5 col-lg-6">
                 <AffichePrix offre={offre} typeProduit={typeProduit} />
               </div>
               <div className="col-md-3">

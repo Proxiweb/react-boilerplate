@@ -95,7 +95,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     return (
       <div className={styles.allContent}>
         <AppBar
-          title="ProxiWeb"
+          title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ color: 'white', textDecoration: 'none' }}>ProxiWeb</Link>}
           onLeftIconButtonTouchTap={this.toggleDrawer}
           iconElementRight={user ? <Logged onChange={this.navigateTo} user={user} /> : <Login onClick={this.handleChangeList} />}
         >

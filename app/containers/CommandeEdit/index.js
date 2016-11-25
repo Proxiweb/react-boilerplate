@@ -8,11 +8,13 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Paper from 'material-ui/Paper';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
+import { cyan500 } from 'material-ui/styles/colors';
 import {
   selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
@@ -29,8 +31,6 @@ import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
 import { selectUtilisateurId } from 'containers/CompteUtilisateur/selectors';
 import { ajouter, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
-import { createStructuredSelector } from 'reselect';
-import { push } from 'react-router-redux';
 import OrderValidate from 'components/OrderValidate';
 import DetailOffres from 'components/DetailOffres';
 import styles from './styles.css';
@@ -98,40 +98,93 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
   }
 
+  setPanierState = (state) => this.setState({ panierExpanded: state })
+
+  toggleState = () => {
+    this.setState({ panierExpanded: !this.state.panierExpanded });
+  }
+
   handleChange(event, index, value) {
     const { commandeId, relaiId } = this.props.params;
+    this.setPanierState(true);
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}`);
   }
 
   navigateTo(productId) {
     const { commandeId, typeProduitId, relaiId } = this.props.params;
+    this.setPanierState(false);
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
   }
 
-  toggleState = () => {
-    this.setState({ panierExpanded: !this.state.panierExpanded });
+  showOffres = () => {
+    const {
+      quantiteOffresAchetees,
+      typeProduits,
+      utilisateurId,
+      fournisseur,
+      produitsById,
+      ajouter,  // eslint-disable-line
+      params,
+    } = this.props;
+
+    return (
+      <DetailOffres
+        offres={quantiteOffresAchetees}
+        typeProduits={typeProduits}
+        utilisateurId={utilisateurId}
+        fournisseur={fournisseur}
+        produit={produitsById[params.produitId]}
+        commandeId={params.commandeId}
+        ajouter={ajouter}
+      />
+    );
+  }
+
+  showPanier = () => {
+    const {
+      commande,
+      params,
+      utilisateurId,
+      sauvegarder, // eslint-disable-line
+      supprimer, // eslint-disable-line
+      annuler, // eslint-disable-line
+      setDistibution, // eslint-disable-line
+      produitId, // eslint-disable-line
+      produitsById,
+      offres,
+    } = this.props;
+    return (
+      <OrderValidate
+        commande={commande}
+        commandeId={params.commandeId}
+        utilisateurId={utilisateurId}
+        sauvegarder={sauvegarder}
+        annuler={annuler}
+        supprimer={supprimer}
+        setDistibution={setDistibution}
+        produitsById={produitsById}
+        offres={offres}
+      />
+    );
   }
 
   render() {
     const {
       typeProduits,
       produits,
-      produitsById,
       quantiteOffresAchetees,
       params,
       commande,
-      fournisseur,
       offres,
       supprimer, // eslint-disable-line
       utilisateurId,
-      livraisons,
     } = this.props;
 
     const { panierExpanded } = this.state;
 
     if (!utilisateurId) return null;
 
-    const { typeProduitId, commandeId, produitId } = params;
+    const { typeProduitId, produitId } = params;
     if (!typeProduits) return null;
 
     const nbreProduits = commande.contenus.length;
@@ -144,7 +197,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <div className="col-sm-4 col-lg-3 col-lg-offset-1 col-xs-12 col-md-4">
+        <div className="col-sm-4 col-lg-3 col-xs-12 col-md-4" style={{ backgroundColor: 'white' }}>
           {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
@@ -160,7 +213,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                 <ListItem
                   key={idx}
                   onClick={() => this.navigateTo(pdt.id)}
-                  style={produitId && pdt.id === produitId ? { backgroundColor: 'red', color: 'white' } : {}}
+                  className={styles.pdtSelected}
+                  style={produitId && pdt.id === produitId ? { borderLeft: `solid 5px ${cyan500}` } : { borderLeft: 'none' }}
                 >
                   {pdt.nom}
                 </ListItem>
@@ -168,9 +222,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </List>
             )}
         </div>
-        <div className="col-md-7 col-xs-12 col-lg-7">
-          <MediaQuery query="(min-device-width: 1224px)">
-            <Card style={{ marginBottom: 20 }} onExpandChange={this.toggleState}>
+        <MediaQuery query="(max-device-width: 1824px)">
+          <div className="col-md-7 col-xs-12 col-lg-7">
+            <Card style={{ marginBottom: 20 }} onExpandChange={this.toggleState} expanded={panierExpanded}>
               <CardHeader
                 title={<span>Panier : <strong>{commande.montant || 0} €</strong> - {nbreProduits} produits</span>}
                 subtitle={nbreProduits ? 'Cliquez ici pour valider la commande' : ''}
@@ -179,49 +233,24 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               />
               <CardText expandable>
                 { (!commande || commande.contenus.length === 0 || !offres) ?
-                  <h1>Panier vide</h1> :
-                  <OrderValidate
-                    commande={commande}
-                    commandeId={commandeId}
-                    utilisateurId={utilisateurId}
-                    sauvegarder={this.props.sauvegarder}
-                    annuler={this.props.annuler}
-                    supprimer={this.props.supprimer}
-                    setDistibution={this.props.setDistibution}
-                    produitsById={produitsById}
-                    offres={offres}
-                  />
+                  <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
+                  this.showPanier()
                 }
               </CardText>
             </Card>
-          </MediaQuery>
-          {quantiteOffresAchetees && typeProduits && !panierExpanded &&
-            <DetailOffres
-              offres={quantiteOffresAchetees}
-              typeProduits={typeProduits}
-              utilisateurId={utilisateurId}
-              fournisseur={fournisseur}
-              produit={produitsById[params.produitId]}
-              commandeId={commandeId}
-              ajouter={this.props.ajouter}
-            />
-          }
-        </div>
-        <MediaQuery query="(max-device-width: 1224px)">
-          <div className="col-md-5 col-xs-12">
+            {quantiteOffresAchetees && typeProduits && !panierExpanded && this.showOffres()}
+          </div>
+        </MediaQuery>
+        <MediaQuery query="(min-device-width: 1824px)">
+          <div className="col-lg-4">
+            {quantiteOffresAchetees && typeProduits && !panierExpanded && this.showOffres()}
+          </div>
+        </MediaQuery>
+        <MediaQuery query="(min-device-width: 1824px)">
+          <div className="col-lg-5">
             { (!commande || commande.contenus.length === 0 || !offres) ?
-              <h1>Panier vide</h1> :
-              <OrderValidate
-                commande={commande}
-                commandeId={commandeId}
-                utilisateurId={utilisateurId}
-                sauvegarder={this.props.sauvegarder}
-                annuler={this.props.annuler}
-                supprimer={this.props.supprimer}
-                setDistibution={this.props.setDistibution}
-                produitsById={produitsById}
-                offres={offres}
-              />
+              <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
+              this.showPanier()
             }
           </div>
         </MediaQuery>

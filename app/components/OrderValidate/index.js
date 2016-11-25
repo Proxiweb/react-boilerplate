@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
+import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
 import assign from 'lodash/assign';
 
@@ -75,12 +77,11 @@ export default class OrderValidate extends Component {
           noPlageHoraire={commande.plageHoraire}
           className={styles.distriItem}
         />
-        <RaisedButton
-          label="Modifier"
-          primary
+        <FlatButton
           onClick={() => this.setState({ view: 'distribution' })}
           className={styles.distriButton}
           icon={<EditorIcon />}
+          style={{ minWidth: 44 }}
         />
       </div>
     );
@@ -90,6 +91,7 @@ export default class OrderValidate extends Component {
     return (
       <RaisedButton
         label="Choisissez le jour de distribution"
+        icon={<DateRangeIcon />}
         style={{ marginTop: 20 }}
         onClick={() => this.setState({ view: 'distribution' })}
       />
@@ -143,8 +145,8 @@ export default class OrderValidate extends Component {
     return (<div>
       { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande() }
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
-      {!commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}
-      {commande.livraisonId && !commande.id && this.showValidate()}
+      <div style={{ textAlign: 'center' }}>{!commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
+      {view === 'panier' && commande.livraisonId && !commande.id && this.showValidate()}
       {!commande.dateLivraison && commande.id && this.showCancel()}
     </div>);
   }

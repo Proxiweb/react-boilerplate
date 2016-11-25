@@ -5,3 +5,7 @@
 .active {
   background-color: red;
 }
+
+.pdtSelected {
+  border-left: 4px solid black;
+}

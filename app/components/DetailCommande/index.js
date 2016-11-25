@@ -41,6 +41,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
             {contenus.map((contenu, idx) => {
+              if (!contenu) return;
               const offre = offres[contenu.offreId];
               return (
                 <TableRow key={idx} selectable={false} displayBorder>

@@ -26,32 +26,35 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
+    pristine: PropTypes.bool.isRequired,
   }
 
   render() {
-    const { handleSubmit, pending } = this.props;
+    const { handleSubmit, pending, pristine } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <Paper zDepth={2} style={{ padding: '1rem' }}>
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <Field cols="6" floatingLabelText="Nom" name="nom" component={TextField} />
               <Field cols="6" floatingLabelText="Adresse" name="adresse" component={TextField} />
               <Field cols="6" floatingLabelText="Code postal" name="codePostal" component={TextField} />
               <Field cols="6" floatingLabelText="Télephone portable" name="telPortable" component={TextField} />
               <Field cols="6" floatingLabelText="Adresse email" name="email" component={TextField} />
             </div>
-            <div className="col-md-6">
+            <div className="col-lg-6">
               <Field cols="6" floatingLabelText="Prénom" name="prenom" component={TextField} label="Prénom" />
               <Field cols="6" floatingLabelText="Adresse complémentaire" name="adressComplementaire" component={TextField} />
               <Field cols="6" floatingLabelText="Ville" name="ville" component={TextField} />
               <Field cols="6" floatingLabelText="Télephone fixe" name="telFixe" component={TextField} />
               <Field cols="6" floatingLabelText="Pseudo (si pas d'email)" name="pseudo" component={TextField} />
             </div>
-            <div className="row center-md">
-              <div className={`col-md ${styles.formFooter}`}>
-                <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
-              </div>
+            <div className="col-lg-12" style={{ minHeight: 52 }}>
+              {!pristine && (<div className="row center-md">
+                <div className={`col-md-4 ${styles.formFooter}`}>
+                  <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+                </div>
+              </div>)}
             </div>
           </div>
         </Paper>
@@ -62,9 +65,6 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
 
 const profileForm = reduxForm({
   form: 'profile',
-  // asyncValidate,
-  // asyncBlurFields: ['nom'],
-  // validate,
 })(ProfileForm);
 
 export default profileForm;

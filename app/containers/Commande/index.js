@@ -72,9 +72,9 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
-          <div className="col-md-3">
-            <h5>Commandes flash</h5>
-            <ul>
+          <div className="col-xs">
+            <div className={styles.colCommande}>Cette semaine</div>
+            <div>
               {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
                 (key, idx) => {
                   const infos = self.getCommandeInfos(key);
@@ -91,16 +91,16 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
                   );
                 }
                 )}
-            </ul>
+            </div>
           </div>
-          <div className="col-md-3">
-            <h5>Cette semaine</h5>
+          <div className="col-xs">
+            <div className={styles.colCommande}>La semaine prochaine</div>
           </div>
-          <div className="col-md-3">
-            <h5>La semaine prochaine</h5>
+          <div className="col-xs">
+            <div className={styles.colCommande}>Dans quinze jours</div>
           </div>
-          <div className="col-md-3">
-            <h5>La semaine suivante</h5>
+          <div className="col-xs">
+            <div className={styles.colCommande}>Dans 3 semaines</div>
             <Offre
               nom="Fromages & charcuterie"
               tarif="1.05 € au lieu de 1.25 €"

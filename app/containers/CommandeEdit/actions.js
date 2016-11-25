@@ -20,7 +20,6 @@ export const annuler = (id) => ({
   url: `commande_utilisateurs/${id}`,
   method: 'del',
   msgPending: 'Annulation commande',
-  msgSuccess: 'Commande annulée',
 });
 
 export function ajouter(offre) {
