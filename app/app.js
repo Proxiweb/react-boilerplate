@@ -38,6 +38,9 @@ openSansObserver.load().then(() => {
 // Import Language Provider
 import LanguageProvider from './containers/LanguageProvider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import shader from 'shader';
+import { limeA700, grey900, blue800, red800, grey300, grey600 } from 'material-ui/styles/colors';
 
 // Import global saga
 import globalSagas from './containers/App/sagas';
@@ -85,12 +88,28 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
+// cutomize theme
+const muiTheme = getMuiTheme({
+  appBar: {
+    height: 50,
+    color: shader(limeA700, -0.1),
+    textColor: grey900,
+  },
+  palette: {
+    primary1Color: blue800,
+    accent1Color: red800,
+    groupColor: grey300,
+    groupColorBorder: grey600,
+  },
+});
+
+
 const render = (messages) => {
   injectTapEventPlugin();
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
-        <MuiThemeProvider>
+        <MuiThemeProvider muiTheme={muiTheme}>
           <Router
             history={history}
             routes={rootRoute}

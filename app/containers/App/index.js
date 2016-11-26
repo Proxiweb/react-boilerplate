@@ -24,7 +24,6 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import CircularProgress from 'material-ui/CircularProgress';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
 
@@ -40,7 +39,7 @@ const getDrawerHeaderStyle = (context) => {
     appBar,
   } = context.muiTheme;
   return {
-    color: 'white',
+    color: appBar.textColor,
     backgroundColor: appBar.color,
     height: appBar.height,
     fontSize: 24,
@@ -91,11 +90,11 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
 
   render() {
     const { user, pending } = this.props;
-
+    const drawerStyle = getDrawerHeaderStyle(this.context);
     return (
       <div className={styles.allContent}>
         <AppBar
-          title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ color: 'white', textDecoration: 'none' }}>ProxiWeb</Link>}
+          title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: drawerStyle.textColor }}>ProxiWeb</Link>}
           onLeftIconButtonTouchTap={this.toggleDrawer}
           iconElementRight={user ? <Logged onChange={this.navigateTo} user={user} /> : <Login onClick={this.handleChangeList} />}
         >
@@ -109,13 +108,13 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             header={(
               <MenuItem
                 primaryText="Menu"
-                rightIcon={<Close color="white" style={{ height: 40, width: 30 }} />}
+                rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
                 onTouchTap={this.closeDrawer}
-                style={getDrawerHeaderStyle(this.context)}
+                style={drawerStyle}
               />)}
           />
         </AppBar>
-        <div className={`${styles.mainContent} container-fluid`}>
+        <div className={`container-fluid ${styles.mainContent}`}>
           {React.Children.toArray(this.props.children)}
         </div>
         <Notifications />
@@ -124,7 +123,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             size={30}
             color="white"
             status="loading"
-            style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: '17px', left: '180px' }}
+            style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: '10px', left: '180px' }}
           />
         )}
       </div>

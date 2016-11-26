@@ -23,6 +23,22 @@ const supprimer = (state, offreId) => {
   return update(state, { contenus: { $set: newContenus }, modifiee: { $set: true } });
 };
 
+// @TODO dryer avec ajouter
+const augmenter = (state, offreId) => {
+  const idx = findIndex(state.contenus, { offreId });
+  const nQte = state.contenus[idx].quantite + 1;
+  return update(state, { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } });
+};
+
+// @TODO dryer avec ajouter
+const diminuer = (state, offreId) => {
+  const idx = findIndex(state.contenus, { offreId });
+  const nQte = state.contenus[idx].quantite - 1;
+  if (nQte === 0) return supprimer(state, offreId);
+
+  return update(state, { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } });
+};
+
 const majTarifs = (state, totaux) => {
   const { totalCommande, partDistribution } = totaux;
   return update(state, { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } });
@@ -54,6 +70,11 @@ function commandeEditReducer(state = initialState, action) {
 
     case c.SUPPRIMER_OFFRE:
       return supprimer(state, action.payload.offreId);
+
+    case c.DIMINUER_OFFRE:
+      return diminuer(state, action.payload.offreId);
+    case c.AUGMENTER_OFFRE:
+      return augmenter(state, action.payload.offreId);
 
     case c.ASYNC_SAUVEGARDER_SUCCESS:
       return { ...state, ...action.datas, modifiee: false };

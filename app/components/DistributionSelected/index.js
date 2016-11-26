@@ -6,7 +6,6 @@ export default class DistributionSelected extends Component {  // eslint-disable
   static propTypes = {
     noPlageHoraire: PropTypes.number.isRequired,
     livraison: PropTypes.object.isRequired,
-    className: PropTypes.string.isRequired,
   }
 
   constructor(props) {
@@ -15,10 +14,8 @@ export default class DistributionSelected extends Component {  // eslint-disable
   }
 
   render() {
-    const { livraison, noPlageHoraire, className } = this.props;
+    const { livraison, noPlageHoraire } = this.props;
     const ranges = buildHoursRanges(livraison.debut, livraison.fin)[noPlageHoraire];
-    return (<div className={className}>
-      Le {moment(livraison.debut).format('dddd Do MMMM')} de {ranges.join(' à ')}
-    </div>);
+    return (<div>RDV le {moment(livraison.debut).format('dddd Do MMMM')} de {ranges.join(' à ')}</div>);
   }
 }

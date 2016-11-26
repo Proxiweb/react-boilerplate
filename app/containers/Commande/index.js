@@ -31,6 +31,10 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     pushState: PropTypes.func.isRequired,
   }
 
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.selectCommande = this.selectCommande.bind(this);
@@ -69,11 +73,21 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   render() {
     const { asyncState, commandes, relaiId } = this.props;
     const self = this;
+    const palette = this.context.muiTheme.palette;
+    const styleTitle = {
+      backgroundColor: palette.groupColor,
+      border: `solid 1px ${palette.groupColorBorder}`,
+      padding: 10,
+      textAlign: 'center',
+      marginBottom: '1rem',
+      fontSize: '1.2em',
+    };
+
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
           <div className="col-xs">
-            <div className={styles.colCommande}>Cette semaine</div>
+            <div style={styleTitle}>Cette semaine</div>
             <div>
               {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
                 (key, idx) => {
@@ -94,13 +108,49 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             </div>
           </div>
           <div className="col-xs">
-            <div className={styles.colCommande}>La semaine prochaine</div>
+            <div style={styleTitle}>La semaine prochaine</div>
+            <div>
+              {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
+                (key, idx) => {
+                  const infos = self.getCommandeInfos(key);
+                  return (
+                    <CommandePanel
+                      nom={infos ? uniq(infos).join(', ') : null}
+                      tarif="1.05 € au lieu de 1.25 €"
+                      prct={100}
+                      fav={false}
+                      key={idx}
+                      commandeId={`${key}`}
+                      clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
+                    />
+                  );
+                }
+                )}
+            </div>
           </div>
           <div className="col-xs">
-            <div className={styles.colCommande}>Dans quinze jours</div>
+            <div style={styleTitle}>Dans quinze jours</div>
+              <div>
+                {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
+                  (key, idx) => {
+                    const infos = self.getCommandeInfos(key);
+                    return (
+                      <CommandePanel
+                        nom={infos ? uniq(infos).join(', ') : null}
+                        tarif="1.05 € au lieu de 1.25 €"
+                        prct={100}
+                        fav={false}
+                        key={idx}
+                        commandeId={`${key}`}
+                        clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
+                      />
+                    );
+                  }
+                  )}
+              </div>
           </div>
           <div className="col-xs">
-            <div className={styles.colCommande}>Dans 3 semaines</div>
+            <div style={styleTitle}>Dans 3 semaines</div>
             <Offre
               nom="Fromages & charcuterie"
               tarif="1.05 € au lieu de 1.25 €"

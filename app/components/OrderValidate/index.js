@@ -21,6 +21,8 @@ export default class OrderValidate extends Component {
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
+    augmenter: PropTypes.func.isRequired,
+    diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
   }
 
@@ -78,6 +80,7 @@ export default class OrderValidate extends Component {
           className={styles.distriItem}
         />
         <FlatButton
+          label="modifier"
           onClick={() => this.setState({ view: 'distribution' })}
           className={styles.distriButton}
           icon={<EditorIcon />}
@@ -99,7 +102,7 @@ export default class OrderValidate extends Component {
   }
 
   showDetailsCommande() {
-    const { offres, commande, produitsById, supprimer } = this.props;
+    const { offres, commande, produitsById, supprimer, augmenter, diminuer } = this.props;
     return (
       <DetailCommande
         contenus={commande.contenus}
@@ -108,6 +111,8 @@ export default class OrderValidate extends Component {
         offres={offres}
         produits={produitsById}
         supprimer={supprimer}
+        augmenter={augmenter}
+        diminuer={diminuer}
         readOnly={commande.datePaiement}
       />
     );
@@ -147,7 +152,7 @@ export default class OrderValidate extends Component {
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
       <div style={{ textAlign: 'center' }}>{!commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && !commande.id && this.showValidate()}
-      {!commande.dateLivraison && commande.id && this.showCancel()}
+      {view === 'panier' && !commande.dateLivraison && commande.id && this.showCancel()}
     </div>);
   }
 }

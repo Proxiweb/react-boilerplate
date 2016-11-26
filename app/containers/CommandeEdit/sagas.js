@@ -21,7 +21,7 @@ export function* setDistibutionSaga() {
 
 export function* calculeTotaux() {
   while(1) { // eslint-disable-line
-    yield take([c.AJOUTER_OFFRE, c.SUPPRIMER_OFFRE]);
+    yield take([c.AJOUTER_OFFRE, c.SUPPRIMER_OFFRE, c.AUGMENTER_OFFRE, c.DIMINUER_OFFRE]);
     const commande = yield select(selectCommande());
     const offres = yield select(selectOffres());
     const contenus = commande.contenus.map((cont) => assign(

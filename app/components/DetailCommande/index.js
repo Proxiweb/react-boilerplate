@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
-import FlatButton from 'material-ui/FlatButton';
 import RemoveIcon from 'material-ui/svg-icons/content/remove';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import styles from './styles.css';
@@ -9,7 +8,8 @@ export default class DetailCommande extends Component { // eslint-disable-line
     contenus: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     produits: PropTypes.object.isRequired,
-    supprimer: PropTypes.func.isRequired,
+    diminuer: PropTypes.func.isRequired,
+    augmenter: PropTypes.func.isRequired,
     readOnly: PropTypes.bool.isRequired,
     montant: PropTypes.string.isRequired,
     recolteFond: PropTypes.string.isRequired,
@@ -20,13 +20,13 @@ export default class DetailCommande extends Component { // eslint-disable-line
   }
 
   render() {
-    const { offres, produits, contenus, supprimer, readOnly, montant, recolteFond } = this.props;
+    const { offres, produits, contenus, diminuer, readOnly, montant, recolteFond, augmenter } = this.props;
     return (
       <div>
         <Table
           selectable={false}
           multiSelectable={false}
-          className={styles.borderedo}
+          className={styles.bordered}
           height={contenus.length > 4 ? 200 : null}
           fixedFooter
         >
@@ -41,7 +41,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
             {contenus.map((contenu, idx) => {
-              if (!contenu) return;
+              if (!contenu) return null;
               const offre = offres[contenu.offreId];
               return (
                 <TableRow key={idx} selectable={false} displayBorder>
@@ -55,14 +55,15 @@ export default class DetailCommande extends Component { // eslint-disable-line
                   <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
                   {!readOnly && (<TableRowColumn className={styles.smallCol}>
-                    <FlatButton onClick={() => supprimer(contenu.offreId)} icon={<RemoveIcon />} />
+                    <button onClick={() => augmenter(contenu.offreId)}>+</button>
+                    <button onClick={() => diminuer(contenu.offreId)}>-</button>
                   </TableRowColumn>)}
                 </TableRow>
               ); })
             }
           </TableBody>
         </Table>
-        <div style={{ textAlign: 'center', marginTop: '2rem' }}>Total : <strong>{montant} €</strong> ( dont <strong>{recolteFond}</strong> € pour la prestation de distribution )</div>
+        <div style={{ textAlign: 'center', padding: '2rem 0', backgroundColor: 'white', border: 'solid 1px gray' }}>Total : <strong>{montant} €</strong> ( dont <strong>{recolteFond}</strong> € pour la prestation de distribution )</div>
       </div>
     );
   }

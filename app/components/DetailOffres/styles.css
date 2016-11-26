@@ -1,15 +1,13 @@
-.enStock { color: green}
-.horsStock { color: red}
+.nonDispo { color: red}
 
 .offres {
   background-color: white;
-  padding: 10px 10px;
   height: 100%;
+  border: solid 1px gray;
 }
 
 .offre {
-  background-color: silver;
-  margin: 0 5px 5px 5px;
+  margin: 10px;
   padding: 5px 0;
 }
 
@@ -19,4 +17,10 @@
 
 .fournisseurSwitch {
   text-align: right;
+}
+
+.produitTitre {
+  text-align: center;
+  font-size: 1.4rem;
+  margin: 10px 0;
 }

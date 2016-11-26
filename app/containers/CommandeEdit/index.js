@@ -14,7 +14,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
-import { cyan500 } from 'material-ui/styles/colors';
+import shader from 'shader';
 import {
   selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
@@ -30,7 +30,7 @@ import {
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
 import { selectUtilisateurId } from 'containers/CompteUtilisateur/selectors';
-import { ajouter, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
+import { ajouter, augmenter, diminuer, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
 import OrderValidate from 'components/OrderValidate';
 import DetailOffres from 'components/DetailOffres';
 import styles from './styles.css';
@@ -61,6 +61,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
   }
+
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -148,11 +152,14 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       sauvegarder, // eslint-disable-line
       supprimer, // eslint-disable-line
       annuler, // eslint-disable-line
+      augmenter, // eslint-disable-line
+      diminuer, // eslint-disable-line
       setDistibution, // eslint-disable-line
       produitId, // eslint-disable-line
       produitsById,
       offres,
     } = this.props;
+
     return (
       <OrderValidate
         commande={commande}
@@ -161,6 +168,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         sauvegarder={sauvegarder}
         annuler={annuler}
         supprimer={supprimer}
+        augmenter={augmenter}
+        diminuer={diminuer}
         setDistibution={setDistibution}
         produitsById={produitsById}
         offres={offres}
@@ -180,6 +189,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       utilisateurId,
     } = this.props;
 
+    const muiTheme = this.context.muiTheme;
+
     const { panierExpanded } = this.state;
 
     if (!utilisateurId) return null;
@@ -197,7 +208,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <div className="col-sm-4 col-lg-3 col-xs-12 col-md-4" style={{ backgroundColor: 'white' }}>
+        <div
+          className={`col-sm-4 col-lg-3 col-xs-12 col-md-4 ${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}
+        >
           {typeProduits && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
@@ -214,7 +227,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                   key={idx}
                   onClick={() => this.navigateTo(pdt.id)}
                   className={styles.pdtSelected}
-                  style={produitId && pdt.id === produitId ? { borderLeft: `solid 5px ${cyan500}` } : { borderLeft: 'none' }}
+                  style={
+                    produitId && pdt.id === produitId ?
+                    { borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
+                    { borderLeft: 'none' }}
                 >
                   {pdt.nom}
                 </ListItem>
@@ -222,8 +238,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             </List>
             )}
         </div>
-        <MediaQuery query="(max-device-width: 1824px)">
-          <div className="col-md-7 col-xs-12 col-lg-7">
+        <MediaQuery query="(max-device-width: 1600px)">
+          <div className="col-md-8 col-xs-12 col-lg-7">
             <Card style={{ marginBottom: 20 }} onExpandChange={this.toggleState} expanded={panierExpanded}>
               <CardHeader
                 title={<span>Panier : <strong>{commande.montant || 0} €</strong> - {nbreProduits} produits</span>}
@@ -241,13 +257,13 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             {quantiteOffresAchetees && typeProduits && !panierExpanded && this.showOffres()}
           </div>
         </MediaQuery>
-        <MediaQuery query="(min-device-width: 1824px)">
+        <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-4">
             {quantiteOffresAchetees && typeProduits && !panierExpanded && this.showOffres()}
           </div>
         </MediaQuery>
-        <MediaQuery query="(min-device-width: 1824px)">
-          <div className="col-lg-5">
+        <MediaQuery query="(min-device-width: 1600px)">
+          <div className="col-lg-5" style={{ paddingLeft: 0, paddingRight: 0 }}>
             { (!commande || commande.contenus.length === 0 || !offres) ?
               <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
               this.showPanier()
@@ -281,6 +297,8 @@ function mapDispatchToProps(dispatch) {
     pushState: (url) => dispatch(push(url)),
     load: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
     ajouter: (offre) => dispatch(ajouter(offre)),
+    augmenter: (offreId) => dispatch(augmenter(offreId)),
+    diminuer: (offreId) => dispatch(diminuer(offreId)),
     supprimer: (offreId) => dispatch(supprimer(offreId)),
     sauvegarder: (datas) => dispatch(sauvegarder(datas)),
     annuler: (id) => dispatch(annuler(id)),

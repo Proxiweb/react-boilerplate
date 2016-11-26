@@ -34,7 +34,12 @@ export const formatterPoids = (offre) => {
 };
 
 function detailPrix(offre) {
-  return `${offre.description || ''}${formatterPoids(offre)} : ${round((offre.prix + offre.recolteFond) / 100, 2)} €`;
+  return (
+    <span>
+      <span>{`${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ''}`}</span> :
+      <span> <strong>{round((offre.prix + offre.recolteFond) / 100, 2)} €</strong></span>
+    </span>
+  );
 }
 
 function prixAuKg(offre, typeProduit) {

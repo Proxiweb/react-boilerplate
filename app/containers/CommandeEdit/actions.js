@@ -29,6 +29,21 @@ export function ajouter(offre) {
   };
 }
 
+export function augmenter(offreId) {
+  return {
+    type: c.AUGMENTER_OFFRE,
+    payload: { offreId },
+  };
+}
+
+export function diminuer(offreId) {
+  return {
+    type: c.DIMINUER_OFFRE,
+    payload: { offreId },
+  };
+}
+
+
 export function supprimer(offreId) {
   return {
     type: c.SUPPRIMER_OFFRE,

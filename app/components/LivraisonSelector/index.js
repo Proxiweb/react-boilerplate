@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
+import shader from 'shader';
+import styles from './styles.css';
 
 export const buildHoursRanges = (start, end) => {
   const duration = moment.duration(moment(end).diff(moment(start)));
@@ -23,6 +25,10 @@ export default class LivraisonSelector extends Component {
     selectionnePlageHoraire: PropTypes.func.isRequired,
   }
 
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
     moment.locale('fr');
@@ -30,17 +36,26 @@ export default class LivraisonSelector extends Component {
 
   render() {
     const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons } = this.props;
+    const muiTheme = this.context.muiTheme;
     return (
       <div className="row">
-        <div className="col-md-8 col-md-offset-2">
+        <div className={`col-md-8 col-md-offset-2 ${styles.livraisonSelector}`}>
+          <div className={styles.lSTitre}>Sélectionnez un créneau horaire</div>
           {livraisons.map((livr, idx1) => (
             <List key={idx1}>
-              <Subheader>{moment(livr.debut).format('dddd Do MMMM')}</Subheader>
+              <Subheader style={{ textAlign: 'center', fontSize: '1.1em' }}>{moment(livr.debut).format('dddd Do MMMM')}</Subheader>
               {buildHoursRanges(livr.debut, livr.fin).map((data, idx) => (
-                <ListItem onClick={() => selectionnePlageHoraire(idx, livr.id)} key={idx} >
-                  {idx === plageHoraire && livraisonId === livr.id && <span>X </span>}
-                  <span style={{ color: 'rgb(77, 71, 71)' }}>De </span>{ data[0] }
-                  <span style={{ color: 'rgb(77, 71, 71)' }}> à </span>{data[1]}
+                <ListItem
+                  onClick={() => selectionnePlageHoraire(idx, livr.id)}
+                  key={idx}
+                  style={
+                    idx === plageHoraire && livraisonId === livr.id ?
+                    { borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
+                    {}
+                  }
+                >
+                  <span style={{ color: 'rgb(77, 71, 71)' }}>De </span><strong>{ data[0] }</strong>
+                  <span style={{ color: 'rgb(77, 71, 71)' }}> à </span><strong>{data[1]}</strong>
                 </ListItem>))}
             </List>)
           )}

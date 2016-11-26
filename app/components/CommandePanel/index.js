@@ -12,7 +12,7 @@ const commandePanel = ({ nom, clickHandler }) => (
     <CardActions>
       <RaisedButton
         label="Commander"
-        icon={<i className="material-icons">shopping_cart</i>}
+        icon={<i className="material-icons" style={{ color: 'white' }}>shopping_cart</i>}
         fullWidth
         primary
         onClick={clickHandler}
