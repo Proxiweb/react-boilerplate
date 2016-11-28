@@ -59,6 +59,7 @@ export default class AppMainDrawer extends Component {
                 <ListItem primaryText="Commandes" value="commandes" />,
                 <ListItem primaryText="Logs" value="logs" />,
                 <ListItem primaryText="Utilisateurs" value="utilisateurs" />,
+                <ListItem primaryText="Communication" value="communications" />,
               ]}
             />
           )}

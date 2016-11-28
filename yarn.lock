@@ -2641,6 +2641,22 @@ download@^4.0.0, download@^4.1.2, download@^4.4.1:
     vinyl-fs "^2.2.0"
     ware "^1.2.0"
 
+draft-js:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.9.1.tgz#940a51a0ad1fede0411676b6404f4050495f54f9"
+  dependencies:
+    fbjs "^0.8.3"
+    immutable "~3.7.4"
+    object-assign "^4.1.0"
+
+draftjs-to-html:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/draftjs-to-html/-/draftjs-to-html-0.3.9.tgz#98bc54650574f6d38dffe0675a051f5f76300409"
+
+draftjs-utils@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/draftjs-utils/-/draftjs-utils-0.3.2.tgz#a8182bf4135c4bb5f1ad1ea1f604aa6cbb50a03e"
+
 duplexer@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
@@ -3368,6 +3384,17 @@ fbjs@^0.8.1, fbjs@^0.8.4:
   dependencies:
     core-js "^1.0.0"
     immutable "^3.7.6"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    ua-parser-js "^0.7.9"
+
+fbjs@^0.8.3:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.6.tgz#7eb67d6986b2d5007a9b6e92e0e7cb6f75cad290"
+  dependencies:
+    core-js "^1.0.0"
     isomorphic-fetch "^2.1.1"
     loose-envify "^1.0.0"
     object-assign "^4.1.0"
@@ -4311,9 +4338,13 @@ imagemin@^5.2.2:
     promise.pipe "^3.0.0"
     replace-ext "0.0.1"
 
-immutable@^3.7.6:
+immutable@^3.7.6, immutable@^3.8.1:
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
+
+immutable@~3.7.4:
+  version "3.7.6"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.7.6.tgz#13b4d3cb12befa15482a26fe1b2ebae640071e4b"
 
 imports-loader@0.6.5:
   version "0.6.5"
@@ -5442,6 +5473,10 @@ lodash.camelcase@^3.0.1:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-3.0.1.tgz#932c8b87f8a4377897c67197533282f97aeac298"
   dependencies:
     lodash._createcompounder "^3.0.0"
+
+lodash.capitalize:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/lodash.capitalize/-/lodash.capitalize-4.2.1.tgz#f826c9b4e2a8511d84e3aca29db05e1a4f3b72a9"
 
 lodash.cond@^4.3.0:
   version "4.5.2"
@@ -7361,6 +7396,14 @@ react-deep-force-update@^1.0.0:
 react-dom@15.3.2:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.3.2.tgz#c46b0aa5380d7b838e7a59c4a7beff2ed315531f"
+
+react-draft-wysiwyg:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.0.0.tgz#40302a5ab9cb958818727dcaeedc464039d13fef"
+  dependencies:
+    classnames "^2.2.5"
+    draftjs-utils "0.3.2"
+    immutable "^3.8.1"
 
 react-element-to-jsx-string@^3.0.0:
   version "3.2.0"

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import adminUtilisateursReducer from 'containers/AdminUtilisateurs/reducer';
+import adminRelaisReducer from 'containers/AdminRelais/reducer';
 import c from './constants';
 
 const initialState = {
@@ -19,4 +20,5 @@ const adminDepotReducer = (state = initialState, action) => {
 export default combineReducers({
   depots: adminDepotReducer,
   utilisateurs: adminUtilisateursReducer,
+  relais: adminRelaisReducer,
 });
