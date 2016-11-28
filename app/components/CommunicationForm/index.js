@@ -53,7 +53,7 @@ class CommunicationForm extends Component { // eslint-disable-line
 
   render() {
     const { sms, message, objet, html, rawHtml } = this.state;
-    console.log(convertFromHTML(html));
+    console.log('r', rawHtml);
     if (!html) return null;
     return (
       <div className="row">
