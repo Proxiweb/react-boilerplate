@@ -8,21 +8,25 @@
 
 .bigCol {
   padding-left: 10;
-  width: 60%;
+  width: 55%;
   padding-right: 10;
 }
 
 .vbigCol {
   padding-left: 10;
-  width: 60%;
+  width: 55%;
   padding-right: 10;
 }
 
-.smallCol {
+.smallCol, .lessSmallCol {
   width: 10%;
   padding-left: 10;
   padding-right: 10;
   text-align: center;
+}
+
+.lessSmallCol {
+  width: 15%;
 }
 
 .colTotal {

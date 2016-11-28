@@ -41,7 +41,7 @@ const getDrawerHeaderStyle = (context) => {
   return {
     color: appBar.textColor,
     backgroundColor: appBar.color,
-    height: appBar.height,
+    height: appBar.height + 6,
     fontSize: 24,
     paddingTop: 0,
     lineHeight: `${appBar.height}px`,
@@ -94,7 +94,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     return (
       <div className={styles.allContent}>
         <AppBar
-          title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: drawerStyle.textColor }}>ProxiWeb</Link>}
+          title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: 'black' }}>ProxiWeb</Link>}
           onLeftIconButtonTouchTap={this.toggleDrawer}
           iconElementRight={user ? <Logged onChange={this.navigateTo} user={user} /> : <Login onClick={this.handleChangeList} />}
         >

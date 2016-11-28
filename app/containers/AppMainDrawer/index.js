@@ -55,8 +55,10 @@ export default class AppMainDrawer extends Component {
               leftIcon={<TestIcon />}
               nestedItems={[
                 <ListItem primaryText="Relais" value="/relais" />,
+                <ListItem primaryText="Depots" value="depots" />,
                 <ListItem primaryText="Commandes" value="commandes" />,
                 <ListItem primaryText="Logs" value="logs" />,
+                <ListItem primaryText="Utilisateurs" value="utilisateurs" />,
               ]}
             />
           )}

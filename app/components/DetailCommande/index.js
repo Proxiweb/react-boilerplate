@@ -36,7 +36,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
               <TableHeaderColumn tooltip="Prix unitaire" className={styles.smallCol}>Prix</TableHeaderColumn>
               <TableHeaderColumn tooltip="Quantité" className={styles.smallCol}>Qté</TableHeaderColumn>
               <TableHeaderColumn tooltip="Total article" className={styles.smallCol}>Total</TableHeaderColumn>
-              {!readOnly && <TableHeaderColumn tooltip="Supprimer" className={styles.smallCol}></TableHeaderColumn>}
+              {!readOnly && <TableHeaderColumn tooltip="Supprimer" className={styles.lessSmallCol}></TableHeaderColumn>}
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
@@ -54,9 +54,9 @@ export default class DetailCommande extends Component { // eslint-disable-line
                   </TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
-                  {!readOnly && (<TableRowColumn className={styles.smallCol}>
-                    <button onClick={() => augmenter(contenu.offreId)}>+</button>
-                    <button onClick={() => diminuer(contenu.offreId)}>-</button>
+                  {!readOnly && (<TableRowColumn className={styles.lessSmallCol}>
+                    <button onClick={() => augmenter(contenu.offreId)} title="quantite + 1">+</button>
+                    <button onClick={() => diminuer(contenu.offreId)} title="quantite - 1">-</button>
                   </TableRowColumn>)}
                 </TableRow>
               ); })

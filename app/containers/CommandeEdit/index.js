@@ -239,11 +239,11 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             )}
         </div>
         <MediaQuery query="(max-device-width: 1600px)">
-          <div className="col-md-8 col-xs-12 col-lg-7">
+          <div className="col-md-8 col-xs-12 col-lg-9">
             <Card style={{ marginBottom: 20 }} onExpandChange={this.toggleState} expanded={panierExpanded}>
               <CardHeader
                 title={<span>Panier : <strong>{commande.montant || 0} €</strong> - {nbreProduits} produits</span>}
-                subtitle={nbreProduits ? 'Cliquez ici pour valider la commande' : ''}
+                subtitle={nbreProduits && !panierExpanded ? 'Cliquez ici pour valider la commande' : ''}
                 actAsExpander={nbreProduits > 0}
                 showExpandableButton={nbreProduits > 0}
               />

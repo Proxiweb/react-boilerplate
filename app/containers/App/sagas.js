@@ -8,6 +8,7 @@ import assign from 'lodash/assign';
 export function* apiFetcherSaga() {
   while (true) { // eslint-disable-line
     const action = yield take('*');
+
     if (action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {  //  format xxx/xxx/ASYNC_[UNE_ACTION]_START
       const actionSuffix = action.type.split('/');
       const actionTypeSplt = actionSuffix[2].split('_');

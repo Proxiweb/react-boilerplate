@@ -140,6 +140,40 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/depots',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/AdminDepot/reducer'),
+          System.import('containers/AdminDepot/sagas'),
+          System.import('containers/AdminDepot/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('admin', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/utilisateurs',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/AdminUtilisateurs/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

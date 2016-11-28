@@ -47,8 +47,8 @@ export default class DetailOffres extends Component {
           <div className="col-md-12">
             <div className="row" style={{ margin: 5 }}>
               <div className="col-md-6">
-                {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={{ width: '100%', height: 'auto' }} />}
-                {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto' }} />}
+                {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
+                {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
               </div>
               <div className="col-md-6">
                 {viewOffre && <p dangerouslySetInnerHTML={{ __html: produit.description }} />}

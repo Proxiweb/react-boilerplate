@@ -25,8 +25,9 @@ import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
 import configureStore from './store';
 
-const openSansObserver = new FontFaceObserver('Open Sans', {});
+const openSansObserver = new FontFaceObserver('Ubuntu', {});
 import styles from './containers/App/styles.css';
+
 // When Open Sans is loaded, add a font-family using Open Sans to the body
 openSansObserver.load().then(() => {
   document.body.classList.add(styles.fontLoaded);
@@ -40,7 +41,7 @@ import LanguageProvider from './containers/LanguageProvider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import shader from 'shader';
-import { limeA700, grey900, blue800, red800, grey300, grey600 } from 'material-ui/styles/colors';
+import { limeA700, grey900, blue800, red800, grey300, grey600, grey200 } from 'material-ui/styles/colors';
 
 // Import global saga
 import globalSagas from './containers/App/sagas';
@@ -100,6 +101,7 @@ const muiTheme = getMuiTheme({
     accent1Color: red800,
     groupColor: grey300,
     groupColorBorder: grey600,
+    oddColor: grey200,
   },
 });
 
