@@ -1,21 +1,34 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+
+import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
+import MessageIcon from 'material-ui/svg-icons/communication/message';
+
 import { Column, Table } from 'react-virtualized';
 import moment from 'moment';
 import capitalize from 'lodash.capitalize';
 import { loadUtilisateurs } from './actions';
+import { addDestinataire } from 'containers/AdminCommunication/actions';
 import SortIndicator from 'components/SortIndicator';
 import styles from './styles.css';
+
+const buildDest = (rowData, moyen) => ({
+  id: rowData.id,
+  [moyen]: rowData[moyen],
+  identite: `${rowData.nom.toUpperCase()} ${capitalize(rowData.prenom)}`,
+});
 
 class AdminUtilisateurs extends Component { // eslint-disable-line
   static propTypes = {
     utilisateurs: PropTypes.array.isRequired,
     relais: PropTypes.array.isRequired,
     loadUtilisateursDatas: PropTypes.func.isRequired,
+    addDest: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -126,7 +139,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
 
   render() {
     const { sortBy, sortDirection } = this.state;
-    const { relais } = this.props;
+    const { relais, addDest } = this.props;
     const palette = this.context.muiTheme.palette;
 
     const datas = this.getFiltredDatas().sort((a, b) => {
@@ -181,7 +194,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
               rowCount={datas.length}
               rowGetter={({ index }) => datas[index]}
               rowStyle={(obj) => ({
-                borderBottom: 'solid 1epx silver',
+                borderBottom: 'solid 1px silver',
                 backgroundColor: obj.index % 2 === 0 || obj.index === -1 ? 'white' : palette.oddColor,
               })}
               sort={this.handleSort}
@@ -229,6 +242,28 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                   }
                 }
               />
+              <Column
+                label="Communication"
+                width="200"
+                cellRenderer={({ rowData }) => (
+                  <div>
+                    <IconButton
+                      tooltip="Envoyer email"
+                      disabled={!rowData.email}
+                      onClick={() => addDest(buildDest(rowData, 'email'))}
+                    >
+                      <EmailIcon />
+                    </IconButton>
+                    <IconButton
+                      tooltip="Envoyer sms"
+                      disabled={!rowData.telPortable}
+                      onClick={() => addDest(buildDest(rowData, 'telPortable'))}
+                    >
+                      <MessageIcon />
+                    </IconButton>
+                  </div>
+                )}
+              />
             </Table>
           </Paper>
         </div>
@@ -244,6 +279,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   loadUtilisateursDatas: (query) => dispatch(loadUtilisateurs(query)),
+  addDest: ({ id, telPortable, email, identite }) => dispatch(addDestinataire({ id, telPortable, email, identite })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminUtilisateurs);

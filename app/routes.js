@@ -178,14 +178,12 @@ export default function createRoutes(store) {
       getComponent(location, cb) {
         const importModules = Promise.all([
           System.import('containers/AdminCommunication/index'),
-          System.import('containers/AdminCommunication/reducer'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component, reducer]) => {
+        importModules.then(([component]) => {
           renderRoute(component);
-          injectReducer('communication', reducer.default);
         });
 
         importModules.catch(errorLoading);

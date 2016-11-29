@@ -52,6 +52,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   static propTypes = {
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
+    destinataires: PropTypes.array.isRequired,
     logout: PropTypes.func.isRequired,
     user: PropTypes.object,
     pending: PropTypes.bool.isRequired,
@@ -77,6 +78,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 
   handleChangeList = (event, value) => {
+    console.log(value);
     event.preventDefault();
     this.props.pushState(value);
     this.closeDrawer();
@@ -89,14 +91,14 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   };
 
   render() {
-    const { user, pending } = this.props;
+    const { user, pending, destinataires, pushState } = this.props;
     const drawerStyle = getDrawerHeaderStyle(this.context);
     return (
       <div className={styles.allContent}>
         <AppBar
           title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: 'black' }}>ProxiWeb</Link>}
           onLeftIconButtonTouchTap={this.toggleDrawer}
-          iconElementRight={user ? <Logged onChange={this.navigateTo} user={user} /> : <Login onClick={this.handleChangeList} />}
+          iconElementRight={user ? <Logged destinataires={destinataires} onClick={pushState} /> : <Login onClick={this.handleChangeList} />}
         >
           <AppMainDrawer
             open={this.state.drawerOpen}
@@ -131,9 +133,15 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 }
 
+const mapStateToProps = (state) => ({
+  user: state.compteUtilisateur.auth,
+  pending: state.global.pending,
+  destinataires: state.admin ? state.admin.communication.destinataires : [],
+});
+
 const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
   logout: () => dispatch(logout()),
 });
 
-export default connect((state) => ({ user: state.compteUtilisateur.auth, pending: state.global.pending }), mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

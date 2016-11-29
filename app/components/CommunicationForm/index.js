@@ -22,6 +22,7 @@ class CommunicationForm extends Component { // eslint-disable-line
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired,
+    nbreDest: PropTypes.number.isRequired,
   }
 
   constructor(props) {
@@ -48,12 +49,12 @@ class CommunicationForm extends Component { // eslint-disable-line
     if (html.length > 0 && objet.length === 0) {
       return false;
     }
+    if (!this.props.nbreDest) return false;
     return true;
   }
 
   render() {
     const { sms, message, objet, html, rawHtml } = this.state;
-    console.log('r', rawHtml);
     if (!html) return null;
     return (
       <div className="row">

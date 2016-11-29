@@ -2,3 +2,12 @@
   background-color: white;
   padding: 1rem;
 }
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chip {
+  margin: 4px;
+}
