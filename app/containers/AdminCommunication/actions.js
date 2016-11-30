@@ -7,6 +7,12 @@ export const loadCommunications = (query = {}) => ({
   query,
 });
 
+export const deleteCommunication = (id) => ({
+  type: findActionType('delete_communication', c, 'START'),
+  url: `communications/${id}`,
+  method: 'del',
+});
+
 export const setMessage = (message) => ({
   type: SET_MESSAGE,
   message,

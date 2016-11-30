@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
-import CommandePanel from 'components/CommandePanel';
 import uniq from 'lodash.uniq';
 import Offre from 'components/Offre';
 import {
@@ -16,6 +15,8 @@ import {
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 import choux from './choux.jpg';
+import CommandePanel from 'components/CommandePanel';
+import Panel from 'components/Panel';
 
 import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './actions';
 
@@ -30,10 +31,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     loadCommandes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
   }
-
-  static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-  };
 
   constructor(props) {
     super(props);
@@ -73,21 +70,12 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   render() {
     const { asyncState, commandes, relaiId } = this.props;
     const self = this;
-    const palette = this.context.muiTheme.palette;
-    const styleTitle = {
-      backgroundColor: palette.groupColor,
-      border: `solid 1px ${palette.groupColorBorder}`,
-      padding: 10,
-      textAlign: 'center',
-      marginBottom: '1rem',
-      fontSize: '1.2em',
-    };
 
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
           <div className="col-xs">
-            <div style={styleTitle}>Cette semaine</div>
+            <Panel>Cette semaine</Panel>
             <div>
               {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
                 (key, idx) => {
@@ -108,7 +96,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             </div>
           </div>
           <div className="col-xs">
-            <div style={styleTitle}>La semaine prochaine</div>
+            <Panel>La semaine prochaine</Panel>
             <div>
               {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
                 (key, idx) => {
@@ -129,28 +117,28 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             </div>
           </div>
           <div className="col-xs">
-            <div style={styleTitle}>Dans quinze jours</div>
-              <div>
-                {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
-                  (key, idx) => {
-                    const infos = self.getCommandeInfos(key);
-                    return (
-                      <CommandePanel
-                        nom={infos ? uniq(infos).join(', ') : null}
-                        tarif="1.05 € au lieu de 1.25 €"
-                        prct={100}
-                        fav={false}
-                        key={idx}
-                        commandeId={`${key}`}
-                        clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
-                      />
-                    );
-                  }
-                  )}
-              </div>
+            <Panel>Dans quinze jours</Panel>
+            <div>
+              {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
+                (key, idx) => {
+                  const infos = self.getCommandeInfos(key);
+                  return (
+                    <CommandePanel
+                      nom={infos ? uniq(infos).join(', ') : null}
+                      tarif="1.05 € au lieu de 1.25 €"
+                      prct={100}
+                      fav={false}
+                      key={idx}
+                      commandeId={`${key}`}
+                      clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
+                    />
+                  );
+                }
+                )}
+            </div>
           </div>
           <div className="col-xs">
-            <div style={styleTitle}>Dans 3 semaines</div>
+            <Panel>Dans 3 semaines</Panel>
             <Offre
               nom="Fromages & charcuterie"
               tarif="1.05 € au lieu de 1.25 €"
