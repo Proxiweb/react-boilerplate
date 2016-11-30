@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import CommunicationFormContainer from './containers/CommunicationFormContainer';
 import CommunicationsHistorique from './containers/CommunicationsHistorique';
-import styles from './index.css';
 
 class AdminCommunication extends Component { // eslint-disable-line
   static propTypes = {

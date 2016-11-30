@@ -40,7 +40,7 @@ const initialState = {
 
 const majComptes = (state, datas) => {
   const { op, trx } = datas;
-  const { id, paging_token, type, asset_type, source_account } = op;
+  const { id, paging_token, source_account } = op; //  type, asset_type,
 
   // // si le paiement a déjà été enregistré
   // if (state.payments.datas.find((payment) => payment.id === id)) {
@@ -74,7 +74,7 @@ function compteUtilisateurReducer(state = initialState, action) {
     case c.ASYNC_LOGIN_ERROR:
       return update(state, { error: { $set: action.msgError }, loading: { $set: false } });
     case c.ASYNC_LOGIN_SUCCESS:
-      return update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: omit(action.datas.user, ['commandeContenus','commandes']) }, token: { $set: action.datas.token } });
+      return update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: omit(action.datas.user, ['commandeContenus', 'commandes']) }, token: { $set: action.datas.token } });
     case LOGOUT:
       return { ...initialState };
     case SET_ERR_MSG:

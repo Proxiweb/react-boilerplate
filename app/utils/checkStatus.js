@@ -6,7 +6,7 @@
  * @return {object|undefined} Returns either the response, or throws an error
  */
 function checkStatus(response) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (response.status >= 200 && response.status < 300) {
       resolve(response);
     }

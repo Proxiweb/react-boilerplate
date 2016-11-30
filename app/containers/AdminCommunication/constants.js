@@ -5,4 +5,5 @@ export const ADD_DESTINATAIRE = 'app/AdminCommunication/ADD_DESTINATAIRE';
 export const REMOVE_DESTINATAIRE = 'app/AdminCommunication/REMOVE_DESTINATAIRE';
 const load = generateConstants('app/AdminCommunication', 'load_communications');
 const del = generateConstants('app/AdminCommunication', 'delete_communication');
-export default assign(load, del);
+const save = generateConstants('app/AdminCommunication', 'save_communication');
+export default assign(load, del, save);

@@ -1,5 +1,5 @@
-import { take, put, call, cancelled, fork } from 'redux-saga/effects';
-import { eventChannel, END } from 'redux-saga';
+import { take, put, call, fork } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 import moment from 'moment';
 import { push } from 'react-router-redux';
 import { findActionType } from '../../utils/asyncSagaConstants';
@@ -13,13 +13,13 @@ import {
   loadAccountError,
 } from 'containers/CompteUtilisateur/actions';
 
-import {
-  selectPayments
-} from 'containers/CompteUtilisateur/selectors';
-
-import {
-  LOAD_ACCOUNT,
-} from '../CompteUtilisateur/constants';
+// import {
+//   selectPayments
+// } from 'containers/CompteUtilisateur/selectors';
+//
+// import {
+//   LOAD_ACCOUNT,
+// } from '../CompteUtilisateur/constants';
 
 import api from '../../utils/stellarApi';
 

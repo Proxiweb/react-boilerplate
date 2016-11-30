@@ -40,10 +40,7 @@ const removeDest = (state, action) => {
   return update(state, { destinataires: { [idx]: { $set: dest } } });
 };
 
-const deleteCom = (state, action) => {
-  console.log(action);
-  return state;
-};
+const deleteCom = (state) => state;
 
 const adminCommunicationsReducer = (state = initialState, action) => {
   switch (action.type) {

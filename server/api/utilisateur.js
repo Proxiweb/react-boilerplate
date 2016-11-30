@@ -197,7 +197,7 @@ module.exports = (router) => {
     Utilisateur
       .get(req.query.id)
       .run()
-      .then(utilisateur => {
+      .then((utilisateur) => {
         res.send(utilisateur);
       })
       .catch(Errors.DocumentNotFound, () => {
@@ -213,7 +213,7 @@ module.exports = (router) => {
             const utilisateur = new Utilisateur({ id: req.query.id, email: req.query.email });
             utilisateur
               .save()
-              .then(util => {
+              .then((util) => {
                 res.send(util);
               });
           });
@@ -224,7 +224,7 @@ module.exports = (router) => {
     Utilisateur
       .filter({ email: req.body.email })
       .run()
-      .then(utilisateurs => {
+      .then((utilisateurs) => {
         if (utilisateurs.length > 0) {
           res.status(400).send({ reponseText: 'Cette adresse email a déjà été utilisée' });
           return next();

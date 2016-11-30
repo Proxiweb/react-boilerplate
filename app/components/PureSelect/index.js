@@ -5,7 +5,7 @@ const PureSelect = ({ input, label, cols, datas, meta: { touched, error } }) => 
     <label>{label}</label>
     <div className="form-group">
       <select {...input} className="form-control">
-        {Object.keys(datas).map(key => <option key={key} value={key}>{datas[key]}</option>)}
+        {Object.keys(datas).map((key) => <option key={key} value={key}>{datas[key]}</option>)}
       </select>
       {touched && error && <div className="text-danger">{error}</div>}
     </div>

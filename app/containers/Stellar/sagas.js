@@ -81,7 +81,7 @@ export function* lookupSaga() {
 }
 
 export default [
-  logger,
+  // logger,
   lookupSaga,
   paySaga,
   loadAccountSaga,

@@ -41,7 +41,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     produits: PropTypes.array,
     commandeProduits: PropTypes.array.isRequired,
     quantiteOffresAchetees: PropTypes.array,
-    livraisons: PropTypes.array,
+    // livraisons: PropTypes.array,
     offres: PropTypes.object.isRequired,
     // offresRelais: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { logout } from '../Login/actions';
@@ -12,7 +12,6 @@ import { selectPayments, selectBalance } from './selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
 import NotificationsForm from 'components/NotificationsForm';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import Paper from 'material-ui/Paper';
 import styles from './styles.css';
 
 export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function

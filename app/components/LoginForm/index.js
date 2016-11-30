@@ -22,7 +22,6 @@ export default class LoginForm extends Component {
     login: PropTypes.func.isRequired,
     googleLogin: PropTypes.func.isRequired,
     onSuccessRedirect: PropTypes.string,
-    user: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -52,11 +51,11 @@ export default class LoginForm extends Component {
           <h3 className={styles.formHeader}>Déjà client ?</h3>
           <form className="form form-inline" onSubmit={this.handleFormSubmit}>
             <div className="col-md-6 col-md-offset-3 text-center">
-                <TextField hintText="Identifiant" floatingLabelText="Identifiant" ref={ (node) => this.username = node}/>
-                <TextField hintText="Mot de passe" floatingLabelText="Mot de passe" ref={ (node) => this.password = node} type="password" />
-                <div className="with-margin-top">
-                    <RaisedButton primary label="Se connecter" type="submit" />
-                </div>
+              <TextField hintText="Identifiant" floatingLabelText="Identifiant" ref={(node) => (this.username = node)} />
+              <TextField hintText="Mot de passe" floatingLabelText="Mot de passe" ref={(node) => (this.password = node)} type="password" />
+              <div className="with-margin-top">
+                <RaisedButton primary label="Se connecter" type="submit" />
+              </div>
             </div>
           </form>
         </div>

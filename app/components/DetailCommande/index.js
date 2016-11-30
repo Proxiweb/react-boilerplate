@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
-import RemoveIcon from 'material-ui/svg-icons/content/remove';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
+import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import styles from './styles.css';
 export default class DetailCommande extends Component { // eslint-disable-line
   static propTypes = {
