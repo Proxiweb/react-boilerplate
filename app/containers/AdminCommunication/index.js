@@ -1,20 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Chip from 'material-ui/Chip';
-import CommunicationForm from 'components/CommunicationForm';
-import { loadCommunications, setMessage, removeDestinataire } from './actions';
-import Avatar from 'material-ui/Avatar';
-import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
-import PhoneIcon from 'material-ui/svg-icons/communication/phone';
-import MessageIcon from 'material-ui/svg-icons/communication/message';
-import moment from 'moment';
+import CommunicationFormContainer from './containers/CommunicationFormContainer';
 import styles from './index.css';
 
 class AdminCommunication extends Component { // eslint-disable-line
   static propTypes = {
-    communication: PropTypes.object.isRequired,
-    setMessage: PropTypes.func.isRequired,
-    removeDest: PropTypes.func.isRequired,
+    communicationId: PropTypes.object.isRequired,
   }
 
   static contextTypes = {
@@ -22,50 +13,16 @@ class AdminCommunication extends Component { // eslint-disable-line
   }
 
   render() {
-    if (!this.props.communication) return null;
-    const { sms, objet, html } = this.props.communication.message;
-    const destinataires = this.props.communication.destinataires;
-    // const palette = this.context.muiTheme.palette;
+    if (this.props.communicationId === 'courante') return <CommunicationFormContainer />;
+    if (this.props.communicationId === 'passees') return <div>Anciennes</div>;
     return (
-      <div className="row">
-        <div className={`col-md-6 ${styles.panel}`}>
-          <div className="row">
-            {destinataires.map((dest, idx) => (
-              <div key={idx} className="col-md">
-                {dest.email && <Chip
-                  style={{ margin: 4 }}
-                  onRequestDelete={() => this.props.removeDest(dest.id, 'email')}
-                >
-                  <Avatar color="#444" icon={<EmailIcon />} />
-                  {dest.identite}
-                </Chip>}
-                {dest.telPortable && <Chip
-                  style={{ margin: 4 }}
-                  onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
-                >
-                  <Avatar color="#444" icon={<MessageIcon />} />
-                  {dest.identite}
-                </Chip>}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className={`col-md-6 ${styles.panel}`}>
-          <CommunicationForm onSubmit={this.props.setMessage} message={{ sms, objet, html }} nbreDest={destinataires.length} />
-        </div>
-      </div>
+      <div>Anciennes</div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  communication: state.admin.communication,
+const mapStateToProps = (state, ownProps) => ({
+  communicationId: ownProps.params.communicationId,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  setMessage: (message) => dispatch(setMessage(message)),
-  removeDest: (id, moyen) => dispatch(removeDestinataire(id, moyen)),
-  // loadUtilisateursDatas: () => dispatch(loadUtilisateurs()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AdminCommunication);
+export default connect(mapStateToProps)(AdminCommunication);

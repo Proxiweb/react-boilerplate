@@ -1,6 +1,11 @@
 .editorClass {
-   height: 300px;
+   height: 150px;
    border: 1px solid silver;
    padding: 5px;
    border-radius: 2px;
+}
+
+.form {
+  margin: 5px;
+  border: solid 1px silver;
 }

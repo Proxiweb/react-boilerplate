@@ -57,7 +57,7 @@ class CommunicationForm extends Component { // eslint-disable-line
     const { sms, message, objet, html, rawHtml } = this.state;
     if (!html) return null;
     return (
-      <div className="row">
+      <div className={`row ${styles.form}`}>
         <div className="col-md-12">
           <TextField
             hintText="Texte du sms"

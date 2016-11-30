@@ -174,7 +174,7 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/communications',
+      path: '/communications/:communicationId',
       getComponent(location, cb) {
         const importModules = Promise.all([
           System.import('containers/AdminCommunication/index'),
