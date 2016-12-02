@@ -50,6 +50,13 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/users/:userId/commandes',
+      getComponent(location, cb) {
+        System.import('containers/HistoriqueCommandes')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/login',
       getComponent(location, cb) {
         const importModules = Promise.all([

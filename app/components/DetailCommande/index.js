@@ -59,7 +59,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
           fixedFooter
         >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow style={{ backgroundColor: shader(muiTheme.appBar.color, +0.6) }}>
+            <TableRow style={{ backgroundColor: muiTheme.palette.tableHeaderBackgroundColor }}>
               {headers.map((h, idx) => (
                 <TableHeaderColumn
                   tooltip={h.tooltip || h.label}

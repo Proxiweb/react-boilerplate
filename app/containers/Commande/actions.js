@@ -12,6 +12,12 @@ export const loadCommandes = () => ({
   msgPending: 'Chargement commandes',
 });
 
+export const loadUserCommandes = (userId) => ({
+  type: findActionType('load_user_commandes', c, 'START'),
+  url: `/utilisateur/${userId}/commandes`,
+  msgPending: 'Chargement commandes',
+});
+
 export const loadCommande = (id) => ({
   type: findActionType('load_commande', c, 'START'),
   url: `commandes/${id}`,

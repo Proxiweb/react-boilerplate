@@ -70,7 +70,7 @@ class AdminDepot extends Component { // eslint-disable-line
             rowCount={depots.length}
             rowGetter={({ index }) => depots[index]}
             rowStyle={(obj) => ({
-              borderBottom: 'solid 1epx silver',
+              borderBottom: 'solid 1px silver',
               backgroundColor: obj.index % 2 === 0 || obj.index === -1 ? 'white' : palette.oddColor,
             })}
           >

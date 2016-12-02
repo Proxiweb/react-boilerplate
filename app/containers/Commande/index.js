@@ -71,16 +71,6 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     const { asyncState, commandes, relaiId } = this.props;
     const self = this;
 
-    const palette = this.context.muiTheme.palette;
-    const styleTitle = {
-      backgroundColor: palette.groupColor,
-      border: `solid 1px ${palette.groupColorBorder}`,
-      padding: 10,
-      textAlign: 'center',
-      marginBottom: '1rem',
-      fontSize: '1.2em',
-    };
-
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">

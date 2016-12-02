@@ -102,6 +102,7 @@ const muiTheme = getMuiTheme({
     groupColor: grey300,
     groupColorBorder: grey600,
     oddColor: grey200,
+    tableHeaderBackgroundColor: shader(limeA700, 0.5),
   },
 });
 
