@@ -1,8 +1,30 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
 import RemoveIcon from 'material-ui/svg-icons/content/remove';
+import shader from 'shader';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import styles from './styles.css';
+const headerColStyle = { color: 'black', fontSize: '14px' };
+const headers = [
+  {
+    label: 'Désignation',
+    className: 'bigCol',
+  },
+  {
+    label: 'Prix',
+    className: 'smallCol',
+  },
+  {
+    label: 'Qté',
+    className: 'smallCol',
+    tooltip: 'Quantité',
+  },
+  {
+    label: 'Total',
+    className: 'smallCol',
+    tooltip: 'Total articles',
+  },
+];
 export default class DetailCommande extends Component { // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.array.isRequired,
@@ -15,12 +37,18 @@ export default class DetailCommande extends Component { // eslint-disable-line
     recolteFond: PropTypes.string.isRequired,
   }
 
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
+
   static defaultProps = {
     readOnly: false,
   }
 
   render() {
     const { offres, produits, contenus, diminuer, readOnly, montant, recolteFond, augmenter } = this.props;
+    const { muiTheme } = this.context;
+
     return (
       <div>
         <Table
@@ -31,12 +59,18 @@ export default class DetailCommande extends Component { // eslint-disable-line
           fixedFooter
         >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn tooltip="Désignation" className={styles.bigCol}>Désignation</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Prix unitaire" className={styles.smallCol}>Prix</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Quantité" className={styles.smallCol}>Qté</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Total article" className={styles.smallCol}>Total</TableHeaderColumn>
-              {!readOnly && <TableHeaderColumn tooltip="Supprimer" className={styles.lessSmallCol}></TableHeaderColumn>}
+            <TableRow style={{ backgroundColor: shader(muiTheme.appBar.color, +0.6) }}>
+              {headers.map((h, idx) => (
+                <TableHeaderColumn
+                  tooltip={h.tooltip || h.label}
+                  className={styles[h.className]}
+                  style={headerColStyle}
+                  key={idx}
+                >
+                  {h.label}
+                </TableHeaderColumn>)
+              )}
+              {!readOnly && <TableHeaderColumn tooltip="Supprimer" className={styles.lessSmallCol} style={headerColStyle} />}
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>

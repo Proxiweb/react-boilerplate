@@ -82,6 +82,7 @@ export const selectCommandesRelais = () => createSelector(
     Object.keys(commandes)
       .filter((commandeId) => {
         let inRelais = false;
+        console.log('cr', commandes[commandeId]);
         commandes[commandeId].livraisons.forEach((cmdeLivr) => {
           if (livraisons[cmdeLivr].relaiId === relaiId) {
             inRelais = true;

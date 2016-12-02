@@ -82,7 +82,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       marginBottom: '1rem',
       fontSize: '1.2em',
     };
-
+    console.log('cmde', commandes);
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
