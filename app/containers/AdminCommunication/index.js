@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import CommunicationFormContainer from './containers/CommunicationFormContainer';
-import styles from './index.css';
+import CommunicationsHistorique from './containers/CommunicationsHistorique';
 
 class AdminCommunication extends Component { // eslint-disable-line
   static propTypes = {
@@ -14,7 +14,7 @@ class AdminCommunication extends Component { // eslint-disable-line
 
   render() {
     if (this.props.communicationId === 'courante') return <CommunicationFormContainer />;
-    if (this.props.communicationId === 'passees') return <div>Anciennes</div>;
+    if (this.props.communicationId === 'passees') return <CommunicationsHistorique />;
     return (
       <div>Anciennes</div>
     );

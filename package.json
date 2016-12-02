@@ -281,7 +281,8 @@
     "superagent": "^2.1.0",
     "thinky": "^2.3.4",
     "toml": "^2.3.0",
-    "warning": "3.0.0"
+    "warning": "3.0.0",
+    "webpack": "2.1.0-beta.22"
   },
   "devDependencies": {
     "babel-cli": "6.16.0",
@@ -352,7 +353,7 @@
     "stylelint": "7.3.1",
     "stylelint-config-standard": "13.0.2",
     "url-loader": "0.5.7",
-    "webpack": "2.1.0-beta.22",
+    "webpack": "2.1.0-beta.27",
     "webpack-dev-middleware": "1.8.3",
     "webpack-hot-middleware": "2.12.2"
   }

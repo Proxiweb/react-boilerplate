@@ -33,7 +33,7 @@ class CommunicationForm extends Component { // eslint-disable-line
 
   onEditorChange = (editorContent) => this.setState({ html: draftToHtml(editorContent) })
 
-  getInitialHTML(html) {
+  getInitialHTML() {
     const contentBlocks = convertFromHTML('<p>oooo</p>');
     const contentState = ContentState.createFromBlockArray(contentBlocks);
     return convertToRaw(contentState);

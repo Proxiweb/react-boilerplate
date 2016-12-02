@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectStellarDomain = () => state => state.stellar;
+const selectStellarDomain = () => (state) => state.stellar;
 
 export const selectEnv = () => createSelector(
   selectStellarDomain(),

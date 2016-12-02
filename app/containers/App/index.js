@@ -14,15 +14,10 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 // import { Nav, NavItem } from 'react-bootstrap';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
 import CircularProgress from 'material-ui/CircularProgress';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
@@ -78,7 +73,6 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 
   handleChangeList = (event, value) => {
-    console.log(value);
     event.preventDefault();
     this.props.pushState(value);
     this.closeDrawer();

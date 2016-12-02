@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
+import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import moment from 'moment';
 
 import styles from './styles.css';

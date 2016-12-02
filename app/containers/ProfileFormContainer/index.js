@@ -12,13 +12,13 @@ import { selectPending } from 'containers/App/selectors';
 
 const isProfilePristine = () => (state) => isPristine('profile')(state);
 
-import submit from './submit';
+// import submit from './submit';
 
 class ProfileFormContainer extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
-    saveAccount: PropTypes.func.isRequired,
+    // saveAccount: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
   }

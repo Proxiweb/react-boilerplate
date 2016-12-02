@@ -6,7 +6,7 @@ import { setMessage, removeDestinataire } from 'containers/AdminCommunication/ac
 import Avatar from 'material-ui/Avatar';
 import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
-import styles from './index.css';
+import styles from './styles.css';
 
 class CommunicationFormContainer extends Component { // eslint-disable-line
   static propTypes = {

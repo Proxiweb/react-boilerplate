@@ -1,15 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import ExpandMore from 'material-ui/svg-icons/navigation/expand-more';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Badge from 'material-ui/Badge';
 
 export default class Logged extends Component {
   static propTypes = {
-    user: PropTypes.object.isRequired,
     destinataires: PropTypes.array.isRequired,
     onClick: PropTypes.func.isRequired,
   };

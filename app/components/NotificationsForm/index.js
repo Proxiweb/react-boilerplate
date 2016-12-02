@@ -13,7 +13,7 @@ class Notifications extends Component { // eslint-disable-line react/prefer-stat
   }
 
   handleToggle1 = (event, isInputChecked) => {
-    const { saveProfile, auth } = this.props;
+    const { auth } = this.props; // saveProfile
     const { veilleLivraison } = auth.notifications;
     const profile = { ...auth, notifications: { veilleLivraison, nouvelleCommande: isInputChecked } };
     this.props.dispatch(saveAccount(auth.id, profile));

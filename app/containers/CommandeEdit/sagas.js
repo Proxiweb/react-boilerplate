@@ -28,22 +28,18 @@ export function* calculeTotaux() {
       offres[cont.offreId], { quantite: cont.quantite, qteRegul: cont.qteRegul })
     );
 
-    try {
-      const totalCommande = contenus.reduce(
-        (memo, contenu) => memo + ((contenu.prix + contenu.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0))),
-        0
-      ) / 100;
+    const totalCommande = contenus.reduce(
+      (memo, contenu) => memo + ((contenu.prix + contenu.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0))),
+      0
+    ) / 100;
 
-      const partDistribution = round(
-        contenus.reduce(
-          (memo, contenu) => memo + (contenu.recolteFond * (contenu.quantite + (contenu.qteRegul || 0))),
-          0
-        ) / 100,
-        2);
-      yield put(modifieTotaux(totalCommande, partDistribution));
-    } catch (e) {
-      console.log(e);
-    }
+    const partDistribution = round(
+      contenus.reduce(
+        (memo, contenu) => memo + (contenu.recolteFond * (contenu.quantite + (contenu.qteRegul || 0))),
+        0
+      ) / 100,
+      2);
+    yield put(modifieTotaux(totalCommande, partDistribution));
   }
 }
 

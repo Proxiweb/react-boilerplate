@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom'; // eslint-disable-line
 import { connect } from 'react-redux';
 import { removeMessage } from 'containers/App/actions';
-import StellarSdk from 'stellar-sdk';
 import Snackbar from 'material-ui/Snackbar';
 
 class Notifications extends Component { // eslint-disable-line

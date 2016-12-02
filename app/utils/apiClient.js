@@ -16,7 +16,7 @@ export function get(url, options = { headers: {}, query: {} }) {
         // }
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+        reject(error.message);
       }
     }));
 }
@@ -36,7 +36,7 @@ export function post(url, options = { headers: {}, query: {}, datas: {} }) {
         // }
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+        reject(error.message);
       }
     }));
     //
@@ -67,7 +67,7 @@ export function put(url, options = { headers: {}, query: {}, datas: {} }) {
         // }
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+        reject(error.message);
       }
     }));
     // .end((err, res) => {
@@ -97,7 +97,7 @@ export function patch(url, options = { headers: {}, query: {}, datas: {} }) {
         // }
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+        reject(error.message);
       }
     }));
     // .end((err, res) => {
@@ -122,7 +122,7 @@ export function del(url, options = { headers: {}, query: {} }) {
       if (error.response) {
         reject({ message: error.response.data });
       } else {
-        console.log('Error', error.message);
+        reject(error.message);
       }
     }));
 }

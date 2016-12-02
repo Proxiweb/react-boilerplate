@@ -82,7 +82,7 @@ class AdminDepot extends Component { // eslint-disable-line
               dataKey="createdAt"
               width="350"
               cellDataGetter={
-                ({ columnData, dataKey, rowData }) => moment(rowData.createdAt).format('LLL')
+                ({ rowData }) => moment(rowData.createdAt).format('LLL')
               }
             />
             <Column
@@ -90,7 +90,7 @@ class AdminDepot extends Component { // eslint-disable-line
               dataKey="utilisateurId"
               width="350"
               cellDataGetter={
-                ({ columnData, dataKey, rowData }) => {
+                ({ rowData }) => {
                   const ut = utilisateurs.find((u) => u.id === rowData.utilisateurId);
                   return ut ?
                           `${ut.prenom} ${ut.nom}` :

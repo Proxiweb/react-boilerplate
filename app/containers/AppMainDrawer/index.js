@@ -2,16 +2,16 @@ import React, { Component, PropTypes } from 'react';
 
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+// import Divider from 'material-ui/Divider';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import TestIcon from 'material-ui/svg-icons/action/settings';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import HelpIcon from 'material-ui/svg-icons/action/help';
 const SelectableList = makeSelectable(List);
 
-export default class AppMainDrawer extends Component {
+export default class AppMainDrawer extends Component { // eslint-disable-line
   static propTypes = {
-    onSelect: PropTypes.func.isRequired,
+    // onSelect: PropTypes.func.isRequired,
     onRequestChange: PropTypes.func.isRequired,
     onChangeList: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,

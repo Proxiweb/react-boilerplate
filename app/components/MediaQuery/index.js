@@ -82,7 +82,7 @@ export default class MediaQuery extends React.Component {
 
   render() {
     if (typeof this.props.children === 'function') {
-      return this.props.children(this.state.matches)
+      return this.props.children(this.state.matches);
     }
 
     if (this.state.matches === false) {
@@ -101,7 +101,7 @@ export default class MediaQuery extends React.Component {
         this.props.component || 'div',
         props,
         this.props.children
-      )
+      );
     } else if (hasMergeProps) {
       return React.cloneElement(
         this.props.children,
