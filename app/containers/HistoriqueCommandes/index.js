@@ -1,32 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { List, ListItem } from 'material-ui/List';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 import classnames from 'classnames';
 
-import {
-  selectCommandeProduits,
-  selectProduits,
-  selectOffres,
-  selectQuantiteOffresAchetees,
-  selectUserIdCommandeUtilisateur,
-  selectUserIdCommandes,
-  selectCommandeId,
-} from 'containers/Commande/selectors';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
 
-import { loadUserCommandes, loadCommande } from 'containers/Commande/actions';
+import DetailCommandeContainer from './components/DetailCommandeContainer';
+import { selectUserIdCommandes, selectCommandeId } from 'containers/Commande/selectors';
+import { loadUserCommandes } from 'containers/Commande/actions';
 import { selectUserId } from 'containers/CompteUtilisateur/selectors';
 import styles from './styles.css';
+
+const SelectableList = makeSelectable(List);
 
 class HistoriqueCommandes extends Component {  // eslint-disable-line
   static propTypes = {
     userId: PropTypes.string.isRequired,
     commandeId: PropTypes.string.isRequired,
+    commandes: PropTypes.array,
+    params: PropTypes.object.isRequired,
+
     loadCommandesUtilisateur: PropTypes.func.isRequired,
-    loadCommande: PropTypes.func.isRequired,
-    commandes: PropTypes.array.isRequired,
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
   }
@@ -36,12 +32,6 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
     loadCommandesUtilisateur(userId);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.commandeId !== nextProps.commandeId) {
-      this.props.loadCommande(nextProps.commandeId);
-    }
-  }
-
   render() {
     const {
       commandes,
@@ -49,30 +39,28 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
       pushState,
       userId,
       commandeId,
-      produits,
-      offres,
-      offresUtilisateur,
-      commandeUtilisateurs,
+      params,
     } = this.props;
     if (!commandes) return null;
-    console.log(produits, offres, offresUtilisateur, commandeUtilisateurs);
     const commande = commandeId ? commandes.find((cde) => cde.id === commandeId) : null;
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>
-          <List>
+          <SelectableList value={location.pathname}>
             {commandes.map((cde, idx) =>
               <ListItem
                 key={idx}
                 primaryText={moment(cde.dateCommande).format('LLL')}
+                value={`/users/${userId}/commandes/${cde.id}`}
                 onClick={() => pushState(`/users/${userId}/commandes/${cde.id}`)}
               />
             )}
-          </List>
+          </SelectableList>
         </div>
         <div className={classnames('col-md-9', styles.panel, styles.noScroll)}>
           {!children && <h1>Historique de vos commandes</h1>}
           {children && commande && <h1>Commande {commande.noCommande}</h1>}
+          {commandeId && <DetailCommandeContainer commandeId={commandeId} params={params} />}
         </div>
       </div>
       );
@@ -83,16 +71,10 @@ const mapStateToProps = createStructuredSelector({
   userId: selectUserId(),
   commandeId: selectCommandeId(),
   commandes: selectUserIdCommandes(),
-
-  produits: selectCommandeProduits(),
-  offres: selectOffres(),
-  offresUtilisateur: selectQuantiteOffresAchetees(),
-  commandeUtilisateur: selectUserIdCommandeUtilisateur(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   loadCommandesUtilisateur: (utilisateurId) => dispatch(loadUserCommandes(utilisateurId)),
-  loadCommande: (id) => dispatch(loadCommande(id)),
   pushState: (url) => dispatch(push(url)),
 });
 

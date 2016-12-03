@@ -284,13 +284,23 @@ export const selectAuthUtilisateurCommandeUtilisateur = () => createSelector(
 );
 
 export const selectUserIdCommandeUtilisateur = () => createSelector(
-  [selectCommandeCommandeUtilisateurs(), selectUserId(), selectCommandeContenus()],
-  (commandeCommandeUtilisateurs, utilisateurId, commandeContenus) => {
-    if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus) { return null; }
-    const cCu = commandeCommandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
+  [
+    selectCommandeCommandeUtilisateurs(),
+    selectUserId(),
+    selectCommandeContenus(),
+    selectCommandeId(),
+  ],
+  (commandeCommandeUtilisateurs, utilisateurId, commandeContenus, commandeId) => {
+    if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus || !commandeId) { return null; }
+    console.log('select!', commandeCommandeUtilisateurs);
+    console.log(utilisateurId);
+    console.log(commandeContenus);
+    const cCu = commandeCommandeUtilisateurs.find(
+      (cu) => cu.utilisateurId === utilisateurId && cu.commandeId === commandeId
+    );
     if (!cCu) return undefined;
 
-    cCu.contenus = cCu.contenus.map((contenuId) => commandeContenus[contenuId]);
+    cCu.contenus = cCu.contenus ? cCu.contenus.map((contenuId) => commandeContenus[contenuId]) : [];
     return cCu;
   }
 );
