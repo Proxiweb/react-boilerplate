@@ -56,6 +56,15 @@ export default function createRoutes(store) {
           .then(loadModule(cb))
           .catch(errorLoading);
       },
+      childRoutes: [{
+        path: ':commandeId',
+        name: 'utilisateurCommande',
+        getComponent(nextState, cb) {
+          System.import('containers/HistoriqueCommandes')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+      }],
     }, {
       path: '/login',
       getComponent(location, cb) {

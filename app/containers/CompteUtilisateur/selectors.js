@@ -7,7 +7,7 @@ const selectCompteUtilisateurDomain = () => (state) => state.compteUtilisateur;
 /**
  * Other specific selectors
  */
-
+export const selectUserId = () => (state, props) => props.params.userId;
 
 /**
  * Default selector used by CompteUtilisateur
@@ -28,7 +28,7 @@ export const selectPaymentsPagingToken = () => createSelector(
   (substate) => substate.payments.pagingToken
 );
 
-export const selectUtilisateurId = () => createSelector(
+export const selectAuthUtilisateurId = () => createSelector(
   [selectCompteUtilisateur()],
   (auth) => (auth ? auth.id : undefined)
 );

@@ -20,6 +20,7 @@ import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { persistStore } from 'redux-persist';
+import moment from 'moment';
 
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
@@ -62,6 +63,8 @@ import 'react-virtualized/styles.css';
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
+
+moment.locale('fr');
 
 persistStore(store, {
   whitelist: ['compteUtilisateur', 'commande'],

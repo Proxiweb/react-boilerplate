@@ -25,11 +25,11 @@ import {
   selectParams,
   selectCommandeLivraisons,
   selectQuantiteOffresAchetees,
-  selectUtilisateurCommandeUtilisateur,
+  selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
-import { selectUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
 import { ajouter, augmenter, diminuer, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
 import OrderValidate from 'components/OrderValidate';
 import DetailOffres from 'components/DetailOffres';
@@ -163,6 +163,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     return (
       <OrderValidate
         commande={commande}
+        produitsById={produitsById}
+        offres={offres}
         commandeId={params.commandeId}
         utilisateurId={utilisateurId}
         sauvegarder={sauvegarder}
@@ -171,8 +173,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         augmenter={augmenter}
         diminuer={diminuer}
         setDistibution={setDistibution}
-        produitsById={produitsById}
-        offres={offres}
       />
     );
   }
@@ -282,9 +282,9 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
   produitsById: selectProduits(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),
-  utilisateurId: selectUtilisateurId(),
+  utilisateurId: selectAuthUtilisateurId(),
   params: selectParams(),
-  commandeUtilisateur: selectUtilisateurCommandeUtilisateur(), // commande utilisateur existante
+  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(), // commande utilisateur existante
   commande: selectCommande(), // commande courante en cours d'édition
   livraisons: selectCommandeLivraisons(),
   fournisseur: selectFournisseurProduit(),

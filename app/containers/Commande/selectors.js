@@ -3,13 +3,13 @@ import { createSelector } from 'reselect';
 import uniq from 'lodash.uniq';
 import flatten from 'lodash.flatten';
 
-import { selectUtilisateurId } from '../CompteUtilisateur/selectors';
+import { selectAuthUtilisateurId, selectUserId } from 'containers/CompteUtilisateur/selectors';
 /**
  * Direct selector to the commande state domain
  */
 const selectCommandeDomain = () => (state) => state.commandes || null;
 export const selectParams = () => (state, props) => props.params;
-const selectCommandeId = () => (state, props) => props.params.commandeId;
+export const selectCommandeId = () => (state, props) => props.params.commandeId;
 export const selectRelaisId = () => (state, props) => props.params.relaiId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
@@ -72,6 +72,19 @@ export const selectLivraisons = () => createSelector(
   (substate) => getModel(substate, 'livraisons')
 );
 
+export const selectUserIdCommandes = () => createSelector(
+  selectUserId(),
+  selectCommandes(),
+  selectCommandesUtilisateurs(),
+  (userId, commandes, commandeUtilisateurs) => {
+    if (!userId || !commandes || !commandeUtilisateurs) return null;
+    return Object
+             .keys(commandeUtilisateurs)
+             .filter((cuId) => commandeUtilisateurs[cuId].utilisateurId === userId)
+             .map((cuId) => commandes[commandeUtilisateurs[cuId].commandeId]);
+  }
+);
+
 export const selectCommandesRelais = () => createSelector(
   selectCommandes(),
   selectLivraisons(),
@@ -82,7 +95,6 @@ export const selectCommandesRelais = () => createSelector(
     Object.keys(commandes)
       .filter((commandeId) => {
         let inRelais = false;
-        console.log('cr', commandes[commandeId]);
         commandes[commandeId].livraisons.forEach((cmdeLivr) => {
           if (livraisons[cmdeLivr].relaiId === relaiId) {
             inRelais = true;
@@ -259,8 +271,20 @@ export const selectQuantiteOffresAchetees = () => createSelector(
 );
 
 
-export const selectUtilisateurCommandeUtilisateur = () => createSelector(
-  [selectCommandeCommandeUtilisateurs(), selectUtilisateurId(), selectCommandeContenus()],
+export const selectAuthUtilisateurCommandeUtilisateur = () => createSelector(
+  [selectCommandeCommandeUtilisateurs(), selectAuthUtilisateurId(), selectCommandeContenus()],
+  (commandeCommandeUtilisateurs, utilisateurId, commandeContenus) => {
+    if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus) { return null; }
+    const cCu = commandeCommandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
+    if (!cCu) return undefined;
+
+    cCu.contenus = cCu.contenus.map((contenuId) => commandeContenus[contenuId]);
+    return cCu;
+  }
+);
+
+export const selectUserIdCommandeUtilisateur = () => createSelector(
+  [selectCommandeCommandeUtilisateurs(), selectUserId(), selectCommandeContenus()],
   (commandeCommandeUtilisateurs, utilisateurId, commandeContenus) => {
     if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus) { return null; }
     const cCu = commandeCommandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);

@@ -14,13 +14,14 @@ export const loadCommandes = () => ({
 
 export const loadUserCommandes = (userId) => ({
   type: findActionType('load_user_commandes', c, 'START'),
-  url: `/utilisateur/${userId}/commandes`,
+  url: `/utilisateurs/${userId}/commandes`,
   msgPending: 'Chargement commandes',
 });
 
 export const loadCommande = (id) => ({
-  type: findActionType('load_commande', c, 'START'),
-  url: `commandes/${id}`,
+  type: findActionType('load_commandes', c, 'START'),
+  url: 'commandes',
+  query: { id },
   msgPending: 'Chargement commande',
 });
 
