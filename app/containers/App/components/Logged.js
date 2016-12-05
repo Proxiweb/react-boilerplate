@@ -19,7 +19,7 @@ export default class Logged extends Component {
     return (
       <div className="row">
         {destinataires.length > 0 && <div className="col-md">
-          <MenuItem onTouchTap={() => onClick('/communications')} primaryText={`Communication en cours (${destinataires.length})`} />
+          <MenuItem onTouchTap={() => onClick('/communications/courante')} primaryText={`Communication en cours (${destinataires.length})`} />
         </div>}
         <div className="col-md">
           <IconMenu

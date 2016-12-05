@@ -9,7 +9,7 @@ export const loadCommunications = (query = {}) => ({
 
 export const sendCommunication = (apiKey, datas) => ({
   type: findActionType('save_communication', c, 'START'),
-  url: '/localhost:8585/communications',
+  url: 'http://localhost:8585/communications',
   method: 'post',
   datas,
   headers: { 'X-Api-Key': apiKey },
