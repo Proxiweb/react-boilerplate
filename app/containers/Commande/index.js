@@ -4,7 +4,6 @@ import { push } from 'react-router-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import uniq from 'lodash.uniq';
-import Offre from 'components/Offre';
 import {
   selectAsyncState,
   selectRelaisId,
@@ -15,10 +14,11 @@ import {
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 import choux from './choux.jpg';
-import CommandePanel from 'components/CommandePanel';
+import CommandePanel from './components/CommandePanel';
+import Offre from 'components/Offre';
 import Panel from 'components/Panel';
 
-import { loadCommandes, loadCommande as loadCommandeAction, ajouter } from './actions';
+import { loadCommandes, loadCommande, ajouter } from './actions';
 
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -328,7 +328,6 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     loadCommandes: (page) => dispatch(loadCommandes(page)),
-    loadCommande: (id) => dispatch(loadCommandeAction(id)),
     pushState: (url) => dispatch(push(url)),
     ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),
   };

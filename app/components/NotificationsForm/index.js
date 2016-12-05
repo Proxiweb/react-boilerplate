@@ -37,11 +37,12 @@ class Notifications extends Component { // eslint-disable-line react/prefer-stat
               label="À chaque nouvelle commande"
               disabled={pending}
               onToggle={this.handleToggle1}
+              trackStyle={{ backgroundColor: 'red' }}
             />
           </div>
           <div className="col-md-6">
             <Toggle
-              toggled={auth.notifications.veilleLivraison}
+              toggled={auth.notifications.veilleLivraison && false}
               label="Les veilles de livraison"
               disabled={pending}
               onToggle={this.handleToggle2}

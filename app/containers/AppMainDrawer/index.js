@@ -56,7 +56,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               nestedItems={[
                 <ListItem primaryText="Relais" value="/relais" />,
                 <ListItem primaryText="Depots" value="/depots" />,
-                <ListItem primaryText="Commandes" value="/commandes" />,
+                <ListItem primaryText="Commandes" value="/admin/relais/e3f38e82-9f29-46c6-a0d7-3181451455a4/commandes" />,
                 <ListItem primaryText="Logs" value="/logs" />,
                 <ListItem primaryText="Utilisateurs" value="/utilisateurs" />,
                 <ListItem

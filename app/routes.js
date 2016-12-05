@@ -159,7 +159,6 @@ export default function createRoutes(store) {
       path: '/depots',
       getComponent(location, cb) {
         const importModules = Promise.all([
-          System.import('containers/AdminDepot/reducer'),
           System.import('containers/AdminDepot/sagas'),
           System.import('containers/AdminDepot/index'),
         ]);
@@ -167,7 +166,6 @@ export default function createRoutes(store) {
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-          injectReducer('admin', reducer.default);
           injectSagas(sagas.default);
           renderRoute(component);
         });
@@ -189,6 +187,30 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
+    }, {
+      path: '/admin/relais/:relaiId/commandes',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/AdminRelaisCommandes/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      childRoutes: [{
+        path: ':commandeId',
+        name: 'utilisateursCommande',
+        getComponent(nextState, cb) {
+          System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+      }],
     }, {
       path: '/communications/:communicationId',
       getComponent(location, cb) {

@@ -1,5 +1,5 @@
 import c from './constants';
-
+import merge from 'lodash.merge';
 const initialState = {
   datas: [],
 };
@@ -7,7 +7,7 @@ const initialState = {
 const adminUtilisateursReducer = (state = initialState, action) => {
   switch (action.type) {
     case c.ASYNC_LOAD_UTILISATEURS_SUCCESS:
-      return { ...state, datas: action.datas.utilisateurs };
+      return { ...state, datas: merge(state.datas, action.datas.utilisateurs) };
     default:
       return state;
   }

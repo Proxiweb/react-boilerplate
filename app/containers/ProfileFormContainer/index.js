@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import ProfileForm from 'components/ProfileForm';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -9,6 +8,7 @@ import {
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 import { selectPending } from 'containers/App/selectors';
+import ProfileForm from './components/ProfileForm';
 
 const isProfilePristine = () => (state) => isPristine('profile')(state);
 

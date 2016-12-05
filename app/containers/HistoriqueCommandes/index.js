@@ -59,7 +59,7 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
         </div>
         <div className={classnames('col-md-9', styles.panel, styles.noScroll)}>
           {!children && <h1>Historique de vos commandes</h1>}
-          {children && commande && <h1>Commande {commande.noCommande}</h1>}
+          {children && commande && <h3>Commande {commande.resume || commande.noCommande}</h3>}
           {commandeId && <DetailCommandeContainer commandeId={commandeId} params={params} />}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { buildHoursRanges } from 'components/LivraisonSelector';
+import { buildHoursRanges } from './LivraisonSelector';
 import moment from 'moment';
 
 export default class DistributionSelected extends Component {  // eslint-disable-line

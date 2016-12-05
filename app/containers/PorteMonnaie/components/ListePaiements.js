@@ -36,7 +36,7 @@ export default class ListePaiements extends Component { // eslint-disable-line
         selectable={false}
         multiSelectable={false}
         className={styles.bordered}
-        height={window.innerHeight - 190}
+        height={window.innerHeight - 230}
       >
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>

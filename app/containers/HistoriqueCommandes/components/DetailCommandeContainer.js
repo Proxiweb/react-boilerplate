@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import DetailCommande from 'components/DetailCommande';
-import { loadCommande } from 'containers/Commande/actions';
+import { loadCommandes } from 'containers/Commande/actions';
 
 import {
   selectProduits,
@@ -27,10 +27,9 @@ class DetailCommandeContainer extends Component {
   }
 
   componentDidMount() {
-    console.log('mount');
     const { commandeUtilisateur, loadCommandeById, commandeId } = this.props;
     if (!commandeUtilisateur) {
-      loadCommandeById(commandeId);
+      loadCommandeById({ id: commandeId });
     }
   }
 
@@ -76,7 +75,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  loadCommandeById: (id) => dispatch(loadCommande(id)),
+  loadCommandeById: (query) => dispatch(loadCommandes(query)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailCommandeContainer);

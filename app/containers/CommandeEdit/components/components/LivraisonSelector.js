@@ -3,7 +3,7 @@ import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
 import shader from 'shader';
-import styles from './styles.css';
+import styles from './LivraisonSelector.css';
 
 export const buildHoursRanges = (start, end) => {
   const duration = moment.duration(moment(end).diff(moment(start)));

@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Card, CardActions, CardHeader } from 'material-ui/Card';
+import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const commandePanel = ({ nom, clickHandler }) => (
@@ -12,7 +13,7 @@ const commandePanel = ({ nom, clickHandler }) => (
     <CardActions>
       <RaisedButton
         label="Commander"
-        icon={<i className="material-icons" style={{ color: 'white' }}>shopping_cart</i>}
+        icon={<ShoppingCartIcon />}
         fullWidth
         primary
         onClick={clickHandler}

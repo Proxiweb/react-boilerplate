@@ -1,9 +1,22 @@
 .porteMonnaie {
   text-align: right;
   font-size: 1.5em;
+  max-height: 80%;
+  margin-bottom: 5px;
 }
 
 .solde {
   font-size: 0.8em;
   color: gray;
+}
+
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 100px);
+}
+
+.appro {
+  min-height: calc(100vh - 225px);
+  border: solid 1px gray;
 }

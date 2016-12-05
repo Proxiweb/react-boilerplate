@@ -1,6 +1,6 @@
 import React from 'react';
 import round from 'lodash.round';  // eslint-disable-line id-length
-import styles from './styles.css';
+import styles from './AffichePrix.css';
 
 const convertisseurs = {
   mg: (poids) => {

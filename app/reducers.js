@@ -10,6 +10,7 @@ import languageProviderReducer from 'containers/LanguageProvider/reducer';
 
 import compteUtilisateur from 'containers/CompteUtilisateur/reducer';
 import commandes from 'containers/Commande/reducer';
+import admin from 'containers/AdminDepot/reducer';
 import global from 'containers/App/reducer';
 
 import { reducer as form } from 'redux-form';
@@ -52,5 +53,6 @@ export default function createReducer(asyncReducers) {
     compteUtilisateur,
     commandes,
     form,
+    admin,
   });
 }

@@ -99,6 +99,16 @@ const muiTheme = getMuiTheme({
     color: shader(limeA700, -0.1),
     textColor: grey900,
   },
+  tabs: {
+    backgroundColor: shader(limeA700, -0.3),
+    selectedTextColor: 'white',
+  },
+  toggle: {
+    thumbOnColor: shader(limeA700, -0.4),
+    thumbOffColor: shader(limeA700, 0.4),
+    trackOnColor: shader(limeA700, 0.2),
+    trackOffColor: shader(limeA700, 0.6),
+  },
   palette: {
     primary1Color: blue800,
     accent1Color: red800,

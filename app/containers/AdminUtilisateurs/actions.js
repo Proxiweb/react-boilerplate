@@ -6,3 +6,10 @@ export const loadUtilisateurs = (query = {}) => ({
   url: 'utilisateurs',
   query,
 });
+
+export const fetchUtilisateurs = (ids) => ({
+  type: findActionType('load_utilisateurs', c, 'START'),
+  method: 'post',
+  url: 'utilisateurs/byIds',
+  datas: { ids },
+});

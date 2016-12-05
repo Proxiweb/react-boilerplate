@@ -7,9 +7,9 @@ import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
 import assign from 'lodash/assign';
 
 import DetailCommande from 'components/DetailCommande';
-import LivraisonSelector from 'components/LivraisonSelector';
-import DistributionSelected from 'components/DistributionSelected';
-import styles from './styles.css';
+import LivraisonSelector from './components/LivraisonSelector';
+import DistributionSelected from './components/DistributionSelected';
+import styles from './OrderValidate.css';
 
 export default class OrderValidate extends Component {
   static propTypes = {

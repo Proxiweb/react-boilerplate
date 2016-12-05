@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Card, CardActions, CardHeader } from 'material-ui/Card';
+import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
+import GradeIcon from 'material-ui/svg-icons/action/grade';
 import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
 import { orange800, green500, cyan500 } from 'material-ui/styles/colors';
@@ -23,17 +25,18 @@ const offre = ({ imageSrc, nom, tarif, prct, fav }) => (
     </div>
     <CardActions expandable>
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-10">
           <FlatButton
             label="Commander"
-            icon={<i className="material-icons">shopping_cart</i>}
+            labelPosition="before"
+            icon={<ShoppingCartIcon color="black" />}
           />
         </div>
-        <div className="col-md-4 text-right" style={{ paddingRight: 0 }}>
+        <div className="col-md-2 text-right" style={{ paddingRight: 0 }}>
           <FlatButton
             href="https://github.com/callemall/material-ui"
             style={{ minWidth: 5 }}
-            icon={<i className="material-icons" style={{ color: fav ? orange800 : 'silver' }}>star</i>}
+            icon={<GradeIcon style={{ color: fav ? orange800 : 'silver' }} />}
           />
         </div>
       </div>

@@ -26,8 +26,8 @@ import AppBar from 'material-ui/AppBar';
 import AppMainDrawer from 'containers/AppMainDrawer';
 
 import { logout } from 'containers/Login/actions';
-import Logged from 'components/Logged';
-import Login from 'components/Login';
+import Logged from './components/Logged';
+import Login from './components/Login';
 
 const getDrawerHeaderStyle = (context) => {
   const {

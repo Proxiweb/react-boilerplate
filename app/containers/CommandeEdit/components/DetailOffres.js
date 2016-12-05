@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import AddShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
-import AffichePrix from 'components/AffichePrix';
+import AffichePrix from './components/AffichePrix';
 import styles from './styles.css';
 
 export default class DetailOffres extends Component {

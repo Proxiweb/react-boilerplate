@@ -31,8 +31,8 @@ import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
 import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
 import { ajouter, augmenter, diminuer, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
-import OrderValidate from 'components/OrderValidate';
-import DetailOffres from 'components/DetailOffres';
+import OrderValidate from './components/OrderValidate';
+import DetailOffres from './components/DetailOffres';
 import styles from './styles.css';
 
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
