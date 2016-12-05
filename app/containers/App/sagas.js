@@ -34,7 +34,8 @@ export function* apiFetcherSaga() {
 
       try {
         yield put(startGlobalPending());
-        const res = yield call(apiClient[method], `/api/${url}`, options);
+        const reqUrl = url.slice(0, 4) === 'http' ? url : `/api/${url}`;
+        const res = yield call(apiClient[method], reqUrl, options);
         yield put(assign({ type: success, datas: res.datas, req: omit(action, 'type'), msgPending, msgSuccess, msgError }));
         yield put(stopGlobalPending());
         if (msgSuccess) {
