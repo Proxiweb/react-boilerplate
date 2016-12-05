@@ -1,18 +1,40 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import Chip from 'material-ui/Chip';
-import CommunicationForm from 'components/CommunicationForm';
-import { setMessage, removeDestinataire } from 'containers/AdminCommunication/actions';
 import Avatar from 'material-ui/Avatar';
 import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
+
+import CommunicationForm from 'components/CommunicationForm';
+import { sendCommunication, removeDestinataire } from 'containers/AdminCommunication/actions';
+import { selectCommunicationDomain } from 'containers/AdminCommunication/selectors';
+import { selectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
 import styles from './styles.css';
 
 class CommunicationFormContainer extends Component { // eslint-disable-line
   static propTypes = {
     communication: PropTypes.object.isRequired,
-    setMessage: PropTypes.func.isRequired,
+    apiKey: PropTypes.string.isRequired,
+    sendMessage: PropTypes.func.isRequired,
     removeDest: PropTypes.func.isRequired,
+  }
+
+  handleSubmit = ({ message, objet, sms }) => {
+    const communication = {
+      siteExpediteur: 'proxiweb',
+      messageCourt: sms,
+      messageLong: message,
+      objet,
+      envoye: false,
+      destinataires: this.props.communication.destinataires.map((d) => ({
+        email: d.email,
+        telPortable: d.telPortable,
+        etat: 'attente',
+        identite: d.identite,
+      })),
+    };
+    this.props.sendMessage(this.props.apiKey, communication);
   }
 
   render() {
@@ -47,19 +69,24 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
           ))}
         </div>
         <div className={`col-md-6 ${styles.panel}`}>
-          <CommunicationForm onSubmit={this.props.setMessage} message={{ sms, objet, html }} nbreDest={destinataires.length} />
+          <CommunicationForm
+            onSubmit={this.handleSubmit}
+            message={{ sms, objet, html }}
+            nbreDest={destinataires.length}
+          />
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  communication: state.admin.communication,
+const mapStateToProps = createStructuredSelector({
+  communication: selectCommunicationDomain(),
+  apiKey: selectAuthApiKey(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setMessage: (message) => dispatch(setMessage(message)),
+  sendMessage: (apiKey, message) => dispatch(sendCommunication(apiKey, message)),
   removeDest: (id, moyen) => dispatch(removeDestinataire(id, moyen)),
 });
 

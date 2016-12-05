@@ -7,11 +7,14 @@ export const loadCommunications = (query = {}) => ({
   query,
 });
 
-export const saveCommunication = (datas) => ({
+export const sendCommunication = (apiKey, datas) => ({
   type: findActionType('save_communication', c, 'START'),
-  url: 'communications',
+  url: '/localhost:8585/communications',
   method: 'post',
   datas,
+  headers: { 'X-Api-Key': apiKey },
+  msgSuccess: 'Message envoyé',
+  msgError: 'Erreur lors de l\'envoi',
 });
 
 export const deleteCommunication = (id) => ({

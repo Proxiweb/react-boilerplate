@@ -32,6 +32,7 @@ class AdminDetailsCommande extends Component {
             (<SelectableList value={location.pathname}>
               {commandeUtilisateurs.map((cu, idx) => {
                 const ut = utilisateurs.datas.find((u) => u.id === cu.utilisateurId);
+                if (!ut) return null;
                 return (
                   <ListItem
                     key={idx}

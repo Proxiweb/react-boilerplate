@@ -54,7 +54,7 @@ class CommunicationForm extends Component { // eslint-disable-line
   }
 
   render() {
-    const { sms, message, objet, html, rawHtml } = this.state;
+    const { sms, objet, html, rawHtml } = this.state;
     if (!html) return null;
     return (
       <div className={`row ${styles.form}`}>
@@ -91,7 +91,7 @@ class CommunicationForm extends Component { // eslint-disable-line
                 label="envoyer"
                 disabled={!this.isValid()}
                 primary
-                onClick={() => this.props.onSubmit({ message, objet, sms })}
+                onClick={() => this.props.onSubmit({ message: this.state.html, objet, sms })}
               />
             </div>
           </div>

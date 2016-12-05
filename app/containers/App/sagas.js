@@ -25,7 +25,7 @@ export function* apiFetcherSaga() {
       const err = sfx + actionTypeSplt.join('_');
 
       const state = yield select();
-      const headers = state.compteUtilisateur.token ? { Authorization: `Bearer ${state.compteUtilisateur.token}` } : {};
+      const headers = state.compteUtilisateur.token ? { Authorization: `Bearer ${state.compteUtilisateur.token}`, ...action.headers } : { ...action.headers };
       const { msgPending, msgSuccess, msgError } = action;
       const query = action.query || {};
       const datas = action.datas || {};

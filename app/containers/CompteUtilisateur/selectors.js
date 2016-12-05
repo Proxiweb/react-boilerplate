@@ -33,6 +33,12 @@ export const selectAuthUtilisateurId = () => createSelector(
   (auth) => (auth ? auth.id : undefined)
 );
 
+export const selectAuthApiKey = () => createSelector(
+  [selectCompteUtilisateur()],
+  (auth) => (auth ? auth.apiKey : undefined)
+);
+
+
 export const selectBalance = () => createSelector(
   selectCompteUtilisateurDomain(),
   (substate) => substate.balances[0],
