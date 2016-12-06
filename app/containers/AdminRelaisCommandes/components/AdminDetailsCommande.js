@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
 import { selectCommandeCommandeUtilisateurs } from 'containers/Commande/selectors';
 import { fetchUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
@@ -11,7 +12,20 @@ import { selectPending } from 'containers/App/selectors';
 const SelectableList = makeSelectable(List);
 import capitalize from 'lodash.capitalize';
 
+
 import DetailsParUtilisateur from './DetailsParUtilisateur';
+
+const getIcon = (cu) => {
+  let color = 'green';
+  if (!cu.datePaiement && !cu.dateLivraison) {
+    color = 'red';
+  } else if (!cu.dateLivraison) {
+    color = 'orange';
+  }
+
+  return <PastilleIcon color={color} />;
+};
+
 
 class AdminDetailsCommande extends Component {
   static propTypes = {
@@ -35,7 +49,6 @@ class AdminDetailsCommande extends Component {
 
   render() {
     const { pending, commandeUtilisateurs, params, utilisateurs, children, pushState } = this.props;
-    console.log(commandeUtilisateurs, utilisateurs);
     return (
       <div className="row">
         <div className="col-md-3">
@@ -50,6 +63,7 @@ class AdminDetailsCommande extends Component {
                     primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
                     value={`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`}
                     onClick={() => pushState(`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`)}
+                    leftIcon={getIcon(cu)}
                   />
                 );
               }
@@ -63,7 +77,7 @@ class AdminDetailsCommande extends Component {
           {children && (
             <DetailsParUtilisateur
               params={params}
-              commandeUtilisateurs={commandeUtilisateurs.filter((cu) => cu.utilisateurId === params.utilisateurId)}
+              commandeUtilisateur={commandeUtilisateurs.find((cu) => cu.utilisateurId === params.utilisateurId)}
               utilisateur={utilisateurs.find((ut) => ut.id === params.utilisateurId)}
             />)}
         </div>

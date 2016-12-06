@@ -4,7 +4,6 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import classnames from 'classnames';
-import moment from 'moment';
 
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommandesRelais, selectCommandeId } from 'containers/Commande/selectors';
