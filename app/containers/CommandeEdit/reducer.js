@@ -73,6 +73,7 @@ function commandeEditReducer(state = initialState, action) {
 
     case c.DIMINUER_OFFRE:
       return diminuer(state, action.payload.offreId);
+
     case c.AUGMENTER_OFFRE:
       return augmenter(state, action.payload.offreId);
 

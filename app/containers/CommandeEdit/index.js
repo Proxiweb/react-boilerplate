@@ -6,6 +6,7 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
@@ -43,6 +44,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     quantiteOffresAchetees: PropTypes.array,
     // livraisons: PropTypes.array,
     offres: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
     // offresRelais: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
     ajouter: PropTypes.func.isRequired,
@@ -76,8 +79,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   }
 
   componentDidMount() {
-    const { commandeUtilisateur, typeProduits, commandeProduits, params, utilisateurId } = this.props;
-
+    const { commandeUtilisateur, typeProduits, commandeProduits, params, utilisateurId, route, router } = this.props;
+    router.setRouteLeaveHook(route, this.routerWillLeave);
     if (!utilisateurId) {
       this.props.pushState('/login');
     }
@@ -119,6 +122,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     this.setPanierState(false);
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
   }
+
+  routerWillLeave = () => (this.props.commandeUtilisateur && this.props.commandeUtilisateur.id ? true : 'Annuler la commande ?')
 
   showOffres = () => {
     const {
@@ -307,4 +312,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommandeEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CommandeEdit));
