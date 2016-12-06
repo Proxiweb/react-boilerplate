@@ -207,7 +207,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 width="300"
                 headerRenderer={this.headerRenderer}
                 cellDataGetter={
-                  ({ rowData }) => `${rowData.nom.toUpperCase()} ${capitalize(rowData.prenom)}`
+                  ({ rowData }) => `${rowData.nom ? rowData.nom.toUpperCase() : ''} ${capitalize(rowData.prenom)}`
                 }
                 disableSort={false}
               />

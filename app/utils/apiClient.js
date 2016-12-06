@@ -37,7 +37,7 @@ export function post(url, options = { headers: {}, query: {}, datas: {} }) {
         // }
       } else {
         // Something happened in setting up the request that triggered an Error
-        reject(error.message);
+        reject(error.message ? error.message : error);
       }
     }));
     //

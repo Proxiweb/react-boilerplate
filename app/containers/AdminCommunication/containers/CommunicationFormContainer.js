@@ -26,7 +26,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
       messageCourt: sms,
       messageLong: message,
       objet,
-      envoye: false,
+      envoye: true,
       destinataires: this.props.communication.destinataires.map((d) => ({
         email: d.email,
         telPortable: d.telPortable,
