@@ -64,29 +64,9 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
     this.setState({ datas: newProps.utilisateurs });
   }
 
-  componentDidUnmount() { // eslint-disable-line
-    this.removeEventListener('resize', this.handleResize);
+  componentWillUnmount() { // eslint-disable-line
+    window.removeEventListener('resize', this.handleResize);
   }
-
-  handleResize = () => this.setState({ ...this.state, height: window.innerHeight - 238, width: window.innerWidth - 30 });
-
-  handleChange = (event) => {
-    if (!event.target.value) {
-      this.setState({
-        datas: this.props.utilisateurs,
-        filtre: { relais: null, cotisation: 'cotisation_all' },
-      });
-    } else {
-      this.setState({
-        datas: this.props.utilisateurs.filter(
-          (u) => u.nom && u.nom.toLowerCase().indexOf(event.target.value) !== -1
-        ),
-        filtre: { relais: null, cotisation: 'cotisation_all' },
-      });
-    }
-  }
-
-  headerRenderer = ({ label, sortBy, sortDirection, dataKey }) => <div>{label}{sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}</div>
 
   getFiltredDatas = () => {
     const { filtre, datas } = this.state;
@@ -128,6 +108,26 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
         })
       : datas;
   }
+
+  handleChange = (event) => {
+    if (!event.target.value) {
+      this.setState({
+        datas: this.props.utilisateurs,
+        filtre: { relais: null, cotisation: 'cotisation_all' },
+      });
+    } else {
+      this.setState({
+        datas: this.props.utilisateurs.filter(
+          (u) => u.nom && u.nom.toLowerCase().indexOf(event.target.value) !== -1
+        ),
+        filtre: { relais: null, cotisation: 'cotisation_all' },
+      });
+    }
+  }
+
+  headerRenderer = ({ label, sortBy, sortDirection, dataKey }) => <div>{label}{sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}</div>
+
+  handleResize = () => this.setState({ ...this.state, height: window.innerHeight - 238, width: window.innerWidth - 30 });
 
   handleSort = ({ sortBy, sortDirection }) => {
     this.setState({ ...this.state, sortBy, sortDirection });

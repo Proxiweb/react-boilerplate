@@ -210,6 +210,15 @@ export default function createRoutes(store) {
             .then(loadModule(cb))
             .catch(errorLoading);
         },
+        childRoutes: [{
+          path: 'utilisateurs/:utilisateurId',
+          name: 'utilisateurCommande',
+          getComponent(nextState, cb) {
+            System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+              .then(loadModule(cb))
+              .catch(errorLoading);
+          },
+        }]
       }],
     }, {
       path: '/communications/:communicationId',

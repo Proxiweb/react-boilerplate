@@ -138,7 +138,7 @@ export const selectFournisseursCommande = () => createSelector(
   selectFournisseursIds(),
   (commande, fournisseursIds) => {
     if (!commande || !fournisseursIds) return null;
-    return Object.keys(commande.fournisseurs).map((key) => fournisseursIds[key]);
+    return commande.fournisseurs.map((key) => fournisseursIds[key]);
   }
 );
 

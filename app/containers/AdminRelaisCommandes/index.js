@@ -15,6 +15,7 @@ const SelectableList = makeSelectable(List);
 class AdminRelaisCommandes extends Component {
   static propTypes = {
     commandes: PropTypes.object.isRequired,
+    commandeId: PropTypes.string.isRequired,
     loadCommandes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
@@ -26,7 +27,7 @@ class AdminRelaisCommandes extends Component {
   }
 
   render() {
-    const { commandes, pushState, params } = this.props;
+    const { commandes, pushState, params, commandeId } = this.props;
     if (!commandes) return null;
 
     return (
@@ -44,7 +45,7 @@ class AdminRelaisCommandes extends Component {
           </SelectableList>
         </div>
         <div className={classnames('col-md-10', styles.panel)}>
-          {this.props.children && React.cloneElement(this.props.children, { ...this.props })}
+          {this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
         </div>
       </div>
     );
