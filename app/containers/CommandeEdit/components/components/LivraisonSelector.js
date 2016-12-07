@@ -17,7 +17,7 @@ export const buildHoursRanges = (start, end) => {
   return datas;
 };
 
-export default class LivraisonSelector extends Component {
+export default class LivraisonSelector extends Component { // eslint-disable-line
   static propTypes = {
     livraisons: PropTypes.array.isRequired,
     plageHoraire: PropTypes.number,
@@ -28,11 +28,6 @@ export default class LivraisonSelector extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
   };
-
-  constructor(props) {
-    super(props);
-    moment.locale('fr');
-  }
 
   render() {
     const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons } = this.props;

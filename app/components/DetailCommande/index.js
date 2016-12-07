@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
-import RemoveIcon from 'material-ui/svg-icons/content/remove';
-import shader from 'shader';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import styles from './styles.css';
 const headerColStyle = { color: 'black', fontSize: '14px' };
@@ -35,6 +33,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
     readOnly: PropTypes.bool.isRequired,
     montant: PropTypes.string.isRequired,
     recolteFond: PropTypes.string.isRequired,
+    commandeId: PropTypes.string,
   }
 
   static contextTypes = {
@@ -46,7 +45,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
   }
 
   render() {
-    const { offres, produits, contenus, diminuer, readOnly, montant, recolteFond, augmenter } = this.props;
+    const { offres, produits, contenus, diminuer, readOnly, montant, recolteFond, augmenter, commandeId } = this.props;
     const { muiTheme } = this.context;
 
     return (
@@ -89,8 +88,8 @@ export default class DetailCommande extends Component { // eslint-disable-line
                   <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
                   {!readOnly && (<TableRowColumn className={styles.lessSmallCol}>
-                    <button onClick={() => augmenter(contenu.offreId)} title="quantite + 1">+</button>
-                    <button onClick={() => diminuer(contenu.offreId)} title="quantite - 1">-</button>
+                    <button onClick={() => augmenter(commandeId, contenu.offreId)} title="quantite + 1">+</button>
+                    <button onClick={() => diminuer(commandeId, contenu.offreId)} title="quantite - 1">-</button>
                   </TableRowColumn>)}
                 </TableRow>
               ); })

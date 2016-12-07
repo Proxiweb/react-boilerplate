@@ -41,7 +41,17 @@ export const selectAuthApiKey = () => createSelector(
 
 export const selectBalance = () => createSelector(
   selectCompteUtilisateurDomain(),
-  (substate) => substate.balances[0],
+  (substate) => substate.balances.find((bal) => bal.asset_code === 'PROXI'),
+);
+
+export const selectMontantBalance = () => createSelector(
+  selectBalance(),
+  (balance) => parseFloat(balance.balance),
+);
+
+export const selectMaxBalance = () => createSelector(
+  selectBalance(),
+  (balance) => parseFloat(balance.limit),
 );
 
 export const selectLoading = () => createSelector(

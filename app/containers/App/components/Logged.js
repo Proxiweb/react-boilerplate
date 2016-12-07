@@ -3,6 +3,7 @@ import IconMenu from 'material-ui/IconMenu';
 import { List, ListItem } from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import IconButton from 'material-ui/IconButton';
 import Badge from 'material-ui/Badge';
 
 export default class Logged extends Component {
@@ -24,14 +25,7 @@ export default class Logged extends Component {
         <div className="col-md">
           <IconMenu
             {...this.props}
-            iconButtonElement={
-              <Badge
-                badgeContent={4}
-                secondary
-              >
-                <CommunicationChatBubble style={{ height: 15 }} />
-              </Badge>
-            }
+            iconButtonElement={<IconButton tooltip="Messages non lus"><CommunicationChatBubble /></IconButton>}
             targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
           >
@@ -58,6 +52,7 @@ export default class Logged extends Component {
               />
             </List>
           </IconMenu>
+          <Badge badgeContent={4} secondary />
         </div>
       </div>
     );

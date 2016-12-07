@@ -30,8 +30,19 @@ import {
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommande } from './selectors';
-import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
-import { ajouter, augmenter, diminuer, supprimer, sauvegarder, annuler, load, setDistibution } from './actions';
+import { selectAuthUtilisateurId, selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+import {
+  initCommande,
+  ajouter,
+  augmenter,
+  diminuer,
+  supprimer,
+  sauvegarder,
+  annuler,
+  load,
+  setDistibution,
+} from './actions';
+
 import OrderValidate from './components/OrderValidate';
 import DetailOffres from './components/DetailOffres';
 import styles from './styles.css';
@@ -42,12 +53,11 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     produits: PropTypes.array,
     commandeProduits: PropTypes.array.isRequired,
     quantiteOffresAchetees: PropTypes.array,
-    // livraisons: PropTypes.array,
     offres: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
-    // offresRelais: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
+    init: PropTypes.func.isRequired,
     ajouter: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     sauvegarder: PropTypes.func.isRequired,
@@ -62,24 +72,24 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commande: PropTypes.object,
     fournisseur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
-    relaiId: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
   }
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      panierExpanded: false,
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.navigateTo = this.navigateTo.bind(this);
-  }
+  state = {
+    panierExpanded: false,
+  };
 
   componentDidMount() {
-    const { commandeUtilisateur, typeProduits, commandeProduits, params, utilisateurId, route, router } = this.props;
+    const { commande, init, params } = this.props;
+
+    if (!commande) {
+      init(params.commandeId);
+    }
+    const { commandeUtilisateur, typeProduits, commandeProduits, utilisateurId, route, router } = this.props;
     router.setRouteLeaveHook(route, this.routerWillLeave);
     if (!utilisateurId) {
       this.props.pushState('/login');
@@ -105,25 +115,37 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
   }
 
+  componentWillUnmount() {
+    const { commande, params, init } = this.props;
+    if (!commande.id) {
+      init(params.commandeId);
+    }
+  }
+
   setPanierState = (state) => this.setState({ panierExpanded: state })
 
   toggleState = () => {
     this.setState({ panierExpanded: !this.state.panierExpanded });
   }
 
-  handleChange(event, index, value) {
+  handleChange = (event, index, value) => {
     const { commandeId, relaiId } = this.props.params;
     this.setPanierState(true);
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}`);
   }
 
-  navigateTo(productId) {
+  navigateTo = (productId) => {
     const { commandeId, typeProduitId, relaiId } = this.props.params;
     this.setPanierState(false);
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
   }
 
-  routerWillLeave = () => (this.props.commandeUtilisateur && this.props.commandeUtilisateur.id ? true : 'Annuler la commande ?')
+  routerWillLeave = () => {
+    const { commande } = this.props;
+
+    if (commande.id) return true;
+    return 'La commande n\'a pas été validée... Souhaitez-vous l\'annuler ?';
+  }
 
   showOffres = () => {
     const {
@@ -163,6 +185,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       produitId, // eslint-disable-line
       produitsById,
       offres,
+      balance,
     } = this.props;
 
     return (
@@ -178,6 +201,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         augmenter={augmenter}
         diminuer={diminuer}
         setDistibution={setDistibution}
+        balance={balance}
       />
     );
   }
@@ -193,6 +217,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       supprimer, // eslint-disable-line
       utilisateurId,
     } = this.props;
+
+    if (!commande) return null;
 
     const muiTheme = this.context.muiTheme;
 
@@ -288,6 +314,7 @@ const mapStateToProps = createStructuredSelector({
   produitsById: selectProduits(),
   quantiteOffresAchetees: selectQuantiteOffresAchetees(),
   utilisateurId: selectAuthUtilisateurId(),
+  balance: selectMontantBalance(),
   params: selectParams(),
   commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(), // commande utilisateur existante
   commande: selectCommande(), // commande courante en cours d'édition
@@ -300,15 +327,16 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: (url) => dispatch(push(url)),
+    init: (commandeId) => dispatch(initCommande(commandeId)),
     load: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
-    ajouter: (offre) => dispatch(ajouter(offre)),
-    augmenter: (offreId) => dispatch(augmenter(offreId)),
-    diminuer: (offreId) => dispatch(diminuer(offreId)),
+    ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
+    augmenter: (commandeId, offreId) => dispatch(augmenter(commandeId, offreId)),
+    diminuer: (commandeId, offreId) => dispatch(diminuer(commandeId, offreId)),
     supprimer: (offreId) => dispatch(supprimer(offreId)),
     sauvegarder: (datas) => dispatch(sauvegarder(datas)),
-    annuler: (id) => dispatch(annuler(id)),
+    annuler: (id, commandeId) => dispatch(annuler(id, commandeId)),
     loadCommandes: () => dispatch(loadCommandes()),
-    setDistibution: (livraisonId, plageHoraire) => dispatch(setDistibution(livraisonId, plageHoraire)),
+    setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
   };
 }
 

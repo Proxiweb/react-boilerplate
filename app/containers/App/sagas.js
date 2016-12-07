@@ -10,7 +10,7 @@ export function* apiFetcherSaga() {
     const action = yield take('*');
 
     if (action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {  //  format xxx/xxx/ASYNC_[UNE_ACTION]_START
-    try {
+
       const actionSuffix = action.type.split('/');
       const actionTypeSplt = actionSuffix[2].split('_');
 
@@ -24,8 +24,6 @@ export function* apiFetcherSaga() {
       actionTypeSplt.pop();
       actionTypeSplt.push('ERROR');
       const err = sfx + actionTypeSplt.join('_');
-      
-      console.log('err **** ', err);
 
       const state = yield select();
       const headers = state.compteUtilisateur.token ? { Authorization: `Bearer ${state.compteUtilisateur.token}`, ...action.headers } : { ...action.headers };
@@ -35,7 +33,7 @@ export function* apiFetcherSaga() {
       const method = action.method || 'get';
       const options = { query, datas, headers, method };
 
-  
+      try {
         yield put(startGlobalPending());
         const reqUrl = url.slice(0, 4) === 'http' ? url : `/api/${url}`;
         const res = yield call(apiClient[method], reqUrl, options);

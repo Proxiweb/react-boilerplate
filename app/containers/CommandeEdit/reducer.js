@@ -4,47 +4,12 @@
  *
  */
 import update from 'react-addons-update';
+import assign from 'lodash.assign';
 import findIndex from 'lodash.findindex';
 import c from './constants';
 
-const ajouter = (state, offre) => {
-  const idx = findIndex(state.contenus, { offreId: offre.offreId });
 
-  if (idx === -1) {
-    return update(state, { contenus: { $push: [offre] }, modifiee: { $set: true } });
-  }
-
-  const nQte = state.contenus[idx].quantite + 1;
-  return update(state, { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } });
-};
-
-const supprimer = (state, offreId) => {
-  const newContenus = state.contenus.filter((cont) => cont.offreId !== offreId);
-  return update(state, { contenus: { $set: newContenus }, modifiee: { $set: true } });
-};
-
-// @TODO dryer avec ajouter
-const augmenter = (state, offreId) => {
-  const idx = findIndex(state.contenus, { offreId });
-  const nQte = state.contenus[idx].quantite + 1;
-  return update(state, { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } });
-};
-
-// @TODO dryer avec ajouter
-const diminuer = (state, offreId) => {
-  const idx = findIndex(state.contenus, { offreId });
-  const nQte = state.contenus[idx].quantite - 1;
-  if (nQte === 0) return supprimer(state, offreId);
-
-  return update(state, { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } });
-};
-
-const majTarifs = (state, totaux) => {
-  const { totalCommande, partDistribution } = totaux;
-  return update(state, { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } });
-};
-
-const initialState = {
+const commandeVide = {
   id: undefined,
   commandeId: null,
   dateLivraison: null,
@@ -52,43 +17,83 @@ const initialState = {
   livraisonId: null,
   plageHoraire: null,
   modifiee: false,
-  montant: null,
+  montant: 0,
   prestationRelai: null,
-  recolteFond: null,
+  recolteFond: 0,
   utilisateurId: null,
   contenus: [],
-  asyncStatus: {
-    pendingMessage: null,
-    error: null,
-  },
 };
 
-function commandeEditReducer(state = initialState, action) {
+const initialState = {
+};
+
+const initCommande = (state, commandeId) => update(state, { [commandeId]: { $set: commandeVide } });
+
+const ajouter = (state, commandeId, offre) => {
+  const idx = findIndex(state[commandeId].contenus, { offreId: offre.offreId });
+
+  if (idx === -1) {
+    return update(state, { [commandeId]: { contenus: { $push: [offre] }, modifiee: { $set: true } } });
+  }
+
+  const nQte = state.contenus[idx].quantite + 1;
+  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } } });
+};
+
+const supprimer = (state, commandeId, offreId) => {
+  const newContenus = state[commandeId].contenus.filter((cont) => cont.offreId !== offreId);
+  return update(state, { [commandeId]: { contenus: { $set: newContenus }, modifiee: { $set: true } } });
+};
+
+// @TODO dryer avec ajouter
+const augmenter = (state, commandeId, offreId) => {
+  const idx = findIndex(state[commandeId].contenus, { offreId });
+  const nQte = state[commandeId].contenus[idx].quantite + 1;
+  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } } });
+};
+
+// @TODO dryer avec ajouter
+const diminuer = (state, commandeId, offreId) => {
+  const idx = findIndex(state[commandeId].contenus, { offreId });
+  const nQte = state[commandeId].contenus[idx].quantite - 1;
+  if (nQte === 0) return supprimer(state, commandeId, offreId);
+
+  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } } });
+};
+
+const majTarifs = (state, payload) => {
+  const { totalCommande, partDistribution, commandeId } = payload;
+  return update(state, { [commandeId]: { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } } });
+};
+
+const commandeEditReducer = (state = initialState, action) => {
   switch (action.type) {
+    case c.INIT_COMMANDE:
+      return initCommande(state, action.payload.commandeId);
     case c.AJOUTER_OFFRE:
-      return ajouter(state, action.payload.offre);
+      return ajouter(state, action.payload.commandeId, action.payload.offre);
 
     case c.SUPPRIMER_OFFRE:
-      return supprimer(state, action.payload.offreId);
+      return supprimer(state, action.payload.commandeId, action.payload.offreId);
 
     case c.DIMINUER_OFFRE:
-      return diminuer(state, action.payload.offreId);
+      return diminuer(state, action.payload.commandeId, action.payload.offreId);
 
     case c.AUGMENTER_OFFRE:
-      return augmenter(state, action.payload.offreId);
+      return augmenter(state, action.payload.commandeId, action.payload.offreId);
 
     case c.ASYNC_SAUVEGARDER_SUCCESS:
-      return { ...state, ...action.datas, modifiee: false };
+      return update(state, { [action.datas.commandeId]: { $set: assign(action.datas, { modifiee: false }) } });
 
     case c.ASYNC_ANNULER_SUCCESS:
-      return initialState;
+      return update(state, { [action.req.commandeId]: { $set: commandeVide } });
 
     case c.LOAD_COMMANDE:
-      return { ...state, ...action.payload.datas };
+      return update(state, { [action.payload.datas.commandeId]: { $set: action.payload.datas } });
 
     case c.SET_DISTRIBUTION: {
-      const { plageHoraire, livraisonId } = action.payload;
-      return { ...state, plageHoraire, livraisonId };
+      const { plageHoraire, livraisonId, commandeId } = action.payload;
+      return update(state, { [commandeId]: { plageHoraire: { $set: plageHoraire }, livraisonId: { $set: livraisonId } } });
     }
 
     case c.MODIFIE_TOTAUX:
@@ -96,6 +101,6 @@ function commandeEditReducer(state = initialState, action) {
     default:
       return state;
   }
-}
+};
 
 export default commandeEditReducer;

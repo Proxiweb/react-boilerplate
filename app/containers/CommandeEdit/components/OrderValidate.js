@@ -24,6 +24,7 @@ export default class OrderValidate extends Component {
     augmenter: PropTypes.func.isRequired,
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
+    balance: PropTypes.number.isRequired,
   }
 
   constructor(props) {
@@ -51,7 +52,7 @@ export default class OrderValidate extends Component {
   }
 
   selectionnePlageHoraire(plageHoraire, livraisonId) {
-    this.props.setDistibution(plageHoraire, livraisonId);
+    this.props.setDistibution(this.props.commandeId, plageHoraire, livraisonId);
     this.setState({ view: 'panier' });
   }
 
@@ -102,7 +103,7 @@ export default class OrderValidate extends Component {
   }
 
   showDetailsCommande() {
-    const { offres, commande, produitsById, supprimer, augmenter, diminuer } = this.props;
+    const { offres, commande, commandeId, produitsById, supprimer, augmenter, diminuer } = this.props;
     return (
       <DetailCommande
         contenus={commande.contenus.reverse()}
@@ -114,6 +115,7 @@ export default class OrderValidate extends Component {
         augmenter={augmenter}
         diminuer={diminuer}
         readOnly={commande.datePaiement}
+        commandeId={commandeId}
       />
     );
   }
@@ -136,7 +138,7 @@ export default class OrderValidate extends Component {
           label="Annuler la commande"
           secondary
           style={{ marginTop: 20 }}
-          onClick={() => this.props.annuler(commande.id)}
+          onClick={() => this.props.annuler(commande.id, commande.commandeId)}
           icon={<TrashIcon />}
         />
       </div>
@@ -144,15 +146,17 @@ export default class OrderValidate extends Component {
   }
 
   render() {
-    const { commande } = this.props;
+    const { commande, balance } = this.props;
     const { view } = this.state;
 
     return (<div>
       { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande() }
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
-      <div style={{ textAlign: 'center' }}>{!commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
+      <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && !commande.id && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && this.showCancel()}
+      { commande.montant <= balance && commande.id && <div>Y peut payer</div>}
+      { commande.montant > balance && commande.id && <div>Y peut pas payer</div>}
     </div>);
   }
 }

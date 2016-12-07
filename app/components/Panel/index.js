@@ -2,7 +2,10 @@ import React, { PropTypes, Component } from 'react';
 
 class Panel extends Component { // eslint-disable-line
   static propTypes = {
-    children: PropTypes.object.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.string,
+    ]),
   }
 
   static contextTypes = {

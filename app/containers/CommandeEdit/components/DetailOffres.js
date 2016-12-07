@@ -69,7 +69,7 @@ export default class DetailOffres extends Component {
                 {
                   enStock ?
                     <RaisedButton
-                      onClick={() => ajouter({ offreId: offre.id, quantite: 1, commandeId, utilisateurId })}
+                      onClick={() => ajouter(commandeId, { offreId: offre.id, quantite: 1, commandeId, utilisateurId })}
                       primary
                       fullWidth
                       icon={<AddShoppingCart />}
