@@ -8,11 +8,6 @@ export default class DistributionSelected extends Component {  // eslint-disable
     livraison: PropTypes.object.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-    moment.locale('fr');
-  }
-
   render() {
     const { livraison, noPlageHoraire } = this.props;
     const ranges = buildHoursRanges(livraison.debut, livraison.fin)[noPlageHoraire];

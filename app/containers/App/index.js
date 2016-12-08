@@ -49,7 +49,10 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     pushState: PropTypes.func.isRequired,
     destinataires: PropTypes.array.isRequired,
     logout: PropTypes.func.isRequired,
-    user: PropTypes.object,
+    user: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.bool,
+    ]),
     pending: PropTypes.bool.isRequired,
   }
 

@@ -16,7 +16,10 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
     onChangeList: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     header: PropTypes.node.isRequired,
-    user: PropTypes.object,
+    user: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.bool,
+    ]),
     logout: PropTypes.func.isRequired,
   }
   render() {

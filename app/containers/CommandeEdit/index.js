@@ -143,8 +143,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   routerWillLeave = () => {
     const { commande } = this.props;
 
-    if (commande.id) return true;
-    return 'La commande n\'a pas été validée... Souhaitez-vous l\'annuler ?';
+    if ((commande.id && !commande.modifiee) || !commande.montant) return true;
+    const modifMsg1 = commande.modifiee ? ' a été modifiée mais' : '';
+    const modifMsg2 = commande.modifiee ? ' annuler les modifications ' : 'l\'annuler';
+    return `La commande${modifMsg1} n'a pas été validée... Souhaitez-vous ${modifMsg2} ?`;
   }
 
   showOffres = () => {

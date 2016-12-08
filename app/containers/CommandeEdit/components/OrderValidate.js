@@ -61,7 +61,7 @@ export default class OrderValidate extends Component {
     return (
       <div className={styles.validation}>
         <RaisedButton
-          label="Valider la commande"
+          label={`${commande.modifiee ? 'Modifier' : 'Valider'} la commande`}
           style={{ marginTop: 20 }}
           primary
           onClick={() => sauvegarder(assign(commande, { commandeId, utilisateurId }))}
@@ -72,11 +72,12 @@ export default class OrderValidate extends Component {
 
   showDistribSelected() {
     const { commande } = this.props;
-
+    const livraison = this.testLivraisons.find((liv) => liv.id === commande.livraisonId);
+    if (!livraison) return <p>Livraison manquante</p>;
     return (
       <div className={styles.distributionSelected}>
         <DistributionSelected
-          livraison={this.testLivraisons.find((liv) => liv.id === commande.livraisonId)}
+          livraison={livraison}
           noPlageHoraire={commande.plageHoraire}
           className={styles.distriItem}
         />
@@ -153,8 +154,8 @@ export default class OrderValidate extends Component {
       { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande() }
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
-      {view === 'panier' && commande.livraisonId && !commande.id && this.showValidate()}
-      {view === 'panier' && !commande.dateLivraison && commande.id && this.showCancel()}
+      {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
+      {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
       { commande.montant <= balance && commande.id && <div>Y peut payer</div>}
       { commande.montant > balance && commande.id && <div>Y peut pas payer</div>}
     </div>);

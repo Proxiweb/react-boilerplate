@@ -10,6 +10,7 @@ import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 
 import { Column, Table } from 'react-virtualized';
+import shallowCompare from 'react-addons-shallow-compare';
 import moment from 'moment';
 import capitalize from 'lodash.capitalize';
 import { loadUtilisateurs } from './actions';
@@ -44,7 +45,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
         cotisation: 'cotisation_all',
       },
       height: window.innerHeight - 238,
-      width: window.innerWidth - 100,
+      width: window.innerWidth - 125,
       sortBy: 'nom',
       sortDirection: 'ASC',
     };
@@ -62,6 +63,10 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
 
   componentWillReceiveProps(newProps) {
     this.setState({ datas: newProps.utilisateurs });
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   componentWillUnmount() { // eslint-disable-line
@@ -187,8 +192,8 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
         <div className={`col-md-12 ${styles.panel}`}>
           <Paper zDepth={1}>
             <Table
-              width={this.state.width}
-              height={this.state.height}
+              width={`${this.state.width}`}
+              height={`${this.state.height}`}
               headerHeight={30}
               rowHeight={30}
               rowCount={datas.length}
@@ -221,9 +226,9 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 disableSort={false}
               />
               <Column
-                label="Cotisation payée le"
+                label="Date Cotis."
                 dataKey="datePaiementCotisation"
-                width="250"
+                width="200"
                 cellDataGetter={
                   ({ rowData }) => (moment(rowData.datePaiementCotisation).isValid() ?
                                     moment(rowData.datePaiementCotisation).format('DD/MM/YYYY') :
