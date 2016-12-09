@@ -17,7 +17,7 @@ export const sauvegarder = (datas) => ({
   method: datas.id ? 'put' : 'post',
   msgPending: 'Sauvegarde commande',
   msgSuccess: 'Commande sauvegardée',
-  datas,
+  datas: { ...datas, modifiee: false },
 });
 
 export const annuler = (id, commandeId) => ({

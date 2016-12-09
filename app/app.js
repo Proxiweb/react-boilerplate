@@ -42,7 +42,7 @@ import LanguageProvider from './containers/LanguageProvider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import shader from 'shader';
-import { limeA700, grey900, blue800, red800, grey300, grey600, grey200 } from 'material-ui/styles/colors';
+import { limeA700, orange800, grey900, blue800, red800, grey300, grey600, grey200 } from 'material-ui/styles/colors';
 
 // Import global saga
 import globalSagas from './containers/App/sagas';
@@ -67,7 +67,7 @@ const store = configureStore(initialState, browserHistory);
 moment.locale('fr');
 
 persistStore(store, {
-  whitelist: ['compteUtilisateur', 'commande'],
+  whitelist: ['compteUtilisateur'], // 'commande'
   debounce: 1500,
   keyPrefix: 'pw',
 });
@@ -112,6 +112,7 @@ const muiTheme = getMuiTheme({
   palette: {
     primary1Color: blue800,
     accent1Color: red800,
+    warningColor: orange800,
     groupColor: grey300,
     groupColorBorder: grey600,
     oddColor: grey200,

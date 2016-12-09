@@ -25,7 +25,10 @@ export default class Logged extends Component {
         <div className="col-md">
           <IconMenu
             {...this.props}
-            iconButtonElement={<IconButton tooltip="Messages non lus"><CommunicationChatBubble /></IconButton>}
+            iconButtonElement={(
+              <IconButton tooltip="Messages non lus" style={{ width: 15 }}>
+                <CommunicationChatBubble />
+              </IconButton>)}
             targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
           >

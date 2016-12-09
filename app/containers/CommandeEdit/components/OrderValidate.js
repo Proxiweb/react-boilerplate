@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import moment from 'moment';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
@@ -9,6 +10,8 @@ import assign from 'lodash/assign';
 import DetailCommande from 'components/DetailCommande';
 import LivraisonSelector from './components/LivraisonSelector';
 import DistributionSelected from './components/DistributionSelected';
+import Paiement from './Paiement';
+
 import styles from './OrderValidate.css';
 
 export default class OrderValidate extends Component {
@@ -18,6 +21,7 @@ export default class OrderValidate extends Component {
     produitsById: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
+    commandeProxiweb: PropTypes.object.isRequired,
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
@@ -26,6 +30,10 @@ export default class OrderValidate extends Component {
     setDistibution: PropTypes.func.isRequired,
     balance: PropTypes.number.isRequired,
   }
+
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -58,12 +66,14 @@ export default class OrderValidate extends Component {
 
   showValidate() {
     const { commande, sauvegarder, commandeId, utilisateurId } = this.props;
+    const { palette } = this.context.muiTheme;
     return (
       <div className={styles.validation}>
         <RaisedButton
-          label={`${commande.modifiee ? 'Modifier' : 'Valider'} la commande`}
+          label={`${commande.modifiee ? 'Sauvegarder mes modifications' : 'Valider la commande'}`}
           style={{ marginTop: 20 }}
-          primary
+          labelColor={commande.modifiee ? 'black' : 'white'}
+          backgroundColor={commande.modifiee ? palette.warningColor : palette.primary1Color}
           onClick={() => sauvegarder(assign(commande, { commandeId, utilisateurId }))}
         />
       </div>
@@ -147,7 +157,7 @@ export default class OrderValidate extends Component {
   }
 
   render() {
-    const { commande, balance } = this.props;
+    const { commande, balance, commandeProxiweb } = this.props;
     const { view } = this.state;
 
     return (<div>
@@ -156,8 +166,7 @@ export default class OrderValidate extends Component {
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
-      { commande.montant <= balance && commande.id && <div>Y peut payer</div>}
-      { commande.montant > balance && commande.id && <div>Y peut pas payer</div>}
+      <Paiement montant={commande.montant} balance={balance} dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')} />
     </div>);
   }
 }

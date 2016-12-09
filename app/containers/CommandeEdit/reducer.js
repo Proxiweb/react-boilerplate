@@ -31,25 +31,28 @@ const initCommande = (state, commandeId) => update(state, { [commandeId]: { $set
 
 const ajouter = (state, commandeId, offre) => {
   const idx = findIndex(state[commandeId].contenus, { offreId: offre.offreId });
+  const changed = typeof state[commandeId].id !== 'undefined';
 
   if (idx === -1) {
-    return update(state, { [commandeId]: { contenus: { $push: [offre] }, modifiee: { $set: true } } });
+    return update(state, { [commandeId]: { contenus: { $push: [offre] }, modifiee: { $set: changed } } });
   }
 
   const nQte = state.contenus[idx].quantite + 1;
-  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } } });
+  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: changed } } });
 };
 
 const supprimer = (state, commandeId, offreId) => {
   const newContenus = state[commandeId].contenus.filter((cont) => cont.offreId !== offreId);
-  return update(state, { [commandeId]: { contenus: { $set: newContenus }, modifiee: { $set: true } } });
+  const changed = typeof state[commandeId].id !== 'undefined';
+  return update(state, { [commandeId]: { contenus: { $set: newContenus }, modifiee: { $set: changed } } });
 };
 
 // @TODO dryer avec ajouter
 const augmenter = (state, commandeId, offreId) => {
   const idx = findIndex(state[commandeId].contenus, { offreId });
   const nQte = state[commandeId].contenus[idx].quantite + 1;
-  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } } });
+  const changed = typeof state[commandeId].id !== 'undefined';
+  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: changed } } });
 };
 
 // @TODO dryer avec ajouter
@@ -57,8 +60,8 @@ const diminuer = (state, commandeId, offreId) => {
   const idx = findIndex(state[commandeId].contenus, { offreId });
   const nQte = state[commandeId].contenus[idx].quantite - 1;
   if (nQte === 0) return supprimer(state, commandeId, offreId);
-
-  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: true } } });
+  const changed = typeof state[commandeId].id !== 'undefined';
+  return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: changed } } });
 };
 
 const majTarifs = (state, payload) => {

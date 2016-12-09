@@ -18,7 +18,7 @@ import CommandePanel from './components/CommandePanel';
 import Offre from 'components/Offre';
 import Panel from 'components/Panel';
 
-import { loadCommandes, loadCommande, ajouter } from './actions';
+import { loadCommandes, ajouter } from './actions';
 
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -289,27 +289,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               { name: 'description', content: 'Description of Commande' },
             ]}
           />
-          { true && (
-            <div>
-              <h1>Commandes</h1>
-              <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-                <button
-                  onClick={() => this.props.loadCommandes(0)}
-                  className="btn btn-primary"
-                >
-                  <span>{ !asyncState.pending && 'Charger les commandes, page 0'} { asyncState.pending && 'loading...' }</span>
-                </button>
-              </div>
-              <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-                <button
-                  onClick={() => this.props.loadCommandes(1)}
-                  className="btn btn-primary"
-                >
-                  <span>{ !asyncState.pending && 'Charger les commandes, page 1'} { asyncState.pending && 'loading...' }</span>
-                </button>
-              </div>
-            </div>
-          )}
+          {commandes && Object.keys(commandes).length === 0 && (<h1>Pas de commande en cours...</h1>)}
         </div>
       </div>);
   }

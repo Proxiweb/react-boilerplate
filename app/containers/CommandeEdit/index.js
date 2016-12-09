@@ -20,6 +20,7 @@ import {
   selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
   selectCommandeProduits,
+  selectCommande as selectCommandeProxiweb,
   selectFournisseurProduit,
   selectProduits,
   selectOffres,
@@ -70,6 +71,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commandeUtilisateur: PropTypes.object,
     produitsById: PropTypes.object,
     commande: PropTypes.object,
+    commandeProxiweb: PropTypes.object,
     fournisseur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
     balance: PropTypes.number.isRequired,
@@ -176,6 +178,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   showPanier = () => {
     const {
       commande,
+      commandeProxiweb,
       params,
       utilisateurId,
       sauvegarder, // eslint-disable-line
@@ -193,6 +196,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     return (
       <OrderValidate
         commande={commande}
+        commandeProxiweb={commandeProxiweb}
         produitsById={produitsById}
         offres={offres}
         commandeId={params.commandeId}
@@ -311,6 +315,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
+  commandeProxiweb: selectCommandeProxiweb(),
   commandeProduits: selectCommandeProduits(),
   offres: selectOffres(),
   produitsById: selectProduits(),
