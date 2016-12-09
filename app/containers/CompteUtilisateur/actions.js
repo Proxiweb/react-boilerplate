@@ -1,6 +1,10 @@
 
 import {
   saveAccountConst,
+  progVirConst,
+  loadVirConst,
+  supprVirConst,
+  depotCbConst,
   LOAD_ACCOUNT,
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
@@ -39,3 +43,29 @@ export const saveAccount =
     datas: { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications },
     msgSuccess,
   });
+
+export const programmerVirement = ({ utilisateurId, montant, type = 'virement' }) => ({
+  type: progVirConst.ASYNC_PROGRAM_VIREMENT_START,
+  url: 'depots',
+  method: 'post',
+  datas: { utilisateurId, montant, type },
+});
+
+export const loadVirements = (utilisateurId) => ({
+  type: loadVirConst.ASYNC_LOAD_VIREMENTS_START,
+  url: 'depots',
+  query: { utilisateurId },
+});
+
+export const annulerVirement = (id) => ({
+  type: supprVirConst.ASYNC_ANNULER_VIREMENT_START,
+  url: `depots/${id}`,
+  method: 'del',
+  id,
+});
+
+export const deposerCB = (datas) => ({
+  type: depotCbConst.ASYNC_DEPOT_CB_START,
+  url: 'charges',
+  datas,
+});

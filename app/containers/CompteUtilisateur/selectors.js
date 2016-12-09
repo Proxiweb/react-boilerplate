@@ -58,3 +58,12 @@ export const selectLoading = () => createSelector(
   [selectCompteUtilisateurDomain()],
   (substate) => substate.loading
 );
+
+export const selectVirements = () => createSelector(
+  selectCompteUtilisateurDomain(),
+  (substate) => (
+      substate.virements ?
+        substate.virements.filter((dep) => dep.type === 'virement' && !dep.transfertEffectue) :
+        null
+    ),
+);

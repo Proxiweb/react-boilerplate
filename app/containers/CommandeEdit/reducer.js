@@ -92,7 +92,7 @@ const commandeEditReducer = (state = initialState, action) => {
       return update(state, { [action.req.commandeId]: { $set: commandeVide } });
 
     case c.LOAD_COMMANDE:
-      return update(state, { [action.payload.datas.commandeId]: { $set: action.payload.datas } });
+      return update(state, { [action.payload.datas.commandeId]: { $set: assign(action.payload.datas, { modifiee: false }) } });
 
     case c.SET_DISTRIBUTION: {
       const { plageHoraire, livraisonId, commandeId } = action.payload;

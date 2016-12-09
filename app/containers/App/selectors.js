@@ -2,6 +2,7 @@
 import isEqual from 'lodash/isEqual';
 
 export const selectPending = () => (state) => state.global.pending;
+export const selectParams = () => (state, props) => props.params;
 
 const selectLocationState = () => {
   let prevRoutingState;

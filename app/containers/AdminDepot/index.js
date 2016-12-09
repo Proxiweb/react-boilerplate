@@ -1,9 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import AutoComplete from 'material-ui/AutoComplete';
 import { loadDepots } from './actions';
 import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import { Column, Table } from 'react-virtualized';
+import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import { selectDepots, selectTotal } from './selectors';
 import moment from 'moment';
 import styles from './index.css';
 
@@ -46,6 +49,7 @@ class AdminDepot extends Component { // eslint-disable-line
 
   render() {
     const { depots, total, utilisateurs } = this.props;
+
     if (!depots.length || !utilisateurs.length) return null;
 
     const palette = this.context.muiTheme.palette;
@@ -105,10 +109,10 @@ class AdminDepot extends Component { // eslint-disable-line
   }
 }
 
-const mapStateToProps = (state) => ({
-  depots: state.admin.depots.datas,
-  total: state.admin.depots.total,
-  utilisateurs: state.admin.utilisateurs.datas,
+const mapStateToProps = createStructuredSelector({
+  depots: selectDepots(),
+  total: selectTotal(),
+  utilisateurs: selectUtilisateurs(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

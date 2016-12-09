@@ -17,6 +17,7 @@
 }
 
 .appro {
-  min-height: calc(100vh - 225px);
+  min-height: calc(100vh - 245px);
   border: solid 1px gray;
+  padding: 1em;
 }

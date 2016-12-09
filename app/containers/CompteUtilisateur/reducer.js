@@ -17,6 +17,9 @@ import {
 import {
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
+  progVirConst,
+  loadVirConst,
+  supprVirConst,
 } from './constants';
 
 import update from 'react-addons-update';
@@ -33,6 +36,7 @@ const initialState = {
     pagingToken: null,
   },
   balances: [],
+  virements: null,
 };
 
 
@@ -75,6 +79,12 @@ function compteUtilisateurReducer(state = initialState, action) {
       return update(state, { error: { $set: action.msgError }, loading: { $set: false } });
     case c.ASYNC_LOGIN_SUCCESS:
       return update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: omit(action.datas.user, ['commandeContenus', 'commandes']) }, token: { $set: action.datas.token } });
+    case progVirConst.ASYNC_PROGRAM_VIREMENT_SUCCESS:
+      return update(state, { virements: { $push: [action.datas] } });
+    case loadVirConst.ASYNC_LOAD_VIREMENTS_SUCCESS:
+      return update(state, { virements: { $set: action.datas.depots } });
+    case supprVirConst.ASYNC_ANNULER_VIREMENT_SUCCESS:
+      return update(state, { virements: { $set: state.virements.filter((v) => v.id !== action.req.id) } });
     case LOGOUT:
       return { ...initialState };
     case SET_ERR_MSG:
