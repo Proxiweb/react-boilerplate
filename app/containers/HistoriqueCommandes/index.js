@@ -9,7 +9,7 @@ import { List, ListItem, makeSelectable } from 'material-ui/List';
 
 import DetailCommandeContainer from './components/DetailCommandeContainer';
 import { selectUserIdCommandes, selectCommandeId } from 'containers/Commande/selectors';
-import { loadUserCommandes } from 'containers/Commande/actions';
+import { loadUserCommandes, loadCommandes } from 'containers/Commande/actions';
 import { selectUserId } from 'containers/CompteUtilisateur/selectors';
 import styles from './styles.css';
 
@@ -23,13 +23,20 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
     params: PropTypes.object.isRequired,
 
     loadCommandesUtilisateur: PropTypes.func.isRequired,
+    loadCommande: PropTypes.func.isRequired,
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
     const { userId, loadCommandesUtilisateur } = this.props;
-    loadCommandesUtilisateur({ id: userId });
+    loadCommandesUtilisateur(userId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.params.commandeId !== nextProps.params.commandeId) {
+      this.props.loadCommande({ id: nextProps.params.commandeId });
+    }
   }
 
   render() {
@@ -75,6 +82,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   loadCommandesUtilisateur: (utilisateurId) => dispatch(loadUserCommandes(utilisateurId)),
+  loadCommande: (query) => dispatch(loadCommandes(query)),
   pushState: (url) => dispatch(push(url)),
 });
 

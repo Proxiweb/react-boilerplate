@@ -68,6 +68,7 @@ function commandeReducer(state = initialState, action) {
     }
     case c.LOAD_COMMANDE_SUCCESS: {
       const datas = normalize([action.datas], arrayOf(schemas.COMMANDES));
+      console.log('load_commande', datas);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
     case c.AJOUTER:
