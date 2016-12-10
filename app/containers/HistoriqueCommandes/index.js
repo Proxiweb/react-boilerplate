@@ -18,7 +18,7 @@ const SelectableList = makeSelectable(List);
 class HistoriqueCommandes extends Component {  // eslint-disable-line
   static propTypes = {
     userId: PropTypes.string.isRequired,
-    commandeId: PropTypes.string.isRequired,
+    commandeId: PropTypes.string,
     commandes: PropTypes.array,
     params: PropTypes.object.isRequired,
 
@@ -29,7 +29,7 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
 
   componentDidMount() {
     const { userId, loadCommandesUtilisateur } = this.props;
-    loadCommandesUtilisateur(userId);
+    loadCommandesUtilisateur({ id: userId });
   }
 
   render() {
