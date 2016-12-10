@@ -74,6 +74,16 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               ]}
             />
           )}
+          {user.fournisseurId && (
+            <ListItem
+              primaryText="Admin Fournisseur"
+              primaryTogglesNestedList
+              leftIcon={<TestIcon />}
+              nestedItems={[
+                <ListItem primaryText="Catalogue" value={`/fournisseurs/${user.fournisseurId}/catalogue`} />,
+              ]}
+            />
+          )}
           {user && <ListItem leftIcon={<HelpIcon />} primaryText="Aide" value={`/users/${user.id}/aide`} />}
           {!user && <ListItem primaryText="Connexion" value="/login" />}
           {user && (

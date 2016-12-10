@@ -1,0 +1,20 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 105px);
+  min-height: calc(100vh - 105px);
+  overflow-y: scroll;
+}
+
+.panelTitre {
+  text-align: left;
+  line-height: 36px;
+}
+
+.panelAction {
+  text-align: right;
+}
+
+.photo {
+  text-align: center;
+}

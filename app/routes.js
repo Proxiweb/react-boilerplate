@@ -218,7 +218,40 @@ export default function createRoutes(store) {
               .then(loadModule(cb))
               .catch(errorLoading);
           },
-        }]
+        }],
+      }],
+    }, {
+      path: 'fournisseurs/:fournisseurId/catalogue',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/AdminFournisseur/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      childRoutes: [{
+        path: ':produitId',
+        name: 'utilisateursCommande',
+        getComponent(nextState, cb) {
+          System.import('containers/AdminFournisseur/components/AdminProduit')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+        // childRoutes: [{
+        //   path: 'utilisateurs/:utilisateurId',
+        //   name: 'utilisateurCommande',
+        //   getComponent(nextState, cb) {
+        //     System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+        //       .then(loadModule(cb))
+        //       .catch(errorLoading);
+        //   },
+        // }],
       }],
     }, {
       path: '/communications/:communicationId',

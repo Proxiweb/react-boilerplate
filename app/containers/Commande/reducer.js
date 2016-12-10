@@ -5,6 +5,7 @@
  */
 import update from 'react-addons-update';
 import c from './constants';
+import cF from 'containers/AdminFournisseur/constants';
 import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
 import merge from 'lodash.merge';
@@ -68,8 +69,11 @@ function commandeReducer(state = initialState, action) {
     }
     case c.LOAD_COMMANDE_SUCCESS: {
       const datas = normalize([action.datas], arrayOf(schemas.COMMANDES));
-      console.log('load_commande', datas);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
+    }
+    case cF.ASYNC_LOAD_FOURNISSEUR_SUCCESS: {
+      const datas = normalize(action.datas, schemas.FOURNISSEURS);
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
     }
     case c.AJOUTER:
       return ajouter(state, action);

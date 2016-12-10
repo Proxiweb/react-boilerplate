@@ -27,7 +27,6 @@ export default class DetailOffres extends Component {
     };
   }
 
-
   render() {
     const { viewOffre } = this.state;
     const { offres, ajouter, fournisseur, utilisateurId, commandeId, produit, typeProduits } = this.props;

@@ -11,6 +11,7 @@ const selectCommandeDomain = () => (state) => state.commandes || null;
 export const selectParams = () => (state, props) => props.params;
 export const selectCommandeId = () => (state, props) => props.params.commandeId;
 export const selectRelaisId = () => (state, props) => props.params.relaiId;
+export const selectFournisseurId = () => (state, props) => props.params.fournisseurId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
 // const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';
@@ -157,6 +158,7 @@ export const selectCommandeProduits = () => createSelector(
   }
 );
 
+
 export const selectCommandeLivraisonsIds = () => createSelector(
   selectCommande(),
   (commande) => {
@@ -213,7 +215,7 @@ export const selectProduit = () => createSelector(
     (produits, produitId) => (produits && produitId ? produits.find((pdt) => pdt.id === produitId) : null)
 );
 
-/* les offres d'un produit */
+/* les offres relais d'un produit */
 export const selectOffresByProduit = () => createSelector(
   selectProduit(),
   selectOffresRelais(),
@@ -226,6 +228,20 @@ export const selectOffresByProduit = () => createSelector(
   }
 );
 
+/* les offres relais d'un produit
+* @TODO améliore cf selectOffresByProduit
+*/
+export const selectOffresDuProduit = () => createSelector(
+  selectProduitId(),
+  selectOffres(),
+  (produitId, offres) => {
+    if (!produitId || !offres) return null;
+    return Object.keys(offres)
+            .filter((key) => offres[key].produitId === produitId)
+            .map((key) => offres[key]);
+  }
+);
+
 /* le fournisseur d'un produit */
 export const selectFournisseurProduit = () => createSelector(
   selectProduit(),
@@ -233,6 +249,18 @@ export const selectFournisseurProduit = () => createSelector(
   (produit, fournisseursIds) => {
     if (!produit) return null;
     return fournisseursIds[produit.fournisseurId];
+  }
+);
+
+/* les produits d'fournisseur */
+export const selectFournisseurProduits = () => createSelector(
+  selectProduits(),
+  selectFournisseurId(),
+  (produits, fournisseurId) => {
+    if (!produits || !fournisseurId) return null;
+    return Object.keys(produits)
+            .filter((key) => produits[key].fournisseurId === fournisseurId)
+            .map((key) => produits[key]);
   }
 );
 
@@ -292,9 +320,6 @@ export const selectUserIdCommandeUtilisateur = () => createSelector(
   ],
   (commandeCommandeUtilisateurs, utilisateurId, commandeContenus, commandeId) => {
     if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus || !commandeId) { return null; }
-    console.log('select!', commandeCommandeUtilisateurs);
-    console.log(utilisateurId);
-    console.log(commandeContenus);
     const cCu = commandeCommandeUtilisateurs.find(
       (cu) => cu.utilisateurId === utilisateurId && cu.commandeId === commandeId
     );
