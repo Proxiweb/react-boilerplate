@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Panel from 'components/Panel';
+import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
@@ -8,7 +9,7 @@ import styles from './styles.css';
 
 const radioStyle = {
   display: 'inline-block',
-  width: '150px',
+  width: '200px',
 };
 
 export default class OffresTopBar extends Component { // eslint-disable-line
@@ -21,10 +22,8 @@ export default class OffresTopBar extends Component { // eslint-disable-line
   render() {
     const { onChangeType, onNewOffer, type } = this.props;
     return (
-      <Panel>
-        <div className="row">
-          <div className={`col-md-8 ${styles.panelTitre}`}>
-            <div style={radioStyle}>Offres</div>
+        <div className="row top-md">
+          <div className={`col-md-9 ${styles.panelTitre}`}>
             <RadioButtonGroup
               valueSelected={type}
               style={{ display: 'inline-block' }}
@@ -32,26 +31,25 @@ export default class OffresTopBar extends Component { // eslint-disable-line
             >
               <RadioButton
                 value="actives"
-                label="actives"
+                label="Offres actives"
                 style={radioStyle}
               />
               <RadioButton
                 value="inactives"
-                label="inactives"
+                label="Offres inactives"
                 style={radioStyle}
               />
             </RadioButtonGroup>
           </div>
-          <div className={`col-md-4 ${styles.panelAction}`}>
-            <FlatButton
-              label="Nouvelle offre"
-              style={{ textAlign: 'right' }}
-              icon={<AddIcon />}
+          <div className={`col-md-3 ${styles.panelAction}`}>
+            <IconButton style={{ padding: 0, width: '27px', height: '27px' }}
+              tooltip="Nouvelle offre"
               onClick={onNewOffer}
-            />
+            >
+              <AddIcon />
+            </IconButton>
           </div>
         </div>
-      </Panel>
     );
   }
 }

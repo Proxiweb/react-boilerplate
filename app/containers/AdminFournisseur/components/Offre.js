@@ -1,10 +1,10 @@
-import React, { PropTypes, Components } from 'react';
+import React, { PropTypes, Component } from 'react';
 import Panel from 'components/Panel';
 import AffichePrix from 'containers/CommandeEdit/components/components/AffichePrix';
-import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 
-export default class Offre extends Components {
+export default class Offre extends Component { // eslint-disable-line
   static propTypes = {
     offre: PropTypes.object.isRequired,
     typeProduit: PropTypes.object.isRequired,
@@ -19,9 +19,9 @@ export default class Offre extends Components {
             <AffichePrix offre={offre} typeProduit={typeProduit} style={{ lineHeight: '36px' }} />
           </div>
           <div className="col-md-4">
-            <FlatButton
-              icon={<EditIcon />}
-            />
+            <IconButton>
+              <EditIcon />
+            </IconButton>
           </div>
         </div>
       </Panel>

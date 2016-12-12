@@ -214,6 +214,7 @@
     ]
   },
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.20.2",
     "babel-polyfill": "6.16.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
@@ -254,6 +255,7 @@
     "react": "15.3.2",
     "react-addons-shallow-compare": "^15.4.1",
     "react-addons-update": "^15.3.0",
+    "react-avatar-editor": "^6.0.0",
     "react-bootstrap": "^0.30.2",
     "react-dom": "15.3.2",
     "react-draft-wysiwyg": "^1.0.0",

@@ -1,8 +1,34 @@
 import React, { Component, PropTypes } from 'react';
-import Panel from 'components/Panel';
-import FlatButton from 'material-ui/FlatButton';
+// import AvatarEditor from 'react-avatar-editor';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import IconButton from 'material-ui/IconButton';
+import Toggle from 'material-ui/Toggle';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import DoneIcon from 'material-ui/svg-icons/action/done';
+
 import styles from './styles.css';
+
+const options = {
+  options: [
+    'inline', 'list', 'link', 'remove', 'textAlign',
+  ],
+  inline: {
+    inDropdown: true,
+    className: undefined,
+    options: ['bold', 'underline'],
+  },
+  list: {
+    inDropdown: true,
+    className: undefined,
+    options: ['unordered'],
+  },
+  history: { inDropdown: true },
+  textAlign: { inDropdown: true },
+};
+
 export default class Produit extends Component {
   static propTypes = {
     produit: PropTypes.object.isRequired,
@@ -12,22 +38,25 @@ export default class Produit extends Component {
     editMode: false,
   }
 
+  onEditorChange = (editorContent) => console.log(editorContent)
+
+  toggleState = () => this.setState({ editMode: !this.state.editMode })
+
   render() {
     const { produit } = this.props;
+    const { editMode } = this.state;
+
     return (
       <div className="row">
-        <div className="col-md-12">
-          <Panel>
-            <div className="row">
-              <div className={`col-md-8 ${styles.panelTitre}`}>{produit.nom}</div>
-              <div className={`col-md-4 ${styles.panelAction}`}>
-                <FlatButton
-                  style={{ textAlign: 'right' }}
-                  icon={<EditIcon />}
-                />
-              </div>
-            </div>
-          </Panel>
+        <div className="col-md-12" style={{ textAlign: 'right' }}>
+          <IconButton
+            tooltip={editMode ? 'Sauvegarder les modifications' : 'modifier ce produit'}
+            style={{ padding: 0, width: '27px', height: '27px' }}
+            onClick={this.toggleState}
+          >
+            {editMode && <DoneIcon />}
+            {!editMode && <EditIcon />}
+          </IconButton>
         </div>
         <div className={`col-md-12 ${styles.photo}`}>
           <img
@@ -37,7 +66,24 @@ export default class Produit extends Component {
           />
         </div>
         <div className={`col-md-12 ${styles.photo}`}>
-          <div dangerouslySetInnerHTML={{ __html: produit.description }} />
+          {!editMode && <div dangerouslySetInnerHTML={{ __html: produit.description }} />}
+          {editMode && (
+            <Editor
+              editorClassName={styles.editorClass}
+              toolbar={options}
+              onChange={this.onEditorChange}
+              initialContentState={
+                convertToRaw(
+                  ContentState.createFromBlockArray(convertFromHTML(produit.description))
+                )
+              }
+            />
+          )}
+          <Toggle
+            label={produit.enStock ? 'En stock' : 'Non disponible'}
+            disabled={!editMode}
+            toggled={produit.enStock}
+          />
         </div>
       </div>
     );
