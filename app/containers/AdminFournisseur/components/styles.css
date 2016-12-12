@@ -25,3 +25,11 @@
    padding: 5px;
    border-radius: 2px;
 }
+
+.upper {
+  text-transform: uppercase;
+}
+
+.capit {
+  text-transform: capitalize;
+}

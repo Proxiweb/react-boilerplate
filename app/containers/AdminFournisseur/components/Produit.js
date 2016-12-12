@@ -10,6 +10,7 @@ import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 
 import styles from './styles.css';
+import ProduitFormContainer from './ProduitFormContainer';
 
 const options = {
   options: [
@@ -67,7 +68,7 @@ export default class Produit extends Component {
         </div>
         <div className={`col-md-12 ${styles.photo}`}>
           {!editMode && <div dangerouslySetInnerHTML={{ __html: produit.description }} />}
-          {editMode && (
+          {false && (
             <Editor
               editorClassName={styles.editorClass}
               toolbar={options}
@@ -79,11 +80,7 @@ export default class Produit extends Component {
               }
             />
           )}
-          <Toggle
-            label={produit.enStock ? 'En stock' : 'Non disponible'}
-            disabled={!editMode}
-            toggled={produit.enStock}
-          />
+          {editMode && <ProduitFormContainer produit={produit} />}
         </div>
       </div>
     );

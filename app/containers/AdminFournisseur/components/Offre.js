@@ -8,10 +8,11 @@ export default class Offre extends Component { // eslint-disable-line
   static propTypes = {
     offre: PropTypes.object.isRequired,
     typeProduit: PropTypes.object.isRequired,
+    handleToggeState: PropTypes.func.isRequired,
   }
 
   render() {
-    const { offre, typeProduit } = this.props;
+    const { offre, typeProduit, handleToggeState } = this.props;
     return (
       <Panel>
         <div className="row">
@@ -19,7 +20,9 @@ export default class Offre extends Component { // eslint-disable-line
             <AffichePrix offre={offre} typeProduit={typeProduit} style={{ lineHeight: '36px' }} />
           </div>
           <div className="col-md-4">
-            <IconButton>
+            <IconButton
+              onClick={handleToggeState}
+            >
               <EditIcon />
             </IconButton>
           </div>
