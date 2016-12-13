@@ -8,6 +8,7 @@ import styles from './styles.css';
 export default class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array.isRequired,
+    contenus: PropTypes.array.isRequired,
     produit: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
     utilisateurId: PropTypes.string.isRequired,
@@ -29,7 +30,7 @@ export default class DetailOffres extends Component {
 
   render() {
     const { viewOffre } = this.state;
-    const { offres, ajouter, fournisseur, utilisateurId, commandeId, produit, typeProduits } = this.props;
+    const { offres, ajouter, fournisseur, utilisateurId, commandeId, produit, typeProduits, contenus } = this.props;
     const muiTheme = this.context.muiTheme;
 
     return (
@@ -59,10 +60,13 @@ export default class DetailOffres extends Component {
         { viewOffre && offres.map((offre, idx) => {
           const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
           const enStock = offre.stock === null || offre.stock > 0;
+          const offreCommande = contenus.find((cont) => cont.offreId === offre.id);
+          const qteCommande = offreCommande ? offreCommande.quantite : 0;
+
           return (
             <div key={idx} className={`row ${styles.offre}`} style={{ backgroundColor: muiTheme.palette.groupColor, border: `solid 1px ${muiTheme.palette.groupColorBorder}` }}>
               <div className="col-md-9 col-lg-9">
-                <AffichePrix offre={offre} typeProduit={typeProduit} />
+                <AffichePrix offre={offre} typeProduit={typeProduit} qteCommande={qteCommande} />
               </div>
               <div className="col-md-3">
                 {

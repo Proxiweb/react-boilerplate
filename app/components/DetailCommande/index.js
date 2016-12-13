@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
+import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import styles from './styles.css';
 const headerColStyle = { color: 'black', fontSize: '14px' };
@@ -28,6 +29,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
     contenus: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     produits: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.object.isRequired,
     diminuer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
     readOnly: PropTypes.bool.isRequired,
@@ -45,7 +47,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
   }
 
   render() {
-    const { offres, produits, contenus, diminuer, readOnly, montant, recolteFond, augmenter, commandeId } = this.props;
+    const { offres, produits, contenus, diminuer, readOnly, montant, recolteFond, augmenter, commandeId, commandeContenus } = this.props;
     const { muiTheme } = this.context;
 
     return (
@@ -76,6 +78,14 @@ export default class DetailCommande extends Component { // eslint-disable-line
             {contenus.map((contenu, idx) => {
               if (!contenu) return null;
               const offre = offres[contenu.offreId];
+
+              const commandeCommandeContenus = Object.keys(commandeContenus).filter((key) =>
+                commandeContenus[key].commandeId === commandeId && commandeContenus[key].offreId === offre.id
+              ).map((key) => commandeContenus[key]);
+
+              const qteTotalOffre = commandeCommandeContenus
+                                      .reduce((memo, item) => memo + item.quantite, 0);
+              const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
               return (
                 <TableRow key={idx} selectable={false} displayBorder>
                   <TableRowColumn className={styles.bigCol}>
@@ -83,10 +93,10 @@ export default class DetailCommande extends Component { // eslint-disable-line
                     {offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}
                   </TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>
-                    {(parseInt((offre.prix + offre.recolteFond), 10) / 100).toFixed(2)}
+                    {(parseInt((tarif.prix + tarif.recolteFond), 10) / 100).toFixed(2)}
                   </TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>
-                  <TableRowColumn className={styles.smallCol}>{round(((offre.prix + offre.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn className={styles.smallCol}>{round(((tarif.prix + tarif.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
                   {!readOnly && (<TableRowColumn className={styles.lessSmallCol}>
                     <button onClick={() => augmenter(commandeId, contenu.offreId)} title="quantite + 1">+</button>
                     <button onClick={() => diminuer(commandeId, contenu.offreId)} title="quantite - 1">-</button>

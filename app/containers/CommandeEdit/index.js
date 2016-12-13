@@ -24,6 +24,7 @@ import {
   selectFournisseurProduit,
   selectProduits,
   selectOffres,
+  selectCommandeContenus,
   selectParams,
   selectCommandeLivraisons,
   selectOffresProduitAvecTotalAchats,
@@ -55,6 +56,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commandeProduits: PropTypes.array.isRequired,
     offresProduitAvecTotalAchats: PropTypes.array,
     offres: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -160,11 +162,13 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       produitsById,
       ajouter,  // eslint-disable-line
       params,
+      commande,
     } = this.props;
 
     return (
       <DetailOffres
         offres={offresProduitAvecTotalAchats}
+        contenus={commande.contenus}
         typeProduits={typeProduits}
         utilisateurId={utilisateurId}
         fournisseur={fournisseur}
@@ -190,6 +194,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       produitId, // eslint-disable-line
       produitsById,
       offres,
+      commandeContenus,
       balance,
     } = this.props;
 
@@ -197,6 +202,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       <OrderValidate
         commande={commande}
         commandeProxiweb={commandeProxiweb}
+        commandeContenus={commandeContenus}
         produitsById={produitsById}
         offres={offres}
         commandeId={params.commandeId}
@@ -223,8 +229,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       supprimer, // eslint-disable-line
       utilisateurId,
     } = this.props;
-
-    console.log('oo', offresProduitAvecTotalAchats);
 
     if (!commande) return null;
 
@@ -320,6 +324,7 @@ const mapStateToProps = createStructuredSelector({
   commandeProxiweb: selectCommandeProxiweb(),
   commandeProduits: selectCommandeProduits(),
   offres: selectOffres(),
+  commandeContenus: selectCommandeContenus(),
   produitsById: selectProduits(),
   offresProduitAvecTotalAchats: selectOffresProduitAvecTotalAchats(),
   utilisateurId: selectAuthUtilisateurId(),

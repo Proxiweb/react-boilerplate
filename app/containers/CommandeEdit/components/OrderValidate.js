@@ -20,6 +20,7 @@ export default class OrderValidate extends Component {
     utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
     sauvegarder: PropTypes.func.isRequired,
@@ -114,7 +115,7 @@ export default class OrderValidate extends Component {
   }
 
   showDetailsCommande() {
-    const { offres, commande, commandeId, produitsById, supprimer, augmenter, diminuer } = this.props;
+    const { offres, commande, commandeId, produitsById, supprimer, augmenter, diminuer, commandeContenus } = this.props;
     return (
       <DetailCommande
         contenus={commande.contenus.reverse()}
@@ -126,6 +127,7 @@ export default class OrderValidate extends Component {
         augmenter={augmenter}
         diminuer={diminuer}
         readOnly={commande.datePaiement}
+        commandeContenus={commandeContenus}
         commandeId={commandeId}
       />
     );
