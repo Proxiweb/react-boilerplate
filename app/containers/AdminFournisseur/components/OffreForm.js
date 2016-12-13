@@ -25,13 +25,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
   return (
     <div className="row">
-      <div className="col-md-12" style={{ textAlign: 'right', marginBottom: '2rem' }}>
-        <RaisedButton label=" + Ajouter une tarification" onTouchTap={() => fields.push()} />
+      <div className="col-md-12" style={{ textAlign: 'right', marginBottom: '1em', marginTop: '2em' }}>
+        <RaisedButton primary label=" + Nouvelle tarification" onTouchTap={() => fields.push()} />
       </div>
       <div className="col-md-12">
         {fields.map((tarification, index) =>
-          <div className="row" key={index}>
-            <div className="col-md-2">
+          <div className="row" key={index} style={{ marginBottom: '0.5em', padding: '0 1em 0.5em 1em 1em', border: 'solid 1px silver' }}>
+            <div className="col-md-3">
               <Field
                 name={`${tarification}.qteMinRelai`}
                 floatingLabelText="Qté min relais"
@@ -41,7 +41,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-2">
+            <div className="col-md-3">
               <Field
                 name={`${tarification}.qteMinProxiweb`}
                 floatingLabelText="Qté min globale"
@@ -51,7 +51,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-2">
+            <div className="col-md-3">
               <Field
                 name={`${tarification}.prix`}
                 floatingLabelText="prix fournisseur"
@@ -61,7 +61,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-2">
+            <div className="col-md-3">
               <Field
                 name={`${tarification}.recolteFond`}
                 floatingLabelText="Prix distributeur"
@@ -71,9 +71,9 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-1">
+            <div className="col-md-12" style={{ marginBottom: '0.5em' }}>
               <RaisedButton
-                label="suppr"
+                label="supprimer"
                 onTouchTap={() => fields.remove(index)}
                 backgroundColor="red"
                 labelStyle={{ color: 'white' }}
@@ -88,6 +88,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
 class offreForm extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
+    handleToggeState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
     formvals: PropTypes.object,
@@ -95,7 +96,7 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
   }
 
   render() {
-    const { handleSubmit, pending, pristine, formvals, tva } = this.props;
+    const { handleSubmit, pending, pristine, formvals, tva, handleToggeState } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <div className="row">
@@ -116,12 +117,17 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
             />
             <FieldArray name="tarifications" component={renderTarifications} props={{ formvals, tva }} />
           </div>
-          <div className="col-lg-12" style={{ minHeight: 52 }}>
-            {!pristine && (<div className="row center-md">
-              <div className={`col-md-4 ${styles.formFooter}`}>
-                <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
-              </div>
-            </div>)}
+          <div className={`col-md-6 ${styles.formFooter}`} style={{ minHeight: 52 }}>
+            {!pristine && <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />}
+          </div>
+          <div className={`col-md-6 ${styles.formFooter}`} style={{ minHeight: 52 }}>
+            <RaisedButton
+              label="Annuler"
+              secondary
+              fullWidth
+              disabled={pending}
+              onClick={handleToggeState}
+            />
           </div>
         </div>
       </form>

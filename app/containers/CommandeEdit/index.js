@@ -26,7 +26,7 @@ import {
   selectOffres,
   selectParams,
   selectCommandeLivraisons,
-  selectQuantiteOffresAchetees,
+  selectOffresProduitAvecTotalAchats,
   selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
@@ -53,7 +53,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     typeProduits: PropTypes.array.isRequired,
     produits: PropTypes.array,
     commandeProduits: PropTypes.array.isRequired,
-    quantiteOffresAchetees: PropTypes.array,
+    offresProduitAvecTotalAchats: PropTypes.array,
     offres: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
@@ -153,7 +153,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
   showOffres = () => {
     const {
-      quantiteOffresAchetees,
+      offresProduitAvecTotalAchats,
       typeProduits,
       utilisateurId,
       fournisseur,
@@ -164,7 +164,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
     return (
       <DetailOffres
-        offres={quantiteOffresAchetees}
+        offres={offresProduitAvecTotalAchats}
         typeProduits={typeProduits}
         utilisateurId={utilisateurId}
         fournisseur={fournisseur}
@@ -216,13 +216,15 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     const {
       typeProduits,
       produits,
-      quantiteOffresAchetees,
+      offresProduitAvecTotalAchats,
       params,
       commande,
       offres,
       supprimer, // eslint-disable-line
       utilisateurId,
     } = this.props;
+
+    console.log('oo', offresProduitAvecTotalAchats);
 
     if (!commande) return null;
 
@@ -291,12 +293,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                 }
               </CardText>
             </Card>
-            {quantiteOffresAchetees && typeProduits && !panierExpanded && this.showOffres()}
+            {offresProduitAvecTotalAchats && typeProduits && !panierExpanded && this.showOffres()}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-4">
-            {quantiteOffresAchetees && typeProduits && !panierExpanded && this.showOffres()}
+            {offresProduitAvecTotalAchats && typeProduits && !panierExpanded && this.showOffres()}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
@@ -319,7 +321,7 @@ const mapStateToProps = createStructuredSelector({
   commandeProduits: selectCommandeProduits(),
   offres: selectOffres(),
   produitsById: selectProduits(),
-  quantiteOffresAchetees: selectQuantiteOffresAchetees(),
+  offresProduitAvecTotalAchats: selectOffresProduitAvecTotalAchats(),
   utilisateurId: selectAuthUtilisateurId(),
   balance: selectMontantBalance(),
   params: selectParams(),

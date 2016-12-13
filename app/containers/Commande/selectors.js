@@ -281,7 +281,7 @@ export const selectCommandeCommandeContenus = () => createSelector(
 );
 
 
-export const selectQuantiteOffresAchetees = () => createSelector(
+export const selectOffresProduitAvecTotalAchats = () => createSelector(
   [selectOffresByProduit(), selectCommandeCommandeContenus(), selectCommandeContenus()],
   (offres, commandeCommandeContenus, commandeContenus) => {
     if (!offres) return null;

@@ -18,6 +18,7 @@ class OffreFormContainer extends React.Component {
     // saveAccount: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
+    handleToggeState: PropTypes.func.isRequired,
     tva: PropTypes.number.isRequired,
   }
 
@@ -32,7 +33,7 @@ class OffreFormContainer extends React.Component {
   }
 
   render() {
-    const { pending, offre, pristine, tva } = this.props;
+    const { pending, offre, pristine, tva, handleToggeState } = this.props;
     return (
       <OffreForm
         initialValues={offre}
@@ -40,6 +41,7 @@ class OffreFormContainer extends React.Component {
         pending={pending}
         pristine={pristine}
         tva={tva}
+        handleToggeState={handleToggeState}
       />
       );
   }

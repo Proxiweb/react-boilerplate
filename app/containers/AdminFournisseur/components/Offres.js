@@ -24,15 +24,22 @@ class Offres extends Component {
   state = {
     editMode: false,
     type: 'actives',
+    itemEditIndex: null,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.produit.id !== this.props.produit.id) {
+      this.setState({ ...this.state, editMode: false });
+    }
   }
 
   handleTypeChange = (event, value) => this.setState({ ...this.state, type: value })
 
-  toggleState = () => this.setState({ editMode: !this.state.editMode })
+  toggleState = (idx) => this.setState({ editMode: !this.state.editMode, itemEditIndex: idx })
 
   render() {
     const { offres, typesProduits, produit } = this.props;
-    const { type, editMode } = this.state;
+    const { type, editMode, itemEditIndex } = this.state;
     const offresFltr = offres.filter((off) => off.active === (type === 'actives'));
     const typeProduit = typesProduits[produit.typeProduitId];
     return (
@@ -47,7 +54,7 @@ class Offres extends Component {
                     index={idx}
                     offre={off}
                     typeProduit={typeProduit}
-                    handleToggeState={this.toggleState}
+                    handleToggeState={() => this.toggleState(idx)}
                   />))}
               </div>
             </div>
@@ -56,8 +63,9 @@ class Offres extends Component {
         {editMode && (
           <div style={{ padding: '2em' }} className="col-md-12">
             <OffreFormContainer
-              offre={Object.assign(offres[0], { tarifications: [] })}
+              offre={offres[itemEditIndex]}
               tva={produit.tva}
+              handleToggeState={this.toggleState}
             />
           </div>
         )}
