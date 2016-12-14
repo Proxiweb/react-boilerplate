@@ -59,7 +59,14 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               nestedItems={[
                 <ListItem primaryText="Relais" value="/relais" />,
                 <ListItem primaryText="Depots" value="/depots" />,
-                <ListItem primaryText="Commandes" value="/admin/relais/e3f38e82-9f29-46c6-a0d7-3181451455a4/commandes" />,
+                <ListItem
+                  primaryText="Commandes"
+                  primaryTogglesNestedList
+                  nestedItems={[
+                    <ListItem primaryText="Détail" value={`admin/relais/${user.relaiId}/commandes`} />,
+                    <ListItem primaryText="Paiements" value={`admin/relais/${user.relaiId}/commande_paiements`} />,
+                  ]}
+                />,
                 <ListItem primaryText="Logs" value="/logs" />,
                 <ListItem primaryText="Utilisateurs" value="/utilisateurs" />,
                 <ListItem
@@ -71,6 +78,16 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
                     <ListItem primaryText="Courante" value="/communications/courante" />,
                   ]}
                 />,
+              ]}
+            />
+          )}
+          {user && user.roles.includes('RELAI_ADMIN') && user.relaiId && (
+            <ListItem
+              primaryText="Relai Admin"
+              primaryTogglesNestedList
+              leftIcon={<TestIcon />}
+              nestedItems={[
+                <ListItem primaryText="Commandes" value={`/admin/relais/${user.relaiId}/commandes`} />,
               ]}
             />
           )}

@@ -12,7 +12,7 @@ export default class CommnandeParProduitFournisseur extends Component { // eslin
 
   render() {
     const { produit, contenus, offre } = this.props;
-    const quantite = contenus.reduce((memo, c) => memo + c.quantite, 0);
+    const quantite = contenus.reduce((memo, c) => memo + c.quantite + c.qteRegul, 0);
     return (
       <TableRow>
         <TableRowColumn>{produit.nom}</TableRowColumn>

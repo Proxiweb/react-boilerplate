@@ -6,13 +6,16 @@ import {
   selectCommandeContenus,
   selectFournisseursCommande,
   selectCommandeProduits,
+  selectCommandeStellarAdresse,
 } from 'containers/Commande/selectors';
+import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash.capitalize';
 import moment from 'moment';
 const format = 'DD/MM/YY à HH:mm';
 import styles from './styles.css';
 import DetailCommande from './DetailCommande';
 import DetailCommandeTotal from './DetailCommandeTotal';
+import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
 
 class DetailsParUtilisateur extends Component { // eslint-disable-line
   static propTypes = {
@@ -21,10 +24,21 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
     contenus: PropTypes.object.isRequired,
     utilisateur: PropTypes.object.isRequired,
     produits: PropTypes.array.isRequired,
+    commandeStellarAdresse: PropTypes.string.isRequired,
+    utilisateurStellarAdresse: PropTypes.string.isRequired,
   }
 
   render() {
-    const { utilisateur, contenus, produits, commandeContenus, commandeUtilisateur } = this.props;
+    const {
+      utilisateur,
+      contenus,
+      produits,
+      commandeContenus,
+      commandeUtilisateur,
+      utilisateurStellarAdresse,
+      commandeStellarAdresse,
+    } = this.props;
+
     return (
       <div className="row">
         <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
@@ -40,7 +54,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
                     'Non payée'}
                 </div>
                 <div className="col-md">
-                  { commandeUtilisateur.datePaiement ?
+                  { commandeUtilisateur.dateLivraison ?
                     `Livrée le ${moment(commandeUtilisateur.datePaiement).format(format)}` :
                     'Non livrée'}
                 </div>
@@ -54,7 +68,11 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             produits={produits}
             commandeUtilisateur={commandeUtilisateur}
           />
-        <DetailCommandeTotal total={commandeUtilisateur.montant} recolteFond={commandeUtilisateur.recolteFond} />
+          <DetailCommandeTotal total={commandeUtilisateur.montant} recolteFond={commandeUtilisateur.recolteFond} />
+          <CommandePaiementsUtilisateur
+            adresseStellarUtilisateur={utilisateurStellarAdresse}
+            adresseStellarCommande={commandeStellarAdresse}
+          />
         </div>
       </div>
     );
@@ -66,6 +84,8 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
+  utilisateurStellarAdresse: selectUtilisateurStellarAdresse(),
+  commandeStellarAdresse: selectCommandeStellarAdresse(),
 });
 
 export default connect(mapStateToProps)(DetailsParUtilisateur);

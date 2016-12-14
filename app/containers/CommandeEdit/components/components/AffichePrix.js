@@ -4,7 +4,6 @@ import styles from './AffichePrix.css';
 
 export const trouveTarification = (tarifications, totalGlobal = 0, totalCommande = 0) => {
   const total = totalGlobal + totalCommande;
-  console.log('ttarif', total);
   return tarifications
           .sort((a, b) => a.qteMinRelais > b.qteMinRelais)
           .find((tar, idx, arr) =>

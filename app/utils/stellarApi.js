@@ -27,11 +27,12 @@ const loadAccount =
       .catch((err) => reject(err))
   );
 
-const loadPayments = (env, accountId) => new Promise((resolve, reject) =>
+const loadPayments = (env, accountId, limit = 10) => new Promise((resolve, reject) =>
   getServer(env)
     .payments()
     .forAccount(accountId)
     .order('desc')
+    .limit(limit)
     .call()
     .then((payments) => resolve(payments.records))
     .catch((err) => reject(err))

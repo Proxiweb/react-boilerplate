@@ -198,6 +198,13 @@ export const selectCommandeCommandeUtilisateurs = () => createSelector(
   }
 );
 
+export const selectCommandeStellarAdresse = () => createSelector(
+  selectCommande(),
+  (commande) => (commande.stellarKeys
+    ? commande.stellarKeys.adresse
+    : null),
+);
+
 /* les produits pour un typedeProduit donné */
 export const selectCommandeProduitsByTypeProduit = () => createSelector(
   selectCommandeProduits(),

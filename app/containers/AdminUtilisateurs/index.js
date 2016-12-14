@@ -65,8 +65,8 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
     this.setState({ datas: newProps.utilisateurs });
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState)
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState);
   }
 
   componentWillUnmount() { // eslint-disable-line
@@ -134,9 +134,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
 
   handleResize = () => this.setState({ ...this.state, height: window.innerHeight - 238, width: window.innerWidth - 30 });
 
-  handleSort = ({ sortBy, sortDirection }) => {
-    this.setState({ ...this.state, sortBy, sortDirection });
-  }
+  handleSort = ({ sortBy, sortDirection }) => this.setState({ ...this.state, sortBy, sortDirection })
 
   handleRelaiChange = (event, idx, relais) => this.setState({ ...this.state, filtre: { ...this.state.filtre, relais } })
 
