@@ -53,7 +53,7 @@ export function* apiFetcherSaga(action) {
   } catch (exception) {
       console.log('e', exception);
     yield put(stopGlobalPending());
-    if (exception.message && exception.message && exception.message.message === 'La session a expirée') {
+    if (exception.data && exception.data.message && exception.data.message === 'La session a expirée') {
       yield put(addMessage({
         type: 'error',
         text: 'La session a expirée, veuillez vous re-connecter',
@@ -63,10 +63,10 @@ export function* apiFetcherSaga(action) {
       yield put(logout('/login'));
     } else {
         console.log('catch',err);
-      yield put(assign({ type: err, msgPending, msgSuccess, msgError: (msgError || exception.message.error), exception: { ...exception } }));
+      yield put(assign({ type: err, msgPending, msgSuccess, msgError: (msgError || exception.data.message), exception: { ...exception } }));
       yield put(addMessage({
         type: 'error',
-        text: msgError || exception.message.message,
+        text: msgError || exception.data.message,
       }));
     }
   }
