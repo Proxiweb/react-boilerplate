@@ -23,8 +23,6 @@ import {
 
 import api from '../../utils/stellarApi';
 
-import StellarSdk from 'stellar-sdk';
-
 // import {
 //   loginSuccess,
 //   loginError,
@@ -55,12 +53,12 @@ import StellarSdk from 'stellar-sdk';
 //   }
 // }
 //
-function effects() { // accountId
-  const server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+function effects(accountId) { // accountId
+  const server = api.getServer();
   return eventChannel((emitter) => { // eslint-disable-line
     return server
       .effects()
-      .forAccount('GAPRF7NV7D2HBXZCLTT4G6U3I4BAF2YYZZCWQ7NIBOBMOD6CZGW6RLQJ')
+      .forAccount(accountId)
       .stream({
         onmessage: (txResponse) => txResponse
                                     .operation()
@@ -102,9 +100,8 @@ export function* listenStellarPaymentsOnLoginSuccess() {
 }
 
 export function* loadAccountSaga(accountId) {
-  const env = 'public'; // yield select(selectEnv());
   try {
-    const account = yield call(api.loadAccount, env, accountId);
+    const account = yield call(api.loadAccount, accountId);
     yield put(accountLoaded(account));
   } catch (err) {
     yield put(loadAccountError(err));

@@ -2,12 +2,12 @@ import request from 'superagent';
 import StellarSdk from 'stellar-sdk';
 import toml from 'toml';
 
-const getServer = (env) => {
-  switch (env) {
-    case 'test':
+const getServer = () => {
+  switch (process.env.NODE_ENV) {
+    case 'development':
       StellarSdk.Network.useTestNetwork();
       return new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    case 'public':
+    case 'production':
     default:
       StellarSdk.Network.usePublicNetwork();
       return new StellarSdk.Server('https://horizon.stellar.org');
@@ -15,8 +15,8 @@ const getServer = (env) => {
 };
 
 const loadAccount =
-  (env, accountId) => new Promise((resolve, reject) =>
-    getServer(env)
+  (accountId) => new Promise((resolve, reject) =>
+    getServer()
       .accounts()
       .accountId(accountId)
       .call()
@@ -27,8 +27,8 @@ const loadAccount =
       .catch((err) => reject(err))
   );
 
-const loadPayments = (env, accountId, limit = 10) => new Promise((resolve, reject) =>
-  getServer(env)
+const loadPayments = (accountId, limit = 10) => new Promise((resolve, reject) =>
+  getServer()
     .payments()
     .forAccount(accountId)
     .order('desc')
@@ -38,8 +38,8 @@ const loadPayments = (env, accountId, limit = 10) => new Promise((resolve, rejec
     .catch((err) => reject(err))
 );
 
-const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
-  getServer(env)
+const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
+  getServer()
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()
@@ -53,15 +53,15 @@ const trust = (env, currencyCode, maxTrust, issuer, stellarKeys) => new Promise(
         .build();
       transaction.sign(StellarSdk.Keypair.fromSeed(stellarKeys.secret));
 
-      return getServer(env).submitTransaction(transaction)
+      return getServer().submitTransaction(transaction)
           .then((transactionResult) => resolve(transactionResult))
           .catch((err) => reject(err));
     })
     .catch((err) => reject(err));
 });
 
-const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) => new Promise((resolve, reject) => {
-  getServer(env)
+const pay = (destination, currency, currencyIssuer, amount, stellarKeys) => new Promise((resolve, reject) => {
+  getServer()
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()
@@ -75,7 +75,7 @@ const pay = (env, destination, currency, currencyIssuer, amount, stellarKeys) =>
         }))
         .build();
       transaction.sign(StellarSdk.Keypair.fromSeed(stellarKeys.secret));
-      return getServer(env).submitTransaction(transaction)
+      return getServer().submitTransaction(transaction)
           .then((transactionResult) => resolve(transactionResult))
           .catch((err) => reject(err));
     })
