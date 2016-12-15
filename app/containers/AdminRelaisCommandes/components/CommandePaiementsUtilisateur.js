@@ -14,27 +14,48 @@ export default class CommandePaiementsUtilisateur extends Component {
   }
 
   componentDidMount = () => {
-    console.log('mount');
     this.loadPayments();
+    this.loadAccount();
   }
 
-  componentWillReceiveProps = () => {
-    console.log('load');
-    this.loadPayments();
-    //this.setState({ paiements: [], soldeCompte: null });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.adresseStellarUtilisateur !== this.props.adresseStellarUtilisateur) {
+      this.loadAccount();
+    }
   }
 
   loadPayments = () => {
-    const { adresseStellarUtilisateur, adresseStellarCommande } = this.props;
     api
-      .loadPayments('public', adresseStellarCommande, 100)
-      .then((res) => this.setState({
-        paiements: res.filter((p) => p.source_account === adresseStellarUtilisateur),
-      }));
+      .loadPayments(this.props.adresseStellarCommande, 100)
+      .then((res) => {
+        this.setState({
+          ...this.state,
+          paiements: res,
+        });
+      });
+  }
+
+  loadAccount = () => {
+    api
+      .loadAccount(this.props.adresseStellarUtilisateur, 100)
+      .then((res) => {
+        this.setState({
+          ...this.state,
+          soldeCompte: res.balances,
+        });
+      });
   }
 
   render() {
     if (this.state.paiements.length === 0) return null;
-    return <h1>Paiements {round(this.state.paiements.reduce((memo, pay) => memo + pay.amount, 0), 2)}</h1>;
+    const paiements = this.state.paiements.filter(
+      (p) => p.source_account === this.props.adresseStellarUtilisateur
+    );
+
+    return (
+      <h1>
+        Paiements {round(paiements.reduce((memo, pay) => memo + pay.amount, 0), 2)}<br />
+        Solde {this.state.soldeCompte && round(this.state.soldeCompte[0].balance, 2)}
+      </h1>);
   }
 }

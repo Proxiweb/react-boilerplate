@@ -7,7 +7,7 @@ import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 
 import CommunicationForm from 'components/CommunicationForm';
-import { sendCommunication, removeDestinataire } from 'containers/AdminCommunication/actions';
+import { sendCommunication, removeDestinataire, setMessage } from 'containers/AdminCommunication/actions';
 import { selectCommunicationDomain } from 'containers/AdminCommunication/selectors';
 import { selectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
 import styles from './styles.css';
@@ -17,6 +17,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
     communication: PropTypes.object.isRequired,
     apiKey: PropTypes.string.isRequired,
     sendMessage: PropTypes.func.isRequired,
+    setMessage: PropTypes.func.isRequired,
     removeDest: PropTypes.func.isRequired,
   }
 
@@ -73,6 +74,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
             onSubmit={this.handleSubmit}
             message={{ sms, objet, html }}
             nbreDest={destinataires.length}
+            setMessage={this.props.setMessage}
           />
         </div>
       </div>
@@ -87,6 +89,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   sendMessage: (apiKey, message) => dispatch(sendCommunication(apiKey, message)),
+  setMessage: (message) => dispatch(setMessage(message)),
   removeDest: (id, moyen) => dispatch(removeDestinataire(id, moyen)),
 });
 

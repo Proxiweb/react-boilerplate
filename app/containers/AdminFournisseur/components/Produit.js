@@ -41,6 +41,12 @@ export default class Produit extends Component {
 
   onEditorChange = (editorContent) => console.log(editorContent)
 
+
+  getInitialHTML = () => {
+    const contentBlocks = convertFromHTML(this.props.produit.description);
+    return convertToRaw(ContentState.createFromBlockArray(contentBlocks));
+  }
+
   toggleState = () => this.setState({ editMode: !this.state.editMode })
 
   render() {
@@ -73,11 +79,7 @@ export default class Produit extends Component {
               editorClassName={styles.editorClass}
               toolbar={options}
               onChange={this.onEditorChange}
-              initialContentState={
-                convertToRaw(
-                  ContentState.createFromBlockArray(convertFromHTML(produit.description))
-                )
-              }
+              initialContentState={this.getInitialHTML()}
             />
           )}
           {editMode && <ProduitFormContainer produit={produit} />}

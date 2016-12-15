@@ -21,6 +21,7 @@ const options = {
 class CommunicationForm extends Component { // eslint-disable-line
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    setMessage: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired,
     nbreDest: PropTypes.number.isRequired,
   }
@@ -31,10 +32,15 @@ class CommunicationForm extends Component { // eslint-disable-line
     this.state = { sms, html, objet, error: null, rawHtml: this.getInitialHTML(html) };
   }
 
+  componentWillUnmount() {
+    const { html, sms, objet } = this.state;
+    this.props.setMessage({ html, sms, objet });
+  }
+
   onEditorChange = (editorContent) => this.setState({ html: draftToHtml(editorContent) })
 
-  getInitialHTML() {
-    const contentBlocks = convertFromHTML('<p>oooo</p>');
+  getInitialHTML(html) {
+    const contentBlocks = convertFromHTML(html);
     const contentState = ContentState.createFromBlockArray(contentBlocks);
     return convertToRaw(contentState);
   }
@@ -66,6 +72,7 @@ class CommunicationForm extends Component { // eslint-disable-line
             fullWidth
             rows={3}
             onChange={this.handleSmsChange}
+            value={this.state.sms}
           />
         </div>
         <div className="col-md-12">
@@ -74,6 +81,7 @@ class CommunicationForm extends Component { // eslint-disable-line
             floatingLabelText="Objet du mail"
             fullWidth
             onChange={this.handleObjetChange}
+            value={this.state.objet}
           />
         </div>
         <div className="col-md-12">
@@ -81,7 +89,7 @@ class CommunicationForm extends Component { // eslint-disable-line
             editorClassName={styles.editorClass}
             toolbar={options}
             onChange={this.onEditorChange}
-            rawContentState={rawHtml}
+            initialContentState={rawHtml}
           />
         </div>
         <div className="col-md-12">

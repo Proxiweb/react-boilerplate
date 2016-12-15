@@ -7,6 +7,10 @@ import classnames from 'classnames';
 
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommandesRelais, selectCommandeId } from 'containers/Commande/selectors';
+import IconButton from 'material-ui/IconButton';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import AddIcon from 'material-ui/svg-icons/content/add';
+
 import styles from './styles.css';
 
 const SelectableList = makeSelectable(List);
@@ -21,17 +25,35 @@ class AdminRelaisCommandes extends Component {
     children: PropTypes.node,
   }
 
+  state = {
+    addMode: false,
+  }
+
   componentDidMount() {
     this.props.loadCommandes({ relaiId: this.props.params.relaiId });
   }
 
+  newCommande = () => {
+    this.setState({ addMode: !this.state.addMode });
+  }
+
   render() {
     const { commandes, pushState, params, commandeId } = this.props;
+    const { addMode } = this.state;
     if (!commandes) return null;
 
     return (
       <div className="row">
         <div className={classnames('col-md-2', styles.panel)}>
+          <div style={{ textAlign: 'center' }}>
+            <IconButton
+              style={{ padding: 0, width: '27px', height: '27px' }}
+              tooltip="Nouvelle commande"
+              onClick={this.newCommande}
+            >
+              <AddIcon />
+            </IconButton>
+          </div>
           <SelectableList value={location.pathname}>
             {Object.keys(commandes).map((key, idx) =>
               <ListItem
@@ -44,7 +66,8 @@ class AdminRelaisCommandes extends Component {
           </SelectableList>
         </div>
         <div className={classnames('col-md-10', styles.panel)}>
-          {this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
+          {!addMode && this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
+          {addMode && <h1>Nouvelle commande</h1>}
         </div>
       </div>
     );
