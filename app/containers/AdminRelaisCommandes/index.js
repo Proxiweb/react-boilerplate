@@ -25,21 +25,16 @@ class AdminRelaisCommandes extends Component {
     children: PropTypes.node,
   }
 
-  state = {
-    addMode: false,
-  }
-
   componentDidMount() {
     this.props.loadCommandes({ relaiId: this.props.params.relaiId });
   }
 
   newCommande = () => {
-    this.setState({ addMode: !this.state.addMode });
+    this.props.pushState(`/admin/relais/${this.props.params.relaiId}/commandes/nouvelle`);
   }
 
   render() {
     const { commandes, pushState, params, commandeId } = this.props;
-    const { addMode } = this.state;
     if (!commandes) return null;
 
     return (
@@ -66,8 +61,7 @@ class AdminRelaisCommandes extends Component {
           </SelectableList>
         </div>
         <div className={classnames('col-md-10', styles.panel)}>
-          {!addMode && this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
-          {addMode && <h1>Nouvelle commande</h1>}
+          {this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
         </div>
       </div>
     );

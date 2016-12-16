@@ -202,24 +202,35 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-      childRoutes: [{
-        path: ':commandeId',
-        name: 'utilisateursCommande',
-        getComponent(nextState, cb) {
-          System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+      childRoutes: [
+        {
+          path: 'nouvelle',
+          name: 'NouvelleCommande',
+          getComponent(nextState, cb) {
+            System.import('containers/AdminNouvelleCommande')
             .then(loadModule(cb))
             .catch(errorLoading);
+          },
         },
-        childRoutes: [{
-          path: 'utilisateurs/:utilisateurId',
-          name: 'utilisateurCommande',
+        {
+          path: ':commandeId',
+          name: 'utilisateursCommande',
           getComponent(nextState, cb) {
             System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
               .then(loadModule(cb))
               .catch(errorLoading);
           },
-        }],
-      }],
+          childRoutes: [{
+            path: 'utilisateurs/:utilisateurId',
+            name: 'utilisateurCommande',
+            getComponent(nextState, cb) {
+              System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+                .then(loadModule(cb))
+                .catch(errorLoading);
+            },
+          }],
+        },
+      ],
     }, {
       path: 'fournisseurs/:fournisseurId/catalogue',
       getComponent(location, cb) {

@@ -1,0 +1,7 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 245px);
+  min-height: calc(100vh - 245px);
+  overflow-y: scroll;
+}
