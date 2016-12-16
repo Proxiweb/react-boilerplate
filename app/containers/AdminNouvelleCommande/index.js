@@ -2,15 +2,19 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { loadFournisseurs } from 'containers/Commande/actions';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import { loadFournisseurs, createCommande } from 'containers/Commande/actions';
 import { selectFournisseurs } from 'containers/Commande/selectors';
-import { List, ListItem, makeSelectable } from 'material-ui/List';
-const SelectableList = makeSelectable(List);
+import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
+import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
+import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
+import moment from 'moment';
 import styles from './styles.css';
 
 class NouvelleCommande extends Component { // eslint-disable-line
   static propTypes = {
-    commande: PropTypes.object,
+    create: PropTypes.func.isRequired,
     fournisseurs: PropTypes.array.isRequired,
   }
 
@@ -20,6 +24,16 @@ class NouvelleCommande extends Component { // eslint-disable-line
 
   state = {
     cdeFourns: [],
+    parametres: {},
+    distributions: [],
+  }
+
+  addDistrib = (value) => {
+    this.setState({ distributions: [...this.state.distributions, value] });
+  }
+
+  delDistrib = (index) => {
+    this.setState({ distributions: this.state.distributions.filter((dist, idx) => idx !== index) });
   }
 
   addFourn = (value) => {
@@ -27,59 +41,86 @@ class NouvelleCommande extends Component { // eslint-disable-line
     this.setState({ cdeFourns: [...this.state.cdeFourns, value] });
   }
 
-  delFourn = (value) => this.setState({ cdeFourns: this.state.cdeFourns.filter((cde) => cde.id !== value.id) });
+  delFourn = (value) => this.setState({
+    ...this.state,
+    cdeFourns: this.state.cdeFourns.filter((cde) => cde.id !== value.id),
+  });
+
+  changeParam = (key, value) => this.setState({
+    ...this.state,
+    parametres: {
+      ...this.state.parametres,
+      [key]: value,
+    },
+  });
+
+  validate = () => {
+    const { cdeFourns, parametres } = this.state;
+    return cdeFourns.length && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
+  }
+
+  create = () => {
+    const { parametres, distributions, cdeFourns } = this.state;
+    const { dateLimite, heureLimite, resume, montantMin, montantMinRelais } = parametres;
+    const commande = {
+      dateCommande: `${moment(dateLimite).format('YYYY-MM-DD')}T${moment(heureLimite).format('HH:mm')}`,
+      resume,
+      montantMin,
+      montantMinRelai: montantMinRelais,
+      fournisseurs: cdeFourns.map((f) => f.id),
+      livraisons: distributions,
+    };
+
+    this.props.create(commande);
+  }
 
   render() {
-    const { fournisseurs, params } = this.props;
-    const { cdeFourns } = this.state;
+    const { fournisseurs } = this.props;
+    const { cdeFourns, parametres, distributions } = this.state;
     const { muiTheme } = this.context;
+
     return (
       <div className="row center-md">
         <div className="col-md-10">
-          <Tabs
-            inkBarStyle={{ height: 7, backgroundColor: muiTheme.appBar.color, marginTop: -7 }}
-          >
-            <Tab label="Fournisseurs">
-              <div className="row">
-                <div className="col-md">
-                  <h4 style={{ textAlign: 'center' }}>Fournisseurs</h4>
-                  <div className={styles.panel}>
-                    <SelectableList value={location.pathname}>
-                      {fournisseurs.map((fourn, idx) =>
-                        <ListItem
-                          key={idx}
-                          primaryText={fourn.nom.toUpperCase()}
-                          value={`${fourn.id}`}
-                          onClick={() => this.addFourn(fourn)}
-                        />
-                      )}
-                    </SelectableList>
-                  </div>
-                </div>
-                <div className="col-md">
-                  <h4 style={{ textAlign: 'center' }}>Fournisseurs de cette commande</h4>
-                  <div className={styles.panel}>
-                    <SelectableList value={location.pathname}>
-                      {cdeFourns.map((fourn, idx) =>
-                        <ListItem
-                          key={idx}
-                          primaryText={fourn.nom.toUpperCase()}
-                          value={`${fourn.id}`}
-                          onClick={() => this.delFourn(fourn)}
-                        />
-                      )}
-                    </SelectableList>
-                  </div>
-                </div>
+          <Paper className={styles.panel}>
+            <Tabs
+              inkBarStyle={{ height: 7, backgroundColor: muiTheme.appBar.color, marginTop: -7 }}
+              contentContainerClassName={styles.tab}
+            >
+              <Tab label="Fournisseurs">
+                <NouvelleCommandeListeFournisseurs
+                  addFourn={this.addFourn}
+                  delFourn={this.delFourn}
+                  fournisseurs={fournisseurs}
+                  fournisseursCommande={cdeFourns}
+                />
+              </Tab>
+              <Tab label="Paramètres">
+                <NouvelleCommandeParametres
+                  parametres={parametres}
+                  changeParam={this.changeParam}
+                />
+              </Tab>
+              <Tab label="Distribution">
+                <NouvelleCommandeDistribution
+                  distributions={distributions}
+                  addDistrib={this.addDistrib}
+                  delDistrib={this.delDistrib}
+                />
+              </Tab>
+            </Tabs>
+            <div className="row center-md">
+              <div className="col-md-4">
+                <RaisedButton
+                  primary
+                  label="Sauvegarder"
+                  onClick={() => this.create()}
+                  fullWidth
+                  disabled={!this.validate()}
+                />
               </div>
-            </Tab>
-            <Tab label="Paramètres">
-
-            </Tab>
-            <Tab label="Distribution">
-
-            </Tab>
-          </Tabs>
+            </div>
+          </Paper>
         </div>
       </div>
     );
@@ -92,6 +133,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   load: () => dispatch(loadFournisseurs()),
+  create: (commande) => dispatch(createCommande(commande)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NouvelleCommande);

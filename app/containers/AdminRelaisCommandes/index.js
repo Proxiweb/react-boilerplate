@@ -60,7 +60,16 @@ class AdminRelaisCommandes extends Component {
             )}
           </SelectableList>
         </div>
-        <div className={classnames('col-md-10', styles.panel)}>
+        <div
+          className={
+            classnames(
+              'col-md-10',
+              styles.panel,
+              { [styles.nouvelleCommande]: !commandeId },
+              { [styles.noScroll]: !commandeId },
+            )
+          }
+        >
           {this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
         </div>
       </div>

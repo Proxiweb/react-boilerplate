@@ -13,7 +13,15 @@ export const loadCommandes = (query) => ({
   msgPending: 'Chargement commandes',
 });
 
-export const load_fournisseurs = (query) => ({
+export const createCommande = (commande) => ({
+  type: findActionType('create_commande', c, 'START'),
+  url: 'commandes',
+  method: 'post',
+  datas: { ...commande },
+  msgPending: 'Création commande',
+});
+
+export const loadFournisseurs = (query) => ({
   type: findActionType('load_fournisseurs', c, 'START'),
   url: 'fournisseurs',
   query,
