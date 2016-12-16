@@ -15,8 +15,8 @@ export const loadCommandes = (query) => ({
 
 export const createCommande = (commande) => ({
   type: findActionType('create_commande', c, 'START'),
-  url: 'commandes',
-  method: 'post',
+  url: `commandes${commande.id ? `/${commande.id}` : ''}`,
+  method: (commande.id ? 'put' : 'post'),
   datas: { ...commande },
   msgPending: 'Création commande',
 });

@@ -8,9 +8,11 @@ import classnames from 'classnames';
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectCommandesRelais, selectCommandeId } from 'containers/Commande/selectors';
 import IconButton from 'material-ui/IconButton';
-import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import AddIcon from 'material-ui/svg-icons/content/add';
+import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
+import RemoveIcon from 'material-ui/svg-icons/action/delete-forever';
 
+import moment from 'moment';
 import styles from './styles.css';
 
 const SelectableList = makeSelectable(List);
@@ -33,29 +35,53 @@ class AdminRelaisCommandes extends Component {
     this.props.pushState(`/admin/relais/${this.props.params.relaiId}/commandes/nouvelle`);
   }
 
+  editCommande = () => {
+    const { relaiId, commandeId } = this.props.params;
+    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/edit`);
+  }
+
+  removeCommande = () => {
+
+  }
+
   render() {
     const { commandes, pushState, params, commandeId } = this.props;
+    const { relaiId, action } = params;
     if (!commandes) return null;
-
+    const commande = commandes ? commandes[commandeId] : null;
     return (
       <div className="row">
         <div className={classnames('col-md-2', styles.panel)}>
           <div style={{ textAlign: 'center' }}>
-            <IconButton
+            {!commandeId && !action && <IconButton
               style={{ padding: 0, width: '27px', height: '27px' }}
               tooltip="Nouvelle commande"
               onClick={this.newCommande}
             >
               <AddIcon />
-            </IconButton>
+            </IconButton>}
+            {commandeId && !action && <IconButton
+              style={{ padding: 0, width: '27px', height: '27px' }}
+              tooltip="Modifier la commande"
+              onClick={this.editCommande}
+            >
+              <EditIcon />
+            </IconButton>}
+            {commandeId && action === 'edit' && <IconButton
+              style={{ padding: 0, width: '27px', height: '27px' }}
+              tooltip="Supprimer la commande"
+              onClick={this.removeCommande}
+            >
+              <RemoveIcon />
+            </IconButton>}
           </div>
           <SelectableList value={location.pathname}>
             {Object.keys(commandes).map((key, idx) =>
               <ListItem
                 key={idx}
-                primaryText={commandes[key].noCommande}
-                value={`/admin/relais/${params.relaiId}/commandes/${key}`}
-                onClick={() => pushState(`/admin/relais/${params.relaiId}/commandes/${key}`)}
+                primaryText={moment(commandes[key].dateCommande).format('DD/MM')}
+                value={`/admin/relais/${relaiId}/commandes/${key}${action === 'edit' && key === commandeId ? '/edit' : ''}`}
+                onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${key}`)}
               />
             )}
           </SelectableList>
@@ -70,7 +96,7 @@ class AdminRelaisCommandes extends Component {
             )
           }
         >
-          {this.props.children && React.cloneElement(this.props.children, { commandes, commandeId, params })}
+          {this.props.children && React.cloneElement(this.props.children, { commande, commandes, commandeId, params })}
         </div>
       </div>
     );

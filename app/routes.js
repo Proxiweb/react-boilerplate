@@ -213,6 +213,15 @@ export default function createRoutes(store) {
           },
         },
         {
+          path: ':commandeId/:action',
+          name: 'ModifCommande',
+          getComponent(nextState, cb) {
+            System.import('containers/AdminNouvelleCommande')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+          },
+        },
+        {
           path: ':commandeId',
           name: 'utilisateursCommande',
           getComponent(nextState, cb) {

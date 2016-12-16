@@ -17,7 +17,7 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
       <div className={`row ${styles.panel}`}>
         <div className="col-md">
           <h4 style={{ textAlign: 'center' }}>Fournisseurs</h4>
-          <div>
+          <div style={{ maxHeight: '300px', overflowY: 'scroll' }}>
             <SelectableList value={location.pathname}>
               {fournisseurs.map((fourn, idx) =>
                 <ListItem

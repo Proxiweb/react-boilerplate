@@ -5,7 +5,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import { loadFournisseurs, createCommande } from 'containers/Commande/actions';
-import { selectFournisseurs } from 'containers/Commande/selectors';
+import { selectFournisseurs, selectFournisseursCommande, selectCommandeLivraisons } from 'containers/Commande/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
 import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
@@ -14,8 +14,11 @@ import styles from './styles.css';
 
 class NouvelleCommande extends Component { // eslint-disable-line
   static propTypes = {
+    commande: PropTypes.object.isRequired,
     create: PropTypes.func.isRequired,
     fournisseurs: PropTypes.array.isRequired,
+    fournisseursCommande: PropTypes.array.isRequired,
+    livraisonsCommande: PropTypes.array.isRequired,
   }
 
   static contextTypes = {
@@ -26,6 +29,36 @@ class NouvelleCommande extends Component { // eslint-disable-line
     cdeFourns: [],
     parametres: {},
     distributions: [],
+  }
+
+  componentDidMount() {
+    const { fournisseursCommande, commande, livraisonsCommande } = this.props;
+    console.log('cde', commande);
+    if (fournisseursCommande.length) {
+      this.setState({
+        ...this.state,
+        cdeFourns: fournisseursCommande,
+        parametres: {
+          dateLimite: new Date(commande.dateCommande),
+          heureLimite: new Date(commande.dateCommande),
+          montantMin: commande.montantMin,
+          montantMinRelai: commande.montantMinRelais,
+        },
+        distributions: livraisonsCommande,
+      });
+    }
+    // if (commande) {
+    //   this.setState({
+    //     ...this.state,
+    //     cdeFourns: commande.fournisseurs.map((id) => {
+    //       const fournisseur = fournisseurs.find((f) => {
+    //         return f.id === id;
+    //       });
+    //       if (!fournisseur) return null;
+    //       return { id, nom: fournisseur.nom };
+    //     }),
+    //   });
+    // }
   }
 
   addDistrib = (value) => {
@@ -62,8 +95,10 @@ class NouvelleCommande extends Component { // eslint-disable-line
   create = () => {
     const { parametres, distributions, cdeFourns } = this.state;
     const { dateLimite, heureLimite, resume, montantMin, montantMinRelais } = parametres;
+    const hLim = parseInt(moment(heureLimite).format('HH'), 10);
+    const mLim = parseInt(moment(heureLimite).format('mm'), 10);
     const commande = {
-      dateCommande: `${moment(dateLimite).format('YYYY-MM-DD')}T${moment(heureLimite).format('HH:mm')}`,
+      dateCommande: moment(dateLimite).hours(hLim).minutes(mLim).toISOString(),
       resume,
       montantMin,
       montantMinRelai: montantMinRelais,
@@ -75,7 +110,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
   }
 
   render() {
-    const { fournisseurs } = this.props;
+    const { fournisseurs, commande } = this.props;
     const { cdeFourns, parametres, distributions } = this.state;
     const { muiTheme } = this.context;
 
@@ -113,7 +148,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
               <div className="col-md-4">
                 <RaisedButton
                   primary
-                  label="Sauvegarder"
+                  label={`${commande && commande.id ? 'Modifier' : 'Créer'} cette commande`}
                   onClick={() => this.create()}
                   fullWidth
                   disabled={!this.validate()}
@@ -129,6 +164,8 @@ class NouvelleCommande extends Component { // eslint-disable-line
 
 const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseurs(),
+  fournisseursCommande: selectFournisseursCommande(),
+  livraisonsCommande: selectCommandeLivraisons(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -19,7 +19,6 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
     heureFin: null,
   }
 
-  on
 
   render() {
     const { addDistrib, delDistrib, distributions } = this.props;
@@ -50,6 +49,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 floatingLabelText="Heure début"
                 hintText="Heure début"
                 autoOk
+                fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
                 onChange={(event, value) => this.setState((oldVal) => ({ ...oldVal, heureDebut: value }))}
@@ -62,6 +62,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 floatingLabelText="Heure fin"
                 hintText="Heure fin"
                 autoOk
+                fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
                 onChange={(event, value) => this.setState((oldVal) => ({ ...oldVal, heureFin: value }))}

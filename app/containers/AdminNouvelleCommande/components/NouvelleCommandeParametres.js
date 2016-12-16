@@ -42,6 +42,7 @@ export default class NouvelleCommandeParametres extends Component {  // eslint-d
                 floatingLabelText="Heure limite"
                 hintText="Heure limite"
                 autoOk
+                fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
                 onChange={(event, value) => changeParam('heureLimite', value)}
@@ -63,7 +64,7 @@ export default class NouvelleCommandeParametres extends Component {  // eslint-d
               <TextField
                 name="montantMinRelais"
                 fullWidth
-                floatingLabelText="montant minimum par relais"
+                floatingLabelText="montant min / relais"
                 onChange={(event, value) => changeParam('montantMinRelais', value)}
                 value={parametres.montantMinRelais}
               />

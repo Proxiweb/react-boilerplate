@@ -40,11 +40,13 @@ class AdminDetailsCommande extends Component {
 
   componentDidMount() {
     const { commandeUtilisateurs, utilisateurs } = this.props;
-    this.props.loadUtilisateurs(
+    const utilisateursIds =
       commandeUtilisateurs
         .filter((cu) => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
-        .map((cu) => cu.utilisateurId)
-    );
+        .map((cu) => cu.utilisateurId);
+    if (utilisateursIds.length) {
+      this.props.loadUtilisateurs(utilisateursIds);
+    }
   }
 
   render() {
