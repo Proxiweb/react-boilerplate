@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
-import uniq from 'lodash.uniq';
 import {
   selectAsyncState,
   selectRelaisId,
@@ -14,7 +13,6 @@ import {
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 import choux from './choux.jpg';
-import CommandePanel from './components/CommandePanel';
 import Semainier from './components/Semainier';
 import Offre from 'components/Offre';
 import Panel from 'components/Panel';
@@ -58,7 +56,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   isInWeek = (dateCommande, weekOffset = 0) => {
     const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
     const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
-    return moment(dateCommande).isBefore(fin) && moment(dateCommande).isAfter(debut);
+    return moment(dateCommande).isAfter(moment()) &&
+           moment(dateCommande).isBetween(debut, fin);
   }
 
   filterByWeek = (weekOffset = 0) =>

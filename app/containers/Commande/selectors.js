@@ -73,6 +73,20 @@ export const selectLivraisons = () => createSelector(
   (substate) => getModel(substate, 'livraisons')
 );
 
+export const selectRelais = () => createSelector(
+  selectCommandeDomain(),
+  (substate) => getModel(substate, 'relais')
+);
+
+export const selectRelaisSelected = () => createSelector(
+  selectRelaisId(),
+  selectRelais(),
+  (relaisId, relais) => {
+    if (!relaisId || !relais) return null;
+    return relais[relaisId];
+  }
+);
+
 export const selectUserIdCommandes = () => createSelector(
   selectUserId(),
   selectCommandes(),

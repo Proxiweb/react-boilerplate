@@ -1,25 +1,29 @@
 import React, { Component, PropTypes } from 'react';
 import { List, ListItem } from 'material-ui/List';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectRelaisSelected } from 'containers/Commande/selectors';
 import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
 import shader from 'shader';
 import styles from './LivraisonSelector.css';
 
-export const buildHoursRanges = (start, end) => {
+export const buildHoursRanges = (start, end, range = 60) => {
   const duration = moment.duration(moment(end).diff(moment(start)));
+  const duree = duration.asMinutes();
   const datas = [];
-  for (let cpt = 0; cpt < duration.asHours(); cpt++ ) { // eslint-disable-line
-    const debut = moment(start).add(cpt, 'hours');
-    const fin = moment(start).add(cpt + 1, 'hours');
+  for (let cpt = 0; cpt < duree; cpt += range) { // eslint-disable-line
+    const debut = moment(start).add(cpt, 'minutes');
+    const fin = moment(start).add(cpt + range, 'minutes');
     datas[cpt] = [debut.format('HH:mm'), fin.format('HH:mm')];
   }
-
   return datas;
 };
 
-export default class LivraisonSelector extends Component { // eslint-disable-line
+class LivraisonSelector extends Component { // eslint-disable-line
   static propTypes = {
     livraisons: PropTypes.array.isRequired,
+    relais: PropTypes.object.isRequired,
     plageHoraire: PropTypes.number,
     livraisonId: PropTypes.string,
     selectionnePlageHoraire: PropTypes.func.isRequired,
@@ -30,8 +34,10 @@ export default class LivraisonSelector extends Component { // eslint-disable-lin
   };
 
   render() {
-    const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons } = this.props;
+    const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons, relais } = this.props;
+
     const muiTheme = this.context.muiTheme;
+    const range = relais.rangeDistribMinutes;
     return (
       <div className="row">
         <div className={`col-md-8 col-md-offset-2 ${styles.livraisonSelector}`}>
@@ -39,7 +45,7 @@ export default class LivraisonSelector extends Component { // eslint-disable-lin
           {livraisons.map((livr, idx1) => (
             <List key={idx1}>
               <Subheader style={{ textAlign: 'center', fontSize: '1.1em' }}>{moment(livr.debut).format('dddd Do MMMM')}</Subheader>
-              {buildHoursRanges(livr.debut, livr.fin).map((data, idx) => (
+              {buildHoursRanges(livr.debut, livr.fin, range).map((data, idx) => (
                 <ListItem
                   onClick={() => selectionnePlageHoraire(idx, livr.id)}
                   key={idx}
@@ -58,3 +64,9 @@ export default class LivraisonSelector extends Component { // eslint-disable-lin
       </div>);
   }
 }
+
+const mapStateToProps = createStructuredSelector({
+  relais: selectRelaisSelected(),
+});
+
+export default connect(mapStateToProps)(LivraisonSelector);

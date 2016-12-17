@@ -19,9 +19,11 @@ export default class OrderValidate extends Component {
     commandeId: PropTypes.string.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
+    livraisons: PropTypes.array.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
@@ -39,18 +41,6 @@ export default class OrderValidate extends Component {
   constructor(props) {
     super(props);
     this.state = { view: 'panier' };
-    this.testLivraisons = [
-      {
-        id: '802744c6-2d16-4517-aa43-0edbfcf35c8c',
-        debut: '2016-09-30T14:00.000',
-        fin: '2016-09-30T19:00.000+00:00',
-      },
-      {
-        id: '900744c6-2d16-4517-aa43-0edbfcf35c8c',
-        debut: '2016-10-01T10:00.000+00:00',
-        fin: '2016-10-01T12:00.000+00:00',
-      },
-    ];
     this.selectionnePlageHoraire = this.selectionnePlageHoraire.bind(this);
     this.showValidate = this.showValidate.bind(this);
     this.showDetailsCommande = this.showDetailsCommande.bind(this);
@@ -82,8 +72,8 @@ export default class OrderValidate extends Component {
   }
 
   showDistribSelected() {
-    const { commande } = this.props;
-    const livraison = this.testLivraisons.find((liv) => liv.id === commande.livraisonId);
+    const { commande, livraisons } = this.props;
+    const livraison = livraisons.find((liv) => liv.id === commande.livraisonId);
     if (!livraison) return <p>Livraison manquante</p>;
     return (
       <div className={styles.distributionSelected}>
@@ -134,12 +124,13 @@ export default class OrderValidate extends Component {
   }
 
   showLivraisonSelector() {
-    const { commande } = this.props;
+    const { commande, livraisons, params } = this.props;
     return (<LivraisonSelector
-      livraisons={this.testLivraisons}
+      livraisons={livraisons}
       plageHoraire={commande.plageHoraire}
       livraisonId={commande.livraisonId}
       selectionnePlageHoraire={this.selectionnePlageHoraire}
+      params={params}
     />);
   }
 

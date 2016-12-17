@@ -10,11 +10,12 @@
   border-left: 4px solid black;
 }
 
-.produits {
+.panelproduits, .produits {
   background-color: white;
+}
+.panelproduits {
   border: solid 1px gray;
 }
-
 .produitsScr {
   background-color: white;
   overflow-y: scroll;

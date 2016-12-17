@@ -76,6 +76,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commande: PropTypes.object,
     commandeProxiweb: PropTypes.object,
     fournisseur: PropTypes.object,
+    livraisons: PropTypes.array.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     balance: PropTypes.number.isRequired,
   }
@@ -197,6 +198,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       offres,
       commandeContenus,
       balance,
+      livraisons,
     } = this.props;
 
     return (
@@ -215,6 +217,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         diminuer={diminuer}
         setDistibution={setDistibution}
         balance={balance}
+        livraisons={livraisons}
+        params={params}
       />
     );
   }
@@ -253,7 +257,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           ]}
         />
         <div
-          className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.produits)}
+          className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.panelproduits)}
         >
           {typeProduits && typeProduits.length > 1 && <SelectField
             value={typeProduitId}

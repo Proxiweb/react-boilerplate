@@ -11,6 +11,6 @@ export default class DistributionSelected extends Component {  // eslint-disable
   render() {
     const { livraison, noPlageHoraire } = this.props;
     const ranges = buildHoursRanges(livraison.debut, livraison.fin)[noPlageHoraire];
-    return (<div>RDV le {moment(livraison.debut).format('dddd Do MMMM')} de {ranges.join(' à ')}</div>);
+    return <div>{moment(livraison.debut).format('[ RDV le ] dddd Do MMMM [de] ')}{ranges.join(' à ')}</div>;
   }
 }
