@@ -15,8 +15,10 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 import choux from './choux.jpg';
 import CommandePanel from './components/CommandePanel';
+import Semainier from './components/Semainier';
 import Offre from 'components/Offre';
 import Panel from 'components/Panel';
+import moment from 'moment';
 
 import { loadCommandes, ajouter } from './actions';
 
@@ -27,18 +29,8 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     produits: PropTypes.object,
     fournisseurs: PropTypes.array,
     typesProduits: PropTypes.object,
-    asyncState: PropTypes.object.isRequired,
     loadCommandes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
-  }
-
-  constructor(props) {
-    super(props);
-    this.selectCommande = this.selectCommande.bind(this);
-    this.getCommandeInfos = this.getCommandeInfos.bind(this);
-    this.state = {
-      commandeSelected: null,
-    };
   }
 
   componentDidMount() {
@@ -48,7 +40,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     }
   }
 
-  getCommandeInfos(id) {
+  getCommandeInfos = (id) => {
     const { produits, commandes, typesProduits, fournisseurs } = this.props;
     const commande = commandes[id];
     return commande.fournisseurs
@@ -63,80 +55,50 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               .map((typePdtId) => typesProduits[typePdtId].nom);
   }
 
-  selectCommande(id) {
-    this.setState({ commandeSelected: id });
+  isInWeek = (dateCommande, weekOffset = 0) => {
+    const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
+    const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
+    return moment(dateCommande).isBefore(fin) && moment(dateCommande).isAfter(debut);
   }
 
+  filterByWeek = (weekOffset = 0) =>
+      Object.keys(this.props.commandes)
+      .filter((key) =>
+        !this.props.commandes[key].terminee && this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
+      ).sort(
+        (key) => !this.props.commandes[key].noCommande
+      );
+
   render() {
-    const { asyncState, commandes, relaiId } = this.props;
-    const self = this;
+    const { commandes, relaiId, pushState } = this.props;
 
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
-          <div className="col-xs">
-            <Panel>Cette semaine</Panel>
-            <div>
-              {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
-                (key, idx) => {
-                  const infos = self.getCommandeInfos(key);
-                  return (
-                    <CommandePanel
-                      nom={infos ? uniq(infos).join(', ') : null}
-                      tarif="1.05 € au lieu de 1.25 €"
-                      prct={100}
-                      fav={false}
-                      key={idx}
-                      commandeId={`${key}`}
-                      clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
-                    />
-                  );
-                }
-                )}
-            </div>
-          </div>
-          <div className="col-xs">
-            <Panel>La semaine prochaine</Panel>
-            <div>
-              {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
-                (key, idx) => {
-                  const infos = self.getCommandeInfos(key);
-                  return (
-                    <CommandePanel
-                      nom={infos ? uniq(infos).join(', ') : null}
-                      tarif="1.05 € au lieu de 1.25 €"
-                      prct={100}
-                      fav={false}
-                      key={idx}
-                      commandeId={`${key}`}
-                      clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
-                    />
-                  );
-                }
-                )}
-            </div>
-          </div>
-          <div className="col-xs">
-            <Panel>Dans quinze jours</Panel>
-            <div>
-              {Object.keys(commandes).filter((key) => !commandes[key].terminee).sort((key) => !commandes[key].noCommande).map(
-                (key, idx) => {
-                  const infos = self.getCommandeInfos(key);
-                  return (
-                    <CommandePanel
-                      nom={infos ? uniq(infos).join(', ') : null}
-                      tarif="1.05 € au lieu de 1.25 €"
-                      prct={100}
-                      fav={false}
-                      key={idx}
-                      commandeId={`${key}`}
-                      clickHandler={() => this.props.pushState(`/relais/${relaiId}/commandes/${key}`)}
-                    />
-                  );
-                }
-                )}
-            </div>
-          </div>
+          <Semainier
+            titreCol="Cette semaine"
+            commandesIds={this.filterByWeek()}
+            commandes={commandes}
+            getCommandeInfos={(key) => this.getCommandeInfos(key)}
+            relaiId={relaiId}
+            pushState={pushState}
+          />
+          <Semainier
+            titreCol="La semaine prochaine"
+            commandesIds={this.filterByWeek(1)}
+            commandes={commandes}
+            getCommandeInfos={(key) => this.getCommandeInfos(key)}
+            relaiId={relaiId}
+            pushState={pushState}
+          />
+          <Semainier
+            titreCol="Dans quinze jours"
+            commandesIds={this.filterByWeek(2)}
+            commandes={commandes}
+            relaiId={relaiId}
+            getCommandeInfos={(key) => this.getCommandeInfos(key)}
+            pushState={pushState}
+          />
           <div className="col-xs">
             <Panel>Dans 3 semaines</Panel>
             <Offre

@@ -168,7 +168,7 @@ export default class OrderValidate extends Component {
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
-      <Paiement montant={commande.montant} balance={balance} dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')} />
+      {commande.id && <Paiement montant={commande.montant} balance={balance} dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')} />}
     </div>);
   }
 }

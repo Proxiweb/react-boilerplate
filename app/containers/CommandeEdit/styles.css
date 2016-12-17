@@ -18,5 +18,5 @@
 .produitsScr {
   background-color: white;
   overflow-y: scroll;
-  border: solid 1px gray;
+  height: calc(100vh - 170px);
 }

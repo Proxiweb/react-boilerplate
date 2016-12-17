@@ -12,6 +12,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import { push } from 'react-router-redux';
+import classnames from 'classnames';
 import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
@@ -252,9 +253,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           ]}
         />
         <div
-          className={`col-sm-4 col-lg-3 col-xs-12 col-md-4 ${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}
+          className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.produits)}
         >
-          {typeProduits && <SelectField
+          {typeProduits && typeProduits.length > 1 && <SelectField
             value={typeProduitId}
             onChange={this.handleChange}
             iconStyle={{ fill: 'black' }}
@@ -264,7 +265,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
           </SelectField>}
           {produits && (
-            <List>
+            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
               {produits.map((pdt, idx) => (
                 <ListItem
                   key={idx}

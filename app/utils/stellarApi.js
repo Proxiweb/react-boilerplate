@@ -4,10 +4,10 @@ import toml from 'toml';
 
 const getServer = () => {
   switch (process.env.NODE_ENV) {
-    case 'development':
+    case 'production':
       StellarSdk.Network.useTestNetwork();
       return new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    case 'production':
+    case 'development':
     default:
       StellarSdk.Network.usePublicNetwork();
       return new StellarSdk.Server('https://horizon.stellar.org');
