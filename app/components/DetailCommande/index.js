@@ -152,7 +152,14 @@ export default class DetailCommande extends Component { // eslint-disable-line
                     }
                   </TableRowColumn>
                   <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>
-                  <TableRowColumn className={styles.smallCol}>{round(((tarif.prix + tarif.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</TableRowColumn>
+                  <TableRowColumn className={styles.smallCol}>
+                    {round(((tarif.prix + tarif.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}
+                    {tarifEnbaisse &&
+                      <span style={{ color: 'red' }}>
+                        {' '}<s>{round(((offre.tarifications[0].prix + offre.tarifications[0].recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</s>
+                      </span>
+                    }
+                  </TableRowColumn>
                   {!readOnly && (<TableRowColumn className={styles.lessSmallCol}>
                     <button onClick={() => augmenter(commandeId, contenu.offreId)} title="quantite + 1">+</button>
                     <button onClick={() => diminuer(commandeId, contenu.offreId)} title="quantite - 1">-</button>

@@ -136,7 +136,7 @@ class OrderValidate extends Component {
     } = this.props;
     return (
       <DetailCommande
-        contenus={commande.contenus.reverse()}
+        contenus={commande.contenus}
         montant={commande.montant.toFixed(2)}
         recolteFond={commande.recolteFond.toFixed(2)}
         offres={offres}
