@@ -28,7 +28,7 @@ const Semainier = ({ commandesIds, commandes, relaiId, titreCol, getCommandeInfo
 Semainier.propTypes = {
   getCommandeInfos: PropTypes.func.isRequired,
   pushState: PropTypes.func.isRequired,
-  commandes: PropTypes.array.isRequired,
+  commandes: PropTypes.object.isRequired,
   commandesIds: PropTypes.array.isRequired,
   relaiId: PropTypes.string.isRequired,
   titreCol: PropTypes.string.isRequired,

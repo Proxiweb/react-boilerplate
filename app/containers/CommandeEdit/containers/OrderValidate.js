@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import moment from 'moment';
@@ -8,16 +10,38 @@ import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
 import assign from 'lodash/assign';
 
 import DetailCommande from 'components/DetailCommande';
-import LivraisonSelector from './components/LivraisonSelector';
-import DistributionSelected from './components/DistributionSelected';
-import Paiement from './Paiement';
+import LivraisonSelector from 'containers/CommandeEdit/components/components/LivraisonSelector';
+import DistributionSelected from 'containers/CommandeEdit/components/components/DistributionSelected';
+import Paiement from 'containers/CommandeEdit/components/Paiement';
+
+import {
+  ajouter,
+  augmenter,
+  diminuer,
+  supprimer,
+  sauvegarder,
+  annuler,
+  setDistibution,
+} from 'containers/CommandeEdit/actions';
+
+import {
+  selectCommande,
+} from 'containers/CommandeEdit/selectors';
+
+import {
+  selectCommande as selectCommandeProxiweb,
+  selectCommandeContenus,
+  selectOffres,
+  selectProduits,
+  selectCommandeLivraisons,
+} from 'containers/Commande/selectors';
+
+import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
 
-export default class OrderValidate extends Component {
+class OrderValidate extends Component {
   static propTypes = {
-    commandeId: PropTypes.string.isRequired,
-    utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
@@ -25,13 +49,14 @@ export default class OrderValidate extends Component {
     commande: PropTypes.object.isRequired,
     livraisons: PropTypes.array.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
+    balance: PropTypes.number.isRequired,
+
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
-    balance: PropTypes.number.isRequired,
   }
 
   static contextTypes = {
@@ -41,7 +66,6 @@ export default class OrderValidate extends Component {
   constructor(props) {
     super(props);
     this.state = { view: 'panier' };
-    this.selectionnePlageHoraire = this.selectionnePlageHoraire.bind(this);
     this.showValidate = this.showValidate.bind(this);
     this.showDetailsCommande = this.showDetailsCommande.bind(this);
     this.showDistribSelected = this.showDistribSelected.bind(this);
@@ -50,13 +74,14 @@ export default class OrderValidate extends Component {
     this.showCancel = this.showCancel.bind(this);
   }
 
-  selectionnePlageHoraire(plageHoraire, livraisonId) {
-    this.props.setDistibution(this.props.commandeId, plageHoraire, livraisonId);
+  selectionnePlageHoraire = (plageHoraire, livraisonId) => {
+    this.props.setDistibution(this.props.params.commandeId, plageHoraire, livraisonId);
     this.setState({ view: 'panier' });
   }
 
-  showValidate() {
-    const { commande, sauvegarder, commandeId, utilisateurId } = this.props;
+  showValidate = () => {
+    const { commande, params } = this.props;
+    const { commandeId, utilisateurId } = params;
     const { palette } = this.context.muiTheme;
     return (
       <div className={styles.validation}>
@@ -65,13 +90,13 @@ export default class OrderValidate extends Component {
           style={{ marginTop: 20 }}
           labelColor={commande.modifiee ? 'black' : 'white'}
           backgroundColor={commande.modifiee ? palette.warningColor : palette.primary1Color}
-          onClick={() => sauvegarder(assign(commande, { commandeId, utilisateurId }))}
+          onClick={() => this.props.sauvegarder(assign(commande, { commandeId, utilisateurId }))}
         />
       </div>
     );
   }
 
-  showDistribSelected() {
+  showDistribSelected = () => {
     const { commande, livraisons } = this.props;
     const livraison = livraisons.find((liv) => liv.id === commande.livraisonId);
     if (!livraison) return <p>Livraison manquante</p>;
@@ -93,19 +118,22 @@ export default class OrderValidate extends Component {
     );
   }
 
-  showDistribButton() {
-    return (
-      <RaisedButton
-        label="Choisissez le jour de distribution"
-        icon={<DateRangeIcon />}
-        style={{ marginTop: 20 }}
-        onClick={() => this.setState({ view: 'distribution' })}
-      />
-    );
-  }
+  showDistribButton = () =>
+    <RaisedButton
+      label="Choisissez le jour de distribution"
+      icon={<DateRangeIcon />}
+      style={{ marginTop: 20 }}
+      onClick={() => this.setState({ view: 'distribution' })}
+    />;
 
-  showDetailsCommande() {
-    const { offres, commande, commandeId, produitsById, supprimer, augmenter, diminuer, commandeContenus } = this.props;
+  showDetailsCommande = () => {
+    const {
+      offres,
+      commande,
+      params,
+      produitsById,
+      commandeContenus,
+    } = this.props;
     return (
       <DetailCommande
         contenus={commande.contenus.reverse()}
@@ -113,17 +141,17 @@ export default class OrderValidate extends Component {
         recolteFond={commande.recolteFond.toFixed(2)}
         offres={offres}
         produits={produitsById}
-        supprimer={supprimer}
-        augmenter={augmenter}
-        diminuer={diminuer}
+        supprimer={this.props.supprimer}
+        augmenter={this.props.augmenter}
+        diminuer={this.props.diminuer}
         readOnly={commande.datePaiement}
         commandeContenus={commandeContenus}
-        commandeId={commandeId}
+        commandeId={params.commandeId}
       />
     );
   }
 
-  showLivraisonSelector() {
+  showLivraisonSelector = () => {
     const { commande, livraisons, params } = this.props;
     return (<LivraisonSelector
       livraisons={livraisons}
@@ -134,7 +162,7 @@ export default class OrderValidate extends Component {
     />);
   }
 
-  showCancel() {
+  showCancel = () => {
     const { commande } = this.props;
     return (
       <div style={{ textAlign: 'center' }}>
@@ -163,3 +191,28 @@ export default class OrderValidate extends Component {
     </div>);
   }
 }
+
+const mapStateToProps = createStructuredSelector({
+  commande: selectCommande(), // commande courante en cours d'édition
+  commandeProxiweb: selectCommandeProxiweb(),
+  offres: selectOffres(),
+  commandeContenus: selectCommandeContenus(),
+  produitsById: selectProduits(),
+  balance: selectMontantBalance(),
+  livraisons: selectCommandeLivraisons(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+    ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
+    augmenter: (commandeId, offreId) => dispatch(augmenter(commandeId, offreId)),
+    diminuer: (commandeId, offreId) => dispatch(diminuer(commandeId, offreId)),
+    supprimer: (offreId) => dispatch(supprimer(offreId)),
+    sauvegarder: (datas) => dispatch(sauvegarder(datas)),
+    annuler: (id, commandeId) => dispatch(annuler(id, commandeId)),
+    setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderValidate);

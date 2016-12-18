@@ -5,19 +5,3 @@
 .active {
   background-color: red;
 }
-
-.pdtSelected {
-  border-left: 4px solid black;
-}
-
-.panelproduits, .produits {
-  background-color: white;
-}
-.panelproduits {
-  border: solid 1px gray;
-}
-.produitsScr {
-  background-color: white;
-  overflow-y: scroll;
-  height: calc(100vh - 170px);
-}
