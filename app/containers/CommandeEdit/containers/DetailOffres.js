@@ -1,19 +1,35 @@
 import React, { PropTypes, Component } from 'react';
+import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import AddShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
-import AffichePrix from './components/AffichePrix';
+import { createStructuredSelector } from 'reselect';
+import {
+    selectOffresProduitAvecTotalAchats,
+    selectCommandeTypesProduits,
+    selectFournisseurProduit,
+    selectProduits,
+} from 'containers/Commande/selectors';
+import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+import { selectCommande } from 'containers/CommandeEdit/selectors';
+
+import {
+  ajouter,
+} from 'containers/CommandeEdit/actions';
+
+import AffichePrix from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
 
-export default class DetailOffres extends Component {
+class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array.isRequired,
-    contenus: PropTypes.array.isRequired,
-    produit: PropTypes.object.isRequired,
+    commande: PropTypes.object.isRequired,
+    utilisateurId: PropTypes.object.isRequired,
+    produitsById: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
-    utilisateurId: PropTypes.string.isRequired,
+    params: PropTypes.object.isRequired,
     fournisseur: PropTypes.object.isRequired,
-    commandeId: PropTypes.string.isRequired,
+    // commandeId: PropTypes.string.isRequired,
     ajouter: PropTypes.func.isRequired,
   }
 
@@ -30,7 +46,21 @@ export default class DetailOffres extends Component {
 
   render() {
     const { viewOffre } = this.state;
-    const { offres, ajouter, fournisseur, utilisateurId, commandeId, produit, typeProduits, contenus } = this.props;
+    const {
+      offres,
+      fournisseur,
+      produitsById,
+      typeProduits,
+      commande,
+      utilisateurId,
+      params,
+    } = this.props;
+
+    if (!offres || !typeProduits) return null;
+
+    const { produitId, commandeId } = params;
+    const produit = produitsById[produitId];
+    const contenus = commande.contenus;
     const muiTheme = this.context.muiTheme;
 
     return (
@@ -72,7 +102,10 @@ export default class DetailOffres extends Component {
                 {
                   enStock ?
                     <RaisedButton
-                      onClick={() => ajouter(commandeId, { offreId: offre.id, quantite: 1, commandeId, utilisateurId })}
+                      onClick={() => this.props.ajouter(
+                        commandeId,
+                        { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                      )}
                       primary
                       fullWidth
                       icon={<AddShoppingCart />}
@@ -86,3 +119,18 @@ export default class DetailOffres extends Component {
     );
   }
 }
+
+const mapStateToProps = createStructuredSelector({
+  typeProduits: selectCommandeTypesProduits(),
+  offres: selectOffresProduitAvecTotalAchats(),
+  fournisseur: selectFournisseurProduit(),
+  produitsById: selectProduits(),
+  utilisateurId: selectAuthUtilisateurId(),
+  commande: selectCommande(), // commande courante en cours d'édition
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailOffres);

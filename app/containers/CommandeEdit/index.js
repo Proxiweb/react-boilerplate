@@ -13,14 +13,12 @@ import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
 import {
-  selectCommandeProduitsByTypeProduit,
   selectCommandeTypesProduits,
   selectCommandeProduits,
   selectFournisseurProduit,
   selectProduits,
-  selectOffres,
+  // selectOffres,
   selectParams,
-  selectOffresProduitAvecTotalAchats,
   selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
@@ -28,26 +26,19 @@ import { selectCommande } from './selectors';
 import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
 import {
   initCommande,
-  ajouter,
-  augmenter,
-  diminuer,
-  supprimer,
-  sauvegarder,
-  annuler,
   load,
   setDistibution,
 } from './actions';
 import ProduitSelector from './containers/ProduitSelector';
 import OrderValidate from './containers/OrderValidate';
-import DetailOffres from './components/DetailOffres';
+import DetailOffres from './containers/DetailOffres';
 import styles from './styles.css';
 
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     typeProduits: PropTypes.array.isRequired,
     commandeProduits: PropTypes.array.isRequired,
-    offresProduitAvecTotalAchats: PropTypes.array,
-    offres: PropTypes.object.isRequired,
+    // offres: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -57,9 +48,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     load: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     commandeUtilisateur: PropTypes.object,
-    produitsById: PropTypes.object,
     commande: PropTypes.object,
-    fournisseur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
   }
 
@@ -71,11 +60,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     panierExpanded: false,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.setPanierState = this.setPanierState.bind(this);
-  }
   componentDidMount() {
     const { commande, init, params } = this.props;
 
@@ -130,87 +114,24 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     return `La commande${modifMsg1} n'a pas été validée... Souhaitez-vous ${modifMsg2} ?`;
   }
 
-  showOffres = () => {
-    const {
-      offresProduitAvecTotalAchats,
-      typeProduits,
-      utilisateurId,
-      fournisseur,
-      produitsById,
-      ajouter,  // eslint-disable-line
-      params,
-      commande,
-    } = this.props;
-
-    return (
-      <DetailOffres
-        offres={offresProduitAvecTotalAchats}
-        contenus={commande.contenus}
-        typeProduits={typeProduits}
-        utilisateurId={utilisateurId}
-        fournisseur={fournisseur}
-        produit={produitsById[params.produitId]}
-        commandeId={params.commandeId}
-        ajouter={ajouter}
-      />
-    );
-  }
-
-  // showPanier = () => {
-  //   const {
-  //     commande,
-  //     commandeProxiweb,
-  //     params,
-  //     utilisateurId,
-  //     produitId, // eslint-disable-line
-  //     produitsById,
-  //     offres,
-  //     commandeContenus,
-  //     balance,
-  //     livraisons,
-  //   } = this.props;
-  //
-  //   return (
-  //     <OrderValidate
-  //       commande={commande}
-  //       commandeProxiweb={commandeProxiweb}
-  //       commandeContenus={commandeContenus}
-  //       produitsById={produitsById}
-  //       offres={offres}
-  //       commandeId={params.commandeId}
-  //       utilisateurId={utilisateurId}
-  //       sauvegarder={sauvegarder}
-  //       annuler={annuler}
-  //       supprimer={supprimer}
-  //       augmenter={augmenter}
-  //       diminuer={diminuer}
-  //       setDistibution={setDistibution}
-  //       balance={balance}
-  //       livraisons={livraisons}
-  //       params={params}
-  //     />
-  //   );
-  // }
-
   render() {
     const {
       params,
-      typeProduits,
-      offresProduitAvecTotalAchats,
+      // typeProduits,
       commande,
-      offres,
+      // offres,
       supprimer, // eslint-disable-line
-      utilisateurId,
+      // utilisateurId,
     } = this.props;
 
-    if (!commande || !utilisateurId || !typeProduits) return null;
+    if (!commande) return null; // !utilisateurId
     const { panierExpanded } = this.state;
     const nbreProduits = commande.contenus.length;
 
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
-          title="CommandeEdit"
+          title="Nouvelle commande"
           meta={[
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
@@ -226,23 +147,23 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                 showExpandableButton={nbreProduits > 0}
               />
               <CardText expandable>
-                { (!commande || commande.contenus.length === 0 || !offres) ?
+                { (!commande || commande.contenus.length === 0) ? // || !offres
                   <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
                   <OrderValidate params={params} />
                 }
               </CardText>
             </Card>
-            {offresProduitAvecTotalAchats && typeProduits && !panierExpanded && this.showOffres()}
+            {!panierExpanded && <DetailOffres params={params} />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-4">
-            {offresProduitAvecTotalAchats && typeProduits && !panierExpanded && this.showOffres()}
+            {!panierExpanded && <DetailOffres params={params} />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-5" style={{ paddingLeft: 0, paddingRight: 0 }}>
-            { (!commande || commande.contenus.length === 0 || !offres) ?
+            { (!commande || commande.contenus.length === 0) ? // || !offres
               <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
               <OrderValidate params={params} />
             }
@@ -257,9 +178,8 @@ const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   commande: selectCommande(), // commande courante en cours d'édition
   commandeProduits: selectCommandeProduits(),
-  offres: selectOffres(),
+  // offres: selectOffres(),
   produitsById: selectProduits(),
-  offresProduitAvecTotalAchats: selectOffresProduitAvecTotalAchats(),
   utilisateurId: selectAuthUtilisateurId(),
   params: selectParams(),
   commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(), // commande utilisateur existante
@@ -273,12 +193,6 @@ function mapDispatchToProps(dispatch) {
     pushState: (url) => dispatch(push(url)),
     init: (commandeId) => dispatch(initCommande(commandeId)),
     load: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
-    ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
-    augmenter: (commandeId, offreId) => dispatch(augmenter(commandeId, offreId)),
-    diminuer: (commandeId, offreId) => dispatch(diminuer(commandeId, offreId)),
-    supprimer: (offreId) => dispatch(supprimer(offreId)),
-    sauvegarder: (datas) => dispatch(sauvegarder(datas)),
-    annuler: (id, commandeId) => dispatch(annuler(id, commandeId)),
     loadCommandes: () => dispatch(loadCommandes()),
     setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
   };

@@ -14,7 +14,7 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <FlatButton {...this.props} label="Login" href="/login" onClick={this.handleClick} />
+      <FlatButton {...this.props} label="Connexion" href="/login" onClick={this.handleClick} />
     );
   }
 }
