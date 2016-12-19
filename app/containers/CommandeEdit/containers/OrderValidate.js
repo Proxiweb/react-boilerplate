@@ -22,7 +22,6 @@ import {
   sauvegarder,
   annuler,
   setDistibution,
-  load,
 } from 'containers/CommandeEdit/actions';
 
 import {
@@ -35,7 +34,6 @@ import {
   selectOffres,
   selectProduits,
   selectCommandeLivraisons,
-  selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 
 import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
@@ -49,13 +47,11 @@ class OrderValidate extends Component {
     offres: PropTypes.object.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
-    commandeUtilisateur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
     livraisons: PropTypes.array.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
     balance: PropTypes.number.isRequired,
 
-    load: PropTypes.func.isRequired,
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
@@ -70,13 +66,6 @@ class OrderValidate extends Component {
 
   state = {
     view: 'panier',
-  }
-
-  componentDidMount() {
-    const { commandeUtilisateur } = this.props;
-    if (commandeUtilisateur) {
-      this.props.load(commandeUtilisateur);
-    }
   }
 
   selectionnePlageHoraire = (plageHoraire, livraisonId) => {
@@ -199,7 +188,6 @@ class OrderValidate extends Component {
 
 const mapStateToProps = createStructuredSelector({
   commande: selectCommande(), // commande courante en cours d'édition
-  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(), // commande utilisateur existante
   commandeProxiweb: selectCommandeProxiweb(),
   offres: selectOffres(),
   commandeContenus: selectCommandeContenus(),
@@ -211,7 +199,6 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    load: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
     ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
     augmenter: (commandeId, offreId) => dispatch(augmenter(commandeId, offreId)),
     diminuer: (commandeId, offreId) => dispatch(diminuer(commandeId, offreId)),

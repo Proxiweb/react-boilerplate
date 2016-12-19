@@ -4,7 +4,7 @@ import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import RaisedButton from 'material-ui/RaisedButton';
 import moment from 'moment';
 
-const commandePanel = ({ nom, dateCommande, clickHandler }) => (
+const commandePanel = ({ nom, dateCommande, clickHandler, label }) => (
   <Card style={{ marginBottom: 20 }}>
     <CardHeader
       title={nom}
@@ -13,7 +13,7 @@ const commandePanel = ({ nom, dateCommande, clickHandler }) => (
     />
     <CardActions>
       <RaisedButton
-        label="Commander"
+        label={label}
         icon={<ShoppingCartIcon />}
         fullWidth
         primary
@@ -25,6 +25,7 @@ const commandePanel = ({ nom, dateCommande, clickHandler }) => (
 
 commandePanel.propTypes = {
   nom: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   dateCommande: PropTypes.string.isRequired,
   clickHandler: PropTypes.func.isRequired,
 };

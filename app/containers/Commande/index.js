@@ -9,7 +9,13 @@ import {
   selectCommandesRelais,
   selectTypesProduits,
   selectFournisseurs,
+  selectCommandesUtilisateurs,
   selectProduits } from './selectors';
+
+import {
+  selectAuthUtilisateurId,
+} from 'containers/CompteUtilisateur/selectors';
+
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 import choux from './choux.jpg';
@@ -23,6 +29,8 @@ import { loadCommandes, ajouter } from './actions';
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
+    commandesUtilisateurs: PropTypes.object,
+    utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string,
     produits: PropTypes.object,
     fournisseurs: PropTypes.array,
@@ -53,6 +61,15 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               .map((typePdtId) => typesProduits[typePdtId].nom);
   }
 
+  commandeUtilisateurExiste = (commandeId) => {
+    const { commandesUtilisateurs, utilisateurId } = this.props;
+    return Object.keys(commandesUtilisateurs)
+            .find((key) =>
+            commandesUtilisateurs[key].utilisateurId === utilisateurId &&
+            commandesUtilisateurs[key].commandeId === commandeId
+          );
+  }
+
   isInWeek = (dateCommande, weekOffset = 0) => {
     const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
     const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
@@ -81,6 +98,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             relaiId={relaiId}
             pushState={pushState}
+            commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <Semainier
             titreCol="La semaine prochaine"
@@ -89,6 +107,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             relaiId={relaiId}
             pushState={pushState}
+            commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <Semainier
             titreCol="Dans quinze jours"
@@ -97,6 +116,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             relaiId={relaiId}
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             pushState={pushState}
+            commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <div className="col-xs">
             <Panel>Dans 3 semaines</Panel>
@@ -258,7 +278,9 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
 const mapStateToProps = createStructuredSelector({
   commandes: selectCommandesRelais(),
+  commandesUtilisateurs: selectCommandesUtilisateurs(),
   relaiId: selectRelaisId(),
+  utilisateurId: selectAuthUtilisateurId(),
   produits: selectProduits(),
   fournisseurs: selectFournisseurs(),
   typesProduits: selectTypesProduits(),
