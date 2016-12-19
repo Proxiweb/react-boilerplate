@@ -7,7 +7,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
@@ -17,7 +16,6 @@ import {
   selectCommandeProduits,
   selectFournisseurProduit,
   selectProduits,
-  // selectOffres,
   selectParams,
   selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
@@ -32,13 +30,13 @@ import {
 import ProduitSelector from './containers/ProduitSelector';
 import OrderValidate from './containers/OrderValidate';
 import DetailOffres from './containers/DetailOffres';
+import PanierCard from './containers/PanierCard';
 import styles from './styles.css';
 
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     typeProduits: PropTypes.array.isRequired,
     commandeProduits: PropTypes.array.isRequired,
-    // offres: PropTypes.object.isRequired,
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -119,7 +117,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       params,
       // typeProduits,
       commande,
-      // offres,
       supprimer, // eslint-disable-line
       // utilisateurId,
     } = this.props;
@@ -127,7 +124,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (!commande) return null; // !utilisateurId
     const { panierExpanded } = this.state;
     const nbreProduits = commande.contenus.length;
-
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
@@ -139,20 +135,14 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         <ProduitSelector params={params} setPanierState={this.setPanierState} />
         <MediaQuery query="(max-device-width: 1600px)">
           <div className="col-md-8 col-xs-12 col-lg-9">
-            <Card style={{ marginBottom: 20 }} onExpandChange={this.toggleState} expanded={panierExpanded}>
-              <CardHeader
-                title={<span>Panier : <strong>{commande.montant || 0} €</strong> - {nbreProduits} produits</span>}
-                subtitle={nbreProduits && !panierExpanded ? 'Cliquez ici pour valider la commande' : ''}
-                actAsExpander={nbreProduits > 0}
-                showExpandableButton={nbreProduits > 0}
-              />
-              <CardText expandable>
-                { (!commande || commande.contenus.length === 0) ? // || !offres
-                  <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
-                  <OrderValidate params={params} />
-                }
-              </CardText>
-            </Card>
+            <PanierCard
+              nbreProduits={nbreProduits}
+              panierExpanded={this.state.panierExpanded}
+              commandeId={params.commandeId}
+              contenus={commande.contenus}
+              params={params}
+              toggleState={this.toggleState}
+            />
             {!panierExpanded && <DetailOffres params={params} />}
           </div>
         </MediaQuery>
@@ -178,7 +168,6 @@ const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   commande: selectCommande(), // commande courante en cours d'édition
   commandeProduits: selectCommandeProduits(),
-  // offres: selectOffres(),
   produitsById: selectProduits(),
   utilisateurId: selectAuthUtilisateurId(),
   params: selectParams(),

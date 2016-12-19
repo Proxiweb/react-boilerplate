@@ -36,8 +36,7 @@ const ajouter = (state, commandeId, offre) => {
   if (idx === -1) {
     return update(state, { [commandeId]: { contenus: { $push: [offre] }, modifiee: { $set: changed } } });
   }
-
-  const nQte = state.contenus[idx].quantite + 1;
+  const nQte = state[commandeId].contenus[idx].quantite + 1;
   return update(state, { [commandeId]: { contenus: { [idx]: { quantite: { $set: nQte } } }, modifiee: { $set: changed } } });
 };
 

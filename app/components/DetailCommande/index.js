@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import round from 'lodash.round';
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
 import TrendingDownIcon from 'material-ui/svg-icons/action/trending-down';
 import IconButton from 'material-ui/IconButton';
 import styles from './styles.css';
@@ -56,8 +57,6 @@ export default class DetailCommande extends Component { // eslint-disable-line
       contenus,
       diminuer,
       readOnly,
-      montant,
-      recolteFond,
       augmenter,
       commandeId,
       commandeContenus,
@@ -65,27 +64,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
 
     const { muiTheme } = this.context;
 
-    const totaux = contenus.reduce((memo, contenu) => {
-      const offre = offres[contenu.offreId];
-
-      const commandeCommandeContenus =
-        Object.keys(commandeContenus).filter((key) =>
-          commandeContenus[key].commandeId === commandeId &&
-          commandeContenus[key].offreId === offre.id
-        ).map((key) => commandeContenus[key]);
-
-      const qteTotalOffre = commandeCommandeContenus
-                              .reduce((mem, item) => mem + item.quantite, 0);
-
-      const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
-      const qte = contenu.quantite + (contenu.qteRegul || 0);
-      return {
-        prixBase: memo.prixBase + round((offre.tarifications[0].prix * qte) / 100, 2),
-        recolteFondBase: memo.recolteFondBase + round((offre.tarifications[0].recolteFond * qte) / 100, 2),
-        prix: memo.prix + round((tarif.prix * qte) / 100, 2),
-        recolteFond: memo.recolteFond + round((tarif.recolteFond * qte) / 100, 2),
-      };
-    }, { prix: 0, recolteFond: 0, prixBase: 0, recolteFondBase: 0 });
+    const totaux = calculeTotauxCommande({ contenus, offres, commandeContenus, commandeId });
 
     return (
       <div>

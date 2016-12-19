@@ -19,33 +19,33 @@ export function* setDistibutionSaga() {
   }
 }
 
-export function* calculeTotaux() {
-  while(1) { // eslint-disable-line
-    const action = yield take([c.AJOUTER_OFFRE, c.SUPPRIMER_OFFRE, c.AUGMENTER_OFFRE, c.DIMINUER_OFFRE]);
-    const { commandeId } = action.payload;
-    const commande = yield select(selectCommandeEditDomain());
-    const offres = yield select(selectOffres());
-    const contenus = commande[commandeId].contenus.map((cont) => assign(
-      offres[cont.offreId], { quantite: cont.quantite, qteRegul: cont.qteRegul })
-    );
-
-    const totalCommande = contenus.reduce(
-      (memo, contenu) => memo + ((contenu.prix + contenu.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0))),
-      0
-    ) / 100;
-
-    const partDistribution = round(
-      contenus.reduce(
-        (memo, contenu) => memo + (contenu.recolteFond * (contenu.quantite + (contenu.qteRegul || 0))),
-        0
-      ) / 100,
-      2);
-    yield put(modifieTotaux(commandeId, totalCommande, partDistribution));
-  }
-}
+// export function* calculeTotaux() {
+//   while(1) { // eslint-disable-line
+//     const action = yield take([c.AJOUTER_OFFRE, c.SUPPRIMER_OFFRE, c.AUGMENTER_OFFRE, c.DIMINUER_OFFRE]);
+//     const { commandeId } = action.payload;
+//     const commande = yield select(selectCommandeEditDomain());
+//     const offres = yield select(selectOffres());
+//     const contenus = commande[commandeId].contenus.map((cont) => assign(
+//       offres[cont.offreId], { quantite: cont.quantite, qteRegul: cont.qteRegul })
+//     );
+//
+//     const totalCommande = contenus.reduce(
+//       (memo, contenu) => memo + ((contenu.prix + contenu.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0))),
+//       0
+//     ) / 100;
+//
+//     const partDistribution = round(
+//       contenus.reduce(
+//         (memo, contenu) => memo + (contenu.recolteFond * (contenu.quantite + (contenu.qteRegul || 0))),
+//         0
+//       ) / 100,
+//       2);
+//     yield put(modifieTotaux(commandeId, totalCommande, partDistribution));
+//   }
+// }
 
 // All sagas to be loaded
 export default [
   setDistibutionSaga,
-  calculeTotaux,
+  // calculeTotaux,
 ];

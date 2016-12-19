@@ -52,7 +52,7 @@ function detailPrix(offre, qteCommande) {
   }
   return (
     <span>
-      <span>{`${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ''}`}</span> :
+      <span>{`${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ' '}`}</span> :
       <span><strong>{round((tarif.prix + tarif.recolteFond) / 100, 2)} €</strong> {ancien}</span>
     </span>
   );
