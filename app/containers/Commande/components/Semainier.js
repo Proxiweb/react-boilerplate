@@ -17,7 +17,9 @@ const Semainier = ({ commandesIds, commandes, relaiId, titreCol, getCommandeInfo
             fav={false}
             key={idx}
             commandeId={`${key}`}
-            clickHandler={() => pushState(`/relais/${relaiId}/commandes/${key}`)}
+            clickHandler={() => pushState(
+              `/relais/${relaiId}/commandes/${key}`
+            )}
           />
         );
       }

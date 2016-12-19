@@ -24,7 +24,7 @@ class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array.isRequired,
     commande: PropTypes.object.isRequired,
-    utilisateurId: PropTypes.object.isRequired,
+    utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,

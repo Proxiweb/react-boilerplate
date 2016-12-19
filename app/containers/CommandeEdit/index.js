@@ -17,16 +17,17 @@ import {
   selectFournisseurProduit,
   selectProduits,
   selectParams,
-  selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
-import { selectCommande } from './selectors';
 import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+
+import { selectCommande } from './selectors';
+
 import {
   initCommande,
-  load,
   setDistibution,
 } from './actions';
+
 import ProduitSelector from './containers/ProduitSelector';
 import OrderValidate from './containers/OrderValidate';
 import DetailOffres from './containers/DetailOffres';
@@ -43,9 +44,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     init: PropTypes.func.isRequired,
     loadCommandes: PropTypes.func.isRequired,
 
-    load: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    commandeUtilisateur: PropTypes.object,
     commande: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
   }
@@ -64,8 +63,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (!commande) {
       init(params.commandeId);
     }
-    const { commandeUtilisateur, typeProduits, commandeProduits, utilisateurId, route, router } = this.props;
+    const { typeProduits, commandeProduits, utilisateurId, route, router } = this.props;
     router.setRouteLeaveHook(route, this.routerWillLeave);
+
     if (!utilisateurId) {
       this.props.pushState('/login');
     }
@@ -76,9 +76,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
 
     const { commandeId, relaiId } = params;
-    if (commandeUtilisateur) {
-      this.props.load(commandeUtilisateur);
-    }
 
     // sélectionner le premier produit du premier type
     const premierTypeProduit = typeProduits && typeProduits.length ? typeProduits[0] : null;
@@ -118,7 +115,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       // typeProduits,
       commande,
       supprimer, // eslint-disable-line
-      // utilisateurId,
+      utilisateurId,
     } = this.props;
 
     if (!commande) return null; // !utilisateurId
@@ -142,6 +139,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               contenus={commande.contenus}
               params={params}
               toggleState={this.toggleState}
+              utilisateurId={utilisateurId}
             />
             {!panierExpanded && <DetailOffres params={params} />}
           </div>
@@ -155,7 +153,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           <div className="col-lg-5" style={{ paddingLeft: 0, paddingRight: 0 }}>
             { (!commande || commande.contenus.length === 0) ? // || !offres
               <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
-              <OrderValidate params={params} />
+              <OrderValidate params={params} utilisateurId={utilisateurId} />
             }
           </div>
         </MediaQuery>
@@ -171,7 +169,6 @@ const mapStateToProps = createStructuredSelector({
   produitsById: selectProduits(),
   utilisateurId: selectAuthUtilisateurId(),
   params: selectParams(),
-  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(), // commande utilisateur existante
   fournisseur: selectFournisseurProduit(),
 });
 
@@ -181,7 +178,6 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     pushState: (url) => dispatch(push(url)),
     init: (commandeId) => dispatch(initCommande(commandeId)),
-    load: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
     loadCommandes: () => dispatch(loadCommandes()),
     setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
   };

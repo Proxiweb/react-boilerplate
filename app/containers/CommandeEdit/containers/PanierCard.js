@@ -8,19 +8,28 @@ import round from 'lodash.round';
 import {
   selectOffres,
   selectCommandeContenus,
+  selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 class PanierCard extends Component { // eslint-disable-line
   static propTypes = {
     toggleState: PropTypes.func.isRequired,
+    commandeUtilisateur: PropTypes.object.isRequired,
     commandeId: PropTypes.string.isRequired,
+    utilisateurId: PropTypes.array.isRequired,
     contenus: PropTypes.array.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     nbreProduits: PropTypes.number.isRequired,
     panierExpanded: PropTypes.bool.isRequired,
+  }
+
+  buildTitle = (nbreProduits, panierExpanded) => {
+    const { commandeUtilisateur } = this.props;
+    if (commandeUtilisateur && commandeUtilisateur.id) return '';
+    return nbreProduits && !panierExpanded ? 'Cliquez ici pour valider la commande' : '';
   }
 
   render() {
@@ -33,6 +42,7 @@ class PanierCard extends Component { // eslint-disable-line
       panierExpanded,
       params,
       toggleState,
+      utilisateurId,
     } = this.props;
 
     const totaux = calculeTotauxCommande({
@@ -45,15 +55,19 @@ class PanierCard extends Component { // eslint-disable-line
     return (
       <Card style={{ marginBottom: 20 }} onExpandChange={toggleState} expanded={panierExpanded}>
         <CardHeader
-          title={<span>Panier : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2) || 0} €</strong> - {nbreProduits} produit{nbreProduits > 1 && 's'}</span>}
-          subtitle={nbreProduits && !panierExpanded ? 'Cliquez ici pour valider la commande' : ''}
+          title={(
+            <span>
+              Panier : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2) || 0} €</strong> - {nbreProduits} produit{nbreProduits > 1 && 's'}
+            </span>
+          )}
+          subtitle={this.buildTitle(nbreProduits, panierExpanded)}
           actAsExpander={nbreProduits > 0}
           showExpandableButton={nbreProduits > 0}
         /> {/**/}
         <CardText expandable>
           { contenus.length === 0 ?
             <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
-            <OrderValidate params={params} />
+            <OrderValidate params={params} utilisateurId={utilisateurId} />
           }
         </CardText>
       </Card>
@@ -63,6 +77,7 @@ class PanierCard extends Component { // eslint-disable-line
 
 const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
+  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(),
   commandeContenus: selectCommandeContenus(),
 });
 
