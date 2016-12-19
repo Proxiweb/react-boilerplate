@@ -17,6 +17,7 @@ import {
   selectFournisseurProduit,
   selectProduits,
   selectParams,
+  selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
@@ -26,6 +27,7 @@ import { selectCommande } from './selectors';
 import {
   initCommande,
   setDistibution,
+  load,
 } from './actions';
 
 import ProduitSelector from './containers/ProduitSelector';
@@ -40,13 +42,15 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commandeProduits: PropTypes.array.isRequired,
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
-    pushState: PropTypes.func.isRequired,
-    init: PropTypes.func.isRequired,
-    loadCommandes: PropTypes.func.isRequired,
-
     params: PropTypes.object.isRequired,
     commande: PropTypes.object,
+    commandeUtilisateur: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
+
+    pushState: PropTypes.func.isRequired,
+    init: PropTypes.func.isRequired,
+    loadCommandeUtilisateur: PropTypes.func.isRequired,
+    loadCdes: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -58,21 +62,38 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   };
 
   componentDidMount() {
-    const { commande, init, params } = this.props;
+    const {
+      commande,
+      params,
+      typeProduits,
+      commandeProduits,
+      utilisateurId,
+      route,
+      router,
+      commandeUtilisateur,
+      init,
+      pushState,
+      loadCdes,
+      loadCommandeUtilisateur,
+    } = this.props;
 
     if (!commande) {
       init(params.commandeId);
     }
-    const { typeProduits, commandeProduits, utilisateurId, route, router } = this.props;
+
     router.setRouteLeaveHook(route, this.routerWillLeave);
 
     if (!utilisateurId) {
-      this.props.pushState('/login');
+      pushState('/login');
     }
 
     if (!commandeProduits) {
-      this.props.loadCommandes();
+      loadCdes();
       return;
+    }
+
+    if (commandeUtilisateur) {
+      loadCommandeUtilisateur(commandeUtilisateur);
     }
 
     const { commandeId, relaiId } = params;
@@ -112,7 +133,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   render() {
     const {
       params,
-      // typeProduits,
+      commandeUtilisateur,
       commande,
       supprimer, // eslint-disable-line
       utilisateurId,
@@ -140,6 +161,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               params={params}
               toggleState={this.toggleState}
               utilisateurId={utilisateurId}
+              commandeUtilisateur={commandeUtilisateur}
             />
             {!panierExpanded && <DetailOffres params={params} />}
           </div>
@@ -168,6 +190,7 @@ const mapStateToProps = createStructuredSelector({
   commandeProduits: selectCommandeProduits(),
   produitsById: selectProduits(),
   utilisateurId: selectAuthUtilisateurId(),
+  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(),
   params: selectParams(),
   fournisseur: selectFournisseurProduit(),
 });
@@ -178,7 +201,8 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     pushState: (url) => dispatch(push(url)),
     init: (commandeId) => dispatch(initCommande(commandeId)),
-    loadCommandes: () => dispatch(loadCommandes()),
+    loadCommandeUtilisateur: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
+    loadCdes: () => dispatch(loadCommandes()),
     setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
   };
 }

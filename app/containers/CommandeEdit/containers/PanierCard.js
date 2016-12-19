@@ -8,7 +8,6 @@ import round from 'lodash.round';
 import {
   selectOffres,
   selectCommandeContenus,
-  selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
@@ -77,7 +76,6 @@ class PanierCard extends Component { // eslint-disable-line
 
 const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
-  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(),
   commandeContenus: selectCommandeContenus(),
 });
 
