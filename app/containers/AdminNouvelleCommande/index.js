@@ -33,32 +33,23 @@ class NouvelleCommande extends Component { // eslint-disable-line
 
   componentDidMount() {
     const { fournisseursCommande, commande, livraisonsCommande } = this.props;
-    console.log('cde', commande);
     if (fournisseursCommande.length) {
-      this.setState({
-        ...this.state,
-        cdeFourns: fournisseursCommande,
-        parametres: {
-          dateLimite: new Date(commande.dateCommande),
-          heureLimite: new Date(commande.dateCommande),
-          montantMin: commande.montantMin,
-          montantMinRelai: commande.montantMinRelais,
-        },
-        distributions: livraisonsCommande,
-      });
+      this.initCmde(fournisseursCommande, commande, livraisonsCommande);
     }
-    // if (commande) {
-    //   this.setState({
-    //     ...this.state,
-    //     cdeFourns: commande.fournisseurs.map((id) => {
-    //       const fournisseur = fournisseurs.find((f) => {
-    //         return f.id === id;
-    //       });
-    //       if (!fournisseur) return null;
-    //       return { id, nom: fournisseur.nom };
-    //     }),
-    //   });
-    // }
+  }
+
+  initCmde = (fournisseursCommande, commande, livraisonsCommande) => {
+    this.setState({
+      ...this.state,
+      cdeFourns: fournisseursCommande,
+      parametres: {
+        dateLimite: new Date(commande.dateCommande),
+        heureLimite: new Date(commande.dateCommande),
+        montantMin: commande.montantMin,
+        montantMinRelai: commande.montantMinRelais,
+      },
+      distributions: livraisonsCommande,
+    });
   }
 
   addDistrib = (value) => {

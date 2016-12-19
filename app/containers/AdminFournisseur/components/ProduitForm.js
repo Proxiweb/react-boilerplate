@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
-import Paper from 'material-ui/Paper';
 import {
   TextField,
 } from 'redux-form-material-ui';

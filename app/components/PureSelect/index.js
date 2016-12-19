@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const PureSelect = ({ input, label, cols, datas, meta: { touched, error } }) => (
   <div className={cols ? `col-sm-${cols}` : null}>
-    <label>{label}</label>
+    <label htmlFor={label}>{label}</label>
     <div className="form-group">
       <select {...input} className="form-control">
         {Object.keys(datas).map((key) => <option key={key} value={key}>{datas[key]}</option>)}

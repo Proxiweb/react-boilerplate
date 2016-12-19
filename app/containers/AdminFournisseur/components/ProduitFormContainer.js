@@ -17,18 +17,17 @@ class ProduitFormContainer extends React.Component {
     pristine: PropTypes.bool.isRequired,
     // saveAccount: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired,
   }
 
-  handleSubmit = (values) => {
-    console.log(values);
-    // const saving = saveAccount(this.props.profile.id, values);
-    // try {
-    //   this.props.dispatch(saving);
-    // } catch (e) {
-    //   console.log(e);
-    // }
-  }
+  // handleSubmit = (values) => {
+  //   console.log(values);
+  //   const saving = saveAccount(this.props.profile.id, values);
+  //   try {
+  //     this.props.dispatch(saving);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   render() {
     const { pending, produit, pristine } = this.props;

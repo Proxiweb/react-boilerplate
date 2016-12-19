@@ -1,11 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-// import AvatarEditor from 'react-avatar-editor';
 import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
+// import draftToHtml from 'draftjs-to-html';
 import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import IconButton from 'material-ui/IconButton';
-import Toggle from 'material-ui/Toggle';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 
@@ -39,7 +37,7 @@ export default class Produit extends Component {
     editMode: false,
   }
 
-  onEditorChange = (editorContent) => console.log(editorContent)
+  // onEditorChange = (editorContent) => console.log(editorContent)
 
 
   getInitialHTML = () => {

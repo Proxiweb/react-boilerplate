@@ -22,7 +22,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 //     });
 // });
 
-const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => {
+const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { // eslint-disable-line
   return (
     <div className="row">
       <div className="col-md-12" style={{ textAlign: 'right', marginBottom: '1em', marginTop: '2em' }}>

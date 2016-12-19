@@ -1,18 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import Panel from 'components/Panel';
-import FlatButton from 'material-ui/FlatButton';
-import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-import AddIcon from 'material-ui/svg-icons/content/add';
 
 import { selectOffresDuProduit, selectTypesProduits } from 'containers/Commande/selectors';
 
 import Offre from './Offre';
 import OffreFormContainer from './OffreFormContainer';
 import OffresTopBar from './OffresTopBar';
-import styles from './styles.css';
 
 class Offres extends Component {
   static propTypes = {

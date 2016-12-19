@@ -7,7 +7,7 @@ import {
 
 import styles from './styles.css';
 import RaisedButton from 'material-ui/RaisedButton';
-import send from 'utils/send';
+// import send from 'utils/send';
 
 // const asyncValidate = (values) => new Promise((resolve, reject) => {
 //   // si l'utilisateur est identifié, l'email ne doit pas être testé

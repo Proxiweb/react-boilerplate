@@ -3,7 +3,7 @@ import { List, ListItem, makeSelectable } from 'material-ui/List';
 const SelectableList = makeSelectable(List);
 import styles from './styles.css';
 
-export default class NouvelleCommandeListeFournisseurs extends Component {
+export default class NouvelleCommandeListeFournisseurs extends Component { // eslint-disable-line
   static propTypes = {
     fournisseurs: PropTypes.array.isRequired,
     fournisseursCommande: PropTypes.array.isRequired,

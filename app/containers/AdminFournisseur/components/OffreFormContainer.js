@@ -17,20 +17,18 @@ class OffreFormContainer extends React.Component {
     pristine: PropTypes.bool.isRequired,
     // saveAccount: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired,
     handleToggeState: PropTypes.func.isRequired,
     tva: PropTypes.number.isRequired,
   }
 
-  handleSubmit = (values) => {
-    console.log(values);
-    // const saving = saveAccount(this.props.profile.id, values);
-    // try {
-    //   this.props.dispatch(saving);
-    // } catch (e) {
-    //   console.log(e);
-    // }
-  }
+  // handleSubmit = (values) => {
+  //   const saving = saveAccount(this.props.profile.id, values);
+  //   try {
+  //     this.props.dispatch(saving);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   render() {
     const { pending, offre, pristine, tva, handleToggeState } = this.props;
