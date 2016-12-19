@@ -40,9 +40,9 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   }
 
   componentDidMount() {
-    const { commandes, loadCommandes } = this.props; // eslint-disable-line
+    const { commandes, loadCommandes, relaiId } = this.props; // eslint-disable-line
     if (!commandes) {
-      loadCommandes();
+      loadCommandes({ relaiId });
     }
   }
 
