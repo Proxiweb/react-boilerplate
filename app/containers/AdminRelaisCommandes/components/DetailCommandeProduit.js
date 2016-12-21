@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
-import round from 'lodash.round';
+import round from 'lodash/round';
 
 
 export default class CommnandeParProduitFournisseur extends Component { // eslint-disable-line

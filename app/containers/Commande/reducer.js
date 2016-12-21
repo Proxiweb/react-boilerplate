@@ -8,8 +8,8 @@ import c from './constants';
 import cF from 'containers/AdminFournisseur/constants';
 import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
-import merge from 'lodash.merge';
-import omit from 'lodash.omit';
+import merge from 'lodash/merge';
+import omit from 'lodash/omit';
 import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
@@ -76,10 +76,17 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize([action.datas], arrayOf(schemas.COMMANDES));
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
+    case c.ASYNC_LOAD_RELAIS_SUCCESS: {
+      const datas = normalize(action.datas.relais, arrayOf(schemas.RELAIS));
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
+    }
+
     case cF.ASYNC_LOAD_FOURNISSEUR_SUCCESS: {
       const datas = normalize(action.datas, schemas.FOURNISSEURS);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
     }
+
+
     case c.AJOUTER:
       return ajouter(state, action);
     case c.NOUVEL_ACHAT: {

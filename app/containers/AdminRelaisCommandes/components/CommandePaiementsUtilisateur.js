@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import round from 'lodash.round';
+import round from 'lodash/round';
 
 import api from 'utils/stellarApi';
 export default class CommandePaiementsUtilisateur extends Component {

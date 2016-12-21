@@ -173,9 +173,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-5" style={{ paddingLeft: 0, paddingRight: 0 }}>
-            { (!commande || commande.contenus.length === 0) ? // || !offres
-              <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
-              <OrderValidate params={params} utilisateurId={utilisateurId} />
+            { (!commande || commande.contenus.length === 0)
+              ? <h1 style={{ textAlign: 'center' }}>Panier vide</h1>
+            : <OrderValidate params={params} utilisateurId={utilisateurId} panierExpanded={false} />
             }
           </div>
         </MediaQuery>

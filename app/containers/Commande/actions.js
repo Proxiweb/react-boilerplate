@@ -28,6 +28,13 @@ export const loadFournisseurs = (query) => ({
   msgPending: 'Chargement fournisseurs',
 });
 
+export const loadRelais = (query) => ({
+  type: findActionType('load_relais', c, 'START'),
+  url: 'relais',
+  query,
+  msgPending: 'Chargement relais',
+});
+
 export const loadUserCommandes = (userId) => ({
   type: findActionType('load_user_commandes', c, 'START'),
   url: `/utilisateurs/${userId}/commandes`,

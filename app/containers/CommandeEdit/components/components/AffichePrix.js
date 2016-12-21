@@ -1,8 +1,9 @@
 import React from 'react';
-import round from 'lodash.round';  // eslint-disable-line id-length
+import round from 'lodash/round';
+import memoize from 'lodash/memoize';
 import styles from './AffichePrix.css';
 
-export const trouveTarification = (tarifications, totalGlobal = 0, totalCommande = 0) => {
+const trouveTarificationFn = (tarifications, totalGlobal = 0, totalCommande = 0) => {
   const total = totalGlobal + totalCommande;
   return tarifications
           .sort((a, b) => a.qteMinRelais > b.qteMinRelais)
@@ -11,6 +12,8 @@ export const trouveTarification = (tarifications, totalGlobal = 0, totalCommande
             (!arr[idx + 1] || arr[idx + 1].qteMinRelais >= (total + 1))
           );
 };
+
+export const trouveTarification = memoize(trouveTarificationFn);
 
 const convertisseurs = {
   mg: (poids) => {

@@ -3,7 +3,7 @@ import StripeCheckout from 'react-stripe-checkout';
 import Slider from 'material-ui/Slider';
 import RaisedButton from 'material-ui/RaisedButton';
 import CreditCardIcon from 'material-ui/svg-icons/action/credit-card';
-import round from 'lodash.round';
+import round from 'lodash/round';
 import styles from './styles.css';
 
 export default class CarteBleue extends Component {

@@ -17,6 +17,7 @@ import {
 } from 'containers/CompteUtilisateur/selectors';
 
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import Paper from 'material-ui/Paper';
 import styles from './styles.css';
 import choux from './choux.jpg';
 import Semainier from './components/Semainier';
@@ -134,18 +135,19 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
     if (!commandes) {
       return (
-        <div className={`${styles.commandeEdit} row`}>
-          <div className="col-md-12">
-            <div style={{ margin: 'auto', width: '40px' }}>
+        <div className={`${styles.loader} row`}>
+          <Paper className="col-md-12">
+            <div style={{ margin: 'auto', width: '70px' }}>
               <RefreshIndicator
-                size={40}
+                size={70}
                 left={0}
-                top={10}
+                top={20}
                 status="loading"
                 style={{ display: 'inline-block', position: 'relative' }}
               />
             </div>
-          </div>
+            <div style={{ margin: '40px auto', width: '300px', textAlign: 'center' }}>Chargement des commandes...</div>
+          </Paper>
         </div>
       );
     }

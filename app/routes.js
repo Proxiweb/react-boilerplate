@@ -188,6 +188,21 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/choixrelais',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/ChoixRelais/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '/admin/relais/:relaiId/commandes',
       getComponent(location, cb) {
         const importModules = Promise.all([

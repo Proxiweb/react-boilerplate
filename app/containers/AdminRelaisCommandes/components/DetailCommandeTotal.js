@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import round from 'lodash.round';
+import round from 'lodash/round';
 import styles from './styles.css';
 
 export default class DetailCommandeTotal extends Component { // eslint-disable-line

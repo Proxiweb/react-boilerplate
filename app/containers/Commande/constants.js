@@ -10,6 +10,7 @@ const commandesConst = generateConstants('app/Commande', 'load_commandes');
 const crCdeConst = generateConstants('app/Commande', 'create_commande');
 const userCommandesConst = generateConstants('app/Commande', 'load_user_commandes');
 const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
+const relaisConst = generateConstants('app/Commande', 'load_relais');
 const AJOUTER = 'app/Commande/AJOUTER';
 const NOUVEL_ACHAT = 'NOUVEL_ACHAT';
 const SUPPRESSION_ACHAT = 'SUPPRESSION_ACHAT';
@@ -20,6 +21,7 @@ export default assign(
   userCommandesConst,
   fournisseursConst,
   crCdeConst,
+  relaisConst,
   {
     AJOUTER,
     NOUVEL_ACHAT,

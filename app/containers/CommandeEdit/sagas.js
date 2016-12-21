@@ -4,7 +4,7 @@ import c from './constants';
 import { selectCommandeEditDomain } from './selectors';
 import { selectOffres } from '../Commande/selectors';
 import { sauvegarder, modifieTotaux } from './actions';
-import round from 'lodash.round';
+import round from 'lodash/round';
 import assign from 'lodash/assign';
 
 // Individual exports for testing

@@ -1,7 +1,7 @@
 import c, { SET_MESSAGE, ADD_DESTINATAIRE, REMOVE_DESTINATAIRE } from './constants';
 import update from 'react-addons-update';
-import findIndex from 'lodash.findindex';
-import assign from 'lodash.assign';
+import findIndex from 'lodash/findIndex';
+import assign from 'lodash/assign';
 
 const initialState = {
   datas: [],

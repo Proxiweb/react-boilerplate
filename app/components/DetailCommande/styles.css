@@ -1,9 +1,13 @@
-.bordered {
+.bordered, .borderedFull {
   border-left: solid 1px gray;
   border-right: solid 1px gray;
   border-top: solid 1px gray;
   box-shadow: 2px 2px 2px silver;
   background-color: silver;
+}
+
+.borderedFull {
+  border-bottom: solid 1px gray;
 }
 
 .bigCol {

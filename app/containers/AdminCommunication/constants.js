@@ -1,5 +1,5 @@
 import generateConstants from 'utils/asyncSagaConstants';
-import assign from 'lodash.assign';
+import assign from 'lodash/assign';
 export const SET_MESSAGE = 'app/AdminCommunication/SET_MESSAGE';
 export const ADD_DESTINATAIRE = 'app/AdminCommunication/ADD_DESTINATAIRE';
 export const REMOVE_DESTINATAIRE = 'app/AdminCommunication/REMOVE_DESTINATAIRE';

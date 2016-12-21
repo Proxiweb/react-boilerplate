@@ -4,8 +4,8 @@
  *
  */
 import update from 'react-addons-update';
-import assign from 'lodash.assign';
-import findIndex from 'lodash.findindex';
+import assign from 'lodash/assign';
+import findIndex from 'lodash/findIndex';
 import c from './constants';
 
 

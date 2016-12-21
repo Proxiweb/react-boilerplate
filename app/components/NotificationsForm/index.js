@@ -9,21 +9,20 @@ class Notifications extends Component { // eslint-disable-line react/prefer-stat
     auth: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     saveProfile: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
   }
 
   handleToggle1 = (event, isInputChecked) => {
-    const { auth } = this.props; // saveProfile
+    const { auth, saveProfile } = this.props;
     const { veilleLivraison } = auth.notifications;
     const profile = { ...auth, notifications: { veilleLivraison, nouvelleCommande: isInputChecked } };
-    this.props.dispatch(saveAccount(auth.id, profile));
-    // saveProfile(auth.id, profile);
+    saveProfile(auth.id, profile, null);
   }
 
   handleToggle2 = (event, isInputChecked) => {
-    const { saveProfile, auth } = this.props;
+    const { auth, saveProfile } = this.props;
     const { nouvelleCommande } = auth.notifications;
-    saveProfile(auth.id, { ...auth, notifications: { nouvelleCommande, veilleLivraison: isInputChecked } });
+    const profile = { ...auth, notifications: { nouvelleCommande, veilleLivraison: isInputChecked } };
+    saveProfile(auth.id, profile, null);
   }
 
   render() {
@@ -37,12 +36,11 @@ class Notifications extends Component { // eslint-disable-line react/prefer-stat
               label="À chaque nouvelle commande"
               disabled={pending}
               onToggle={this.handleToggle1}
-              trackStyle={{ backgroundColor: 'red' }}
             />
           </div>
           <div className="col-md-6">
             <Toggle
-              toggled={auth.notifications.veilleLivraison && false}
+              toggled={auth.notifications.veilleLivraison}
               label="Les veilles de livraison"
               disabled={pending}
               onToggle={this.handleToggle2}
@@ -60,7 +58,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveProfile: (datas) => dispatch(saveAccount(datas)),
+  saveProfile: (id, datas, msgSuccess, redirect) => dispatch(saveAccount(id, datas, msgSuccess, redirect)),
   dispatch,
 });
 

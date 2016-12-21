@@ -1,5 +1,6 @@
 import { take, call, put, select, fork } from 'redux-saga/effects';
 import apiClient from 'utils/apiClient';
+import { push } from 'react-router-redux';
 import { addMessage, startGlobalPending, stopGlobalPending } from 'containers/App/actions';
 import { logout } from 'containers/Login/actions';
 import omit from 'lodash/omit';
@@ -40,7 +41,6 @@ export function* apiFetcherSaga(action) {
   const method = action.method || 'get';
   const options = { query, datas, headers, method };
 
-
   try {
     yield put(startGlobalPending());
     const reqUrl = url.slice(0, 4) === 'http' ? url : `/api/${url}`;
@@ -49,6 +49,10 @@ export function* apiFetcherSaga(action) {
     yield put(stopGlobalPending());
     if (msgSuccess) {
       yield put(addMessage({ type: 'success', text: msgSuccess }));
+    }
+
+    if (action.redirectSuccess) {
+      yield put(push(action.redirectSuccess));
     }
   } catch (exception) {
     yield put(stopGlobalPending());

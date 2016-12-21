@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import round from 'lodash.round';
+import round from 'lodash/round';
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import TrendingDownIcon from 'material-ui/svg-icons/action/trending-down';
-import IconButton from 'material-ui/IconButton';
 import styles from './styles.css';
 const headerColStyle = { color: 'black', fontSize: '14px' };
 import shader from 'shader';
@@ -32,14 +31,13 @@ export default class DetailCommande extends Component { // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
-    produits: PropTypes.object.isRequired,
     commandeContenus: PropTypes.object.isRequired,
+    commandeId: PropTypes.string,
+    produits: PropTypes.object.isRequired,
     diminuer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
     readOnly: PropTypes.bool.isRequired,
-    montant: PropTypes.string.isRequired,
-    recolteFond: PropTypes.string.isRequired,
-    commandeId: PropTypes.string,
+    panierExpanded: PropTypes.bool.isRequired,
   }
 
   static contextTypes = {
@@ -60,6 +58,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
       augmenter,
       commandeId,
       commandeContenus,
+      panierExpanded,
     } = this.props;
 
     const { muiTheme } = this.context;
@@ -71,7 +70,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
         <Table
           selectable={false}
           multiSelectable={false}
-          className={styles.bordered}
+          className={panierExpanded ? styles.borderedFull : styles.bordered}
           height={contenus.length > 4 ? 200 : null}
           fixedFooter
         >
@@ -148,11 +147,13 @@ export default class DetailCommande extends Component { // eslint-disable-line
             }
           </TableBody>
         </Table>
-        <div style={{ textAlign: 'center', padding: '2rem 0', backgroundColor: 'white', border: 'solid 1px gray' }}>
-          Total : <strong>{round(totaux.prix + totaux.recolteFond, 2)} €</strong>{' '}
-          {totaux.prixBase !== totaux.prix ? <span style={{ color: 'red' }}><s>{round(totaux.prixBase + totaux.recolteFondBase, 2)} €</s> </span> : ''}
-          ( dont <strong>{round(totaux.recolteFond, 2)}</strong> € pour la prestation de distribution )
-        </div>
+        {!panierExpanded && (
+          <div style={{ textAlign: 'center', padding: '1rem 0', backgroundColor: 'white', border: 'solid 1px gray' }}>
+            Total : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2)} €</strong>{' '}
+            {totaux.prixBase !== totaux.prix ? <span style={{ color: 'red' }}><s>{round(totaux.prixBase + totaux.recolteFondBase, 2).toFixed(2)} €</s> </span> : ''}
+            ( dont <strong>{round(totaux.recolteFond, 2).toFixed(2)}</strong> € pour la prestation de distribution )
+          </div>
+        )}
       </div>
     );
   }

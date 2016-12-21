@@ -10,7 +10,7 @@ import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import DetailsParFournisseur from './DetailsParFournisseur';
 import { selectPending } from 'containers/App/selectors';
 const SelectableList = makeSelectable(List);
-import capitalize from 'lodash.capitalize';
+import capitalize from 'lodash/capitalize';
 
 
 import DetailsParUtilisateur from './DetailsParUtilisateur';

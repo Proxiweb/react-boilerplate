@@ -51,6 +51,7 @@ class OrderValidate extends Component {
     livraisons: PropTypes.array.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
     balance: PropTypes.number.isRequired,
+    panierExpanded: PropTypes.bool.isRequired,
 
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
@@ -127,12 +128,11 @@ class OrderValidate extends Component {
       params,
       produitsById,
       commandeContenus,
+      panierExpanded,
     } = this.props;
     return (
       <DetailCommande
         contenus={commande.contenus}
-        montant={commande.montant.toFixed(2)}
-        recolteFond={commande.recolteFond.toFixed(2)}
         offres={offres}
         produits={produitsById}
         supprimer={this.props.supprimer}
@@ -141,6 +141,7 @@ class OrderValidate extends Component {
         readOnly={commande.datePaiement}
         commandeContenus={commandeContenus}
         commandeId={params.commandeId}
+        panierExpanded={panierExpanded}
       />
     );
   }
@@ -172,7 +173,7 @@ class OrderValidate extends Component {
   }
 
   render() {
-    const { commande, balance, commandeProxiweb } = this.props;
+    const { commande, commandeContenus, params, offres, balance, commandeProxiweb } = this.props;
     const { view } = this.state;
 
     return (<div>
@@ -181,7 +182,16 @@ class OrderValidate extends Component {
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
-      {commande.id && <Paiement montant={commande.montant} balance={balance} dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')} />}
+      {commande.id && (
+        <Paiement
+          contenus={commande.contenus}
+          commandeContenus={commandeContenus}
+          commandeId={params.commandeId}
+          balance={balance}
+          offres={offres}
+          dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')}
+        />
+      )}
     </div>);
   }
 }

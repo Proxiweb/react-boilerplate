@@ -1,13 +1,13 @@
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
-import round from 'lodash.round';
-
+import round from 'lodash/round';
+import memoize from 'lodash/memoize';
 /* calcule les totaux de la commande
 * @contenus commande contenus de l'utilisateur
 * @commandeContenus liste des commandeContenus
 * @offres offres de la commande
 * @commandeId No commande
 */
-export const calculeTotauxCommande = ({ contenus, commandeContenus, offres, commandeId }) =>
+const calculeTotauxCommandeFn = ({ contenus, commandeContenus, offres, commandeId }) =>
   contenus.reduce((memo, contenu) => {
     const offre = offres[contenu.offreId];
 
@@ -29,3 +29,5 @@ export const calculeTotauxCommande = ({ contenus, commandeContenus, offres, comm
       recolteFond: memo.recolteFond + round((tarif.recolteFond * qte) / 100, 2),
     };
   }, { prix: 0, recolteFond: 0, prixBase: 0, recolteFondBase: 0 });
+
+export const calculeTotauxCommande = memoize(calculeTotauxCommandeFn);

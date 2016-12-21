@@ -1,5 +1,5 @@
 import c from './constants';
-import merge from 'lodash.merge';
+import merge from 'lodash/merge';
 const initialState = {
   datas: [],
 };

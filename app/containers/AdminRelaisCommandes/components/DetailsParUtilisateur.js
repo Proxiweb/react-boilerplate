@@ -9,7 +9,7 @@ import {
   selectCommandeStellarAdresse,
 } from 'containers/Commande/selectors';
 import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
-import capitalize from 'lodash.capitalize';
+import capitalize from 'lodash/capitalize';
 import moment from 'moment';
 const format = 'DD/MM/YY à HH:mm';
 import styles from './styles.css';

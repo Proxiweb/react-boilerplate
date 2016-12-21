@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import CommandePanel from './CommandePanel';
-import uniq from 'lodash.uniq';
+import uniq from 'lodash/uniq';
 import Panel from 'components/Panel';
 
 const Semainier = ({ commandesIds, commandes, relaiId, titreCol, getCommandeInfos, pushState, commandeUtilisateurExiste }) =>

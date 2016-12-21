@@ -12,7 +12,7 @@ import MessageIcon from 'material-ui/svg-icons/communication/message';
 import { Column, Table } from 'react-virtualized';
 import shallowCompare from 'react-addons-shallow-compare';
 import moment from 'moment';
-import capitalize from 'lodash.capitalize';
+import capitalize from 'lodash/capitalize';
 import { loadUtilisateurs } from './actions';
 import { addDestinataire } from 'containers/AdminCommunication/actions';
 import SortIndicator from 'components/SortIndicator';

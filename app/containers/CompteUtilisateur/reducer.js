@@ -4,8 +4,8 @@
  *
  */
 
-import round from 'lodash.round';
-import omit from 'lodash.omit';
+import round from 'lodash/round';
+import omit from 'lodash/omit';
 
 import {
   loginConst as c,
@@ -20,6 +20,7 @@ import {
   progVirConst,
   loadVirConst,
   supprVirConst,
+  saveAccountConst as s,
 } from './constants';
 
 import update from 'react-addons-update';
@@ -79,6 +80,8 @@ function compteUtilisateurReducer(state = initialState, action) {
       return update(state, { error: { $set: action.msgError }, loading: { $set: false } });
     case c.ASYNC_LOGIN_SUCCESS:
       return update(state, { error: { $set: false }, loading: { $set: false }, auth: { $set: omit(action.datas.user, ['commandeContenus', 'commandes']) }, token: { $set: action.datas.token } });
+    case s.ASYNC_SAVE_ACCOUNT_SUCCESS:
+      return update(state, { auth: { $set: action.datas } });
     case progVirConst.ASYNC_PROGRAM_VIREMENT_SUCCESS:
       return update(state, { virements: { $push: [action.datas] } });
     case loadVirConst.ASYNC_LOAD_VIREMENTS_SUCCESS:

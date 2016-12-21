@@ -34,14 +34,16 @@ export const accountLoaded = (account) => ({
 export const saveAccount =
   (
     utilisateurId,
-    { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications },
-    msgSuccess = 'Profile sauvegardé'
+    { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications, relaiId },
+    msgSuccess = 'Profile sauvegardé',
+    redirectSuccess = null,
   ) => ({
     type: saveAccountConst.ASYNC_SAVE_ACCOUNT_START,
     url: `utilisateurs/${utilisateurId}`,
     method: 'put',
-    datas: { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications },
+    datas: { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications, relaiId },
     msgSuccess,
+    redirectSuccess,
   });
 
 export const programmerVirement = ({ utilisateurId, montant, type = 'virement' }) => ({

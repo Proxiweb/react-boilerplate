@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
-// import merge from 'lodash.merge';
-import uniq from 'lodash.uniq';
-import flatten from 'lodash.flatten';
+// import merge from 'lodash/merge';
+import uniq from 'lodash/uniq';
+import flatten from 'lodash/flatten';
 
 import { selectAuthUtilisateurId, selectUserId } from 'containers/CompteUtilisateur/selectors';
 /**

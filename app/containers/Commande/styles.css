@@ -10,3 +10,10 @@
   font-size: 1.2rem;
   border: solid 1px #aaa4a4;
 }
+
+.loader {
+  background-color: white;
+  height: 150px;
+  width: 500px;
+  margin: auto;
+}
