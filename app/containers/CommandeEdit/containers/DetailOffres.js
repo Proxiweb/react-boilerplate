@@ -73,7 +73,7 @@ class DetailOffres extends Component {
               label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
             />
           </div>
-          <div className={`${styles.produitTitre} col-md-12`}>{produit.nom}</div>
+          {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom}</div>}
           <div className="col-md-12">
             <div className="row" style={{ margin: 5 }}>
               <div className="col-md-6">
@@ -90,6 +90,7 @@ class DetailOffres extends Component {
         { viewOffre && offres.map((offre, idx) => {
           const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
           const enStock = offre.stock === null || offre.stock > 0;
+
           const offreCommande = contenus.find((cont) => cont.offreId === offre.id);
           const qteCommande = offreCommande ? offreCommande.quantite : 0;
 

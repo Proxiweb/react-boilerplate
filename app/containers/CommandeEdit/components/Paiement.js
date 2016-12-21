@@ -3,11 +3,12 @@ import ActionDoneIcon from 'material-ui/svg-icons/action/done';
 import AlertWarningIcon from 'material-ui/svg-icons/alert/warning';
 import shader from 'shader';
 import round from 'lodash/round';
+import styles from './styles.css';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 const buildMessage = (icon, msg, color) => (
-  <div style={{ padding: '1em', marginTop: '1em', border: `solid 5px ${color}` }}>
+  <div className={styles.message} style={{ border: `solid 5px ${color}` }}>
     <div className="row">
       <div className="col-md-2">
         {icon}

@@ -69,7 +69,7 @@ class ProduitSelector extends React.Component {
                   { borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
                   { borderLeft: 'none' }}
               >
-                {pdt.nom}
+                {pdt.nom.toUpperCase()}
               </ListItem>
               ))}
           </List>

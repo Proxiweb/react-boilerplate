@@ -2,3 +2,9 @@
   padding: 1em;
   margin-top: 1em;
 }
+
+.message {
+  padding: 1em;
+  margin-top: 1em;
+  background-color: white;
+}
