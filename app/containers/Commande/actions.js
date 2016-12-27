@@ -13,6 +13,13 @@ export const loadCommandes = (query) => ({
   msgPending: 'Chargement commandes',
 });
 
+export const loadCommande = (id, query) => ({
+  type: findActionType('load_commande', c, 'START'),
+  url: `commandes/${id}`,
+  query,
+  msgPending: 'Chargement commandes',
+});
+
 export const createCommande = (commande) => ({
   type: findActionType('create_commande', c, 'START'),
   url: `commandes${commande.id ? `/${commande.id}` : ''}`,

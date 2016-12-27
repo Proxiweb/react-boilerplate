@@ -69,12 +69,11 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_USER_COMMANDES_SUCCESS:
     case c.ASYNC_LOAD_COMMANDES_SUCCESS: {
       const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDES));
-      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
+      return update(state, { datas: { entities: { $set: datas.entities }, result: { $push: datas.result } }, pending: { $set: false } });
     }
-    case c.ASYNC_CREATE_COMMANDE_SUCCESS:
-    case c.LOAD_COMMANDE_SUCCESS: {
-      const datas = normalize([action.datas], arrayOf(schemas.COMMANDES));
-      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
+    case c.ASYNC_LOAD_COMMANDE_SUCCESS: {
+      const datas = normalize(action.datas, schemas.COMMANDES);
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: [datas.result] } }, pending: { $set: false } });
     }
     case c.ASYNC_LOAD_RELAIS_SUCCESS: {
       const datas = normalize(action.datas.relais, arrayOf(schemas.RELAIS));

@@ -36,6 +36,8 @@ import {
   selectCommandeLivraisons,
 } from 'containers/Commande/selectors';
 
+import { selectPending } from 'containers/App/selectors';
+
 import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
@@ -59,6 +61,7 @@ class OrderValidate extends Component {
     augmenter: PropTypes.func.isRequired,
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
   }
 
   static contextTypes = {
@@ -75,13 +78,19 @@ class OrderValidate extends Component {
   }
 
   showValidate = () => {
-    const { commande, params, utilisateurId } = this.props;
+    const { commande, params, utilisateurId, pending } = this.props;
     const { commandeId } = params;
     const { palette } = this.context.muiTheme;
+    let label = null;
+    if (commande.modifiee) {
+      label = pending ? 'Sauvegarde des modifications...' : 'Sauvegarder mes modifications';
+    } else {
+      label = pending ? 'Validation de la commande...' : 'Valider la commande';
+    }
     return (
       <div className={styles.validation}>
         <RaisedButton
-          label={`${commande.modifiee ? 'Sauvegarder mes modifications' : 'Valider la commande'}`}
+          label={label}
           style={{ marginTop: 20 }}
           labelColor={commande.modifiee ? 'black' : 'white'}
           backgroundColor={commande.modifiee ? palette.warningColor : palette.primary1Color}
@@ -158,11 +167,11 @@ class OrderValidate extends Component {
   }
 
   showCancel = () => {
-    const { commande } = this.props;
+    const { commande, pending } = this.props;
     return (
       <div style={{ textAlign: 'center' }}>
         <RaisedButton
-          label="Annuler la commande"
+          label={`${pending ? 'Annuler' : 'Annulation de'} la commande`}
           secondary
           style={{ marginTop: 20 }}
           onClick={() => this.props.annuler(commande.id, commande.commandeId)}
@@ -173,7 +182,7 @@ class OrderValidate extends Component {
   }
 
   render() {
-    const { commande, commandeContenus, params, offres, balance, commandeProxiweb } = this.props;
+    const { commande, commandeContenus, params, offres, balance, commandeProxiweb, pending } = this.props;
     const { view } = this.state;
 
     return (<div>
@@ -189,6 +198,7 @@ class OrderValidate extends Component {
           commandeId={params.commandeId}
           balance={balance}
           offres={offres}
+          pending={pending}
           dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')}
         />
       )}
@@ -204,6 +214,7 @@ const mapStateToProps = createStructuredSelector({
   produitsById: selectProduits(),
   balance: selectMontantBalance(),
   livraisons: selectCommandeLivraisons(),
+  pending: selectPending(),
 });
 
 function mapDispatchToProps(dispatch) {

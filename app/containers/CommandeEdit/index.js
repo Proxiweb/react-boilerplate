@@ -21,6 +21,7 @@ import {
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 
 import { selectCommande } from './selectors';
 
@@ -139,6 +140,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       utilisateurId,
     } = this.props;
 
+    const muiTheme = this.context.muiTheme;
+
     if (!commande) return null; // !utilisateurId
     const { panierExpanded } = this.state;
     const nbreProduits = commande.contenus.length;
@@ -172,10 +175,17 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
-          <div className="col-lg-5" style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <div className="col-lg-5">
             { (!commande || commande.contenus.length === 0)
-              ? <h1 style={{ textAlign: 'center' }}>Panier vide</h1>
-            : <OrderValidate params={params} utilisateurId={utilisateurId} panierExpanded={false} />
+              ? <div className={`row ${styles.panel}`}>
+                <div className="col-md-5" style={{ textAlign: 'right' }}>
+                  <ShoppingCart style={{ height: 100, width: 100, color: muiTheme.appBar.color }} />
+                </div>
+                <div className="col-md-5">
+                  <h1 style={{ textAlign: 'left', color: muiTheme.appBar.color }}>Panier vide</h1>
+                </div>
+              </div>
+              : <OrderValidate params={params} utilisateurId={utilisateurId} panierExpanded={false} />
             }
           </div>
         </MediaQuery>

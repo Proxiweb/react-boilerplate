@@ -7,6 +7,7 @@ import assign from 'lodash/assign';
 import generateConstants from 'utils/asyncSagaConstants';
 
 const commandesConst = generateConstants('app/Commande', 'load_commandes');
+const commandeConst = generateConstants('app/Commande', 'load_commande');
 const crCdeConst = generateConstants('app/Commande', 'create_commande');
 const userCommandesConst = generateConstants('app/Commande', 'load_user_commandes');
 const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
@@ -18,6 +19,7 @@ const MODIF_ACHAT = 'MODIF_ACHAT';
 
 export default assign(
   commandesConst,
+  commandeConst,
   userCommandesConst,
   fournisseursConst,
   crCdeConst,

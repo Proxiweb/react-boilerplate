@@ -22,14 +22,13 @@ import styles from './styles.css';
 
 class DetailOffres extends Component {
   static propTypes = {
-    offres: PropTypes.array.isRequired,
+    offres: PropTypes.array,
     commande: PropTypes.object.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
-    fournisseur: PropTypes.object.isRequired,
-    // commandeId: PropTypes.string.isRequired,
+    fournisseur: PropTypes.object,
     ajouter: PropTypes.func.isRequired,
   }
 
@@ -73,7 +72,7 @@ class DetailOffres extends Component {
               label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
             />
           </div>
-          {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom}</div>}
+          {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
           <div className="col-md-12">
             <div className="row" style={{ margin: 5 }}>
               <div className="col-md-6">

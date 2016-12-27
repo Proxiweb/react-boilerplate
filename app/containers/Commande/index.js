@@ -16,6 +16,11 @@ import {
   selectAuthUtilisateurId,
 } from 'containers/CompteUtilisateur/selectors';
 
+import {
+  selectLocationState,
+  selectPending,
+} from 'containers/App/selectors';
+
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Paper from 'material-ui/Paper';
 import styles from './styles.css';
@@ -25,7 +30,7 @@ import Offre from 'components/Offre';
 import Panel from 'components/Panel';
 import moment from 'moment';
 
-import { loadCommandes, ajouter } from './actions';
+import { loadCommandes, ajouter, loadCommande } from './actions';
 
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -34,17 +39,18 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string,
     produits: PropTypes.object,
+    route: PropTypes.object,
     fournisseurs: PropTypes.array,
     typesProduits: PropTypes.object,
     loadCommandes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
   }
 
   componentDidMount() {
-    const { commandes, loadCommandes, relaiId } = this.props; // eslint-disable-line
-    if (!commandes) {
-      loadCommandes({ relaiId });
-    }
+    const { commandes, loadCommandes, relaiId, loadCommande, route } = this.props; // eslint-disable-line
+    loadCommandes({ relaiId });
+    // loadCommande('2cfdf815-3e1e-4223-87e2-c3022e596ee7');
   }
 
   getCommandeInfos = (id) => {
@@ -87,7 +93,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       );
 
   render() {
-    const { commandes, relaiId, pushState } = this.props;
+    const { commandes, relaiId, pushState, pending } = this.props;
 
     if (commandes && Object.keys(commandes).length > 0) {
       return (
@@ -99,6 +105,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             relaiId={relaiId}
             pushState={pushState}
+            pending={pending}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <Semainier
@@ -107,6 +114,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             commandes={commandes}
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             relaiId={relaiId}
+            pending={pending}
             pushState={pushState}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
@@ -115,6 +123,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             commandesIds={this.filterByWeek(2)}
             commandes={commandes}
             relaiId={relaiId}
+            pending={pending}
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             pushState={pushState}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
@@ -287,12 +296,15 @@ const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseurs(),
   typesProduits: selectTypesProduits(),
   asyncState: selectAsyncState(),
+  route: selectLocationState(),
+  pending: selectPending(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     loadCommandes: (page) => dispatch(loadCommandes(page)),
+    loadCommande: (id) => dispatch(loadCommande(id)),
     pushState: (url) => dispatch(push(url)),
     ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),
   };

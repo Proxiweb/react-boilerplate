@@ -3,7 +3,16 @@ import CommandePanel from './CommandePanel';
 import uniq from 'lodash/uniq';
 import Panel from 'components/Panel';
 
-const Semainier = ({ commandesIds, commandes, relaiId, titreCol, getCommandeInfos, pushState, commandeUtilisateurExiste }) =>
+const Semainier = ({
+  commandesIds,
+  commandes,
+  relaiId,
+  titreCol,
+  getCommandeInfos,
+  pushState,
+  commandeUtilisateurExiste,
+  pending,
+}) =>
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
     <div>
@@ -18,6 +27,7 @@ const Semainier = ({ commandesIds, commandes, relaiId, titreCol, getCommandeInfo
             fav={false}
             key={idx}
             commandeId={`${key}`}
+            disabled={pending}
             clickHandler={() => pushState(
               `/relais/${relaiId}/commandes/${key}`
             )}
@@ -36,6 +46,7 @@ Semainier.propTypes = {
   commandesIds: PropTypes.array.isRequired,
   relaiId: PropTypes.string.isRequired,
   titreCol: PropTypes.string.isRequired,
+  pending: PropTypes.bool.isRequired,
 };
 
 export default Semainier;

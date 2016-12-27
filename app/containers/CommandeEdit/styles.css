@@ -5,3 +5,8 @@
 .active {
   background-color: red;
 }
+
+.panel {
+  background-color: white;
+  padding: 1rem;
+}

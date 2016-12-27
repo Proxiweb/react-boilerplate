@@ -36,7 +36,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
     produits: PropTypes.object.isRequired,
     diminuer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool.isRequired,
+    readOnly: PropTypes.bool,
     panierExpanded: PropTypes.bool.isRequired,
   }
 
@@ -109,10 +109,9 @@ export default class DetailCommande extends Component { // eslint-disable-line
                 <TableRow key={idx} selectable={false} displayBorder>
                   <TableRowColumn
                     className={styles.bigCol}
-                    tooltip="test"
                   >
                     <span>
-                      {produits[offre.produitId].nom}{` ${offre.description || ''}`}
+                      {produits[offre.produitId].nom.toUpperCase()}{` ${offre.description || ''}`}
                       {offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}
                     </span>
                     {tarifEnbaisse &&

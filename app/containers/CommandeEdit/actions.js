@@ -16,7 +16,6 @@ export const sauvegarder = (datas) => ({
   url: datas.id ? `commande_utilisateurs/${datas.id}` : 'commande_utilisateurs',
   method: datas.id ? 'put' : 'post',
   msgPending: 'Sauvegarde commande',
-  msgSuccess: 'Commande sauvegardée',
   datas: { ...datas, modifiee: false },
 });
 

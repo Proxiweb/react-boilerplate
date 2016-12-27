@@ -76,4 +76,5 @@ export function* apiFetcherSaga(action) {
 export default [
   apiListenerSaga,
   apiFetcherSaga,
+  // reloadCommandeSaga,
 ];
