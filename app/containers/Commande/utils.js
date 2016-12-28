@@ -2,7 +2,7 @@ import { trouveTarification } from 'containers/CommandeEdit/components/component
 import round from 'lodash/round';
 import memoize from 'lodash/memoize';
 /* calcule les totaux de la commande
-* @contenus commande contenus de l'utilisateur
+* @contenus commande contenus de(s) l'utilisateur(s)
 * @commandeContenus liste des commandeContenus
 * @offres offres de la commande
 * @commandeId No commande

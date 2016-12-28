@@ -4,7 +4,8 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'mate
 
 export default class DetailsCommande extends Component { // eslint-disable-line
   static propTypes = {
-    contenus: PropTypes.object.isRequired,
+    contenus: PropTypes.array.isRequired,
+    commandeContenus: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
   }
 
@@ -13,7 +14,7 @@ export default class DetailsCommande extends Component { // eslint-disable-line
   };
 
   render() {
-    const { produits, contenus } = this.props;
+    const { produits, contenus, commandeContenus } = this.props;
     const { muiTheme } = this.context;
     return (
       <Table selectable={false}>
@@ -34,6 +35,11 @@ export default class DetailsCommande extends Component { // eslint-disable-line
                 key={key}
                 produit={pdt}
                 contenus={contenus.filter((c) => c.offre.produitId === pdt.id)}
+                qteTotalOffre={
+                  commandeContenus
+                    .filter((c) => c.offre.produitId === pdt.id)
+                    .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)
+                }
                 offre={contenus.find((c) => c.offre.produitId === pdt.id).offre}
               />))
           }

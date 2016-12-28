@@ -7,6 +7,7 @@ import {
   selectFournisseursCommande,
   selectCommandeProduits,
   selectCommandeStellarAdresse,
+  selectOffres,
 } from 'containers/Commande/selectors';
 import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
@@ -16,12 +17,15 @@ import styles from './styles.css';
 import DetailCommande from './DetailCommande';
 import DetailCommandeTotal from './DetailCommandeTotal';
 import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 class DetailsParUtilisateur extends Component { // eslint-disable-line
   static propTypes = {
     commandeUtilisateur: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     contenus: PropTypes.object.isRequired,
+    offres: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
     utilisateur: PropTypes.object.isRequired,
     produits: PropTypes.array.isRequired,
     commandeStellarAdresse: PropTypes.string.isRequired,
@@ -33,12 +37,15 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
       utilisateur,
       contenus,
       produits,
+      params,
+      offres,
       commandeContenus,
       commandeUtilisateur,
       utilisateurStellarAdresse,
       commandeStellarAdresse,
     } = this.props;
-
+    const contenusUtilisateur = commandeContenus.map((key) => contenus[key]).filter((c) => c.utilisateurId === utilisateur.id);
+    const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
     return (
       <div className="row">
         <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
@@ -64,11 +71,14 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
         </div>
         <div className="col-md-12">
           <DetailCommande
-            contenus={commandeContenus.map((key) => contenus[key]).filter((c) => c.utilisateurId === utilisateur.id)}
+            contenus={contenusUtilisateur}
+            commandeContenus={commandeContenus.map((key) => contenus[key])}
             produits={produits}
             commandeUtilisateur={commandeUtilisateur}
+            commandeId={params.commandeId}
+            offres={offres}
           />
-          <DetailCommandeTotal total={commandeUtilisateur.montant} recolteFond={commandeUtilisateur.recolteFond} />
+          <DetailCommandeTotal totaux={totaux} />
           <CommandePaiementsUtilisateur
             adresseStellarUtilisateur={utilisateurStellarAdresse}
             adresseStellarCommande={commandeStellarAdresse}
@@ -82,6 +92,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
 const mapStateToProps = createStructuredSelector({
   contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),
+  offres: selectOffres(),
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
   utilisateurStellarAdresse: selectUtilisateurStellarAdresse(),
