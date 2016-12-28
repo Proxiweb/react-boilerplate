@@ -69,6 +69,12 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_USER_COMMANDES_SUCCESS:
     case c.ASYNC_LOAD_COMMANDES_SUCCESS: {
       const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDES));
+      if (!datas.entities.commandeUtilisateurs) {
+        datas.entities.commandeUtilisateurs = {};
+      }
+      if (!datas.entities.commandeContenus) {
+        datas.entities.commandeContenus = {};
+      }
       return update(state, { datas: { entities: { $set: datas.entities }, result: { $push: datas.result } }, pending: { $set: false } });
     }
     case c.ASYNC_LOAD_COMMANDE_SUCCESS: {

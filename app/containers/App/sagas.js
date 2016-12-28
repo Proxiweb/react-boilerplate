@@ -24,7 +24,6 @@ export function* apiFetcherSaga(action) {
 
   const {actionType, url, ...rest} = action;  // eslint-disable-line
   const sfx = `${actionSuffix[0]}/${actionSuffix[1]}/`;
-
   actionTypeSplt.pop();
   actionTypeSplt.push('SUCCESS');
   const success = sfx + Array.from(actionTypeSplt).join('_');
@@ -32,6 +31,7 @@ export function* apiFetcherSaga(action) {
   actionTypeSplt.pop();
   actionTypeSplt.push('ERROR');
   const err = sfx + actionTypeSplt.join('_');
+
 
   const state = yield select();
   const headers = state.compteUtilisateur.token ? { Authorization: `Bearer ${state.compteUtilisateur.token}`, ...action.headers } : { ...action.headers };
