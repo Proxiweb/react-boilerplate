@@ -1,18 +1,36 @@
 import React, { PropTypes, Component } from 'react';
 import DetailCommande from './DetailCommande';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import DetailCommandeTotal from './DetailCommandeTotal';
+
 export default class CommandeFournisseur extends Component { // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.object.isRequired,
     fournisseur: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.array.isRequired,
+    offres: PropTypes.object.isRequired,
     produits: PropTypes.array.isRequired,
+    commandeId: PropTypes.string.isRequired,
   }
 
   render() {
-    const { fournisseur, produits, contenus } = this.props;
+    const { fournisseur, produits, contenus, commandeContenus, commandeId, offres } = this.props;
+    const contenusFournisseur =
+      commandeContenus
+        .map((key) => contenus[key])
+        .filter((c) => produits.find((pdt) => pdt.id === c.offre.produitId).fournisseurId === fournisseur.id);
+    const totaux = calculeTotauxCommande({ contenus: contenusFournisseur, offres, commandeContenus, commandeId });
     return (
       <div>
         <h1>{fournisseur.nom}</h1>
-        <DetailCommande produits={produits} contenus={contenus} />
+        <DetailCommande
+          contenus={contenusFournisseur}
+          commandeContenus={contenusFournisseur}
+          produits={produits}
+          commandeId={commandeId}
+          offres={offres}
+        />
+        <DetailCommandeTotal totaux={totaux} />
       </div>
     );
   }

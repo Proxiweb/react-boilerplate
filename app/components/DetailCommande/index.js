@@ -4,6 +4,7 @@ import { trouveTarification } from 'containers/CommandeEdit/components/component
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import TrendingDownIcon from 'material-ui/svg-icons/action/trending-down';
+import buildCommandeRow from 'components/DetailCommandeColumns';
 import styles from './styles.css';
 const headerColStyle = { color: 'black', fontSize: '14px' };
 import shader from 'shader';
@@ -94,6 +95,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
               if (!contenu) return null;
               const offre = offres[contenu.offreId];
 
+
               const commandeCommandeContenus =
                 Object.keys(commandeContenus).filter((key) =>
                   commandeContenus[key].commandeId === commandeId &&
@@ -101,42 +103,23 @@ export default class DetailCommande extends Component { // eslint-disable-line
                 ).map((key) => commandeContenus[key]);
 
               const qteTotalOffre = commandeCommandeContenus
-                                      .reduce((memo, item) => memo + item.quantite, 0);
+                                      .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0);
 
               const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
-              const tarifEnbaisse = offre.tarifications[0].prix > tarif.prix;
+              const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
+
+              const rows = buildCommandeRow({
+                contenu,
+                idx,
+                offre,
+                tarifEnBaisse,
+                colorTrendingDown: shader(muiTheme.palette.tableHeaderBackgroundColor, -0.4),
+                tarif,
+                produit: produits[offre.produitId],
+              });
               return (
                 <TableRow key={idx} selectable={false} displayBorder>
-                  <TableRowColumn
-                    className={styles.bigCol}
-                  >
-                    <span>
-                      {produits[offre.produitId].nom.toUpperCase()}{` ${offre.description || ''}`}
-                      {offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}
-                    </span>
-                    {tarifEnbaisse &&
-                      <TrendingDownIcon
-                        style={{ verticalAlign: 'middle', color: shader(muiTheme.palette.tableHeaderBackgroundColor, -0.4) }}
-                        tooltip="Tarif en baisse"
-                      />}
-                  </TableRowColumn>
-                  <TableRowColumn className={styles.smallCol}>
-                    {(parseInt((tarif.prix + tarif.recolteFond), 10) / 100).toFixed(2)}
-                    {tarifEnbaisse &&
-                      <span style={{ color: 'red' }}>
-                        {' '}<s>{(parseInt((offre.tarifications[0].prix + offre.tarifications[0].recolteFond), 10) / 100).toFixed(2)}</s>
-                      </span>
-                    }
-                  </TableRowColumn>
-                  <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>
-                  <TableRowColumn className={styles.smallCol}>
-                    {round(((tarif.prix + tarif.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}
-                    {tarifEnbaisse &&
-                      <span style={{ color: 'red' }}>
-                        {' '}<s>{round(((offre.tarifications[0].prix + offre.tarifications[0].recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}</s>
-                      </span>
-                    }
-                  </TableRowColumn>
+                  { rows }
                   {!readOnly && (<TableRowColumn className={styles.lessSmallCol}>
                     <button onClick={() => augmenter(commandeId, contenu.offreId)} title="quantite + 1">+</button>
                     <button onClick={() => diminuer(commandeId, contenu.offreId)} title="quantite - 1">-</button>

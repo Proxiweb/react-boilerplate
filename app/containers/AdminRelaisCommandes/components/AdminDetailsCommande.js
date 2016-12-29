@@ -56,20 +56,23 @@ class AdminDetailsCommande extends Component {
         <div className="col-md-3">
           {!pending &&
             (<SelectableList value={location.pathname}>
-              {commandeUtilisateurs.map((cu, idx) => {
-                const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
-                if (!ut) return null;
-                return (
-                  <ListItem
-                    key={idx}
-                    primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
-                    value={`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`}
-                    onClick={() => pushState(`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`)}
-                    leftIcon={getIcon(cu)}
-                  />
-                );
+              {
+                commandeUtilisateurs
+                  .filter((cu) => cu.commandeId === params.commandeId)
+                  .map((cu, idx) => {
+                    const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
+                    if (!ut) return null;
+                    return (
+                      <ListItem
+                        key={idx}
+                        primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
+                        value={`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`}
+                        onClick={() => pushState(`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`)}
+                        leftIcon={getIcon(cu)}
+                      />
+                    );
+                  })
               }
-              )}
             </SelectableList>
             )
           }

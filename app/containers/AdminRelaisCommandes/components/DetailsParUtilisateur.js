@@ -74,7 +74,6 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             contenus={contenusUtilisateur}
             commandeContenus={commandeContenus.map((key) => contenus[key])}
             produits={produits}
-            commandeUtilisateur={commandeUtilisateur}
             commandeId={params.commandeId}
             offres={offres}
           />

@@ -6,6 +6,7 @@ import {
   selectCommandeContenus,
   selectFournisseursCommande,
   selectCommandeProduits,
+  selectOffres,
 } from 'containers/Commande/selectors';
 
 import CommandeFournisseur from './CommandeFournisseur';
@@ -14,12 +15,15 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
+    offres: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
   }
 
   render() {
-    const { commandeContenus, contenus, produits, fournisseurs } = this.props;
+    const { commandeContenus, contenus, produits, fournisseurs, offres, params } = this.props;
+    const { commandeId } = params;
     return (
       <div>
         {fournisseurs
@@ -30,7 +34,9 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
               fournisseur={fournisseur}
               produits={produits.filter((pdt) => pdt.fournisseurId === fournisseur.id)}
               commandeContenus={commandeContenus}
-              contenus={commandeContenus.map((key) => contenus[key])}
+              contenus={contenus}
+              offres={offres}
+              commandeId={commandeId}
             />
           ))}
       </div>
@@ -43,6 +49,7 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
+  offres: selectOffres(),
 });
 
 export default connect(mapStateToProps)(DetailsParFournisseur);

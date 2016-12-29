@@ -21,27 +21,27 @@ export default class DetailsCommande extends Component { // eslint-disable-line
         <TableHeader displaySelectAll={false} style={{ backgroundColor: muiTheme.palette.tableHeaderBackgroundColor }}>
           <TableRow>
             <TableHeaderColumn style={{ color: 'black' }}>Désignation</TableHeaderColumn>
-            <TableHeaderColumn style={{ color: 'black' }}>Quantité</TableHeaderColumn>
             <TableHeaderColumn style={{ color: 'black' }}>Prix</TableHeaderColumn>
-            <TableHeaderColumn style={{ color: 'black' }}>Recolte fond</TableHeaderColumn>
+            <TableHeaderColumn style={{ color: 'black' }}>Quantité</TableHeaderColumn>
             <TableHeaderColumn style={{ color: 'black' }}>Total</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {produits
-            .filter((pdt) => contenus.find((c) => c.offre.produitId === pdt.id))
-            .map((pdt, key) => (
-              <DetailCommandeProduit
-                key={key}
-                produit={pdt}
-                contenus={contenus.filter((c) => c.offre.produitId === pdt.id)}
-                qteTotalOffre={
-                  commandeContenus
-                    .filter((c) => c.offre.produitId === pdt.id)
-                    .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)
-                }
-                offre={contenus.find((c) => c.offre.produitId === pdt.id).offre}
-              />))
+          {commandeContenus &&
+            produits
+              .filter((pdt) => contenus.find((c) => c.offre.produitId === pdt.id))
+              .map((pdt, key) => (
+                <DetailCommandeProduit
+                  idx={key}
+                  produit={pdt}
+                  contenus={contenus.filter((c) => c.offre.produitId === pdt.id)}
+                  qteTotalOffre={
+                    commandeContenus
+                      .filter((c) => c.offre.produitId === pdt.id)
+                      .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)
+                  }
+                  offre={contenus.find((c) => c.offre.produitId === pdt.id).offre}
+                />))
           }
         </TableBody>
       </Table>
