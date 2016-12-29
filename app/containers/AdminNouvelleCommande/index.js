@@ -5,7 +5,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import { loadFournisseurs, createCommande } from 'containers/Commande/actions';
-import { selectFournisseurs, selectFournisseursCommande, selectCommandeLivraisons } from 'containers/Commande/selectors';
+import { selectFournisseursRelais, selectFournisseursCommande, selectCommandeLivraisons } from 'containers/Commande/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
 import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
@@ -154,7 +154,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseurs(),
+  fournisseurs: selectFournisseursRelais(),
   fournisseursCommande: selectFournisseursCommande(),
   livraisonsCommande: selectCommandeLivraisons(),
 });

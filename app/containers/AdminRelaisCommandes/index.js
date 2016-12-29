@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import classnames from 'classnames';
 
-import { loadCommandes } from 'containers/Commande/actions';
+import { loadCommandes, loadFournisseurs } from 'containers/Commande/actions';
 import { selectCommandesRelais, selectCommandeId } from 'containers/Commande/selectors';
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
@@ -22,6 +22,7 @@ class AdminRelaisCommandes extends Component {
     commandes: PropTypes.object.isRequired,
     commandeId: PropTypes.string.isRequired,
     loadCommandes: PropTypes.func.isRequired,
+    loadFournisseurs: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
@@ -29,6 +30,7 @@ class AdminRelaisCommandes extends Component {
 
   componentDidMount() {
     this.props.loadCommandes({ relaiId: this.props.params.relaiId });
+    this.props.loadFournisseurs();
   }
 
   newCommande = () => {
@@ -109,6 +111,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   loadCommandes: (query) => dispatch(loadCommandes(query)),
+  loadFournisseurs: () => dispatch(loadFournisseurs()),
   pushState: (url) => dispatch(push(url)),
 });
 
