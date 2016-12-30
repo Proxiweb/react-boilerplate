@@ -11,20 +11,22 @@ export default class NouvelleCommandeListeFournisseurs extends Component { // es
     delFourn: PropTypes.func.isRequired,
   }
 
+  handleChangeList = (event, value) =>
+    this.props.addFourn({ id: value.id, nom: value.nom });
+
   render() {
-    const { fournisseurs, fournisseursCommande, addFourn, delFourn } = this.props;
+    const { fournisseurs, fournisseursCommande, delFourn } = this.props;
     return (
       <div className={`row ${styles.panel}`}>
         <div className="col-md">
           <h4 style={{ textAlign: 'center' }}>Fournisseurs</h4>
           <div style={{ maxHeight: '300px', overflowY: 'scroll' }}>
-            <SelectableList value={location.pathname}>
+            <SelectableList value={location.pathname} onChange={this.handleChangeList}>
               {fournisseurs.map((fourn, idx) =>
                 <ListItem
                   key={idx}
                   primaryText={fourn.nom.toUpperCase()}
-                  value={`${fourn.id}`}
-                  onClick={() => addFourn({ id: fourn.id, nom: fourn.nom })}
+                  value={fourn}
                 />
               )}
             </SelectableList>

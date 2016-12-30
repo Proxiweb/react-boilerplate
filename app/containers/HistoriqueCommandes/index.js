@@ -39,11 +39,13 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
     }
   }
 
+  handleChangeList = (event, value) =>
+    this.props.pushState(value);
+
   render() {
     const {
       commandes,
       children,
-      pushState,
       userId,
       commandeId,
       params,
@@ -53,7 +55,7 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>
-          <SelectableList value={location.pathname}>
+          <SelectableList value={location.pathname} onChange={this.handleChangeList}>
             {commandes.map((cde, idx) =>
               <ListItem
                 key={idx}

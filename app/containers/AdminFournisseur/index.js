@@ -24,20 +24,22 @@ class Catalogue extends Component {
     this.props.load(this.props.params.fournisseurId);
   }
 
+  handleChangeList = (event, value) =>
+    this.props.pushState(value);
+
   render() {
-    const { produits, pushState, params } = this.props;
+    const { produits, params } = this.props;
     if (!produits) return null;
 
     return (
       <div className="row">
         <div className={classnames('col-md-2', styles.panel)}>
-          <SelectableList value={location.pathname}>
+          <SelectableList value={location.pathname} onChange={this.handleChangeList}>
             {produits.map((pdt, idx) =>
               <ListItem
                 key={idx}
                 primaryText={pdt.nom}
                 value={`/fournisseurs/${params.fournisseurId}/catalogue/${pdt.id}`}
-                onClick={() => pushState(`/fournisseurs/${params.fournisseurId}/catalogue/${pdt.id}`)}
               />
             )}
           </SelectableList>

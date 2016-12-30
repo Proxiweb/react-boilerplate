@@ -49,9 +49,8 @@ class AdminDetailsCommande extends Component {
     }
   }
 
-  handleChangeList = (event, value) => {
+  handleChangeList = (event, value) =>
     this.props.pushState(value);
-  }
 
   render() {
     const { pending, commandeUtilisateurs, params, utilisateurs, children } = this.props;
