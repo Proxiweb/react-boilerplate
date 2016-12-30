@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { List, ListItem } from 'material-ui/List';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
 import api from 'utils/stellarApi';
 
@@ -18,6 +18,8 @@ import styles from './styles.css';
 import classnames from 'classnames';
 import capitalize from 'lodash/capitalize';
 
+const SelectableList = makeSelectable(List);
+
 class PaiementsCommande extends Component {
   static propTypes = {
     commandeUtilisateurs: PropTypes.array.isRequired,
@@ -31,6 +33,7 @@ class PaiementsCommande extends Component {
   state = {
     paiements: {},
     totaux: {},
+    utilisateurSelected: null,
   }
 
   componentDidMount() {
@@ -50,22 +53,23 @@ class PaiementsCommande extends Component {
       commandeContenus,
       offres,
     } = this.props;
+
     const { commandeId } = params;
+
     api
       .loadAccount(accountId)
       .then((res) => {
         const bal = res.balances.find((b) => b.asset_code === 'PROXI');
         const totaux = calculeTotauxCommande({
-          contenus,
+          contenus: contenus.filter((c) => c.utilisateurId === id),
           offres,
           commandeContenus,
           commandeId,
         });
-        round(totaux.prix + totaux.recolteFond, 2);
         this.setState({
           ...this.state,
           paiements: {
-            ...this.state.paiement,
+            ...this.state.paiements,
             [id]: bal,
           },
           totaux: {
@@ -76,20 +80,27 @@ class PaiementsCommande extends Component {
       });
   }
 
+  handleChangeList = (event, value) =>
+    this.setState({
+      ...this.state,
+      utilisateurSelected: value,
+    });
+
   render() {
     const {
       commandeUtilisateurs,
       utilisateurs,
       params,
     } = this.props;
-    const { paiements, totaux } = this.state;
+
+    const { paiements, totaux, utilisateurSelected } = this.state;
 
     return (
       <div className="row">
         <div className={classnames('col-md-12', styles.panel)}>
           <div className="row">
-            <div className="col-md-4 col-md-offset-2">
-              <List>
+            <div className="col-md-4 col-md-offset-1">
+              <SelectableList value={utilisateurSelected} onChange={this.handleChangeList}>
                 {
                   commandeUtilisateurs
                   .filter((cu) => cu.commandeId === params.commandeId)
@@ -107,12 +118,13 @@ class PaiementsCommande extends Component {
                            ${totaux[ut.id] ? ` - ${totaux[ut.id].toFixed(2)} €` : ''}
                           `
                         }
+                        value={ut.id}
                         leftIcon={cu.datePaiement ? null : <PastilleIcon color={iconColor} />}
                       />
                   );
                   })
                 }
-              </List>
+              </SelectableList>
             </div>
             <div className="col-md-4">
             </div>

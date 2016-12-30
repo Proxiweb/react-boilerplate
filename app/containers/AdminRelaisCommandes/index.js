@@ -46,12 +46,14 @@ class AdminRelaisCommandes extends Component {
 
   }
 
-  handleChangeList = (event, value) =>
-    this.props.pushState(value);
+  handleChangeList = (event, value) => {
+    const { relaiId, action } = this.params;
+    this.props.pushState(`/admin/relais/${relaiId}/commandes/${value}${action === 'edit' ? '/edit' : ''}`);
+  }
 
   render() {
-    const { commandes, params, commandeId } = this.props;
-    const { relaiId, action } = params;
+    const { commandes, params } = this.props;
+    const { action, commandeId } = params;
     if (!commandes) return null;
     const commande = commandes ? commandes[commandeId] : null;
     return (
@@ -80,12 +82,12 @@ class AdminRelaisCommandes extends Component {
               <RemoveIcon />
             </IconButton>}
           </div>
-          <SelectableList value={location.pathname} onChange={this.handleChangeList}>
+          <SelectableList value={commandeId} onChange={this.handleChangeList}>
             {Object.keys(commandes).map((key, idx) =>
               <ListItem
                 key={idx}
                 primaryText={moment(commandes[key].dateCommande).format('DD/MM')}
-                value={`/admin/relais/${relaiId}/commandes/${key}${action === 'edit' && key === commandeId ? '/edit' : ''}`}
+                value={key}
               />
             )}
           </SelectableList>
