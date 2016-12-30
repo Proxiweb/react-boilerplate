@@ -88,7 +88,7 @@ class PanierCard extends Component { // eslint-disable-line
               Panier : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2) || 0} €</strong>
               {panierExpanded
                 ? <span> (dont <strong>{round(totaux.recolteFond, 2).toFixed(2)} €</strong> pour la prestation de distribution)</span>
-              : ` - ${nbreProduits} produit${nbreProduits > 1 && 's'}`
+              : ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}`
               }
               {msgPaiement}
             </span>
