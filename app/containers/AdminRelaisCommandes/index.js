@@ -47,7 +47,7 @@ class AdminRelaisCommandes extends Component {
   }
 
   handleChangeList = (event, value) => {
-    const { relaiId, action } = this.params;
+    const { relaiId, action } = this.props.params;
     this.props.pushState(`/admin/relais/${relaiId}/commandes/${value}${action === 'edit' ? '/edit' : ''}`);
   }
 
