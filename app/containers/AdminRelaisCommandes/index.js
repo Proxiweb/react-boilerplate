@@ -20,7 +20,7 @@ const SelectableList = makeSelectable(List);
 class AdminRelaisCommandes extends Component {
   static propTypes = {
     commandes: PropTypes.object.isRequired,
-    commandeId: PropTypes.string.isRequired,
+    commandeId: PropTypes.string,
     loadCommandes: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -46,8 +46,11 @@ class AdminRelaisCommandes extends Component {
 
   }
 
+  handleChangeList = (event, value) =>
+    this.props.pushState(value);
+
   render() {
-    const { commandes, pushState, params, commandeId } = this.props;
+    const { commandes, params, commandeId } = this.props;
     const { relaiId, action } = params;
     if (!commandes) return null;
     const commande = commandes ? commandes[commandeId] : null;
@@ -77,13 +80,12 @@ class AdminRelaisCommandes extends Component {
               <RemoveIcon />
             </IconButton>}
           </div>
-          <SelectableList value={location.pathname}>
+          <SelectableList value={location.pathname} onChange={this.handleChangeList}>
             {Object.keys(commandes).map((key, idx) =>
               <ListItem
                 key={idx}
                 primaryText={moment(commandes[key].dateCommande).format('DD/MM')}
                 value={`/admin/relais/${relaiId}/commandes/${key}${action === 'edit' && key === commandeId ? '/edit' : ''}`}
-                onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${key}`)}
               />
             )}
           </SelectableList>

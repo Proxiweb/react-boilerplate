@@ -5,10 +5,11 @@ import round from 'lodash/round';
 import styles from './styles.css';
 
 const buildCommandeRow =
-  ({ contenu, tarifEnBaisse, produit, offre, colorTrendingDown, tarif }) =>
+  ({ contenu, tarifEnBaisse, produit, offre, colorTrendingDown, tarif, idx }) =>
     [
       <TableRowColumn
         className={styles.bigCol}
+        key={idx}
       >
         <span>
           {produit.nom.toUpperCase()}{` ${offre.description || ''}`}

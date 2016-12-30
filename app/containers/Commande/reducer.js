@@ -77,6 +77,7 @@ function commandeReducer(state = initialState, action) {
       }
       return update(state, { datas: { entities: { $set: datas.entities }, result: { $push: datas.result } }, pending: { $set: false } });
     }
+    case c.ASYNC_CREATE_COMMANDE_SUCCESS:
     case c.ASYNC_LOAD_COMMANDE_SUCCESS: {
       const datas = normalize(action.datas, schemas.COMMANDES);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: [datas.result] } }, pending: { $set: false } });

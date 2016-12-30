@@ -79,10 +79,10 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             offres={offres}
           />
           <DetailCommandeTotal totaux={totaux} />
-          <CommandePaiementsUtilisateur
+          {false && <CommandePaiementsUtilisateur
             adresseStellarUtilisateur={utilisateurStellarAdresse}
             adresseStellarCommande={commandeStellarAdresse}
-          />
+          />}
         </div>
       </div>
     );

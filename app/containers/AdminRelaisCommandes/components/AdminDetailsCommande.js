@@ -49,13 +49,17 @@ class AdminDetailsCommande extends Component {
     }
   }
 
+  handleChangeList = (event, value) => {
+    this.props.pushState(value);
+  }
+
   render() {
-    const { pending, commandeUtilisateurs, params, utilisateurs, children, pushState } = this.props;
+    const { pending, commandeUtilisateurs, params, utilisateurs, children } = this.props;
     return (
       <div className="row">
         <div className="col-md-3">
           {!pending &&
-            (<SelectableList value={location.pathname}>
+            (<SelectableList value={location.pathname} onChange={this.handleChangeList}>
               {
                 commandeUtilisateurs
                   .filter((cu) => cu.commandeId === params.commandeId)
@@ -67,7 +71,6 @@ class AdminDetailsCommande extends Component {
                         key={idx}
                         primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
                         value={`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`}
-                        onClick={() => pushState(`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`)}
                         leftIcon={getIcon(cu)}
                       />
                     );
