@@ -7,18 +7,18 @@ import memoize from 'lodash/memoize';
 * @offres offres de la commande
 * @commandeId No commande
 */
-const calculeTotauxCommandeFn = ({ contenus, commandeContenus, offres, commandeId }) =>
-  contenus.reduce((memo, contenu) => {
+const calculeTotauxCommandeFn = ({ contenus, commandeContenus, offres, commandeId }) => {
+  const totaux = contenus.reduce((memo, contenu) => {
     const offre = offres[contenu.offreId];
 
     const commandeCommandeContenus =
-      Object.keys(commandeContenus).filter((key) =>
-        commandeContenus[key].commandeId === commandeId &&
-        commandeContenus[key].offreId === offre.id
-      ).map((key) => commandeContenus[key]);
+    Object.keys(commandeContenus).filter((key) =>
+      commandeContenus[key].commandeId === commandeId &&
+      commandeContenus[key].offreId === offre.id
+    ).map((key) => commandeContenus[key]);
 
     const qteTotalOffre = commandeCommandeContenus
-                            .reduce((mem, item) => mem + item.quantite, 0);
+    .reduce((mem, item) => mem + item.quantite, 0);
 
     const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
     const qte = contenu.quantite + (contenu.qteRegul || 0);
@@ -29,5 +29,11 @@ const calculeTotauxCommandeFn = ({ contenus, commandeContenus, offres, commandeI
       recolteFond: memo.recolteFond + round((tarif.recolteFond * qte) / 100, 2),
     };
   }, { prix: 0, recolteFond: 0, prixBase: 0, recolteFondBase: 0 });
+
+  totaux.recolteFond = round(totaux.recolteFond, 2);
+  totaux.recolteFondBase = round(totaux.recolteFondBase, 2);
+
+  return totaux;
+};
 
 export const calculeTotauxCommande = memoize(calculeTotauxCommandeFn);

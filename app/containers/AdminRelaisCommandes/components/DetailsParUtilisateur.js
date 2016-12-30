@@ -44,6 +44,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
       utilisateurStellarAdresse,
       commandeStellarAdresse,
     } = this.props;
+
     const contenusUtilisateur = commandeContenus.map((key) => contenus[key]).filter((c) => c.utilisateurId === utilisateur.id);
     const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
     return (

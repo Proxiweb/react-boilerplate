@@ -228,7 +228,16 @@ export default function createRoutes(store) {
           },
         },
         {
-          path: ':commandeId/:action',
+          path: ':commandeId/paiements',
+          name: 'PaiementCommande',
+          getComponent(nextState, cb) {
+            System.import('containers/AdminPaiementsCommande')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+          },
+        },
+        {
+          path: ':commandeId/edit',
           name: 'ModifCommande',
           getComponent(nextState, cb) {
             System.import('containers/AdminNouvelleCommande')

@@ -3,7 +3,6 @@ import round from 'lodash/round';
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import TrendingDownIcon from 'material-ui/svg-icons/action/trending-down';
 import buildCommandeRow from 'components/DetailCommandeColumns';
 import styles from './styles.css';
 const headerColStyle = { color: 'black', fontSize: '14px' };

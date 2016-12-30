@@ -1,6 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import FlatButton from 'material-ui/FlatButton';
+import SendIcon from 'material-ui/svg-icons/content/send';
+
 import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
@@ -8,6 +12,8 @@ import {
   selectCommandeProduits,
   selectOffres,
 } from 'containers/Commande/selectors';
+
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import CommandeFournisseur from './CommandeFournisseur';
 
@@ -19,13 +25,34 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
     params: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
+    auth: PropTypes.object.isRequired,
+    pushState: PropTypes.func.isRequired,
   }
 
   render() {
-    const { commandeContenus, contenus, produits, fournisseurs, offres, params } = this.props;
-    const { commandeId } = params;
+    const {
+      commandeContenus,
+      contenus,
+      produits,
+      fournisseurs,
+      offres,
+      params,
+      auth,
+      pushState,
+    } = this.props;
+
+    const { commandeId, relaiId } = params;
     return (
       <div>
+        <div>
+          {auth.roles.includes('ADMIN') &&
+            <FlatButton
+              label="Virer les fonds"
+              icon={<SendIcon />}
+              onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/paiements`)}
+            />
+          }
+        </div>
         {fournisseurs
           .filter((f) => f.visible)
           .map((fournisseur, idx) => (
@@ -50,6 +77,11 @@ const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
   offres: selectOffres(),
+  auth: selectCompteUtilisateur(),
 });
 
-export default connect(mapStateToProps)(DetailsParFournisseur);
+const mapDispatchToProps = (dispatch) => ({
+  pushState: (url) => dispatch(push(url)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);
