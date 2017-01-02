@@ -20,7 +20,7 @@ import {
   selectAuthUtilisateurCommandeUtilisateur,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
-import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 
 import { selectCommande } from './selectors';
@@ -44,9 +44,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     route: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    locationState: PropTypes.object.isRequired,
     commande: PropTypes.object,
     commandeUtilisateur: PropTypes.object,
-    utilisateurId: PropTypes.string.isRequired,
 
     pushState: PropTypes.func.isRequired,
     init: PropTypes.func.isRequired,
@@ -68,12 +68,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       params,
       typeProduits,
       commandeProduits,
-      utilisateurId,
       route,
       router,
       commandeUtilisateur,
       init,
       pushState,
+      locationState,
       loadCdes,
       loadCommandeUtilisateur,
     } = this.props;
@@ -83,6 +83,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
 
     router.setRouteLeaveHook(route, this.routerWillLeave);
+
+    const query = locationState.locationBeforeTransitions.query;
+    const utilisateurId = query.utilisateurId || null;
 
     if (!utilisateurId) {
       pushState('/login');
@@ -104,7 +107,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (premierTypeProduit) {
       const pdts = commandeProduits.filter((prod) => prod.typeProduitId === premierTypeProduit.id);
       if (pdts && pdts.length) {
-        this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}`);
+        this.props.pushState(
+          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${utilisateurId}`
+        );
       }
     }
   }
@@ -137,7 +142,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       commandeUtilisateur,
       commande,
       supprimer, // eslint-disable-line
-      utilisateurId,
+      locationState,
     } = this.props;
 
     const muiTheme = this.context.muiTheme;
@@ -145,6 +150,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (!commande) return null; // !utilisateurId
     const { panierExpanded } = this.state;
     const nbreProduits = commande.contenus.length;
+
+    const query = locationState.locationBeforeTransitions.query;
+    const utilisateurId = query.utilisateurId || null;
+
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
@@ -199,10 +208,10 @@ const mapStateToProps = createStructuredSelector({
   commande: selectCommande(), // commande courante en cours d'édition
   commandeProduits: selectCommandeProduits(),
   produitsById: selectProduits(),
-  utilisateurId: selectAuthUtilisateurId(),
   commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(),
   params: selectParams(),
   fournisseur: selectFournisseurProduit(),
+  locationState: selectLocationState(),
 });
 
 

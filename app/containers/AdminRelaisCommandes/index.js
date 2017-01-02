@@ -83,12 +83,16 @@ class AdminRelaisCommandes extends Component {
             </IconButton>}
           </div>
           <SelectableList value={commandeId} onChange={this.handleChangeList}>
-            {Object.keys(commandes).map((key, idx) =>
-              <ListItem
-                key={idx}
-                primaryText={moment(commandes[key].dateCommande).format('DD/MM')}
-                value={key}
-              />
+            {Object.keys(commandes)
+              .sort((key1, key2) =>
+                moment(commandes[key1].dateCommande).unix() < moment(commandes[key2].dateCommande).unix()
+              )
+              .map((key, idx) =>
+                <ListItem
+                  key={idx}
+                  primaryText={moment(commandes[key].dateCommande).format('DD/MM')}
+                  value={key}
+                />
             )}
           </SelectableList>
         </div>

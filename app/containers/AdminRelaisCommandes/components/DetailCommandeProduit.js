@@ -1,12 +1,11 @@
 import React, { PropTypes, Component } from 'react';
-import { TableRow, TableRowColumn } from 'material-ui/Table';
-import round from 'lodash/round';
+import { TableRow } from 'material-ui/Table';
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 import buildCommandeRow from 'components/DetailCommandeColumns';
 
 export default class CommnandeParProduitFournisseur extends Component { // eslint-disable-line
   static propTypes = {
-    contenus: PropTypes.object.isRequired,
+    contenus: PropTypes.array.isRequired,
     produit: PropTypes.object.isRequired,
     qteTotalOffre: PropTypes.number.isRequired,
     offre: PropTypes.object.isRequired,

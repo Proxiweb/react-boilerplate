@@ -93,7 +93,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       );
 
   render() {
-    const { commandes, relaiId, pushState, pending } = this.props;
+    const { commandes, relaiId, pushState, pending, utilisateurId } = this.props;
     if (commandes && Object.keys(commandes).length > 0) {
       return (
         <div className="row">
@@ -105,6 +105,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             relaiId={relaiId}
             pushState={pushState}
             pending={pending}
+            utilisateurId={utilisateurId}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <Semainier
@@ -115,6 +116,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             relaiId={relaiId}
             pending={pending}
             pushState={pushState}
+            utilisateurId={utilisateurId}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <Semainier
@@ -125,6 +127,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             pending={pending}
             getCommandeInfos={(key) => this.getCommandeInfos(key)}
             pushState={pushState}
+            utilisateurId={utilisateurId}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
           />
           <div className="col-xs">
