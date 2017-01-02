@@ -36,7 +36,7 @@ export default class NouvelleCommandeListeFournisseurs extends Component { // es
           <h4 style={{ textAlign: 'center' }}>Fournisseurs de cette commande</h4>
           <div className={styles.panelo}>
             <SelectableList value={location.pathname}>
-              {fournisseursCommande.map((fourn, idx) =>
+              {fournisseursCommande.filter((f) => f.visible).map((fourn, idx) =>
                 <ListItem
                   key={idx}
                   primaryText={fourn.nom.toUpperCase()}
