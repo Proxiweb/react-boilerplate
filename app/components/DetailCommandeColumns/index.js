@@ -9,7 +9,7 @@ const buildCommandeRow =
     [
       <TableRowColumn
         className={styles.bigCol}
-        key={idx}
+        key={`${idx}1`}
       >
         <span>
           {produit.nom.toUpperCase()}{` ${offre.description || ''}`}
@@ -21,7 +21,7 @@ const buildCommandeRow =
             tooltip="Tarif en baisse"
           />}
       </TableRowColumn>,
-      <TableRowColumn className={styles.smallCol}>
+      <TableRowColumn className={styles.smallCol} key={`${idx}2`}>
         {(parseInt((tarif.prix + tarif.recolteFond), 10) / 100).toFixed(2)}
         {tarifEnBaisse &&
           <span style={{ color: 'red' }}>
@@ -29,8 +29,8 @@ const buildCommandeRow =
           </span>
         }
       </TableRowColumn>,
-      <TableRowColumn className={styles.smallCol}>{contenu.quantite}</TableRowColumn>,
-      <TableRowColumn className={styles.smallCol}>
+      <TableRowColumn className={styles.smallCol} key={`${idx}3`}>{contenu.quantite}</TableRowColumn>,
+      <TableRowColumn className={styles.smallCol} key={`${idx}4`}>
         {round(((tarif.prix + tarif.recolteFond) * contenu.quantite) / 100, 2).toFixed(2)}
         {tarifEnBaisse &&
           <span style={{ color: 'red' }}>
