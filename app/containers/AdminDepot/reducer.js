@@ -13,6 +13,10 @@ const adminDepotReducer = (state = initialState, action) => {
   switch (action.type) {
     case c.ASYNC_LOAD_DEPOTS_SUCCESS:
       return { ...state, datas: action.datas.depots, total: action.datas.total };
+    case c.ASYNC_LOAD_DEPOTS_RELAIS_START:
+      return initialState;
+    case c.ASYNC_LOAD_DEPOTS_RELAIS_SUCCESS:
+      return { ...state, datas: action.datas.depots };
     default:
       return state;
   }

@@ -44,9 +44,9 @@ class AdminDetailsCommande extends Component {
       commandeUtilisateurs
         .filter((cu) => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
         .map((cu) => cu.utilisateurId);
-    if (utilisateursIds.length) {
-      this.props.loadUtilisateurs(utilisateursIds);
-    }
+    // if (utilisateursIds.length) {
+    this.props.loadUtilisateurs(utilisateursIds);
+    // }
   }
 
   handleChangeList = (event, value) =>

@@ -6,3 +6,8 @@ export const loadDepots = (query = {}) => ({
   url: 'depots',
   query,
 });
+
+export const loadDepotsRelais = (relaiId) => ({
+  type: findActionType('load_depots_relais', c, 'START'),
+  url: `relais/${relaiId}/depots`,
+});

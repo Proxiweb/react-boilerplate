@@ -43,6 +43,20 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/relais',
+      getComponent(location, cb) {
+        System.import('containers/AdminRelais')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/relais/:relaiId',
+      getComponent(location, cb) {
+        System.import('containers/AdminRelais')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/users/:userId/porte-monnaie',
       getComponent(location, cb) {
         System.import('containers/PorteMonnaie')
@@ -232,6 +246,15 @@ export default function createRoutes(store) {
           name: 'PaiementCommande',
           getComponent(nextState, cb) {
             System.import('containers/AdminPaiementsCommande')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+          },
+        },
+        {
+          path: ':commandeId/utilisateurs',
+          name: 'UtilisateurCommande',
+          getComponent(nextState, cb) {
+            System.import('containers/AdminCommandeUtilisateur')
             .then(loadModule(cb))
             .catch(errorLoading);
           },

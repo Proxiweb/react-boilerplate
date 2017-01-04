@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import FlatButton from 'material-ui/FlatButton';
 import SendIcon from 'material-ui/svg-icons/content/send';
+import PersonIcon from 'material-ui/svg-icons/social/person';
 
 import {
   selectCommandeCommandeContenus,
@@ -44,15 +45,20 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
     const { commandeId, relaiId } = params;
     return (
       <div>
-        <div>
-          {auth.roles.includes('ADMIN') &&
+        {auth.roles.includes('ADMIN') &&
+          <div>
             <FlatButton
               label="Virer les fonds"
               icon={<SendIcon />}
               onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/paiements`)}
             />
-          }
-        </div>
+            <FlatButton
+              label="Passer une commande"
+              icon={<PersonIcon />}
+              onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs`)}
+            />
+          </div>
+        }
         {fournisseurs
           .filter((f) => f.visible)
           .map((fournisseur, idx) => (

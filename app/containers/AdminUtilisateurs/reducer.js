@@ -6,6 +6,8 @@ const initialState = {
 
 const adminUtilisateursReducer = (state = initialState, action) => {
   switch (action.type) {
+    case c.ASYNC_LOAD_UTILISATEURS_START:
+      return initialState;
     case c.ASYNC_LOAD_UTILISATEURS_SUCCESS:
       return { ...state, datas: merge(state.datas, action.datas.utilisateurs) };
     default:
