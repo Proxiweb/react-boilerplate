@@ -130,7 +130,7 @@ class OrderValidate extends Component {
       onClick={() => this.setState({ view: 'distribution' })}
     />;
 
-  showDetailsCommande = () => {
+  showDetailsCommande = (contenus) => {
     const {
       offres,
       commande,
@@ -141,7 +141,7 @@ class OrderValidate extends Component {
     } = this.props;
     return (
       <DetailCommande
-        contenus={commande.contenus}
+        contenus={contenus}
         offres={offres}
         produits={produitsById}
         supprimer={this.props.supprimer}
@@ -171,7 +171,7 @@ class OrderValidate extends Component {
     return (
       <div style={{ textAlign: 'center' }}>
         <RaisedButton
-          label={`${pending ? 'Annuler' : 'Annulation de'} la commande`}
+          label={`${!pending ? 'Annuler ma ' : 'Annulation de la '}commande`}
           secondary
           style={{ marginTop: 20 }}
           onClick={() => this.props.annuler(commande.id, commande.commandeId)}
@@ -184,16 +184,16 @@ class OrderValidate extends Component {
   render() {
     const { commande, commandeContenus, params, offres, balance, commandeProxiweb, pending } = this.props;
     const { view } = this.state;
-
+    const contenusCommande = commande.contenus.map((id) => commandeContenus[id]);
     return (<div>
-      { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande() }
+      { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande) }
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
       {commande.id && (
         <Paiement
-          contenus={commande.contenus}
+          contenus={contenusCommande}
           commandeContenus={commandeContenus}
           commandeId={params.commandeId}
           balance={balance}

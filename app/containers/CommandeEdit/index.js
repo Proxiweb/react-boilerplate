@@ -17,7 +17,7 @@ import {
   selectFournisseurProduit,
   selectProduits,
   selectParams,
-  selectAuthUtilisateurCommandeUtilisateur,
+  selectCommandeCommandeUtilisateurs,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
 import { selectLocationState } from 'containers/App/selectors';
@@ -46,7 +46,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     params: PropTypes.object.isRequired,
     locationState: PropTypes.object.isRequired,
     commande: PropTypes.object,
-    commandeUtilisateur: PropTypes.object,
+    commandeUtilisateurs: PropTypes.array,
 
     pushState: PropTypes.func.isRequired,
     init: PropTypes.func.isRequired,
@@ -70,7 +70,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       commandeProduits,
       route,
       router,
-      commandeUtilisateur,
+      commandeUtilisateurs,
       init,
       pushState,
       locationState,
@@ -96,6 +96,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       return;
     }
 
+    const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
     if (commandeUtilisateur) {
       loadCommandeUtilisateur(commandeUtilisateur);
     }
@@ -139,7 +140,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
   render() {
     const {
       params,
-      commandeUtilisateur,
+      commandeUtilisateurs,
       commande,
       supprimer, // eslint-disable-line
       locationState,
@@ -153,6 +154,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
     const query = locationState.locationBeforeTransitions.query;
     const utilisateurId = query.utilisateurId || null;
+    const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
 
     return (
       <div className={`${styles.commandeEdit} row`}>
@@ -208,7 +210,7 @@ const mapStateToProps = createStructuredSelector({
   commande: selectCommande(), // commande courante en cours d'édition
   commandeProduits: selectCommandeProduits(),
   produitsById: selectProduits(),
-  commandeUtilisateur: selectAuthUtilisateurCommandeUtilisateur(),
+  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   params: selectParams(),
   fournisseur: selectFournisseurProduit(),
   locationState: selectLocationState(),
