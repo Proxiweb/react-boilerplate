@@ -91,6 +91,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       pushState('/login');
     }
 
+    if (commande && commande.utilisateurId !== utilisateurId) {
+      init(params.commandeId);
+    }
+
     if (!commandeProduits) {
       loadCdes();
       return;

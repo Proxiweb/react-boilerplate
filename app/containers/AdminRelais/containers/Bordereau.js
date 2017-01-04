@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import capitalize from 'lodash.capitalize';
 import round from 'lodash/round';
 import {
   Table,
@@ -42,7 +43,7 @@ export default class DepotsRelais extends Component { // eslint-disable-line
         <TableBody displayRowCheckbox={false}>
           {depots.map((depot, idx) =>
             <TableRow key={idx} selectable={false}>
-              <TableRowColumn>{depot.utilisateur.nom.toUpperCase()}</TableRowColumn>
+              <TableRowColumn>{capitalize(depot.utilisateur.prenom)} <strong>{depot.utilisateur.nom.toUpperCase()}</strong></TableRowColumn>
               <TableRowColumn style={align}>{parseFloat(depot.montant).toFixed(2)}</TableRowColumn>
               <TableRowColumn style={align}>{depot.fait ? 'oui' : 'non'}</TableRowColumn>
             </TableRow>

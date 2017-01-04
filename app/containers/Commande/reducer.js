@@ -10,6 +10,7 @@ import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import assign from 'lodash/assign';
 import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
@@ -69,13 +70,14 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_USER_COMMANDES_SUCCESS:
     case c.ASYNC_LOAD_COMMANDES_SUCCESS: {
       const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDES));
-      if (!datas.entities.commandeUtilisateurs) {
-        datas.entities.commandeUtilisateurs = {};
-      }
-      if (!datas.entities.commandeContenus) {
-        datas.entities.commandeContenus = {};
-      }
-      return update(state, { datas: { entities: { $set: datas.entities }, result: { $push: datas.result } }, pending: { $set: false } });
+      const defaults = {
+        commandes: {},
+        commandeContenus: {},
+        commandeUtilisateurs: {},
+        livraisons: {},
+        fournisseurs: {},
+      };
+      return update(state, { datas: { entities: { $set: assign(defaults, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
     case c.ASYNC_CREATE_COMMANDE_SUCCESS:
     case c.ASYNC_LOAD_COMMANDE_SUCCESS: {

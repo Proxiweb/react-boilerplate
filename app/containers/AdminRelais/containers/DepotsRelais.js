@@ -36,9 +36,6 @@ class DepotsRelais extends Component {
     }
   }
 
-  // shouldComponentUpdate = (nextProps) =>
-  //   nextProps.relaiId !== this.props.relaiId;
-
   handleChangeList = (event, value) =>
     this.setState({ bordereauSelected: value });
 

@@ -12,7 +12,7 @@ export default class NouvelleCommandeListeFournisseurs extends Component { // es
   }
 
   handleChangeList = (event, value) =>
-    this.props.addFourn({ id: value.id, nom: value.nom });
+    this.props.addFourn({ id: value.id, nom: value.nom, visible: value.visible });
 
   render() {
     const { fournisseurs, fournisseursCommande, delFourn } = this.props;

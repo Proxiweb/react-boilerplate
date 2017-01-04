@@ -18,7 +18,9 @@ export default class CommandeFournisseur extends Component { // eslint-disable-l
     const contenusFournisseur =
       commandeContenus
         .map((key) => contenus[key])
-        .filter((c) => produits.find((pdt) => pdt.id === c.offre.produitId).fournisseurId === fournisseur.id);
+        .filter((c) =>
+          produits.find((pdt) => pdt.id === c.offre.produitId && pdt.fournisseurId === fournisseur.id)
+        );
     const totaux = calculeTotauxCommande({ contenus: contenusFournisseur, offres, commandeContenus, commandeId });
     return (
       <div>

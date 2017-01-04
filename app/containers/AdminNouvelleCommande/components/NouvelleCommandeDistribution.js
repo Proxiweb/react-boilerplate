@@ -11,6 +11,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
     delDistrib: PropTypes.func.isRequired,
     addDistrib: PropTypes.func.isRequired,
     distributions: PropTypes.array.isRequired,
+    dateLimiteCommande: PropTypes.object.isRequired,
   }
 
   state = {
@@ -21,7 +22,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
 
 
   render() {
-    const { addDistrib, delDistrib, distributions } = this.props;
+    const { addDistrib, delDistrib, distributions, dateLimiteCommande } = this.props;
     const { dateLimite, heureDebut, heureFin } = this.state;
     return (
       <div className="row center-md" style={{ paddingTop: '2em' }}>
@@ -38,6 +39,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 locale="fr"
                 okLabel="OK"
                 cancelLabel="Annuler"
+                minDate={dateLimiteCommande}
                 DateTimeFormat={Intl.DateTimeFormat}
                 onChange={(event, value) => this.setState((oldVal) => ({ ...oldVal, dateLimite: value }))}
               />
@@ -73,6 +75,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 label="+"
                 primary
                 fullWidth
+                disabled={!dateLimite || !heureDebut || !heureFin}
                 style={{ marginTop: '1.2em' }}
                 onClick={() => addDistrib({
                   debut: `${moment(dateLimite).format('YYYY-MM-DD')}T${moment(heureDebut).format('HH:mm')}`,

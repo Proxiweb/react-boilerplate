@@ -23,7 +23,7 @@ const Semainier = ({
           <CommandePanel
             nom={infos ? uniq(infos).join(', ') : null}
             dateCommande={commandes[key].dateCommande}
-            label={commandeUtilisateurExiste(key) ? 'Modifier la commande' : 'Commander'}
+            label={commandeUtilisateurExiste(key) ? 'Modifier ma commande' : 'Commander'}
             prct={100}
             fav={false}
             key={idx}

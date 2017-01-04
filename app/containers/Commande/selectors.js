@@ -112,7 +112,7 @@ export const selectCommandesRelais = () => createSelector(
   selectLivraisons(),
   selectRelaisId(),
   (commandes, livraisons, relaiId) => {
-    if (!commandes || !livraisons || !relaiId) return null;
+    if (typeof commandes !== 'object' || typeof livraisons !== 'object' || !relaiId) return null;
     const cmdesRelais = {};
     Object.keys(commandes)
       .filter((commandeId) => {

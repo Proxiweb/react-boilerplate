@@ -1,5 +1,10 @@
-.commande { /* stylelint-disable */
+.commande, .noCommande { /* stylelint-disable */
     margin-top: 10;
+}
+
+.noCommande {
+  text-align: center;
+  padding: 2em;
 }
 
 .colCommande {

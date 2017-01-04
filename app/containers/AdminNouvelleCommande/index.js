@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
 import { loadFournisseurs, createCommande } from 'containers/Commande/actions';
-import { selectFournisseursRelais, selectFournisseursCommande, selectCommandeLivraisons } from 'containers/Commande/selectors';
+import { selectFournisseursRelais, selectFournisseursCommande, selectCommandeLivraisons, selectCommandeCommandeUtilisateurs } from 'containers/Commande/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
 import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
@@ -14,11 +16,12 @@ import styles from './styles.css';
 
 class NouvelleCommande extends Component { // eslint-disable-line
   static propTypes = {
-    commande: PropTypes.object.isRequired,
+    commande: PropTypes.object,
     create: PropTypes.func.isRequired,
     fournisseurs: PropTypes.array.isRequired,
-    fournisseursCommande: PropTypes.array.isRequired,
-    livraisonsCommande: PropTypes.array.isRequired,
+    fournisseursCommande: PropTypes.array,
+    commandeUtilisateurs: PropTypes.array.isRequired,
+    livraisonsCommande: PropTypes.array,
   }
 
   static contextTypes = {
@@ -29,11 +32,12 @@ class NouvelleCommande extends Component { // eslint-disable-line
     cdeFourns: [],
     parametres: {},
     distributions: [],
+    confirmDestroyOpen: false,
   }
 
   componentDidMount() {
     const { fournisseursCommande, commande, livraisonsCommande } = this.props;
-    if (fournisseursCommande.length) {
+    if (fournisseursCommande && fournisseursCommande.length) {
       this.initCmde(fournisseursCommande, commande, livraisonsCommande);
     }
   }
@@ -53,16 +57,16 @@ class NouvelleCommande extends Component { // eslint-disable-line
   }
 
   addDistrib = (value) => {
-    this.setState({ distributions: [...this.state.distributions, value] });
+    this.setState({ ...this.state, distributions: [...this.state.distributions, value] });
   }
 
   delDistrib = (index) => {
-    this.setState({ distributions: this.state.distributions.filter((dist, idx) => idx !== index) });
+    this.setState({ ...this.state, distributions: this.state.distributions.filter((dist, idx) => idx !== index) });
   }
 
   addFourn = (value) => {
     if (this.state.cdeFourns.includes(value)) return;
-    this.setState({ cdeFourns: [...this.state.cdeFourns, value] });
+    this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
   }
 
   delFourn = (value) => this.setState({
@@ -80,7 +84,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
 
   validate = () => {
     const { cdeFourns, parametres } = this.state;
-    return cdeFourns.length && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
+    return cdeFourns.length > 1 && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
   }
 
   create = () => {
@@ -100,9 +104,22 @@ class NouvelleCommande extends Component { // eslint-disable-line
     this.props.create(commande);
   }
 
+  handleOpen= () => {
+    this.setState({ ...this.state, confirmDestroyOpen: true });
+  }
+
+  handleClose = () => {
+    this.setState({ ...this.state, confirmDestroyOpen: false });
+  }
+
+  handleDestroy = () => {
+    console.log('suppression confirmée');
+    this.handleClose();
+  }
+
   render() {
-    const { fournisseurs, commande } = this.props;
-    const { cdeFourns, parametres, distributions } = this.state;
+    const { fournisseurs, commande, commandeUtilisateurs } = this.props;
+    const { cdeFourns, parametres, distributions, confirmDestroyOpen } = this.state;
     const { muiTheme } = this.context;
 
     return (
@@ -132,6 +149,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
                   distributions={distributions}
                   addDistrib={this.addDistrib}
                   delDistrib={this.delDistrib}
+                  dateLimiteCommande={parametres.dateLimite}
                 />
               </Tab>
             </Tabs>
@@ -145,6 +163,43 @@ class NouvelleCommande extends Component { // eslint-disable-line
                   disabled={!this.validate()}
                 />
               </div>
+              <div className="col-md-4">
+                { commande.id &&
+                  <RaisedButton
+                    secondary
+                    label="Supprimer cette commande"
+                    disabled={commandeUtilisateurs.length > 0}
+                    onClick={() => this.handleOpen()}
+                    fullWidth
+                  />
+                }
+                {
+                  commande.id && commandeUtilisateurs.length === 0 &&
+                    <Dialog
+                      title="Supprimer une commande"
+                      actions={
+                        [
+                          <FlatButton
+                            label="Annuler"
+                            primary
+                            onTouchTap={this.handleClose}
+                          />,
+                          <FlatButton
+                            label="Supprimer"
+                            primary
+                            keyboardFocused
+                            onTouchTap={this.handleDestroy}
+                          />,
+                        ]
+                      }
+                      modal
+                      open={confirmDestroyOpen}
+                      onRequestClose={this.handleClose}
+                    >
+                      Confirmez-vous la suppression de la commande ?
+                    </Dialog>
+                }
+              </div>
             </div>
           </Paper>
         </div>
@@ -156,6 +211,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
 const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseursRelais(),
   fournisseursCommande: selectFournisseursCommande(),
+  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   livraisonsCommande: selectCommandeLivraisons(),
 });
 

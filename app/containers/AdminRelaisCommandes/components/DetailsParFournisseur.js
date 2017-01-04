@@ -61,17 +61,21 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
         }
         {fournisseurs
           .filter((f) => f.visible)
-          .map((fournisseur, idx) => (
-            <CommandeFournisseur
-              key={idx}
-              fournisseur={fournisseur}
-              produits={produits.filter((pdt) => pdt.fournisseurId === fournisseur.id)}
-              commandeContenus={commandeContenus}
-              contenus={contenus}
-              offres={offres}
-              commandeId={commandeId}
-            />
-          ))}
+          .map((fournisseur, idx) => {
+            const pdts = produits.filter((pdt) => pdt.fournisseurId === fournisseur.id);
+            return (
+              <CommandeFournisseur
+                key={idx}
+                fournisseur={fournisseur}
+                produits={pdts}
+                commandeContenus={commandeContenus}
+                contenus={contenus}
+                offres={offres}
+                commandeId={commandeId}
+              />
+            );
+          })
+        }
       </div>
     );
   }

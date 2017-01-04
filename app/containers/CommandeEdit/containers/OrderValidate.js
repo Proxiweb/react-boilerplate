@@ -139,6 +139,7 @@ class OrderValidate extends Component {
       commandeContenus,
       panierExpanded,
     } = this.props;
+
     return (
       <DetailCommande
         contenus={contenus}

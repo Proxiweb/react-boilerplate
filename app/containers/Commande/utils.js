@@ -8,14 +8,14 @@ import memoize from 'lodash/memoize';
 * @commandeId No commande
 */
 const calculeTotauxCommandeFn = ({ contenus, commandeContenus, offres, commandeId }) => {
+  console.log(contenus, commandeContenus)
   const totaux = contenus.reduce((memo, contenu) => {
     const offre = offres[contenu.offreId];
-
     const commandeCommandeContenus =
-    Object.keys(commandeContenus).filter((key) =>
-      commandeContenus[key].commandeId === commandeId &&
-      commandeContenus[key].offreId === offre.id
-    ).map((key) => commandeContenus[key]);
+      Object.keys(commandeContenus).filter((key) =>
+        commandeContenus[key].commandeId === commandeId &&
+        commandeContenus[key].offreId === offre.id
+      ).map((key) => commandeContenus[key]);
 
     const qteTotalOffre = commandeCommandeContenus
     .reduce((mem, item) => mem + item.quantite, 0);

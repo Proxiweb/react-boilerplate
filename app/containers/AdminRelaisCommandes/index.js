@@ -19,7 +19,7 @@ const SelectableList = makeSelectable(List);
 
 class AdminRelaisCommandes extends Component {
   static propTypes = {
-    commandes: PropTypes.object.isRequired,
+    commandes: PropTypes.object,
     commandeId: PropTypes.string,
     loadCommandes: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
