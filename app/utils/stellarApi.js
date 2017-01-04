@@ -115,4 +115,5 @@ module.exports = {
   trust,
   loadAccount,
   loadPayments,
+  getServer,
 };
