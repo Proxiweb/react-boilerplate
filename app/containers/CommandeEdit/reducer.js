@@ -95,7 +95,15 @@ const commandeEditReducer = (state = initialState, action) => {
 
     case c.SET_DISTRIBUTION: {
       const { plageHoraire, livraisonId, commandeId } = action.payload;
-      return update(state, { [commandeId]: { plageHoraire: { $set: plageHoraire }, livraisonId: { $set: livraisonId } } });
+      return update(
+        state,
+        { [commandeId]:
+        {
+          plageHoraire: { $set: plageHoraire },
+          livraisonId: { $set: livraisonId },
+          modifiee: { $set: true },
+        },
+      });
     }
 
     case c.MODIFIE_TOTAUX:
