@@ -1,6 +1,9 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import Helmet from 'react-helmet';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
@@ -9,6 +12,7 @@ import {
   selectCommandeStellarAdresse,
   selectOffres,
 } from 'containers/Commande/selectors';
+
 import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
 import moment from 'moment';
@@ -30,6 +34,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
     produits: PropTypes.array.isRequired,
     commandeStellarAdresse: PropTypes.string.isRequired,
     utilisateurStellarAdresse: PropTypes.string.isRequired,
+    pushState: PropTypes.func.isRequired,
   }
 
   render() {
@@ -43,16 +48,23 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
       commandeUtilisateur,
       utilisateurStellarAdresse,
       commandeStellarAdresse,
+      pushState,
     } = this.props;
+
+    const { commandeId, relaiId, utilisateurId } = params;
 
     const contenusUtilisateur = commandeContenus.map((key) => contenus[key]).filter((c) => c.utilisateurId === utilisateur.id);
     const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
+    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`
     return (
       <div className="row">
+        <Helmet
+          title={`Commande de ${identite}`}
+        />
         <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
           <div className="row">
             <div className="col-md">
-              <strong>{capitalize(utilisateur.prenom)} {utilisateur.nom.toUpperCase()}</strong>
+              <strong>{identite}</strong>
             </div>
             <div className="col-md">
               <div className="row arround-md">
@@ -84,6 +96,22 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             adresseStellarCommande={commandeStellarAdresse}
           />}
         </div>
+        {!commandeUtilisateur.datePaiement &&
+          <div className="col-md-12" style={{ marginTop: '1em' }}>
+            <div className="row center-md">
+              <div className="col-md-6">
+                <RaisedButton
+                  fullWidth
+                  primary
+                  label="Modifier la commande"
+                  onClick={
+                    () => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        }
       </div>
     );
   }
@@ -99,4 +127,8 @@ const mapStateToProps = createStructuredSelector({
   commandeStellarAdresse: selectCommandeStellarAdresse(),
 });
 
-export default connect(mapStateToProps)(DetailsParUtilisateur);
+const mapDispatchToProps = (dispatch) => ({
+  pushState: (url) => dispatch(push(url)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);

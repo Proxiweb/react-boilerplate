@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import Helmet from 'react-helmet';
 
 import { selectUtilisateurs } from 'containers/Commande/selectors';
 import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
@@ -34,6 +35,9 @@ class AdminCommandeUtilisateurs extends Component {
 
     return (
       <div className="row">
+        <Helmet
+          title="Passer une commande"
+        />
         <div className={classnames('col-md-12', styles.panel)}>
           <div className="row">
             <div className="col-md-4 col-md-offset-1">

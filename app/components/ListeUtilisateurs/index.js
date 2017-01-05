@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import capitalize from 'lodash/capitalize';
 import styles from './styles.css';
 
@@ -22,6 +23,18 @@ export default class ListeUtilisateurs extends Component {
 
   render() {
     const { utilisateurs } = this.props;
+    if (!utilisateurs) {
+      return (
+        <RefreshIndicator
+          size={70}
+          left={0}
+          top={20}
+          status="loading"
+          style={{ display: 'inline-block', position: 'relative' }}
+        />
+      );
+    }
+
     const utilisateursArray = Object.keys(utilisateurs)
       .map((id) => utilisateurs[id])
       .filter((u) => u.nom)
