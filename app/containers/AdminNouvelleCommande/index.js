@@ -7,7 +7,13 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
 import { loadFournisseurs, createCommande } from 'containers/Commande/actions';
-import { selectFournisseursRelais, selectFournisseursCommande, selectCommandeLivraisons, selectCommandeCommandeUtilisateurs } from 'containers/Commande/selectors';
+import {
+  selectFournisseursRelais,
+  selectFournisseursCommande,
+  selectCommandeLivraisons,
+  selectCommandeCommandeUtilisateurs,
+  selectRelaisSelected,
+} from 'containers/Commande/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
 import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
@@ -17,6 +23,7 @@ import styles from './styles.css';
 class NouvelleCommande extends Component { // eslint-disable-line
   static propTypes = {
     commande: PropTypes.object,
+    relais: PropTypes.object.isRequired,
     create: PropTypes.func.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     fournisseursCommande: PropTypes.array,
@@ -74,26 +81,61 @@ class NouvelleCommande extends Component { // eslint-disable-line
     cdeFourns: this.state.cdeFourns.filter((cde) => cde.id !== value.id),
   });
 
-  changeParam = (key, value) => this.setState({
-    ...this.state,
-    parametres: {
-      ...this.state.parametres,
-      [key]: value,
-    },
-  });
+  changeParam = (key, value) => {
+    const parametres = { ...this.state.parametres, [key]: value };
+    let distributions = this.state.distributions;
+    const { relais } = this.props;
+    if (
+      !distributions.length &&
+      relais.livraisons.length &&
+      parametres.heureLimite &&
+      parametres.dateLimite
+    ) {
+      const dateCommande = this.calculeDateCommande();
+      const livraisons =
+        relais.livraisons
+          .map((livr) => {
+            const dateDebut = moment(dateCommande)
+              .weekday(livr.jour)
+              .hours(livr.heureDebut.split(':')[0])
+              .minutes(livr.heureDebut.split(':')[1]);
+            const dateFin = moment(dateCommande)
+              .weekday(livr.jour)
+              .hours(livr.heureFin.split(':')[0])
+              .minutes(livr.heureFin.split(':')[1]);
+
+            return {
+              debut: dateDebut.toISOString(),
+              fin: dateFin.toISOString(),
+            };
+          });
+      distributions = livraisons.filter((livr) => moment(livr.debut).isAfter(dateCommande));
+    }
+    this.setState({
+      ...this.state,
+      distributions,
+      parametres,
+    });
+  }
 
   validate = () => {
     const { cdeFourns, parametres } = this.state;
     return cdeFourns.length > 1 && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
   }
 
-  create = () => {
-    const { parametres, distributions, cdeFourns } = this.state;
-    const { dateLimite, heureLimite, resume, montantMin, montantMinRelais } = parametres;
+  calculeDateCommande = () => {
+    const { dateLimite, heureLimite } = this.state.parametres;
     const hLim = parseInt(moment(heureLimite).format('HH'), 10);
     const mLim = parseInt(moment(heureLimite).format('mm'), 10);
+    return moment(dateLimite).hours(hLim).minutes(mLim);
+  }
+
+  create = () => {
+    const { parametres, distributions, cdeFourns } = this.state;
+    const { resume, montantMin, montantMinRelais } = parametres;
+
     const commande = {
-      dateCommande: moment(dateLimite).hours(hLim).minutes(mLim).toISOString(),
+      dateCommande: this.calculeDateCommande().toISOString(),
       resume,
       montantMin,
       montantMinRelai: montantMinRelais,
@@ -164,41 +206,36 @@ class NouvelleCommande extends Component { // eslint-disable-line
                 />
               </div>
               <div className="col-md-4">
-                { commande.id &&
-                  <RaisedButton
-                    secondary
-                    label="Supprimer cette commande"
-                    disabled={commandeUtilisateurs.length > 0}
-                    onClick={() => this.handleOpen()}
-                    fullWidth
-                  />
-                }
-                {
-                  commande.id && commandeUtilisateurs.length === 0 &&
-                    <Dialog
-                      title="Supprimer une commande"
-                      actions={
-                        [
-                          <FlatButton
-                            label="Annuler"
-                            primary
-                            onTouchTap={this.handleClose}
-                          />,
-                          <FlatButton
-                            label="Supprimer"
-                            primary
-                            keyboardFocused
-                            onTouchTap={this.handleDestroy}
-                          />,
-                        ]
-                      }
-                      modal
-                      open={confirmDestroyOpen}
-                      onRequestClose={this.handleClose}
-                    >
-                      Confirmez-vous la suppression de la commande ?
-                    </Dialog>
-                }
+                <RaisedButton
+                  secondary
+                  label="Supprimer cette commande"
+                  disabled={!commandeUtilisateurs || commandeUtilisateurs.length > 0}
+                  onClick={() => this.handleOpen()}
+                  fullWidth
+                />
+                <Dialog
+                  title="Supprimer une commande"
+                  actions={
+                    [
+                      <FlatButton
+                        label="Annuler"
+                        primary
+                        onTouchTap={this.handleClose}
+                      />,
+                      <FlatButton
+                        label="Supprimer"
+                        primary
+                        keyboardFocused
+                        onTouchTap={this.handleDestroy}
+                      />,
+                    ]
+                  }
+                  modal
+                  open={confirmDestroyOpen}
+                  onRequestClose={this.handleClose}
+                >
+                  Confirmez-vous la suppression de la commande ?
+                </Dialog>
               </div>
             </div>
           </Paper>
@@ -213,6 +250,7 @@ const mapStateToProps = createStructuredSelector({
   fournisseursCommande: selectFournisseursCommande(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   livraisonsCommande: selectCommandeLivraisons(),
+  relais: selectRelaisSelected(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
