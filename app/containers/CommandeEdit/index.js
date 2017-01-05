@@ -168,7 +168,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <ProduitSelector params={params} setPanierState={this.setPanierState} />
+        <ProduitSelector params={params} setPanierState={this.setPanierState} utilisateurId={utilisateurId} />
         <MediaQuery query="(max-device-width: 1600px)">
           <div className="col-md-8 col-xs-12 col-lg-9">
             <PanierCard
@@ -181,12 +181,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               utilisateurId={utilisateurId}
               commandeUtilisateur={commandeUtilisateur}
             />
-            {!panierExpanded && <DetailOffres params={params} />}
+            {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-4">
-            {!panierExpanded && <DetailOffres params={params} />}
+            {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1600px)">

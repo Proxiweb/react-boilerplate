@@ -101,7 +101,7 @@ const commandeEditReducer = (state = initialState, action) => {
         {
           plageHoraire: { $set: plageHoraire },
           livraisonId: { $set: livraisonId },
-          modifiee: { $set: true },
+          modifiee: { $set: typeof state.id !== 'undefined' },
         },
       });
     }

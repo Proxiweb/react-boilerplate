@@ -10,7 +10,7 @@ import {
     selectFournisseurProduit,
     selectProduits,
 } from 'containers/Commande/selectors';
-import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+
 import { selectCommande } from 'containers/CommandeEdit/selectors';
 
 import {
@@ -125,7 +125,6 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffresProduitAvecTotalAchats(),
   fournisseur: selectFournisseurProduit(),
   produitsById: selectProduits(),
-  utilisateurId: selectAuthUtilisateurId(),
   commande: selectCommande(), // commande courante en cours d'édition
 });
 

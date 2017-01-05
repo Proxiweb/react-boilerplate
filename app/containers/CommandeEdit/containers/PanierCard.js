@@ -56,8 +56,15 @@ class PanierCard extends Component { // eslint-disable-line
       balance,
     } = this.props;
 
+    const contenusCommande = contenus.map((contenu) =>
+      // quand le contenu vient d'être ajouté, contenu est un objet sans id
+      // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id]
+      (typeof contenu === 'object' ? contenu : commandeContenus[contenu])
+    );
+
+
     const totaux = calculeTotauxCommande({
-      contenus,
+      contenus: contenusCommande,
       commandeId,
       offres,
       commandeContenus,

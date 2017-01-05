@@ -15,6 +15,7 @@ import {
 
 class ProduitSelector extends React.Component {
   static propTypes = {
+    utilisateurId: PropTypes.string.isRequired,
     pushState: PropTypes.func.isRequired,
     setPanierState: PropTypes.func.isRequired,
     typeProduits: PropTypes.array.isRequired,
@@ -28,8 +29,9 @@ class ProduitSelector extends React.Component {
 
   navigateTo = (productId) => {
     const { commandeId, typeProduitId, relaiId } = this.props.params;
+    const { utilisateurId } = this.props;
     this.props.setPanierState(false);
-    this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}`);
+    this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`);
   }
 
   handleChange = (event, index, value) => {

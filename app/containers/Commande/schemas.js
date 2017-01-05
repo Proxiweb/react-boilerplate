@@ -2,7 +2,7 @@ import { Schema, arrayOf } from 'normalizr';
 
 const commandes = new Schema('commandes');
 const commandeUtilisateurs = new Schema('commandeUtilisateurs');
-// const utilisateurs = new Schema('utilisateurs');
+const utilisateurs = new Schema('utilisateurs');
 const fournisseurs = new Schema('fournisseurs');
 const commandeContenus = new Schema('commandeContenus');
 const offres = new Schema('offres');
@@ -10,7 +10,6 @@ const livraisons = new Schema('livraisons');
 const relais = new Schema('relais');
 const produits = new Schema('produits');
 const typeProduits = new Schema('typeProduits');
-
 
 commandeUtilisateurs.define({
   // utilisateur,
@@ -47,6 +46,7 @@ export const schemas = {
   COMMANDE_UTILISATEURS: commandeUtilisateurs,
   COMMANDE_CONTENUS: commandeContenus,
   COMMANDES: commandes,
+  UTILISATEURS: utilisateurs,
   OFFRES: offres,
   LIVRAISONS: livraisons,
 };

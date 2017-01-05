@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import capitalize from 'lodash.capitalize';
+import capitalize from 'lodash/capitalize';
 import round from 'lodash/round';
 import {
   Table,
