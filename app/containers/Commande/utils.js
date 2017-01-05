@@ -8,7 +8,6 @@ import memoize from 'lodash/memoize';
 * @commandeId No commande
 */
 const calculeTotauxCommandeFn = ({ contenus, commandeContenus, offres, commandeId }) => {
-  console.log(contenus, commandeContenus)
   const totaux = contenus.reduce((memo, contenu) => {
     const offre = offres[contenu.offreId];
     const commandeCommandeContenus =

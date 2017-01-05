@@ -6,6 +6,7 @@
 import update from 'react-addons-update';
 import c from './constants';
 import cF from 'containers/AdminFournisseur/constants';
+import cE from 'containers/CommandeEdit/constants';
 import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
 import merge from 'lodash/merge';
@@ -78,6 +79,11 @@ function commandeReducer(state = initialState, action) {
         fournisseurs: {},
       };
       return update(state, { datas: { entities: { $set: assign(defaults, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
+    }
+    case cE.ASYNC_SAUVEGARDER_SUCCESS: {
+      console.log('up');
+      const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: [datas.result] } }, pending: { $set: false } });
     }
     case c.ASYNC_CREATE_COMMANDE_SUCCESS:
     case c.ASYNC_LOAD_COMMANDE_SUCCESS: {
