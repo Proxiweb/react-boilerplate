@@ -11,6 +11,8 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
+import assign from 'lodash.assign';
+
 import {
   selectCommandeTypesProduits,
   selectCommandeProduits,
@@ -18,8 +20,12 @@ import {
   selectProduits,
   selectParams,
   selectCommandeCommandeUtilisateurs,
+  selectCommandeContenus,
+  selectCommandeCommandeContenus,
+  selectUtilisateurs,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
+import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
 import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 
@@ -47,7 +53,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     locationState: PropTypes.object.isRequired,
     commande: PropTypes.object,
     commandeUtilisateurs: PropTypes.array,
-
+    cdeCommandeContenus: PropTypes.array.isRequired,
+    commandeContenus: PropTypes.object.isRequired,
+    utilisateurs: PropTypes.array,
+    authUtilisateurId: PropTypes.string.isRequired,
     pushState: PropTypes.func.isRequired,
     init: PropTypes.func.isRequired,
     loadCommandeUtilisateur: PropTypes.func.isRequired,
@@ -71,6 +80,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       route,
       router,
       commandeUtilisateurs,
+      cdeCommandeContenus,
+      commandeContenus,
       init,
       pushState,
       locationState,
@@ -102,7 +113,11 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
     const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
     if (commandeUtilisateur) {
-      loadCommandeUtilisateur(commandeUtilisateur);
+      const contenus =
+        cdeCommandeContenus
+          .map((id) => commandeContenus[id])
+          .filter((cc) => cc.utilisateurId === utilisateurId);
+      loadCommandeUtilisateur(assign({}, commandeUtilisateur, { contenus }));
     }
 
     const { commandeId, relaiId } = params;
@@ -145,6 +160,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     const {
       params,
       commandeUtilisateurs,
+      utilisateurs,
+      authUtilisateurId,
       commande,
       supprimer, // eslint-disable-line
       locationState,
@@ -159,6 +176,11 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     const query = locationState.locationBeforeTransitions.query;
     const utilisateurId = query.utilisateurId || null;
     const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
+
+    let autreUtilisateur = null;
+    if (utilisateurId !== authUtilisateurId) {
+      autreUtilisateur = utilisateurs[utilisateurId];
+    }
 
     return (
       <div className={`${styles.commandeEdit} row`}>
@@ -199,6 +221,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                 <div className="col-md-5">
                   <h1 style={{ textAlign: 'left', color: muiTheme.appBar.color }}>Panier vide</h1>
                 </div>
+                {autreUtilisateur && <div className="col-md-12" style={{ textAlign: 'center' }}>
+                  Commande de {autreUtilisateur.prenom} {autreUtilisateur.nom.toUpperCase()}
+                </div>}
               </div>
               : <OrderValidate params={params} utilisateurId={utilisateurId} panierExpanded={false} />
             }
@@ -215,6 +240,10 @@ const mapStateToProps = createStructuredSelector({
   commandeProduits: selectCommandeProduits(),
   produitsById: selectProduits(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
+  cdeCommandeContenus: selectCommandeCommandeContenus(),
+  commandeContenus: selectCommandeContenus(),
+  authUtilisateurId: selectAuthUtilisateurId(),
+  utilisateurs: selectUtilisateurs(),
   params: selectParams(),
   fournisseur: selectFournisseurProduit(),
   locationState: selectLocationState(),

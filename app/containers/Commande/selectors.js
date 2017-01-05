@@ -78,6 +78,12 @@ export const selectRelais = () => createSelector(
   (substate) => getModel(substate, 'relais')
 );
 
+export const selectUtilisateurs = () => createSelector(
+  [selectCommandeDomain()],
+  (substate) => getModel(substate, 'utilisateurs')
+);
+
+
 export const selectRelaisSelected = () => createSelector(
   selectRelaisId(),
   selectRelais(),
