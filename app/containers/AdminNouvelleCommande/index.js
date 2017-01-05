@@ -120,7 +120,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
 
   validate = () => {
     const { cdeFourns, parametres } = this.state;
-    return cdeFourns.length > 1 && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
+    return cdeFourns.length > 0 && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
   }
 
   calculeDateCommande = () => {
