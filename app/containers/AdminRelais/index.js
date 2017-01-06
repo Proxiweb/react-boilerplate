@@ -6,7 +6,7 @@ import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import EuroIcon from 'material-ui/svg-icons/action/euro-symbol';
 import PeopleIcon from 'material-ui/svg-icons/social/person';
 import includes from 'lodash/includes';
-import assign from 'lodash/assign';
+// import assign from 'lodash/assign';
 
 import styles from './styles.css';
 import classnames from 'classnames';
@@ -15,7 +15,7 @@ import { selectRelais } from 'containers/AdminDepot/selectors';
 
 import DepotsRelais from './containers/DepotsRelais';
 import Utilisateur from './containers/Utilisateur';
-import ListeUtilisateurs from 'components/ListeUtilisateurs';
+import ListeUtilisateurs from 'containers/ListeUtilisateurs';
 // import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 import { push } from 'react-router-redux';
 import { loadRelais } from './actions';
@@ -52,9 +52,15 @@ class AdminRelais extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { utilisateurs, loadUtil } = this.props;
     if (this.props.params.relaiId !== nextProps.params.relaiId) {
       this.setState({ viewSelected: null });
-      this.props.loadUtil({ relaiId: nextProps.params.relaiId });
+      if (
+        !utilisateurs ||
+        !Object.keys(utilisateurs).filter((k) => utilisateurs[k].relaiId === nextProps.params.relaiId).length
+      ) {
+        loadUtil({ relaiId: nextProps.params.relaiId });
+      }
     }
   }
 
@@ -117,7 +123,7 @@ class AdminRelais extends Component {
           <div className="row">
             <div className="col-md-4">
               <ListeUtilisateurs
-                utilisateurs={utilisateurs.reduce((memo, u) => assign({}, memo, { [u.id]: u }), {})}
+                relaiId={relaiId}
                 onChangeList={(event, value) => this.setState({ ...this.state, utilisateurId: value })}
               />
             </div>

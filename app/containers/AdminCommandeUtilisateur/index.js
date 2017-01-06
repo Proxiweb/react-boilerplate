@@ -1,18 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
+// import { createStructuredSelector } from 'reselect';
 import Helmet from 'react-helmet';
 
-import { selectUtilisateurs } from 'containers/Commande/selectors';
+// import { selectUtilisateurs } from 'containers/Commande/selectors';
 import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import styles from './styles.css';
 import classnames from 'classnames';
-import ListeUtilisateurs from 'components/ListeUtilisateurs';
+import ListeUtilisateurs from 'containers/ListeUtilisateurs';
 
 class AdminCommandeUtilisateurs extends Component {
   static propTypes = {
-    utilisateurs: PropTypes.array.isRequired,
+    // utilisateurs: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     load: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -30,7 +30,7 @@ class AdminCommandeUtilisateurs extends Component {
 
   render() {
     const {
-      utilisateurs,
+      params,
     } = this.props;
 
     return (
@@ -41,7 +41,7 @@ class AdminCommandeUtilisateurs extends Component {
         <div className={classnames('col-md-12', styles.panel)}>
           <div className="row">
             <div className="col-md-4 col-md-offset-1">
-              <ListeUtilisateurs onChangeList={this.handleChangeList} utilisateurs={utilisateurs} />
+              <ListeUtilisateurs onChangeList={this.handleChangeList} relaiId={params.relaiId} />
             </div>
             <div className="col-md-7">
               Passer une commande pour un adhérent
@@ -52,14 +52,14 @@ class AdminCommandeUtilisateurs extends Component {
     );
   }
 }
-
-const mapStateToProps = createStructuredSelector({
-  utilisateurs: selectUtilisateurs(),
-});
+//
+// const mapStateToProps = createStructuredSelector({
+//   utilisateurs: selectUtilisateurs(),
+// });
 
 const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
   load: (relaiId) => dispatch(loadUtilisateurs(relaiId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminCommandeUtilisateurs);
+export default connect(mapDispatchToProps)(AdminCommandeUtilisateurs);
