@@ -13,7 +13,7 @@ import {
   selectCommandeContenus,
 } from 'containers/Commande/selectors';
 
-import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+// import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
@@ -24,7 +24,7 @@ class PanierCard extends Component { // eslint-disable-line
     commandeId: PropTypes.string.isRequired,
     utilisateurId: PropTypes.array.isRequired,
     contenus: PropTypes.array.isRequired,
-    balance: PropTypes.number.isRequired,
+    balance: PropTypes.number,
     commandeContenus: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
@@ -97,7 +97,7 @@ class PanierCard extends Component { // eslint-disable-line
                 ? <span> (dont <strong>{round(totaux.recolteFond, 2).toFixed(2)} €</strong> pour la prestation de distribution)</span>
               : ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}`
               }
-              {msgPaiement}
+              {balance && msgPaiement}
             </span>
           )}
           titleStyle={{ width: '600px' }}
@@ -108,7 +108,12 @@ class PanierCard extends Component { // eslint-disable-line
         <CardText expandable style={{ paddingTop: 0 }}>
           { contenus.length === 0 ?
             <h1 style={{ textAlign: 'center' }}>Panier vide</h1> :
-            <OrderValidate params={params} utilisateurId={utilisateurId} panierExpanded={panierExpanded} />
+            <OrderValidate
+              params={params}
+              utilisateurId={utilisateurId}
+              panierExpanded={panierExpanded}
+              balance={balance}
+            />
           }
         </CardText>
       </Card>
@@ -118,7 +123,7 @@ class PanierCard extends Component { // eslint-disable-line
 
 const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
-  balance: selectMontantBalance(),
+  // balance: selectMontantBalance(),
   commandeContenus: selectCommandeContenus(),
 });
 

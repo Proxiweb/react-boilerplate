@@ -95,13 +95,18 @@ const commandeEditReducer = (state = initialState, action) => {
 
     case c.SET_DISTRIBUTION: {
       const { plageHoraire, livraisonId, commandeId } = action.payload;
+      const commande = state[commandeId];
+      if (commande.plageHoraire === plageHoraire && commande.livraisonId === livraisonId) {
+        return state;
+      }
+
       return update(
         state,
         { [commandeId]:
         {
           plageHoraire: { $set: plageHoraire },
           livraisonId: { $set: livraisonId },
-          modifiee: { $set: typeof state.id !== 'undefined' },
+          modifiee: { $set: typeof state[commandeId].id !== 'undefined' },
         },
       });
     }

@@ -25,7 +25,10 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
-import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectAuthUtilisateurId,
+  selectMontantBalance,
+} from 'containers/CompteUtilisateur/selectors';
 import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 
@@ -33,7 +36,7 @@ import { selectCommande } from './selectors';
 
 import {
   initCommande,
-  setDistibution,
+  // setDistibution,
   load,
 } from './actions';
 
@@ -42,6 +45,8 @@ import OrderValidate from './containers/OrderValidate';
 import DetailOffres from './containers/DetailOffres';
 import PanierCard from './containers/PanierCard';
 import styles from './styles.css';
+
+import api from 'utils/stellarApi';
 
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -57,6 +62,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     commandeContenus: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array,
     authUtilisateurId: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
     pushState: PropTypes.func.isRequired,
     init: PropTypes.func.isRequired,
     loadCommandeUtilisateur: PropTypes.func.isRequired,
@@ -69,6 +75,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
   state = {
     panierExpanded: false,
+    balance: null,
   };
 
   componentDidMount() {
@@ -87,6 +94,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       locationState,
       loadCdes,
       loadCommandeUtilisateur,
+      balance,
+      authUtilisateurId,
+      utilisateurs,
     } = this.props;
 
     if (!commande) {
@@ -100,6 +110,17 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
 
     if (!utilisateurId) {
       pushState('/login');
+    }
+
+    if (utilisateurId !== authUtilisateurId) {
+      // si utilisateur connecté utiliser balance
+      // sinon mettre à null, setBalance chargera le compte
+      if (utilisateurId === authUtilisateurId) {
+        this.setBalance(balance);
+      } else {
+        const utilisateur = utilisateurs[utilisateurId];
+        this.setBalance(null, utilisateur.stellarKeys.adresse);
+      }
     }
 
     if (commande && commande.utilisateurId !== utilisateurId) {
@@ -134,6 +155,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.balance !== null) {
+      this.setBalance(nextProps.balance);
+    }
+  }
+
   componentWillUnmount() {
     const { commande, params, init } = this.props;
     if (!commande.id) {
@@ -141,10 +168,24 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
   }
 
-  setPanierState = (state) => this.setState({ panierExpanded: state })
+  /*
+  *
+  */
+  setBalance = (balance, adresse) => {
+    if (balance === null) {
+      api.loadAccount(adresse)
+         .then((res) => {
+           const bal = res.balances.find((b) => b.asset_code === 'PROXI');
+           this.setState({ ...this.state, balance: parseFloat(bal.balance) });
+         });
+    }
+    this.setState({ ...this.state, balance });
+  }
+
+  setPanierState = (state) => this.setState({ ...this.state, panierExpanded: state })
 
   toggleState = () => {
-    this.setState({ panierExpanded: !this.state.panierExpanded });
+    this.setState({ ...this.state, panierExpanded: !this.state.panierExpanded });
   }
 
   routerWillLeave = () => {
@@ -167,12 +208,11 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       locationState,
     } = this.props;
 
+    if (!commande) return null;
+
+    const { panierExpanded, balance } = this.state;
     const muiTheme = this.context.muiTheme;
-
-    if (!commande) return null; // !utilisateurId
-    const { panierExpanded } = this.state;
     const nbreProduits = commande.contenus.length;
-
     const query = locationState.locationBeforeTransitions.query;
     const utilisateurId = query.utilisateurId || null;
     const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
@@ -195,7 +235,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           <div className="col-md-8 col-xs-12 col-lg-9">
             <PanierCard
               nbreProduits={nbreProduits}
-              panierExpanded={this.state.panierExpanded}
+              panierExpanded={panierExpanded}
+              balance={balance}
               commandeId={params.commandeId}
               contenus={commande.contenus}
               params={params}
@@ -225,7 +266,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
                   Commande de {autreUtilisateur.prenom} {autreUtilisateur.nom.toUpperCase()}
                 </div>}
               </div>
-              : <OrderValidate params={params} utilisateurId={utilisateurId} panierExpanded={false} />
+              : <OrderValidate
+                params={params}
+                utilisateurId={utilisateurId}
+                panierExpanded={false}
+                balance={balance}
+              />
             }
           </div>
         </MediaQuery>
@@ -247,6 +293,7 @@ const mapStateToProps = createStructuredSelector({
   params: selectParams(),
   fournisseur: selectFournisseurProduit(),
   locationState: selectLocationState(),
+  balance: selectMontantBalance(),
 });
 
 
@@ -257,7 +304,7 @@ function mapDispatchToProps(dispatch) {
     init: (commandeId) => dispatch(initCommande(commandeId)),
     loadCommandeUtilisateur: (commandeUtilisateur) => dispatch(load(commandeUtilisateur)),
     loadCdes: () => dispatch(loadCommandes()),
-    setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
+    // setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
   };
 }
 

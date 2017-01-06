@@ -36,9 +36,9 @@ class ProduitSelector extends React.Component {
 
   handleChange = (event, index, value) => {
     const { commandeId, relaiId } = this.props.params;
-    const { setPanierState, pushState } = this.props;
+    const { setPanierState, pushState, utilisateurId } = this.props;
     setPanierState(true);
-    pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}`);
+    pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`);
   }
 
   render() {

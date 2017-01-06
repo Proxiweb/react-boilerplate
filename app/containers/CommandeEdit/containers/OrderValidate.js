@@ -38,7 +38,7 @@ import {
 
 import { selectPending } from 'containers/App/selectors';
 
-import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+// import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
 
@@ -52,7 +52,7 @@ class OrderValidate extends Component {
     utilisateurId: PropTypes.string.isRequired,
     livraisons: PropTypes.array.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
-    balance: PropTypes.number.isRequired,
+    balance: PropTypes.number,
     panierExpanded: PropTypes.bool.isRequired,
 
     sauvegarder: PropTypes.func.isRequired,
@@ -197,7 +197,7 @@ class OrderValidate extends Component {
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
-      {commande.id && (
+      {commande.id && balance !== null && (
         <Paiement
           contenus={contenusCommande}
           commandeContenus={commandeContenus}
@@ -218,7 +218,7 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
   commandeContenus: selectCommandeContenus(),
   produitsById: selectProduits(),
-  balance: selectMontantBalance(),
+  // balance: selectMontantBalance(),
   livraisons: selectCommandeLivraisons(),
   pending: selectPending(),
 });
