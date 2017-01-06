@@ -56,7 +56,7 @@ export const selectBalance = () => createSelector(
 
 export const selectMontantBalance = () => createSelector(
   selectBalance(),
-  (balance) => parseFloat(balance.balance),
+  (balance) => (balance ? parseFloat(balance.balance) : null),
 );
 
 export const selectMaxBalance = () => createSelector(
