@@ -11,7 +11,8 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import MediaQuery from 'components/MediaQuery';
 import Helmet from 'react-helmet';
-import assign from 'lodash.assign';
+import assign from 'lodash/assign';
+import capitalize from 'lodash/capitalize';
 
 import {
   selectCommandeTypesProduits,
@@ -243,6 +244,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               toggleState={this.toggleState}
               utilisateurId={utilisateurId}
               commandeUtilisateur={commandeUtilisateur}
+              autreUtilisateur={`${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`}
             />
             {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
           </div>

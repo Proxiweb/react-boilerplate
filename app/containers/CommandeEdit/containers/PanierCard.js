@@ -23,6 +23,7 @@ class PanierCard extends Component { // eslint-disable-line
     commandeUtilisateur: PropTypes.object.isRequired,
     commandeId: PropTypes.string.isRequired,
     utilisateurId: PropTypes.array.isRequired,
+    autreUtilisateur: PropTypes.string,
     contenus: PropTypes.array.isRequired,
     balance: PropTypes.number,
     commandeContenus: PropTypes.object.isRequired,
@@ -37,9 +38,22 @@ class PanierCard extends Component { // eslint-disable-line
   };
 
   buildTitle = (nbreProduits, panierExpanded) => {
-    const { commandeUtilisateur } = this.props;
-    if (commandeUtilisateur && commandeUtilisateur.id) return '';
-    return nbreProduits && !panierExpanded ? 'Cliquez ici pour valider la commande' : '';
+    const { commandeUtilisateur, autreUtilisateur } = this.props;
+    if (commandeUtilisateur && commandeUtilisateur.id) {
+      return autreUtilisateur ? `Commande de ${autreUtilisateur}` : '';
+    }
+
+    if (!panierExpanded) {
+      const formule =
+        nbreProduits > 0
+          ? 'Cliquez ici pour valider la commande'
+          : 'Commande';
+      return autreUtilisateur
+        ? `${formule} de ${autreUtilisateur}`
+        : formule;
+    }
+
+    return '';
   }
 
   render() {
@@ -97,7 +111,7 @@ class PanierCard extends Component { // eslint-disable-line
                 ? <span> (dont <strong>{round(totaux.recolteFond, 2).toFixed(2)} €</strong> pour la prestation de distribution)</span>
               : ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}`
               }
-              {balance && msgPaiement}
+              {typeof balance === 'number' && totaux.prix > 0 && msgPaiement}
             </span>
           )}
           titleStyle={{ width: '600px' }}

@@ -62,4 +62,4 @@ const mapDispatchToProps = (dispatch) => ({
   load: (relaiId) => dispatch(loadUtilisateurs(relaiId)),
 });
 
-export default connect(mapDispatchToProps)(AdminCommandeUtilisateurs);
+export default connect(null, mapDispatchToProps)(AdminCommandeUtilisateurs);
