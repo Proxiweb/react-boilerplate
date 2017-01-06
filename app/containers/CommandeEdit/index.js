@@ -120,6 +120,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         this.setBalance(balance);
       } else {
         const utilisateur = utilisateurs[utilisateurId];
+        if (!utilisateur.stellarKeys) {
+          alert('Adhérent(e) sans porte-monnaie'); // eslint-disable-line
+          return;
+        }
         this.setBalance(null, utilisateur.stellarKeys.adresse);
       }
     }

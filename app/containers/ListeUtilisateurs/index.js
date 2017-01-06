@@ -18,6 +18,11 @@ class ListeUtilisateursRelais extends Component {
     utilisateurs: PropTypes.object.isRequired,
     onChangeList: PropTypes.func.isRequired,
     load: PropTypes.func.isRequired,
+    customFilter: PropTypes.func,
+  }
+
+  static defaultProps = {
+    customFilter: () => true,
   }
 
   state = {
@@ -48,7 +53,7 @@ class ListeUtilisateursRelais extends Component {
   }
 
   render() {
-    const { utilisateurs, relaiId } = this.props;
+    const { utilisateurs, relaiId, customFilter } = this.props;
     const { value, searchItem } = this.state;
     if (!utilisateurs) {
       return (
@@ -71,7 +76,8 @@ class ListeUtilisateursRelais extends Component {
                  !searchItem ||
                  searchItem.length < 3 ||
                  util.nom.toUpperCase().search(searchItem.toUpperCase()) !== -1
-               );
+               ) &&
+               customFilter(util);
       })
       .map((id) => utilisateurs[id])
       .sort((a, b) => a.nom > b.nom);
@@ -84,7 +90,7 @@ class ListeUtilisateursRelais extends Component {
           onChange={(event) => this.setState({ ...this.state, searchItem: event.currentTarget.value })}
           value={this.state.searchItem}
         />
-        <SelectableList value={this.state.value} onChange={this.handleChangeList} className={styles.list}>
+        <SelectableList value={value} onChange={this.handleChangeList} className={styles.list}>
           { utilisateursArray.map((ut, idx) =>
             <ListItem
               key={idx}

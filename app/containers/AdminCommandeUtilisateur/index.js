@@ -41,7 +41,11 @@ class AdminCommandeUtilisateurs extends Component {
         <div className={classnames('col-md-12', styles.panel)}>
           <div className="row">
             <div className="col-md-4 col-md-offset-1">
-              <ListeUtilisateurs onChangeList={this.handleChangeList} relaiId={params.relaiId} />
+              <ListeUtilisateurs
+                onChangeList={this.handleChangeList}
+                relaiId={params.relaiId}
+                customFilter={(util) => typeof util.stellarKeys !== 'undefined'}
+              />
             </div>
             <div className="col-md-7">
               Passer une commande pour un adhérent
