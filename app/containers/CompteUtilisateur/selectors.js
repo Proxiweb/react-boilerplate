@@ -33,6 +33,16 @@ export const selectAuthUtilisateurId = () => createSelector(
   (auth) => (auth ? auth.id : undefined)
 );
 
+export const selectRoles = () => createSelector(
+  [selectCompteUtilisateur()],
+  (auth) => (auth ? auth.roles : undefined)
+);
+
+export const selectRelaiId = () => createSelector(
+  [selectCompteUtilisateur()],
+  (auth) => (auth ? auth.relaiId : undefined)
+);
+
 export const selectAuthApiKey = () => createSelector(
   [selectCompteUtilisateur()],
   (auth) => (auth ? auth.apiKey : undefined)

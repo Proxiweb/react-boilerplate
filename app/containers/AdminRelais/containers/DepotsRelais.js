@@ -5,7 +5,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import groupBy from 'lodash/groupBy';
 import { createStructuredSelector } from 'reselect';
 import { selectDepots } from 'containers/AdminDepot/selectors';
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 
 import Borderau from './Bordereau';
@@ -91,7 +90,6 @@ class DepotsRelais extends Component {
 
 const mapStateToProps = createStructuredSelector({
   depots: selectDepots(),
-  utilisateurs: selectUtilisateurs(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
