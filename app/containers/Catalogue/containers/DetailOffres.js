@@ -1,9 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
+import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
-import AffichePrix, { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import { createStructuredSelector } from 'reselect';
+import round from 'lodash/round';
+import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import {
     selectOffresDuProduit,
     selectTypesProduitsRelais,
@@ -48,11 +50,19 @@ class DetailOffres extends Component {
     const produit = produits.find((pdt) => pdt.id === produitId);
 
     if (!produit) {
-      return <h1>Produit non trouvé</h1>;
+      return <h1>{'Produit non trouvé'}</h1>;
     }
 
     const fournisseur = fournisseurs.find((f) => f.id === produit.fournisseurId);
     const muiTheme = this.context.muiTheme;
+
+    const generateTarifMin = (tarifications, idx) => {
+      if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
+      const tarif = tarifications[idx];
+      return tarifications[idx + 1]
+        ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
+        : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
+    };
 
     return (
       <div className={styles.offres}>
@@ -80,19 +90,63 @@ class DetailOffres extends Component {
         </div>
         { viewOffre && offres.filter((o) => o.active && o.relaiId === relaiId).map((offre, idx) => {
           const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
-
+          const dPrix = detailPrix(offre, 0, 'json');
+          const pAuKg = prixAuKg(offre, typeProduit, 'json');
+          const tR = offre.tarifications.length > 1;
           return (
-            <div key={idx} className={`row ${styles.offre}`} style={{ backgroundColor: muiTheme.palette.groupColor, border: `solid 1px ${muiTheme.palette.groupColorBorder}` }}>
+            <div key={idx} className={`row ${styles.offre}`}>
               <div className="col-md-12">
-                <Card>
+                <Card
+                  style={{
+                    backgroundColor: muiTheme.palette.groupColor,
+                    border: `solid 1px ${muiTheme.palette.groupColorBorder}`,
+                    boxShadow: 'none',
+                  }}
+                >
                   <CardHeader
-                    actAsExpander
-                    showExpandableButton
-                    title={<AffichePrix offre={offre} typeProduit={typeProduit} />}
-                  >
-                  </CardHeader>
+                    actAsExpander={tR}
+                    showExpandableButton={tR}
+                    textStyle={{ textAlign: 'left', paddingRight: 215 }}
+                    title={<span>
+                      {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
+                      {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
+                    </span>}
+                    subtitle={tR && 'Tarif dégressif (cliquez pour plus de détails)'}
+                  />
                   <CardText expandable>
-                    lorem
+                    <Table
+                      selectable={false}
+                      multiSelectable={false}
+                    >
+                      <TableHeader
+                        displaySelectAll={false}
+                        adjustForCheckbox={false}
+                      >
+                        <TableRow>
+                          <TableHeaderColumn>Quantité achetée <sup>*</sup></TableHeaderColumn>
+                          <TableHeaderColumn
+                            style={{ textAlign: 'right' }}
+                          >
+                            Tarif
+                          </TableHeaderColumn>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody displayRowCheckbox={false}>
+                        {offre.tarifications.map((t, index, tarifications) =>
+                          <TableRow>
+                            <TableRowColumn>
+                              {generateTarifMin(tarifications, index)}
+                            </TableRowColumn>
+                            <TableRowColumn
+                              style={{ textAlign: 'right' }}
+                            >
+                              {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
+                            </TableRowColumn>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                    <p><sup>*</sup> Quantité globale achetée par tous les participants de la commande</p>
                   </CardText>
                 </Card>
               </div>
