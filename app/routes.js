@@ -50,6 +50,13 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/catalogue/:relaiId',
+      getComponent(location, cb) {
+        System.import('containers/Catalogue')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/relais/:relaiId',
       getComponent(location, cb) {
         System.import('containers/AdminRelais')

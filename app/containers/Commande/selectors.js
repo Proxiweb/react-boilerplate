@@ -97,7 +97,10 @@ export const selectFournisseursRelais = () => createSelector(
   selectRelaisId(),
   selectFournisseurs(),
   (relaisId, fournisseurs) =>
-    fournisseurs.filter((f) => f.livraisonGlobale || f.relais.find((r) => r.id === relaisId && r.actif)),
+    fournisseurs.filter((f) =>
+      f.livraisonGlobale ||
+      f.relais.find((r) => r.id === relaisId && r.actif)
+    )
 );
 
 export const selectUserIdCommandes = () => createSelector(

@@ -40,6 +40,13 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
           )}
           {user && (
             <ListItem
+              leftIcon={<ShoppingCartIcon />}
+              primaryText="Catalogue"
+              value={`/catalogue/${user.relaiId}`}
+            />
+          )}
+          {user && (
+            <ListItem
               primaryText="Votre compte"
               primaryTogglesNestedList
               leftIcon={<PersonIcon />}
