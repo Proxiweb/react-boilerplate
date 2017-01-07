@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import MediaQuery from 'components/MediaQuery';
 
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import {
@@ -147,18 +148,33 @@ class DetailOffres extends Component {
                       {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
                     </span>}
                   >
-                    {
-                      enStock ?
-                        <RaisedButton
-                          onClick={
-                            (event) => this.handleClick(event, commandeId, offre.id, utilisateurId)
-                          }
-                          primary
-                          label="Ajouter au panier"
-                          icon={<AddShoppingCart />}
-                        /> :
-                        <span className={styles.nonDispo}>Non disponible</span>
-                    }
+                    <MediaQuery query="(max-device-width: 1600px)">
+                      {
+                        enStock ?
+                          <RaisedButton
+                            onClick={
+                              (event) => this.handleClick(event, commandeId, offre.id, utilisateurId)
+                            }
+                            primary
+                            label="Ajouter au panier"
+                            icon={<AddShoppingCart />}
+                          /> :
+                          <span className={styles.nonDispo}>Non disponible</span>
+                      }
+                    </MediaQuery>
+                    <MediaQuery query="(min-device-width: 1600px)">
+                      {
+                        enStock ?
+                          <RaisedButton
+                            onClick={
+                              (event) => this.handleClick(event, commandeId, offre.id, utilisateurId)
+                            }
+                            primary
+                            icon={<AddShoppingCart />}
+                          /> :
+                          <span className={styles.nonDispo}>Non disponible</span>
+                      }
+                    </MediaQuery>
                   </CardHeader>
                   <CardText expandable>
                     <Table
