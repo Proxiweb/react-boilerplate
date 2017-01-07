@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import AffichePrix from 'containers/CommandeEdit/components/components/AffichePrix';
+import AffichePrix, { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import { createStructuredSelector } from 'reselect';
 import {
     selectOffresDuProduit,
