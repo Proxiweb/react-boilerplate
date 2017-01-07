@@ -248,7 +248,11 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               toggleState={this.toggleState}
               utilisateurId={utilisateurId}
               commandeUtilisateur={commandeUtilisateur}
-              autreUtilisateur={`${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`}
+              autreUtilisateur={
+                autreUtilisateur
+                 ? `${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`
+                 : null
+              }
             />
             {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
           </div>

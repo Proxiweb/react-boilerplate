@@ -56,6 +56,24 @@ export default function createRoutes(store) {
           .then(loadModule(cb))
           .catch(errorLoading);
       },
+      childRoutes: [{
+        path: 'typeProduits/:typeProduitId',
+        name: 'catalogueTypeProduits',
+        getComponent(nextState, cb) {
+          System.import('containers/Catalogue')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+        childRoutes: [{
+          path: 'produits/:produitId',
+          name: 'catalogueProduits',
+          getComponent(nextState, cb) {
+            System.import('containers/Catalogue')
+              .then(loadModule(cb))
+              .catch(errorLoading);
+          },
+        }],
+      }],
     }, {
       path: '/relais/:relaiId',
       getComponent(location, cb) {

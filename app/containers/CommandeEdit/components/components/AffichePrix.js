@@ -46,30 +46,50 @@ export const formatterPoids = (offre) => {
   return convertisseur(offre.poids);
 };
 
-function detailPrix(offre, qteCommande) {
+export const detailPrix = (offre, qteCommande, format = 'component') => {
   const tarif = trouveTarification(offre.tarifications, offre.quantiteTotal, qteCommande);
   let ancien = null;
   if (tarif.qteMinRelais !== offre.tarifications[0].qteMinRelais) {
     const t = offre.tarifications[0];
-    ancien = <span style={{ color: 'red' }}><s>{round((t.prix + t.recolteFond) / 100, 2)} €</s>{' '}</span>;
+    ancien = <s style={{ color: 'red' }}>{round((t.prix + t.recolteFond) / 100, 2)} €</s>;
   }
+
+  const datas = {
+    descriptionPdt: `${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ' '}`,
+    prix: round((tarif.prix + tarif.recolteFond) / 100, 2),
+    ancienTarif: ancien,
+  };
+
+  if (format === 'json') return datas;
+
+  const { descriptionPdt, prix, ancienTarif } = datas;
   return (
     <span>
-      <span>{`${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ' '}`}</span> :
-      <span><strong>{round((tarif.prix + tarif.recolteFond) / 100, 2)} €</strong> {ancien}</span>
+      {descriptionPdt}{' : '}<strong>{prix} €</strong>
+      {ancienTarif && ' '}
+      {ancienTarif && <s style={{ color: 'red' }}>{ancienTarif}</s>}
     </span>
   );
-}
+};
 
-function prixAuKg(offre, typeProduit) {
+export const prixAuKg = (offre, typeProduit, format = 'component') => {
   if (!offre.poids) return '';
   if (typeProduit.quantiteUnite === 'ml') return '';
+
+  const datas = {
+    prixAuKg: round(((offre.prix + offre.recolteFond) * 10000) / offre.poids, 2),
+  };
+
+  if (format === 'json') {
+    return datas;
+  }
+
   return (
     <span className={styles.prixAuKg}>
-      {`${round(((offre.prix + offre.recolteFond) * 10000) / offre.poids, 2)} €/Kg`}
+      {`${datas.prixAuKg} €/Kg`}
     </span>
   );
-}
+};
 
 const OffreDetail = (props) => {
   const { offre, deuxLignes, typeProduit, qteCommande } = props;

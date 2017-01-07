@@ -81,7 +81,6 @@ function commandeReducer(state = initialState, action) {
       return update(state, { datas: { entities: { $set: assign(defaults, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
     case cE.ASYNC_SAUVEGARDER_SUCCESS: {
-      console.log('up');
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: [datas.result] } }, pending: { $set: false } });
     }
@@ -95,6 +94,7 @@ function commandeReducer(state = initialState, action) {
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
     }
 
+    case c.ASYNC_LOAD_FOURNISSEUR_SUCCESS:
     case cF.ASYNC_LOAD_FOURNISSEUR_SUCCESS: {
       const datas = normalize(action.datas, schemas.FOURNISSEURS);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });

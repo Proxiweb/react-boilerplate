@@ -11,7 +11,7 @@
 .produitsScr {
   background-color: white;
   overflow-y: scroll;
-  height: calc(100vh - 170px);
+  height: calc(100vh - 210px);
 }
 
 .nonDispo { color: red}
