@@ -121,11 +121,15 @@ class DetailOffres extends Component {
                       <TableHeader
                         displaySelectAll={false}
                         adjustForCheckbox={false}
+                        style={{ color: 'black' }}
                       >
                         <TableRow>
-                          <TableHeaderColumn>Quantité achetée <sup>*</sup></TableHeaderColumn>
                           <TableHeaderColumn
-                            style={{ textAlign: 'right' }}
+                            style={{ textAlign: 'left', color: 'black' }}
+                          >
+                            Quantité achetée <sup>*</sup></TableHeaderColumn>
+                          <TableHeaderColumn
+                            style={{ textAlign: 'right', color: 'black' }}
                           >
                             Tarif
                           </TableHeaderColumn>

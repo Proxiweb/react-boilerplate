@@ -15,6 +15,7 @@ import {
 } from 'material-ui/Table';
 
 import AddShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
+import DetailOffreHeader from 'containers/CommandeEdit/components/DetailOffreHeader';
 import { createStructuredSelector } from 'reselect';
 import {
     selectOffresProduitAvecTotalAchats,
@@ -30,8 +31,29 @@ import {
 } from 'containers/CommandeEdit/actions';
 import round from 'lodash/round';
 
-import AffichePrix, { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
+import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
+
+// 215 360px
+const buildHeader = (paddingRight, width, label, title, enStock, handleClick, showExp) =>
+  <CardHeader
+    actAsExpander={false}
+    showExpandableButton={showExp}
+    style={{ padding: '5px' }}
+    textStyle={{ textAlign: 'left', paddingRight, width }}
+    title={title}
+  >
+    {
+      enStock ?
+        <RaisedButton
+          onClick={() => handleClick()}
+          primary
+          label={label}
+          icon={<AddShoppingCart />}
+        /> :
+        <span className={styles.nonDispo}>Non disponible</span>
+    }
+  </CardHeader>;
 
 class DetailOffres extends Component {
   static propTypes = {
@@ -54,16 +76,6 @@ class DetailOffres extends Component {
     this.state = {
       viewOffre: true,
     };
-  }
-
-  handleClick = (e, commandeId, offreId, utilisateurId) => {
-    e.stopPropagation();
-    e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    this.props.ajouter(
-      commandeId,
-      { offreId, quantite: 1, commandeId, utilisateurId }
-    );
   }
 
   render() {
@@ -127,6 +139,12 @@ class DetailOffres extends Component {
           const pAuKg = prixAuKg(offre, typeProduit, 'json');
           const tR = offre.tarifications.length > 1;
 
+          const title =
+            (<span>
+              {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
+              {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
+            </span>);
+
           return (
             <div key={idx} className={`row ${styles.offre}`}>
               <div className="col-md-12">
@@ -138,44 +156,38 @@ class DetailOffres extends Component {
                     padding: '3px',
                   }}
                 >
-                  <CardHeader
-                    actAsExpander={false}
-                    showExpandableButton={tR}
-                    style={{ padding: '5px' }}
-                    textStyle={{ textAlign: 'left', paddingRight: 215, width: '360px' }}
-                    title={<span>
-                      {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
-                      {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
-                    </span>}
-                  >
-                    <MediaQuery query="(max-device-width: 1600px)">
-                      {
-                        enStock ?
-                          <RaisedButton
-                            onClick={
-                              (event) => this.handleClick(event, commandeId, offre.id, utilisateurId)
-                            }
-                            primary
-                            label="Ajouter au panier"
-                            icon={<AddShoppingCart />}
-                          /> :
-                          <span className={styles.nonDispo}>Non disponible</span>
+                  <MediaQuery query="(max-device-width: 1600px)">
+                    <DetailOffreHeader
+                      paddingRight={215}
+                      width={360}
+                      label="Ajouter au panier"
+                      title={title}
+                      enStock={enStock}
+                      handleClick={() =>
+                        this.props.ajouter(
+                          commandeId,
+                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                        )
                       }
-                    </MediaQuery>
-                    <MediaQuery query="(min-device-width: 1600px)">
-                      {
-                        enStock ?
-                          <RaisedButton
-                            onClick={
-                              (event) => this.handleClick(event, commandeId, offre.id, utilisateurId)
-                            }
-                            primary
-                            icon={<AddShoppingCart />}
-                          /> :
-                          <span className={styles.nonDispo}>Non disponible</span>
+                      showExp={tR}
+                    />
+                  </MediaQuery>
+                  <MediaQuery query="(min-device-width: 1600px)">
+                    <DetailOffreHeader
+                      paddingRight={0}
+                      width={300}
+                      label={null}
+                      title={title}
+                      enStock={enStock}
+                      handleClick={() =>
+                        this.props.ajouter(
+                          commandeId,
+                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                        )
                       }
-                    </MediaQuery>
-                  </CardHeader>
+                      showExp={tR}
+                    />
+                  </MediaQuery>
                   <CardText expandable>
                     <Table
                       selectable={false}
@@ -186,9 +198,13 @@ class DetailOffres extends Component {
                         adjustForCheckbox={false}
                       >
                         <TableRow>
-                          <TableHeaderColumn>Quantité achetée <sup>*</sup></TableHeaderColumn>
                           <TableHeaderColumn
-                            style={{ textAlign: 'right' }}
+                            style={{ color: 'black' }}
+                          >
+                            Quantité achetée <sup>*</sup>
+                          </TableHeaderColumn>
+                          <TableHeaderColumn
+                            style={{ textAlign: 'right', color: 'black' }}
                           >
                             Tarif
                           </TableHeaderColumn>
