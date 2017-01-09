@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ProduitSelector from './containers/ProduitSelector';
 import DetailOffres from './containers/DetailOffres';
+import TexteCatalogue from './containers/TexteCatalogue';
 
 import { loadFournisseurs } from 'containers/Commande/actions';
 
@@ -26,6 +27,7 @@ class Catalogue extends Component { // eslint-disable-line
         </div>
         <div className="col-md-6">
           {produitId && <DetailOffres params={this.props.params} />}
+          {!produitId && <TexteCatalogue params={this.props.params} />}
         </div>
       </div>
     );

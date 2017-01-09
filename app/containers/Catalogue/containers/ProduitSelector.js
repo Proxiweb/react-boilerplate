@@ -30,6 +30,19 @@ class ProduitSelector extends React.Component {
     typeProduitSecondaire: null,
   }
 
+  componentWillReceiveProps = (nextProps) => {
+    if (this.props.typeProduits === null && nextProps.typeProduits.length) {
+      const { typeProduits, params } = nextProps;
+      // sélectionner le premier produit du premier type
+      const premierTypeProduit = typeProduits && typeProduits.length ? typeProduits[0] : null;
+      if (premierTypeProduit) {
+        this.props.pushState(
+          `/catalogue/${params.relaiId}/typeProduits/${premierTypeProduit.id}`
+        );
+      }
+    }
+  }
+
   navigateTo = (productId) => {
     const { typeProduitId, relaiId } = this.props.params;
     this.props.pushState(`/catalogue/${relaiId}/typeProduits/${typeProduitId}/produits/${productId}`);
@@ -56,52 +69,54 @@ class ProduitSelector extends React.Component {
     }
 
     return (
-      <div
-        className={classnames('col-sm-4 col-lg-12 col-xs-12 col-md-4', styles.panelproduits)}
-      >
-        {typeProduits && Object.keys(typeProduits).length > 1 && <SelectField
-          value={typeProduitId}
-          onChange={this.handleChange}
-          iconStyle={{ fill: 'black' }}
-          underlineStyle={{ borderColor: 'black' }}
-          style={{ width: '100%' }}
+      <div className="row">
+        <div
+          className={classnames('col-sm-4 col-lg-12 col-xs-12 col-md-4', styles.panelproduits)}
         >
-          { typeProduits && Object.keys(typeProduits).map((key, index) => <MenuItem key={index} value={typeProduits[key].id} primaryText={typeProduits[key].nom} />)}
-        </SelectField>}
-        {typesProduitsSecondaires && <SelectField
-          value={typeProduitSecondaire}
-          onChange={(event, index, value) => this.setState({ typeProduitSecondaire: value })}
-          iconStyle={{ fill: 'black' }}
-          underlineStyle={{ borderColor: 'black' }}
-          style={{ width: '100%' }}
-        >
-          { typesProduitsSecondaires.map((val, index) =>
-            <MenuItem key={index} value={val} primaryText={val} />)
-          }
-        </SelectField>}
-        {produits && (
-          <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
-            {produits
-              .filter((p) =>
-                p.enStock &&
-                ((!typeProduitSecondaire && !typesProduitsSecondaires) ||
-                p.typeProduitSecondaire === typeProduitSecondaire)
-              )
-              .map((pdt, idx) => (
-                <ListItem
-                  key={idx}
-                  onClick={() => this.navigateTo(pdt.id)}
-                  className={styles.pdtSelected}
-                  style={
-                    produitId && pdt.id === produitId ?
-                    { borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
-                    { borderLeft: 'none' }}
-                >
-                  {pdt.nom.toUpperCase()}
-                </ListItem>
-              ))}
-          </List>
-          )}
+          {typeProduits && Object.keys(typeProduits).length > 1 && <SelectField
+            value={typeProduitId}
+            onChange={this.handleChange}
+            iconStyle={{ fill: 'black' }}
+            underlineStyle={{ borderColor: 'black' }}
+            style={{ width: '100%' }}
+          >
+            { typeProduits && Object.keys(typeProduits).map((key, index) => <MenuItem key={index} value={typeProduits[key].id} primaryText={typeProduits[key].nom} />)}
+          </SelectField>}
+          {typesProduitsSecondaires && <SelectField
+            value={typeProduitSecondaire}
+            onChange={(event, index, value) => this.setState({ typeProduitSecondaire: value })}
+            iconStyle={{ fill: 'black' }}
+            underlineStyle={{ borderColor: 'black' }}
+            style={{ width: '100%' }}
+          >
+            { typesProduitsSecondaires.map((val, index) =>
+              <MenuItem key={index} value={val} primaryText={val} />)
+            }
+          </SelectField>}
+          {produits && (
+            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
+              {produits
+                .filter((p) =>
+                  p.enStock &&
+                  ((!typeProduitSecondaire && !typesProduitsSecondaires) ||
+                  p.typeProduitSecondaire === typeProduitSecondaire)
+                )
+                .map((pdt, idx) => (
+                  <ListItem
+                    key={idx}
+                    onClick={() => this.navigateTo(pdt.id)}
+                    className={styles.pdtSelected}
+                    style={
+                      produitId && pdt.id === produitId ?
+                      { borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
+                      { borderLeft: 'none' }}
+                  >
+                    {pdt.nom.toUpperCase()}
+                  </ListItem>
+                ))}
+            </List>
+            )}
+        </div>
       </div>
     );
   }

@@ -1,11 +1,12 @@
 .pdtSelected {
   border-left: 4px solid black;
+  text-align: left;
 }
 
-.panelproduits, .produits {
+.panelproduits, .produits, .texteCatalogue {
   background-color: white;
 }
-.panelproduits {
+.panelproduits, .texteCatalogue {
   border: solid 1px gray;
 }
 .produitsScr {
