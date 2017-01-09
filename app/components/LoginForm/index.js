@@ -17,6 +17,16 @@ export default class LoginForm extends Component {
     view: 'login',
   }
 
+  componentDidMount = () => {
+    this.username.focus();
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (this.state.view !== prevState.view) {
+      this.username.focus();
+    }
+  }
+
   handleFormSubmit = (event) => {
     event.preventDefault();
     const { view } = this.state;

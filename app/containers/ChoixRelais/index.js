@@ -28,7 +28,7 @@ class ChoixRelais extends Component { // eslint-disable-line
 
   componentDidMount = () => {
     const { relais, load } = this.props;
-    if (!relais) {
+    if (!relais || relais.length === 1) {
       load();
     }
   }
