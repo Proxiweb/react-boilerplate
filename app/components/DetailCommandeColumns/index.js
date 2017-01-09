@@ -2,6 +2,7 @@ import React from 'react';
 import { TableRowColumn } from 'material-ui/Table';
 import TrendingDownIcon from 'material-ui/svg-icons/action/trending-down';
 import round from 'lodash/round';
+import truncate from 'lodash/truncate';
 import styles from './styles.css';
 
 const buildCommandeRow =
@@ -12,8 +13,10 @@ const buildCommandeRow =
         key={`${idx}1`}
       >
         <span>
-          {produit.nom.toUpperCase()}{` ${offre.description || ''}`}
-          {offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}
+          { truncate(
+              `${produit.nom.toUpperCase()} ${offre.description || ''}${offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}`
+            , { length: 40})
+          }
         </span>
         {tarifEnBaisse &&
           <TrendingDownIcon
