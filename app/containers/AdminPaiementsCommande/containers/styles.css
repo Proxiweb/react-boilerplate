@@ -1,0 +1,12 @@
+.form {
+  border: solid 1px silver;
+  padding: 1em;
+}
+
+.submit {
+  margin-top: 1em;
+}
+
+.depot {
+  padding: 1em;
+}

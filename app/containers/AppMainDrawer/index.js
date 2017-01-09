@@ -6,6 +6,7 @@ import { List, ListItem, makeSelectable } from 'material-ui/List';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import TestIcon from 'material-ui/svg-icons/action/settings';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
+import ListIcon from 'material-ui/svg-icons/action/list';
 import HelpIcon from 'material-ui/svg-icons/action/help';
 const SelectableList = makeSelectable(List);
 
@@ -40,7 +41,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
           )}
           {user && (
             <ListItem
-              leftIcon={<ShoppingCartIcon />}
+              leftIcon={<ListIcon />}
               primaryText="Catalogue"
               value={`/catalogue/${user.relaiId}`}
             />

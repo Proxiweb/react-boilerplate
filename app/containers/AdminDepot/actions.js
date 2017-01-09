@@ -11,3 +11,11 @@ export const loadDepotsRelais = (relaiId) => ({
   type: findActionType('load_depots_relais', c, 'START'),
   url: `relais/${relaiId}/depots`,
 });
+
+export const ajouterDepot = (depot) => ({
+  type: findActionType('ajouter_depot', c, 'START'),
+  url: 'depots',
+  method: 'post',
+  datas: { ...depot },
+  msgSuccess: 'Dépot ajouté',
+});

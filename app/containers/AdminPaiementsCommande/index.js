@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
+import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import api from 'utils/stellarApi';
 
 import {
@@ -20,14 +21,20 @@ import capitalize from 'lodash/capitalize';
 
 const SelectableList = makeSelectable(List);
 
+import DepotRelais from './containers/DepotRelais';
+import { selectDepots } from 'containers/AdminDepot/selectors';
+import { loadDepotsRelais } from 'containers/AdminDepot/actions';
+
 class PaiementsCommande extends Component {
   static propTypes = {
     commandeUtilisateurs: PropTypes.array.isRequired,
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
+    depots: PropTypes.array,
     offres: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
+    load: PropTypes.func.isRequired,
   }
 
   state = {
@@ -37,11 +44,12 @@ class PaiementsCommande extends Component {
   }
 
   componentDidMount() {
-    const { utilisateurs, commandeUtilisateurs } = this.props;
+    const { utilisateurs, commandeUtilisateurs, params } = this.props;
     commandeUtilisateurs.forEach((cu) => {
       const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
       this.loadAccount(cu.utilisateurId, ut.stellarKeys.adresse);
     });
+    this.props.load(params.relaiId);
   }
 
   loadAccount(id, accountId) {
@@ -91,6 +99,7 @@ class PaiementsCommande extends Component {
       commandeUtilisateurs,
       utilisateurs,
       params,
+      depots,
     } = this.props;
 
     const { paiements, totaux, utilisateurSelected } = this.state;
@@ -99,13 +108,19 @@ class PaiementsCommande extends Component {
       <div className="row">
         <div className={classnames('col-md-12', styles.panel)}>
           <div className="row">
-            <div className="col-md-4 col-md-offset-1">
+            <div className="col-md-6">
               <SelectableList value={utilisateurSelected} onChange={this.handleChangeList}>
                 {
                   commandeUtilisateurs
                   .filter((cu) => cu.commandeId === params.commandeId)
                   .map((cu, idx) => {
                     const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
+                    const dep = depots.find((d) =>
+                      d.utilisateurId === cu.utilisateurId &&
+                      !d.transfertEffectue &&
+                      d.type === 'depot_relais'
+                    );
+
                     let iconColor = 'silver';
                     if (paiements[ut.id]) {
                       iconColor = totaux[ut.id] <= parseFloat(paiements[ut.id].balance) ? 'green' : 'orange';
@@ -120,13 +135,26 @@ class PaiementsCommande extends Component {
                         }
                         value={ut.id}
                         leftIcon={cu.datePaiement ? null : <PastilleIcon color={iconColor} />}
+                        rightIcon={dep && <WalletIcon />}
                       />
                   );
                   })
                 }
               </SelectableList>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-6">
+              {utilisateurSelected &&
+                <DepotRelais
+                  utilisateurId={utilisateurSelected}
+                  balance={paiements[utilisateurSelected]}
+                  totalCommande={totaux[utilisateurSelected].toFixed(2)}
+                  relaiId={params.relaiId}
+                  depot={depots.find((d) =>
+                    d.utilisateurId === utilisateurSelected &&
+                    !d.transfertEffectue &&
+                    d.type === 'depot_relais'
+                  )}
+                />}
             </div>
           </div>
         </div>
@@ -141,6 +169,11 @@ const mapStateToProps = createStructuredSelector({
   contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),
   offres: selectOffres(),
+  depots: selectDepots(),
 });
 
-export default connect(mapStateToProps)(PaiementsCommande);
+const mapDispatchToProps = (dispatch) => ({
+  load: (relaiId) => dispatch(loadDepotsRelais(relaiId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PaiementsCommande);
