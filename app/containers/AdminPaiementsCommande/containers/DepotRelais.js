@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionDoneIcon from 'material-ui/svg-icons/action/done';
 import { connect } from 'react-redux';
+import round from 'lodash/round';
 import { ajouterDepot } from 'containers/AdminDepot/actions';
 import shader from 'shader';
 import styles from './styles.css';
@@ -49,9 +50,10 @@ class DepotRelais extends Component { // eslint-disable-line
   }
 
   render() {
-    const { depot } = this.props;
+    const { depot, totalCommande, balance } = this.props;
     const { muiTheme } = this.context;
     if (depot) {
+      const montant = parseFloat(depot.montant);
       return (
         <div
           className={`row ${styles.depot}`}
@@ -68,16 +70,21 @@ class DepotRelais extends Component { // eslint-disable-line
             />
           </div>
           <div className="col-md-8">
-            {`Dépot de ${parseFloat(depot.montant).toFixed(2)} € en cours...`}
+            {`Dépot de ${montant.toFixed(2)} € en cours...`}
           </div>
         </div>);
     }
+
+    const manque = round(parseFloat(balance.balance) - totalCommande, 2);
+    const manqueStr = manque > 0 ? '' : `( manque ${(manque * -1).toFixed(2)} €)`;
     return (
       <div className={`row center-md ${styles.form}`}>
         <div className="col-md-12">
           <TextField
             type="number"
-            floatingLabelText="Montant reçu"
+            fullWidth
+            floatingLabelText={`Montant reçu ${manqueStr}`}
+            label="Montant reçu"
             onChange={(event, montant) => this.setState({ montant })}
           />
         </div>

@@ -120,10 +120,16 @@ class PaiementsCommande extends Component {
                       !d.transfertEffectue &&
                       d.type === 'depot_relais'
                     );
+                    // si un dépot a été fait, en tenir compte
+                    const totalAvecDepot = dep && dep.montant
+                      ? round(parseFloat(dep.montant) + parseFloat(paiements[ut.id].balance), 2)
+                      : 0;
 
                     let iconColor = 'silver';
                     if (paiements[ut.id]) {
-                      iconColor = totaux[ut.id] <= parseFloat(paiements[ut.id].balance) ? 'green' : 'orange';
+                      iconColor = totaux[ut.id] <= totalAvecDepot
+                        ? 'green'
+                        : 'orange';
                     }
                     return (
                       <ListItem
