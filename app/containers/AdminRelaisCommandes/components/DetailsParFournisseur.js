@@ -5,6 +5,8 @@ import { createStructuredSelector } from 'reselect';
 import FlatButton from 'material-ui/FlatButton';
 import SendIcon from 'material-ui/svg-icons/content/send';
 import PersonIcon from 'material-ui/svg-icons/social/person';
+import DoneIcon from 'material-ui/svg-icons/action/done';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 import {
   selectCommandeCommandeContenus,
@@ -43,9 +45,16 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
     } = this.props;
 
     const { commandeId, relaiId } = params;
+    const totaux = calculeTotauxCommande({
+      contenus: Object.keys(contenus).map((key) => contenus[key]),
+      offres,
+      commandeContenus,
+      commandeId,
+    });
+
     return (
       <div>
-        {auth.roles.includes('ADMIN') &&
+        {(auth.roles.includes('ADMIN') || auth.roles.includes('RELAI_ADMIN')) &&
           <div>
             <FlatButton
               label="Virer les fonds"
@@ -57,8 +66,18 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
               icon={<PersonIcon />}
               onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs`)}
             />
+            {auth.roles.includes('ADMIN') && <FlatButton
+              label="Finaliser la commande"
+              icon={<DoneIcon />}
+              onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/finalisation`)}
+            />}
           </div>
         }
+        <div className="row end-md">
+          <div className="col-md-6">
+            Total Distributeur: <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
+          </div>
+        </div>
         {fournisseurs
           .filter((f) => f.visible)
           .map((fournisseur, idx) => {

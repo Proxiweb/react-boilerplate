@@ -285,6 +285,15 @@ export default function createRoutes(store) {
           },
         },
         {
+          path: ':commandeId/finalisation',
+          name: 'FinalisationCommande',
+          getComponent(nextState, cb) {
+            System.import('containers/AdminFinalisationCommande')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+          },
+        },
+        {
           path: ':commandeId/edit',
           name: 'ModifCommande',
           getComponent(nextState, cb) {

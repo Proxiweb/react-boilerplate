@@ -79,7 +79,14 @@ class AdminDepot extends Component { // eslint-disable-line
             })}
           >
             <Column label="Type" dataKey="type" width="150" />
-            <Column label="Effectué" dataKey="transfertEffectue" width="150" />
+            <Column
+              label="Effectué"
+              dataKey="transfertEffectue"
+              width="150"
+              cellDataGetter={
+                ({ rowData }) => (rowData.transfertEffectue ? 'oui' : 'non')
+              }
+            />
             <Column label="Montant" dataKey="montant" width="150" />
             <Column
               label="Date"
