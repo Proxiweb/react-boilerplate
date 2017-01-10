@@ -93,7 +93,7 @@ class AdminRelais extends Component {
           <div classNames="col-md-4">
             {relaisSelected &&
               <FlatButton
-                label="Commandes"
+                label="Commandes en cours"
                 icon={<ShoppingCartIcon />}
                 onClick={() => pushState(`/relais/${relaiId}/commandes`)}
               />

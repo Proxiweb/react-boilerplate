@@ -24,6 +24,7 @@ const SelectableList = makeSelectable(List);
 import DepotRelais from './containers/DepotRelais';
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
+import ValidationCommande from './components/ValidationCommande';
 
 class PaiementsCommande extends Component {
   static propTypes = {
@@ -41,6 +42,7 @@ class PaiementsCommande extends Component {
     paiements: {},
     totaux: {},
     utilisateurSelected: null,
+    error: false,
   }
 
   componentDidMount() {
@@ -85,6 +87,9 @@ class PaiementsCommande extends Component {
             [id]: round(totaux.prix + totaux.recolteFond, 2),
           },
         });
+      })
+      .catch(() => {
+        this.setState({ ...this.state, error: true });
       });
   }
 
@@ -102,13 +107,28 @@ class PaiementsCommande extends Component {
       depots,
     } = this.props;
 
-    const { paiements, totaux, utilisateurSelected } = this.state;
+    const { paiements, totaux, utilisateurSelected, error } = this.state;
 
+    if (error) {
+      return (
+        <div className="col-md-12">
+          <h1>{'Les comptes n\'ont pu être chargé veuillez réessayer ultérieurement'}</h1>
+        </div>
+      );
+    }
     return (
-      <div className="row">
-        <div className={classnames('col-md-12', styles.panel)}>
+      <div className={classnames('col-md-12', styles.panel)}>
+        {depots && Object.keys(paiements).length === commandeUtilisateurs.length &&
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-12">
+              <ValidationCommande
+                paiements={paiements}
+                totaux={totaux}
+                depots={depots}
+                commandeUtilisateurs={commandeUtilisateurs}
+              />
+            </div>
+            <div className="col-md-4 col-md-offset-2">
               <SelectableList value={utilisateurSelected} onChange={this.handleChangeList}>
                 {
                   commandeUtilisateurs
@@ -123,7 +143,7 @@ class PaiementsCommande extends Component {
                     // si un dépot a été fait, en tenir compte
                     const totalAvecDepot = dep && dep.montant
                       ? round(parseFloat(dep.montant) + parseFloat(paiements[ut.id].balance), 2)
-                      : 0;
+                      : round(parseFloat(paiements[ut.id].balance), 2);
 
                     let iconColor = 'silver';
                     if (paiements[ut.id]) {
@@ -148,7 +168,7 @@ class PaiementsCommande extends Component {
                 }
               </SelectableList>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-4">
               {utilisateurSelected &&
                 <DepotRelais
                   utilisateurId={utilisateurSelected}
@@ -162,8 +182,7 @@ class PaiementsCommande extends Component {
                   )}
                 />}
             </div>
-          </div>
-        </div>
+          </div>}
       </div>
     );
   }
