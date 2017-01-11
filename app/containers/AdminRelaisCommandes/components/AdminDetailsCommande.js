@@ -2,83 +2,89 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { List, ListItem, makeSelectable } from 'material-ui/List';
-import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
-import { selectCommandeCommandeUtilisateurs } from 'containers/Commande/selectors';
+import {
+  selectCommandeCommandeUtilisateurs,
+  selectCommandeCommandeContenus,
+  selectCommandeContenus,
+  selectOffres,
+} from 'containers/Commande/selectors';
+
 import { fetchUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+
+import { selectDepots } from 'containers/AdminDepot/selectors';
+import { loadDepotsRelais } from 'containers/AdminDepot/actions';
+
 import DetailsParFournisseur from './DetailsParFournisseur';
+import ListeAcheteurs from './ListeAcheteurs';
 import { selectPending } from 'containers/App/selectors';
-const SelectableList = makeSelectable(List);
-import capitalize from 'lodash/capitalize';
-
-
 import DetailsParUtilisateur from './DetailsParUtilisateur';
-
-const getIcon = (cu) => {
-  let color = 'green';
-  if (!cu.datePaiement && !cu.dateLivraison) {
-    color = 'red';
-  } else if (!cu.dateLivraison) {
-    color = 'orange';
-  }
-
-  return <PastilleIcon color={color} />;
-};
-
 
 class AdminDetailsCommande extends Component {
   static propTypes = {
     pushState: PropTypes.func.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
-    utilisateurs: PropTypes.array.isRequired,
     pending: PropTypes.bool.isRequired,
-    loadUtilisateurs: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
+    offres: PropTypes.object.isRequired,
+    contenus: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.array.isRequired,
     children: PropTypes.node,
+    depots: PropTypes.array,
+    utilisateurs: PropTypes.array.isRequired,
+    loadUtilisateurs: PropTypes.func.isRequired,
+    loadDepots: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    const { commandeUtilisateurs, utilisateurs } = this.props;
+    const { commandeUtilisateurs, utilisateurs, params } = this.props;
     const utilisateursIds =
       commandeUtilisateurs
         .filter((cu) => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
         .map((cu) => cu.utilisateurId);
 
     this.props.loadUtilisateurs(utilisateursIds);
+    this.props.loadDepots(params.relaiId);
   }
 
   handleChangeList = (event, value) =>
     this.props.pushState(value);
 
   render() {
-    const { pending, commandeUtilisateurs, params, utilisateurs, children } = this.props;
+    const {
+      pending,
+      commandeUtilisateurs,
+      commandeContenus,
+      depots,
+      contenus,
+      offres,
+      params,
+      utilisateurs,
+      children,
+    } = this.props;
     return (
       <div className="row">
-        <div className="col-md-3">
+        <div className="col-md-4">
           {!pending &&
-            (<SelectableList value={location.pathname} onChange={this.handleChangeList}>
-              {
-                commandeUtilisateurs
-                  .filter((cu) => cu.commandeId === params.commandeId)
-                  .map((cu, idx) => {
-                    const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
-                    if (!ut) return null;
-                    return (
-                      <ListItem
-                        key={idx}
-                        primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
-                        value={`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`}
-                        leftIcon={getIcon(cu)}
-                      />
-                    );
-                  })
-              }
-            </SelectableList>
-            )
+            commandeUtilisateurs &&
+            commandeContenus &&
+            contenus &&
+            utilisateurs &&
+            depots &&
+            offres &&
+            <ListeAcheteurs
+              commandeUtilisateurs={commandeUtilisateurs}
+              commandeContenus={commandeContenus}
+              contenus={contenus}
+              utilisateurs={utilisateurs}
+              depots={depots}
+              offres={offres}
+              params={params}
+              onChange={this.handleChangeList}
+            />
           }
         </div>
-        <div className="col-md-9">
+        <div className="col-md-8">
           {!children && <DetailsParFournisseur params={params} commandeUtilisateurs={commandeUtilisateurs} />}
           {children && (
             <DetailsParUtilisateur
@@ -95,11 +101,16 @@ class AdminDetailsCommande extends Component {
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
+  contenus: selectCommandeContenus(),
+  commandeContenus: selectCommandeCommandeContenus(),
   utilisateurs: selectUtilisateurs(),
+  depots: selectDepots(),
+  offres: selectOffres(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   loadUtilisateurs: (ids) => dispatch(fetchUtilisateurs(ids)),
+  loadDepots: (relaiId) => dispatch(loadDepotsRelais(relaiId)),
   pushState: (url) => dispatch(push(url)),
 });
 

@@ -55,7 +55,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
 
     const contenusUtilisateur = commandeContenus.map((key) => contenus[key]).filter((c) => c.utilisateurId === utilisateur.id);
     const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
-    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`
+    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
       <div className="row">
         <Helmet
@@ -99,11 +99,21 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
         {!commandeUtilisateur.datePaiement &&
           <div className="col-md-12" style={{ marginTop: '1em' }}>
             <div className="row center-md">
-              <div className="col-md-6">
+              <div className="col-md-4">
                 <RaisedButton
                   fullWidth
                   primary
-                  label="Modifier la commande"
+                  label="Modifier"
+                  onClick={
+                    () => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)
+                  }
+                />
+              </div>
+              <div className="col-md-4">
+                <RaisedButton
+                  fullWidth
+                  secondary
+                  label="Annuler"
                   onClick={
                     () => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)
                   }
