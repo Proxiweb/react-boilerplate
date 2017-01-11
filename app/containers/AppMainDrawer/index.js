@@ -52,8 +52,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               primaryTogglesNestedList
               leftIcon={<PersonIcon />}
               nestedItems={[
-                <ListItem primaryText="Profil" value={`/users/${user.id}/profile`} />,
-                <ListItem primaryText="Notifications" value={`/users/${user.id}/notifications`} />,
+                <ListItem primaryText="Profil" value={`/users/${user.id}/profile?tab=profil`} />,
                 <ListItem primaryText="Historique" value={`/users/${user.id}/commandes`} />,
                 <ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />,
               ]}

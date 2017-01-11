@@ -40,7 +40,7 @@ class ChoixRelais extends Component { // eslint-disable-line
       utilisateur.id,
       { ...utilisateur, relaiId },
       `Bienvenu sur le relais ${relais[relaiId].nom} !`,
-      `users/${utilisateur.id}/profile`
+      `users/${utilisateur.id}/profile?tab=profil`
     );
   }
 

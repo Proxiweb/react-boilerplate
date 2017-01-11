@@ -38,22 +38,38 @@ class ProfileForm extends Component { // eslint-disable-line react/prefer-statel
     return (
       <form onSubmit={handleSubmit}>
         <Paper zDepth={2} style={{ padding: '1rem' }}>
-          <div className="row">
-            <div className="col-lg-6">
-              <Field cols="6" tabIndex={-1} floatingLabelText="Nom" name="nom" component={TextField} ref={(node) => (this.nom = node)} />
-              <Field cols="6" tabIndex={-18} floatingLabelText="Adresse" name="adresse" component={TextField} />
-              <Field cols="6" tabIndex={-16} floatingLabelText="Code postal" name="codePostal" component={TextField} />
-              <Field cols="6" tabIndex={-14} floatingLabelText="Télephone portable" name="telPortable" component={TextField} />
-              <Field cols="6" tabIndex={-12} floatingLabelText="Adresse email" name="email" component={TextField} />
+          <div className="row center-md">
+            <div className="col-md-6">
+              <Field cols="6" inputStyle={{ textTransform: 'uppercase' }} floatingLabelText="Nom" name="nom" component={TextField} ref={(node) => (this.nom = node)} />
             </div>
-            <div className="col-lg-6">
-              <Field cols="6" tabIndex={-1} floatingLabelText="Prénom" name="prenom" component={TextField} label="Prénom" />
-              <Field cols="6" tabIndex={-17} floatingLabelText="Adresse complémentaire" name="adressComplementaire" component={TextField} />
-              <Field cols="6" tabIndex={-15} floatingLabelText="Ville" name="ville" component={TextField} />
-              <Field cols="6" tabIndex={-13} floatingLabelText="Télephone fixe" name="telFixe" component={TextField} />
-              <Field cols="6" tabIndex={-11} floatingLabelText="Pseudo (si pas d'email)" name="pseudo" component={TextField} />
+            <div className="col-md-6">
+              <Field cols="6" inputStyle={{ textTransform: 'capitalize' }} floatingLabelText="Prénom" name="prenom" component={TextField} label="Prénom" />
             </div>
-            <div className="col-lg-12" style={{ minHeight: 52 }}>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Adresse" name="adresse" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Adresse complémentaire" name="adressComplementaire" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Code postal" name="codePostal" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" inputStyle={{ textTransform: 'uppercase' }} floatingLabelText="Ville" name="ville" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Télephone portable" name="telPortable" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Télephone fixe" name="telFixe" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Adresse email" name="email" component={TextField} />
+            </div>
+            <div className="col-md-6">
+              <Field cols="6" floatingLabelText="Pseudo (si pas d'email)" name="pseudo" component={TextField} />
+            </div>
+            <div className="col-md-12" style={{ minHeight: 52 }}>
               {!pristine && (<div className="row center-md">
                 <div className={`col-md-4 ${styles.formFooter}`}>
                   <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />

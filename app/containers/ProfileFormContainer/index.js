@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import capitalize from 'lodash/capitalize';
 import {
   isPristine,
 } from 'redux-form';
@@ -18,13 +19,24 @@ class ProfileFormContainer extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
-    // saveAccount: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
   }
 
   handleSubmit = (values) => {
-    const saving = saveAccount(this.props.profile.id, values);
+    const sauvegardeInitiale = this.props.profile.nom !== values.nom;
+
+    const saving = saveAccount(
+      this.props.profile.id,
+      { ...values,
+        nom: values.nom.toUpperCase(),
+        prenom: capitalize(values.prenom),
+      },
+      null,
+      sauvegardeInitiale
+        ? `/users/${this.props.profile.id}/profile?tab=notifications`
+        : null,
+    );
     try {
       this.props.dispatch(saving);
     } catch (e) {

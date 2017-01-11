@@ -3,7 +3,7 @@ import { eventChannel } from 'redux-saga';
 import moment from 'moment';
 import { push } from 'react-router-redux';
 import { findActionType } from '../../utils/asyncSagaConstants';
-import { loginConst, LOGOUT } from './constants';
+import { loginConst, registerConst, LOGOUT } from './constants';
 import { addEffect } from './actions';
 
 import { addMessage } from 'containers/App/actions';
@@ -81,10 +81,20 @@ export function* onLoginSuccess() {
     }
     const user = action.datas.user;
     if (user.relaiId) {
+      if (!user.nom) {
+        yield put(push(`/users/${user.id}/profile?tab=profil`));
+      }
       yield put(push(`/relais/${user.relaiId}/commandes`));
     } else {
       yield put(push('/choixrelais'));
     }
+  }
+}
+
+export function* onRegisterSuccess() {
+  while(true) { // eslint-disable-line
+    yield take(findActionType('register', registerConst, 'SUCCESS'));
+    yield put(push('/choixrelais'));
   }
 }
 
@@ -122,5 +132,6 @@ export default [
   // googleLoginSaga,
   onLogout,
   onLoginSuccess,
+  onRegisterSuccess,
   listenStellarPaymentsOnLoginSuccess,
 ];

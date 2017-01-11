@@ -124,7 +124,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     const depot = params.utilisateurId ? this.findDepot(params.utilisateurId) : null;
     return (
       <div className="row">
-        <div className="col-md-6 col-md-offset-3">
+        <div className={`col-md-6 col-md-offset-3 ${styles.depot}`}>
           {!depot && params.utilisateurId &&
             <RaisedButton
               primary
@@ -133,7 +133,8 @@ class ListeAcheteurs extends Component { // eslint-disable-line
               onClick={() => this.setState({ ...this.state, depot: true })}
             />
           }
-          {depot && <div className={styles.depot}>Dépot : {parseFloat(depot.montant).toFixed(2)} €</div>}
+          {!params.utilisateurId && <span style={{ color: 'black' }}>Acheteurs</span>}
+          {depot && `Dépot : ${parseFloat(depot.montant).toFixed(2)} €`}
           {!depot && totaux[params.utilisateurId] && paiements[params.utilisateurId] &&
             <DepotRelais
               utilisateurId={params.utilisateurId}

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 import { Toggle } from 'material-ui';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
+import Panel from 'components/Panel';
 
 class Notifications extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -29,20 +30,45 @@ class Notifications extends Component { // eslint-disable-line react/prefer-stat
     const { auth, pending } = this.props;
     return (
       <Paper zDepth={2} style={{ padding: '1rem', minHeight: '444px' }}>
-        <div className="row">
-          <div className="col-md-6">
+        <div className="row center-md">
+          <div className="col-md-10">
+            <p style={{ textAlign: 'left', marginBottom: 5 }}><strong>Envoyer les notifications</strong></p>
             <Toggle
               toggled={auth.notifications.nouvelleCommande}
-              label="À chaque nouvelle commande"
+              label="Par SMS"
               disabled={pending}
+              labelPosition="left"
+              labelStyle={{ textAlign: 'left' }}
+              onToggle={this.handleToggle1}
+            />
+            <Toggle
+              toggled={auth.notifications.nouvelleCommande}
+              label="Par email"
+              disabled={pending}
+              labelPosition="left"
+              labelStyle={{ textAlign: 'left' }}
               onToggle={this.handleToggle1}
             />
           </div>
-          <div className="col-md-6">
+
+          <div className="col-md-10">
+            <p style={{ textAlign: 'left', marginBottom: 5 }}><strong>Notifications :</strong></p>
+            <Toggle
+              toggled={auth.notifications.nouvelleCommande}
+              label="Envoyer le résumé hebdomadaire des commandes"
+              disabled={pending}
+              labelPosition="left"
+              labelStyle={{ textAlign: 'left' }}
+              onToggle={this.handleToggle1}
+            />
+          </div>
+          <div className="col-md-10">
             <Toggle
               toggled={auth.notifications.veilleLivraison}
-              label="Les veilles de livraison"
+              labelPosition="left"
+              label="Envoyer un rappel la veille d'une distribution"
               disabled={pending}
+              labelStyle={{ textAlign: 'left' }}
               onToggle={this.handleToggle2}
             />
           </div>

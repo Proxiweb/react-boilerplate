@@ -12,6 +12,7 @@ import {
   selectOffres,
   selectCommandeCommandeUtilisateurs,
 } from 'containers/Commande/selectors';
+
 import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import round from 'lodash/round';
@@ -21,7 +22,7 @@ import capitalize from 'lodash/capitalize';
 
 const SelectableList = makeSelectable(List);
 
-// import DepotRelais from './containers/DepotRelais';
+import DepotRelais from 'containers/DepotRelais';
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 import ValidationCommande from './components/ValidationCommande';
@@ -169,7 +170,7 @@ class PaiementsCommande extends Component {
               </SelectableList>
             </div>
             <div className="col-md-4">
-              {/* utilisateurSelected &&
+              {utilisateurSelected &&
                 <DepotRelais
                   utilisateurId={utilisateurSelected}
                   balance={paiements[utilisateurSelected]}
@@ -180,7 +181,7 @@ class PaiementsCommande extends Component {
                     !d.transfertEffectue &&
                     d.type === 'depot_relais'
                   )}
-                /> */}
+                />}
             </div>
           </div>}
       </div>
