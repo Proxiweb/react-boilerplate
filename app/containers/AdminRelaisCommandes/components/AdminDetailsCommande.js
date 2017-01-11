@@ -15,6 +15,8 @@ import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 
+import { selectRoles } from 'containers/CompteUtilisateur/selectors';
+
 import DetailsParFournisseur from './DetailsParFournisseur';
 import ListeAcheteurs from './ListeAcheteurs';
 import { selectPending } from 'containers/App/selectors';
@@ -26,9 +28,11 @@ class AdminDetailsCommande extends Component {
     commandeUtilisateurs: PropTypes.array.isRequired,
     pending: PropTypes.bool.isRequired,
     params: PropTypes.object.isRequired,
+    commande: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
+    roles: PropTypes.array.isRequired,
     children: PropTypes.node,
     depots: PropTypes.array,
     utilisateurs: PropTypes.array.isRequired,
@@ -47,19 +51,23 @@ class AdminDetailsCommande extends Component {
     this.props.loadDepots(params.relaiId);
   }
 
-  handleChangeList = (event, value) =>
-    this.props.pushState(value);
+  handleChangeList = (event, value) => {
+    const { relaiId, commandeId } = this.props.params;
+    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`);
+  }
 
   render() {
     const {
       pending,
       commandeUtilisateurs,
       commandeContenus,
+      commande,
       depots,
       contenus,
       offres,
       params,
       utilisateurs,
+      roles,
       children,
     } = this.props;
     return (
@@ -69,7 +77,7 @@ class AdminDetailsCommande extends Component {
             commandeUtilisateurs &&
             commandeContenus &&
             contenus &&
-            utilisateurs &&
+            utilisateurs.length > 0 &&
             depots &&
             offres &&
             <ListeAcheteurs
@@ -80,6 +88,7 @@ class AdminDetailsCommande extends Component {
               depots={depots}
               offres={offres}
               params={params}
+              roles={roles}
               onChange={this.handleChangeList}
             />
           }
@@ -89,6 +98,7 @@ class AdminDetailsCommande extends Component {
           {children && (
             <DetailsParUtilisateur
               params={params}
+              commande={commande}
               commandeUtilisateur={commandeUtilisateurs.find((cu) => cu.utilisateurId === params.utilisateurId)}
               utilisateur={utilisateurs.find((ut) => ut.id === params.utilisateurId)}
             />)}
@@ -105,6 +115,7 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
   utilisateurs: selectUtilisateurs(),
   depots: selectDepots(),
+  roles: selectRoles(),
   offres: selectOffres(),
 });
 

@@ -26,6 +26,7 @@ import { calculeTotauxCommande } from 'containers/Commande/utils';
 class DetailsParUtilisateur extends Component { // eslint-disable-line
   static propTypes = {
     commandeUtilisateur: PropTypes.object.isRequired,
+    commande: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     contenus: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
@@ -46,6 +47,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
       offres,
       commandeContenus,
       commandeUtilisateur,
+      commande,
       utilisateurStellarAdresse,
       commandeStellarAdresse,
       pushState,
@@ -96,7 +98,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             adresseStellarCommande={commandeStellarAdresse}
           />}
         </div>
-        {!commandeUtilisateur.datePaiement &&
+        {!commandeUtilisateur.datePaiement && moment(commande.dateCommande).isAfter(moment()) &&
           <div className="col-md-12" style={{ marginTop: '1em' }}>
             <div className="row center-md">
               <div className="col-md-4">

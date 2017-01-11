@@ -6,7 +6,7 @@ const getServer = () => {
   switch (process.env.NODE_ENV) {
     case 'production':
       StellarSdk.Network.useTestNetwork();
-      return new StellarSdk.Server('https://horizon-testnet.stellar.org');
+      return new StellarSdk.Server('https://horizon.stellar.org'); // -testnet
     case 'development':
     default:
       StellarSdk.Network.usePublicNetwork();

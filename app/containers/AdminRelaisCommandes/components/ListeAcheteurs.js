@@ -2,23 +2,19 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import capitalize from 'lodash/capitalize';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import RaisedButton from 'material-ui/RaisedButton';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
+import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
+import DoneIcon from 'material-ui/svg-icons/action/done';
 import round from 'lodash/round';
+import includes from 'lodash/includes';
 import api from 'utils/stellarApi';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import DepotRelais from 'containers/DepotRelais';
+import styles from './styles.css';
 const SelectableList = makeSelectable(List);
-
-const getIcon = (cu) => {
-  let color = 'green';
-  if (!cu.datePaiement && !cu.dateLivraison) {
-    color = 'red';
-  } else if (!cu.dateLivraison) {
-    color = 'orange';
-  }
-
-  return <PastilleIcon color={color} />;
-};
 
 class ListeAcheteurs extends Component { // eslint-disable-line
   static propTypes = {
@@ -37,6 +33,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     totaux: {},
     utilisateurSelected: null,
     error: false,
+    depot: false,
   }
 
   componentDidMount() {
@@ -86,27 +83,96 @@ class ListeAcheteurs extends Component { // eslint-disable-line
       });
   }
 
+  findDepot = (utilisateurId) =>
+    this.props.depots.find((d) =>
+      d.utilisateurId === utilisateurId &&
+      !d.transfertEffectue &&
+      d.type === 'depot_relais'
+    );
+
+  handleClose = () => this.setState({ ...this.state, depot: false })
+
+  handleDepotExpress = () => this.setState({ ...this.state, depot: false })
+
+  handleDepotRelais = () => this.setState({ ...this.state, depot: false })
+
+  computeDatas = (utilisateurId) => {
+    const { utilisateurs } = this.props;
+    const { paiements, totaux } = this.state;
+
+    const ut = utilisateurs.find((u) => u.id === utilisateurId);
+    const dep = this.findDepot(utilisateurId);
+    // si un dépot a été fait, en tenir compte
+    const depot = dep && dep.montant ? parseFloat(dep.montant) : 0;
+
+    let iconColor = 'silver';
+    if (paiements[ut.id]) {
+      iconColor = totaux[ut.id] <= round(depot + parseFloat(paiements[ut.id].balance), 2)
+        ? 'green'
+        : 'orange';
+    }
+
+    return {
+      dep,
+      iconColor,
+    };
+  }
+
   render() {
     const { commandeUtilisateurs, onChange, params, utilisateurs } = this.props;
+    const { paiements, totaux } = this.state;
+    const depot = params.utilisateurId ? this.findDepot(params.utilisateurId) : null;
     return (
-      <SelectableList value={location.pathname} onChange={onChange}>
-        {
-          commandeUtilisateurs
-            .filter((cu) => cu.commandeId === params.commandeId)
-            .map((cu, idx) => {
-              const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
-              if (!ut) return null;
-              return (
-                <ListItem
-                  key={idx}
-                  primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
-                  value={`/admin/relais/${params.relaiId}/commandes/${cu.commandeId}/utilisateurs/${cu.utilisateurId}`}
-                  leftIcon={getIcon(cu)}
-                />
-              );
-            })
-        }
-      </SelectableList>
+      <div className="row">
+        <div className="col-md-6 col-md-offset-3">
+          {!depot && params.utilisateurId &&
+            <RaisedButton
+              primary
+              fullWidth
+              label="Deposer des fonds"
+              onClick={() => this.setState({ ...this.state, depot: true })}
+            />
+          }
+          {depot && <div className={styles.depot}>Dépot : {parseFloat(depot.montant).toFixed(2)} €</div>}
+          {!depot && totaux[params.utilisateurId] && paiements[params.utilisateurId] &&
+            <DepotRelais
+              utilisateurId={params.utilisateurId}
+              balance={paiements[params.utilisateurId]}
+              totalCommande={totaux[params.utilisateurId].toFixed(2)}
+              relaiId={params.relaiId}
+              depot={depot}
+              open={this.state.depot}
+              onRequestClose={this.handleClose}
+            />
+          }
+        </div>
+        <div className="col-md-12">
+          <SelectableList value={params.utilisateurId} onChange={onChange}>
+            {
+              commandeUtilisateurs
+                .map((cu) => ({ ...cu, utilisateur: utilisateurs.find((u) => u.id === cu.utilisateurId) }))
+                .filter((cu) => cu.commandeId === params.commandeId && cu.utilisateur && cu.utilisateur.nom)
+                .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
+                .map((cu, idx) => {
+                  const datas = this.computeDatas(cu.utilisateurId);
+                  return (
+                    <ListItem
+                      key={idx}
+                      primaryText={`${cu.utilisateur.nom.toUpperCase()} ${capitalize(cu.utilisateur.prenom)}`}
+                      value={cu.utilisateurId}
+                      leftIcon={
+                        cu.dateLivraison
+                        ? <DoneIcon color="green" />
+                        : <PastilleIcon color={datas.iconColor} />
+                      }
+                      rightIcon={datas.dep && <WalletIcon />}
+                    />
+                  );
+                })
+            }
+          </SelectableList>
+        </div>
+      </div>
     );
   }
 }

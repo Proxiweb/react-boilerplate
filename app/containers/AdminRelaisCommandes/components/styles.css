@@ -6,3 +6,10 @@
   margin-top: 1em;
   text-align: right;
 }
+
+.depot {
+  min-height: 36px;
+  text-align: center;
+  font-size: 1.2em;
+  color: green;
+}
