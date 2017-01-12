@@ -164,6 +164,9 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     if (nextProps.balance !== null) {
       this.setBalance(nextProps.balance);
     }
+    if (this.props.params.produitId !== nextProps.params.produitId) {
+      this.setState({ ...this.state, panierExpanded: false });
+    }
   }
 
   componentWillUnmount() {
@@ -186,8 +189,6 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
     this.setState({ ...this.state, balance });
   }
-
-  setPanierState = (state) => this.setState({ ...this.state, panierExpanded: state })
 
   toggleState = () => {
     this.setState({ ...this.state, panierExpanded: !this.state.panierExpanded });
@@ -235,7 +236,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
             { name: 'description', content: 'Description of CommandeEdit' },
           ]}
         />
-        <ProduitSelector params={params} setPanierState={this.setPanierState} utilisateurId={utilisateurId} />
+        <ProduitSelector params={params} utilisateurId={utilisateurId} />
         <MediaQuery query="(max-device-width: 1600px)">
           <div className="col-md-8 col-xs-12 col-lg-9">
             <PanierCard

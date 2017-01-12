@@ -21,7 +21,6 @@ class ProduitSelector extends React.Component {
   static propTypes = {
     utilisateurId: PropTypes.string.isRequired,
     pushState: PropTypes.func.isRequired,
-    setPanierState: PropTypes.func.isRequired,
     typeProduits: PropTypes.array.isRequired,
     produits: PropTypes.array,
     allProduits: PropTypes.object.isRequired,
@@ -40,14 +39,13 @@ class ProduitSelector extends React.Component {
     if (typeProduitId === 'favoris') {
       typeProduitId = allProduits[productId].typeProduitId;
     }
-    this.props.setPanierState(false);
+
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`);
   }
 
   handleChange = (event, index, value) => {
     const { commandeId, relaiId } = this.props.params;
-    const { setPanierState, pushState, utilisateurId } = this.props;
-    setPanierState(true);
+    const { pushState, utilisateurId } = this.props;
     pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`);
   }
 
