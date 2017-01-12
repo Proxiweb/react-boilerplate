@@ -20,9 +20,9 @@ import { calculeTotauxCommande } from 'containers/Commande/utils';
 class PanierCard extends Component { // eslint-disable-line
   static propTypes = {
     toggleState: PropTypes.func.isRequired,
-    commandeUtilisateur: PropTypes.object.isRequired,
+    commandeUtilisateur: PropTypes.object,
     commandeId: PropTypes.string.isRequired,
-    utilisateurId: PropTypes.array.isRequired,
+    utilisateurId: PropTypes.string.isRequired,
     autreUtilisateur: PropTypes.string,
     contenus: PropTypes.array.isRequired,
     balance: PropTypes.number,

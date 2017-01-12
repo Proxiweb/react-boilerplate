@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import { List, ListItem } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import classnames from 'classnames';
@@ -11,7 +13,9 @@ import styles from './styles.css';
 import {
   selectCommandeTypesProduits,
   selectCommandeProduitsByTypeProduit,
+  selectProduits,
 } from 'containers/Commande/selectors';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 class ProduitSelector extends React.Component {
   static propTypes = {
@@ -20,6 +24,8 @@ class ProduitSelector extends React.Component {
     setPanierState: PropTypes.func.isRequired,
     typeProduits: PropTypes.array.isRequired,
     produits: PropTypes.array,
+    allProduits: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
   }
 
@@ -28,8 +34,12 @@ class ProduitSelector extends React.Component {
   };
 
   navigateTo = (productId) => {
-    const { commandeId, typeProduitId, relaiId } = this.props.params;
-    const { utilisateurId } = this.props;
+    const { commandeId, relaiId } = this.props.params;
+    let { typeProduitId } = this.props.params;
+    const { utilisateurId, allProduits } = this.props;
+    if (typeProduitId === 'favoris') {
+      typeProduitId = allProduits[productId].typeProduitId;
+    }
     this.props.setPanierState(false);
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`);
   }
@@ -42,9 +52,16 @@ class ProduitSelector extends React.Component {
   }
 
   render() {
-    const { typeProduits, produits, params } = this.props;
+    const { typeProduits, produits, params, allProduits, auth } = this.props;
     const { typeProduitId, produitId } = params;
     const muiTheme = this.context.muiTheme;
+
+    const listeProduits =
+      typeProduitId !== 'favoris'
+        ? produits
+        : Object.keys(allProduits)
+          .filter((id) => includes(auth.produitsFavoris, id))
+          .map((id) => allProduits[id]);
 
     return (
       <div
@@ -58,10 +75,12 @@ class ProduitSelector extends React.Component {
           style={{ width: '100%' }}
         >
           { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
+          {auth.produitsFavoris && auth.produitsFavoris.length > 0 && <Divider />}
+          {auth.produitsFavoris && auth.produitsFavoris.length > 0 && <MenuItem key="favoris" value="favoris" primaryText="Produits favoris" />}
         </SelectField>}
-        {produits && (
+        {listeProduits && (
           <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
-            {produits.map((pdt, idx) => (
+            {listeProduits.map((pdt, idx) => (
               <ListItem
                 key={idx}
                 onClick={() => this.navigateTo(pdt.id)}
@@ -84,6 +103,8 @@ class ProduitSelector extends React.Component {
 const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduits(),
   produits: selectCommandeProduitsByTypeProduit(),
+  allProduits: selectProduits(),
+  auth: selectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

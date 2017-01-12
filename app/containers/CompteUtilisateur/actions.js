@@ -34,14 +34,14 @@ export const accountLoaded = (account) => ({
 export const saveAccount =
   (
     utilisateurId,
-    { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications, relaiId },
+    { nom, produitsFavoris, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications, relaiId },
     msgSuccess = 'Profile sauvegardé',
     redirectSuccess = null,
   ) => ({
     type: saveAccountConst.ASYNC_SAVE_ACCOUNT_START,
     url: `utilisateurs/${utilisateurId}`,
     method: 'put',
-    datas: { nom, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications, relaiId },
+    datas: { nom, produitsFavoris, prenom, adresse, adresseComplementaire, codePostal, ville, telPortable, telFixe, email, pseudo, notifications, relaiId },
     msgSuccess,
     redirectSuccess,
   });

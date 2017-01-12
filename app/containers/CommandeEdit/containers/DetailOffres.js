@@ -1,10 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
+import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
+import includes from 'lodash/includes';
+
 import MediaQuery from 'components/MediaQuery';
 
-import { Card, CardHeader, CardText } from 'material-ui/Card';
+import { Card, CardText } from 'material-ui/Card';
 import {
   Table,
   TableHeader,
@@ -14,7 +16,7 @@ import {
   TableHeaderColumn,
 } from 'material-ui/Table';
 
-import AddShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
+import StarIcon from 'material-ui/svg-icons/toggle/star';
 import DetailOffreHeader from 'containers/CommandeEdit/components/DetailOffreHeader';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -26,6 +28,9 @@ import {
 
 import { selectCommande } from 'containers/CommandeEdit/selectors';
 
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { saveAccount } from 'containers/CompteUtilisateur/actions';
+
 import {
   ajouter,
 } from 'containers/CommandeEdit/actions';
@@ -34,27 +39,6 @@ import round from 'lodash/round';
 import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
 
-// 215 360px
-const buildHeader = (paddingRight, width, label, title, enStock, handleClick, showExp) =>
-  <CardHeader
-    actAsExpander={false}
-    showExpandableButton={showExp}
-    style={{ padding: '5px' }}
-    textStyle={{ textAlign: 'left', paddingRight, width }}
-    title={title}
-  >
-    {
-      enStock ?
-        <RaisedButton
-          onClick={() => handleClick()}
-          primary
-          label={label}
-          icon={<AddShoppingCart />}
-        /> :
-        <span className={styles.nonDispo}>Non disponible</span>
-    }
-  </CardHeader>;
-
 class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array,
@@ -62,9 +46,11 @@ class DetailOffres extends Component {
     utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
+    auth: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     fournisseur: PropTypes.object,
     ajouter: PropTypes.func.isRequired,
+    saveFavoris: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -78,6 +64,21 @@ class DetailOffres extends Component {
     };
   }
 
+  toggleFav = (produitId) => {
+    const { auth, saveFavoris } = this.props;
+    const produitsFavoris = includes(auth.produitsFavoris, produitId)
+      ? auth.produitsFavoris.filter((item) => item !== produitId)
+      : auth.produitsFavoris.concat(produitId);
+
+    const datas = { ...auth, produitsFavoris };
+
+    saveFavoris(
+      auth.id,
+      datas,
+      null
+    );
+  }
+
   render() {
     const { viewOffre } = this.state;
     const {
@@ -88,6 +89,7 @@ class DetailOffres extends Component {
       commande,
       utilisateurId,
       params,
+      auth,
     } = this.props;
 
     if (!offres || !typeProduits) return null;
@@ -108,7 +110,21 @@ class DetailOffres extends Component {
     return (
       <div className={styles.offres}>
         <div className="row">
-          <div className={`col-md-12 ${styles.fournisseurSwitch}`}>
+          <div className={`col-md-6 ${styles.favoris}`}>
+            {viewOffre &&
+              <IconButton
+                tooltip="Ajouter aux produits favoris"
+                onClick={() => this.toggleFav(produitId)}
+              >
+                <StarIcon
+                  color={
+                    auth.produitsFavoris.find((item) => item === produitId) ? 'yellow' : 'silver'
+                  }
+                />
+              </IconButton>
+            }
+          </div>
+          <div className={`col-md-6 ${styles.fournisseurSwitch}`}>
             <FlatButton
               onClick={() => this.setState((oldState) => ({ viewOffre: !oldState.viewOffre }))}
               primary
@@ -242,10 +258,14 @@ const mapStateToProps = createStructuredSelector({
   fournisseur: selectFournisseurProduit(),
   produitsById: selectProduits(),
   commande: selectCommande(), // commande courante en cours d'édition
+  auth: selectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
+  ajouter: (commandeId, offre) =>
+    dispatch(ajouter(commandeId, offre)),
+  saveFavoris: (id, datas, msg, redirect) =>
+    dispatch(saveAccount(id, datas, msg, redirect)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailOffres);
