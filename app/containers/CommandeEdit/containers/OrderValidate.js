@@ -197,7 +197,7 @@ class OrderValidate extends Component {
       <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && commande.livraisonId && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
-      {commande.id && balance !== null && (
+      {commande.id && balance !== null && view === 'panier' && (
         <Paiement
           contenus={contenusCommande}
           commandeContenus={commandeContenus}
