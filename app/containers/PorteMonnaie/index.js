@@ -59,7 +59,7 @@ export class PorteMonnaie extends React.Component { // eslint-disable-line react
   render() {
     const { compte, payments, progVir, params, virements, annulVir, auth, depCb } = this.props;
     const muiTheme = this.context.muiTheme;
-
+    if (!compte) return null;
     return (
       <div className="row">
         <div className={`col-md-6 ${styles.panel}`}>

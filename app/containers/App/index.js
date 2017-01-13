@@ -15,7 +15,7 @@ import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-// import { Nav, NavItem } from 'react-bootstrap';
+import { createStructuredSelector } from 'reselect';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -24,6 +24,15 @@ import Close from 'material-ui/svg-icons/navigation/close';
 
 import AppBar from 'material-ui/AppBar';
 import AppMainDrawer from 'containers/AppMainDrawer';
+
+import {
+  selectBalance,
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
+
+import {
+  selectPending,
+} from './selectors';
 
 import { logout } from 'containers/Login/actions';
 import Logged from './components/Logged';
@@ -49,6 +58,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     pushState: PropTypes.func.isRequired,
     destinataires: PropTypes.array.isRequired,
     logout: PropTypes.func.isRequired,
+    compte: PropTypes.object,
     user: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.bool,
@@ -88,7 +98,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   };
 
   render() {
-    const { user, pending, destinataires, pushState } = this.props;
+    const { user, pending, destinataires, pushState, compte } = this.props;
     const drawerStyle = getDrawerHeaderStyle(this.context);
     return (
       <div className={styles.allContent}>
@@ -102,6 +112,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             onSelect={this.navigateTo}
             onChangeList={this.handleChangeList}
             user={user}
+            showPorteMonnaie={compte}
             onRequestChange={(open) => this.setState({ drawerOpen: open })}
             logout={this.props.logout}
             header={(
@@ -130,10 +141,13 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 }
 
-const mapStateToProps = (state) => ({
-  user: state.compteUtilisateur.auth,
-  pending: state.global.pending,
-  destinataires: state.admin ? state.admin.communication.destinataires : [],
+const selectDestinaires = () => (state) => (state.admin ? state.admin.communication.destinataires : []);
+
+const mapStateToProps = createStructuredSelector({
+  user: selectCompteUtilisateur(),
+  pending: selectPending(),
+  destinataires: selectDestinaires(),
+  compte: selectBalance(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
