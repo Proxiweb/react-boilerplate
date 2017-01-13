@@ -9,6 +9,7 @@ export default class DetailOffreHeader extends Component { // eslint-disable-lin
     paddingRight: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
+    fontSize: PropTypes.string.isRequired,
     title: PropTypes.node.isRequired,
     enStock: PropTypes.bool.isRequired,
     handleClick: PropTypes.func.isRequired,
@@ -33,7 +34,7 @@ export default class DetailOffreHeader extends Component { // eslint-disable-lin
         style={{ padding: '1px' }}
         textStyle={{
           textAlign: 'left',
-          fontSize: '1.2em',
+          fontSize: this.props.fontSize || '1.2em',
           color: '#1565c0',
           paddingRight,
           width,

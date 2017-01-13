@@ -32,6 +32,24 @@ class ProduitSelector extends React.Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
+  getTypesProduitsMenuItems = (typeProduits, produitsFavoris) => {
+    const menuItems = typeProduits.map((type, index) =>
+      <MenuItem key={index} value={type.id} primaryText={type.nom} />
+    );
+    if (produitsFavoris && produitsFavoris.length) {
+      menuItems.push(<Divider />);
+      menuItems.push(<MenuItem key="favoris" value="favoris" primaryText="Produits favoris" />);
+    }
+
+    return menuItems;
+  }
+
+  handleChange = (event, index, value) => {
+    const { commandeId, relaiId } = this.props.params;
+    const { pushState, utilisateurId } = this.props;
+    pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`);
+  }
+
   navigateTo = (productId) => {
     const { commandeId, relaiId } = this.props.params;
     let { typeProduitId } = this.props.params;
@@ -41,12 +59,6 @@ class ProduitSelector extends React.Component {
     }
 
     this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`);
-  }
-
-  handleChange = (event, index, value) => {
-    const { commandeId, relaiId } = this.props.params;
-    const { pushState, utilisateurId } = this.props;
-    pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`);
   }
 
   render() {
@@ -72,9 +84,7 @@ class ProduitSelector extends React.Component {
           underlineStyle={{ borderColor: 'black' }}
           style={{ width: '100%' }}
         >
-          { typeProduits && typeProduits.map((type, index) => <MenuItem key={index} value={type.id} primaryText={type.nom} />)}
-          {auth.produitsFavoris && auth.produitsFavoris.length > 0 && <Divider />}
-          {auth.produitsFavoris && auth.produitsFavoris.length > 0 && <MenuItem key="favoris" value="favoris" primaryText="Produits favoris" />}
+          {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
         </SelectField>}
         {listeProduits && (
           <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>

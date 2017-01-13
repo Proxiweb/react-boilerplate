@@ -110,7 +110,7 @@ class DetailOffres extends Component {
     return (
       <div className={styles.offres}>
         <div className="row">
-          <div className={`col-md-6 ${styles.favoris}`}>
+          <div className={`col-md-2 ${styles.favoris}`}>
             {viewOffre &&
               <FlatButton
                 tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
@@ -125,13 +125,13 @@ class DetailOffres extends Component {
                     hoverColor={
                       estFavoris ? shader('#ffd203', 0.5) : shader('silver', 0.5)
                     }
-                    style={{ height: '48px', width: '48px' }}
+                    style={{ height: '36px', width: '36px' }}
                   />
                 }
               />
             }
           </div>
-          <div className={`col-md-6 ${styles.fournisseurSwitch}`}>
+          <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
             <FlatButton
               onClick={() => this.setState((oldState) => ({ viewOffre: !oldState.viewOffre }))}
               primary
@@ -164,8 +164,11 @@ class DetailOffres extends Component {
 
           const title =
             (<span>
-              <strong>{parseFloat(dPrix.prix).toFixed(2)} € - <small>{dPrix.descriptionPdt}</small></strong>
-              {'      '}{offre.poids && <small style={{ color: 'gray' }}>{`${pAuKg.prixAuKg} € / Kg`}</small>}
+              <strong>
+                {parseFloat(dPrix.prix).toFixed(2)} € - <small>{dPrix.descriptionPdt}</small>
+              </strong>
+              {'      '}
+              {offre.poids && <small style={{ color: 'gray' }}>{`${pAuKg.prixAuKg} € / Kg`}</small>}
             </span>);
 
           return (
@@ -174,7 +177,7 @@ class DetailOffres extends Component {
                 <Card
                   style={{
                     backgroundColor: 'white',
-                    border: 'solid 1px #ede7e7',
+                    border: 'solid 1px #a5a1a1',
                     boxShadow: 'none',
                     padding: '5px 0 5px 15px',
                   }}

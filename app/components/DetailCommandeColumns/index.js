@@ -15,7 +15,7 @@ const buildCommandeRow =
         <span>
           { truncate(
               `${produit.nom.toUpperCase()} ${offre.description || ''}${offre.poids && ` ${parseInt(offre.poids, 10) / 1000}g`}`
-            , { length: 40})
+            , { length: 35 })
           }
         </span>
         {tarifEnBaisse &&
