@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import includes from 'lodash/includes';
+import shader from 'shader';
 
 import MediaQuery from 'components/MediaQuery';
 
@@ -97,7 +97,6 @@ class DetailOffres extends Component {
     const { produitId, commandeId } = params;
     const produit = produitsById[produitId];
     const contenus = commande.contenus;
-    const muiTheme = this.context.muiTheme;
 
     const generateTarifMin = (tarifications, idx) => {
       if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
@@ -107,21 +106,29 @@ class DetailOffres extends Component {
         : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
     };
 
+    const estFavoris = auth.produitsFavoris.find((item) => item === produitId);
     return (
       <div className={styles.offres}>
         <div className="row">
           <div className={`col-md-6 ${styles.favoris}`}>
             {viewOffre &&
-              <IconButton
-                tooltip="Ajouter aux produits favoris"
+              <FlatButton
+                tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
                 onClick={() => this.toggleFav(produitId)}
-              >
-                <StarIcon
-                  color={
-                    auth.produitsFavoris.find((item) => item === produitId) ? 'yellow' : 'silver'
-                  }
-                />
-              </IconButton>
+                style={{ height: '48px', width: '48px', minWidth: 'none' }}
+                hoverColor="white"
+                icon={
+                  <StarIcon
+                    color={
+                      estFavoris ? '#ffd203' : 'silver'
+                    }
+                    hoverColor={
+                      estFavoris ? shader('#ffd203', 0.5) : shader('silver', 0.5)
+                    }
+                    style={{ height: '48px', width: '48px' }}
+                  />
+                }
+              />
             }
           </div>
           <div className={`col-md-6 ${styles.fournisseurSwitch}`}>
@@ -132,8 +139,8 @@ class DetailOffres extends Component {
             />
           </div>
           {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
-          <div className="col-md-12">
-            <div className="row" style={{ margin: 5 }}>
+          <div className="col-md-10">
+            <div className="row" style={{ margin: 10 }}>
               <div className="col-md-6">
                 {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
                 {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
@@ -157,8 +164,8 @@ class DetailOffres extends Component {
 
           const title =
             (<span>
-              {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
-              {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
+              <strong>{parseFloat(dPrix.prix).toFixed(2)} € - <small>{dPrix.descriptionPdt}</small></strong>
+              {'      '}{offre.poids && <small style={{ color: 'gray' }}>{`${pAuKg.prixAuKg} € / Kg`}</small>}
             </span>);
 
           return (
@@ -166,15 +173,15 @@ class DetailOffres extends Component {
               <div className="col-md-12">
                 <Card
                   style={{
-                    backgroundColor: muiTheme.palette.groupColor,
-                    border: `solid 1px ${muiTheme.palette.groupColorBorder}`,
+                    backgroundColor: 'white',
+                    border: 'solid 1px #ede7e7',
                     boxShadow: 'none',
-                    padding: '3px',
+                    padding: '5px 0 5px 15px',
                   }}
                 >
                   <MediaQuery query="(max-device-width: 1600px)">
                     <DetailOffreHeader
-                      paddingRight={215}
+                      paddingRight={390}
                       width={360}
                       label="Ajouter au panier"
                       title={title}

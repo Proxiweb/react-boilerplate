@@ -85,8 +85,8 @@ class ProduitSelector extends React.Component {
                 className={styles.pdtSelected}
                 style={
                   produitId && pdt.id === produitId ?
-                  { borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
-                  { borderLeft: 'none' }}
+                  { fontSize: '0.9em', borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
+                  { fontSize: '0.9em', borderLeft: 'none' }}
               >
                 {pdt.nom.toUpperCase()}
               </ListItem>

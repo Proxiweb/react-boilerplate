@@ -46,8 +46,8 @@ class PanierCard extends Component { // eslint-disable-line
     if (!panierExpanded) {
       const formule =
         nbreProduits > 0
-          ? 'Cliquez ici pour valider la commande'
-          : 'Commande';
+          ? 'Cliquez ici pour valider votre commande'
+          : '';
       return autreUtilisateur
         ? `${formule} de ${autreUtilisateur}`
         : formule;
@@ -91,15 +91,15 @@ class PanierCard extends Component { // eslint-disable-line
     if (!panierExpanded) {
       msgPaiement =
         round(totaux.prix + totaux.recolteFond, 2) <= balance
-          ? (<span style={{ color: shader(muiTheme.appBar.color, -0.4) }}>
+          ? (<small style={{ color: shader(muiTheme.appBar.color, -0.4) }}>
             {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}<ActionDoneIcon style={{ verticalAlign: 'middle', color: shader(muiTheme.appBar.color, -0.4) }} />
             {'\u00A0'}Fonds porte-monnaie suffisants
-          </span>)
-          : (<span style={{ color: muiTheme.palette.warningColor }}>
+          </small>)
+          : (<small style={{ color: muiTheme.palette.warningColor }}>
               {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
               <AlertWarningIcon style={{ verticalAlign: 'middle', color: muiTheme.palette.warningColor }} />
             {'\u00A0'}Fonds porte-monnaie insuffisants
-            </span>);
+          </small>);
     }
     return (
       <Card style={{ marginBottom: 20 }} onExpandChange={toggleState} expanded={panierExpanded}>
@@ -107,14 +107,16 @@ class PanierCard extends Component { // eslint-disable-line
           title={(
             <span>
               Panier : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2) || 0} €</strong>
-              {panierExpanded
+              {panierExpanded // eslint-disable-line
                 ? <span> (dont <strong>{round(totaux.recolteFond, 2).toFixed(2)} €</strong> pour la prestation de distribution)</span>
-              : ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}`
+                : nbreProduits > 0
+                  ? ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}`
+                  : ''
               }
               {typeof balance === 'number' && totaux.prix > 0 && msgPaiement}
             </span>
           )}
-          titleStyle={{ width: '600px' }}
+          titleStyle={{ width: '600px', fontSize: '1.2em' }}
           subtitle={this.buildTitle(nbreProduits, panierExpanded)}
           actAsExpander={nbreProduits > 0}
           showExpandableButton={nbreProduits > 0}

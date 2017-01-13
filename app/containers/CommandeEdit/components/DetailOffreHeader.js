@@ -30,8 +30,15 @@ export default class DetailOffreHeader extends Component { // eslint-disable-lin
       <CardHeader
         actAsExpander={false}
         showExpandableButton={showExp}
-        style={{ padding: '5px' }}
-        textStyle={{ textAlign: 'left', paddingRight, width }}
+        style={{ padding: '1px' }}
+        textStyle={{
+          textAlign: 'left',
+          fontSize: '1.2em',
+          color: '#1565c0',
+          paddingRight,
+          width,
+        }}
+        titleStyle={{ color: '#1565c0', fontSize: '1.2em' }}
         title={title}
       >
         {
