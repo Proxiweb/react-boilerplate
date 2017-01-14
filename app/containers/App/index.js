@@ -106,6 +106,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
           title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: 'black' }}>Relais ProxiWeb</Link>}
           onLeftIconButtonTouchTap={this.toggleDrawer}
           iconElementRight={user ? <Logged destinataires={destinataires} onClick={pushState} /> : <Login onClick={this.handleChangeList} />}
+          className={styles.noPrint}
         >
           <AppMainDrawer
             open={this.state.drawerOpen}

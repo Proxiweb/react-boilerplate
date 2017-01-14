@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { Link } from 'react-router';
 import DetailCommande from './DetailCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import DetailCommandeTotal from './DetailCommandeTotal';
@@ -24,7 +25,13 @@ export default class CommandeFournisseur extends Component { // eslint-disable-l
     const totaux = calculeTotauxCommande({ contenus: contenusFournisseur, offres, commandeContenus, commandeId });
     return (
       <div>
-        <h1>{fournisseur.nom}</h1>
+        <h1>
+          <Link
+            to={`/factures/${commandeId}/fournisseurs/${fournisseur.id}`}
+          >
+            {fournisseur.nom}
+          </Link>
+        </h1>
         <DetailCommande
           contenus={contenusFournisseur}
           commandeContenus={contenusFournisseur}

@@ -12,6 +12,8 @@ import {
   selectOffres,
   selectUserIdCommandeUtilisateur,
   selectCommandeId,
+  selectCommandeCommandeContenus,
+  selectCommandeContenus,
 } from 'containers/Commande/selectors';
 
 
@@ -22,6 +24,8 @@ class DetailCommandeContainer extends Component {
     produits: PropTypes.object,
     offres: PropTypes.object,
     commandeUtilisateur: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.array.isRequired,
+    contenus: PropTypes.object.isRequired,
 
     loadCommandeById: PropTypes.func.isRequired,
   }
@@ -42,7 +46,7 @@ class DetailCommandeContainer extends Component {
   }
 
   render() {
-    const { produits, offres, commandeUtilisateur } = this.props;
+    const { produits, offres, commandeUtilisateur, commandeContenus, contenus } = this.props;
     if (!commandeUtilisateur) {
       return (
         <RefreshIndicator
@@ -54,6 +58,8 @@ class DetailCommandeContainer extends Component {
         />
       );
     }
+    console.log(commandeContenus, contenus);
+    return null;
     return (
       <DetailCommande
         contenus={commandeUtilisateur.contenus}
@@ -72,6 +78,8 @@ const mapStateToProps = createStructuredSelector({
   produits: selectProduits(),
   offres: selectOffres(),
   commandeUtilisateur: selectUserIdCommandeUtilisateur(),
+  contenus: selectCommandeContenus(),
+  commandeContenus: selectCommandeCommandeContenus(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

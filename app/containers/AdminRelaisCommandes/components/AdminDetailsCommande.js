@@ -25,12 +25,12 @@ import DetailsParUtilisateur from './DetailsParUtilisateur';
 class AdminDetailsCommande extends Component {
   static propTypes = {
     pushState: PropTypes.func.isRequired,
-    commandeUtilisateurs: PropTypes.array.isRequired,
     pending: PropTypes.bool.isRequired,
     params: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     contenus: PropTypes.object.isRequired,
+    commandeUtilisateurs: PropTypes.array.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     roles: PropTypes.array.isRequired,
     children: PropTypes.node,

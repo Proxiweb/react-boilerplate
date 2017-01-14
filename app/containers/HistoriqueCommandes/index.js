@@ -40,13 +40,14 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
   }
 
   handleChangeList = (event, value) =>
-    this.props.pushState(value);
+    this.props.pushState(
+      `/users/${this.props.params.userId}/commandes/${value}`
+    );
 
   render() {
     const {
       commandes,
       children,
-      userId,
       commandeId,
       params,
     } = this.props;
@@ -59,9 +60,8 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
             {commandes.map((cde, idx) =>
               <ListItem
                 key={idx}
-                primaryText={moment(cde.dateCommande).format('LLL')}
-                value={`/users/${userId}/commandes/${cde.id}`}
-                onClick={() => pushState(`/users/${userId}/commandes/${cde.id}`)}
+                primaryText={moment(cde.dateCommande).format('LL')}
+                value={cde.id}
               />
             )}
           </SelectableList>
