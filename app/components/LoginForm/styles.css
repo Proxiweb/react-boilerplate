@@ -1,6 +1,6 @@
 .login {
   margin-bottom: 0;
-  padding: 0 0 15px 0;
+  padding: 0 0 15px;
 }
 
 .formHeader {
@@ -11,5 +11,5 @@
 
 .paddedHoriz {
   background-color: #FFF;
-  padding: 0 2em 0 2em;
+  padding: 0 2em;
 }

@@ -14,7 +14,6 @@ import {
 import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import round from 'lodash/round';
-import styles from './styles.css';
 import classnames from 'classnames';
 import capitalize from 'lodash/capitalize';
 

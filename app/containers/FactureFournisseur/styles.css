@@ -11,48 +11,46 @@
 }
 
 /*  https://github.com/NextStepWebs/simple-html-invoice-template */
-.invoicebox{
-    max-width:800px;
-    margin:auto;
-    padding:30px;
-    border:1px solid #eee;
-    box-shadow:0 0 10px rgba(0, 0, 0, .15);
-    font-size:16px;
-    line-height:24px;
-    font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-    color:#555;
+.invoicebox {
+  max-width: 800px;
+  margin: auto;
+  padding: 30px;
+  border: 1px solid #EEE;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  line-height: 24px;
+  font-family: Ubuntu, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #555;
 }
 
-.invoiceBox table{
-    width:100%;
-    line-height:inherit;
-    text-align:left;
+.invoiceBox table {
+  width: 100%;
+  line-height: inherit;
+  text-align: left;
 }
 
-.invoiceBox table td{
-    padding:5px;
-    vertical-align:top;
+.invoiceBox table td {
+  padding: 5px;
+  vertical-align: top;
 }
 
-.invoiceBox table tr td:nth-child(4),
-{
-    text-align:right;
+.invoiceBox table tr td:nth-child(4) {
+  text-align: right;
 }
 
 .invoiceBox table tr td:nth-child(2),
-.invoiceBox table tr td:nth-child(3),
-{
-    text-align:center;
+.invoiceBox table tr td:nth-child(3) {
+  text-align: center;
 }
 
-.invoiceBox table tr.top table td{
-    padding-bottom:20px;
+.invoiceBox table tr.top table td {
+  padding-bottom: 20px;
 }
 
-.invoiceBox table tr.top table td.title{
-    font-size:20px;
-    line-height:20px;
-    color:#333;
+.invoiceBox table tr.top table td.title {
+  font-size: 20px;
+  line-height: 20px;
+  color: #333;
 }
 
 h3 {
@@ -62,48 +60,47 @@ h3 {
 }
 
 .invoiceBox table tr.top table td.dates {
-    text-align: right;
+  text-align: right;
 }
 
-.invoiceBox table tr.information table td{
-    padding-bottom:40px;
+.invoiceBox table tr.information table td {
+  padding-bottom: 40px;
 }
 
-.invoiceBox table tr.heading td{
-    background:#eee;
-    border-bottom:1px solid #ddd;
-    font-weight:bold;
+.invoiceBox table tr.heading td {
+  background: #EEE;
+  border-bottom: 1px solid #DDD;
+  font-weight: bold;
 }
 
-.invoiceBox table tr.details td{
-    padding-bottom:20px;
+.invoiceBox table tr.details td {
+  padding-bottom: 20px;
 }
 
-.invoiceBox table tr.item td{
-    border-bottom:1px solid #eee;
+.invoiceBox table tr.item td {
+  border-bottom: 1px solid #EEE;
 }
 
-.invoiceBox table tr.item.last td{
-    border-bottom:none;
+.invoiceBox table tr.item.last td {
+  border-bottom: none;
 }
 
-.invoiceBox table tr.total td:nth-child(4){
-    border-top:2px solid #eee;
-    font-weight:bold;
-    text-align: right;
+.invoiceBox table tr.total td:nth-child(4) {
+  border-top: 2px solid #EEE;
+  font-weight: bold;
+  text-align: right;
 }
-
 
 @media only screen and (max-width: 600px) {
-    .invoiceBox table tr.top table td{
-        width:100%;
-        display:block;
-        text-align:center;
-    }
+  .invoiceBox table tr.top table td {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
 
-    .invoiceBox table tr.information table td{
-        width:100%;
-        display:block;
-        text-align:center;
-    }
+  .invoiceBox table tr.information table td {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
 }
