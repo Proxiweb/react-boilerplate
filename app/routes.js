@@ -43,6 +43,13 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/factures/:commandeId/fournisseurs/:fournisseurId',
+      getComponent(location, cb) {
+        System.import('containers/FactureFournisseur')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/relais',
       getComponent(location, cb) {
         System.import('containers/AdminRelais')
