@@ -98,6 +98,14 @@ export function* onRegisterSuccess() {
   }
 }
 
+export function* loadAccountOnWalletCreation() {
+  while(true) { // eslint-disable-line
+    const action = yield take('WS/STELLAR_WALLET_UTILISATEUR');
+    console.log('nouveau wallet', action)
+    yield fork(loadAccountSaga, action.datas.stellarKeys.adresse);
+  }
+}
+
 export function* listenStellarPaymentsOnLoginSuccess() {
   const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
   const channel = effects(action.datas.user.stellarKeys.adresse);
@@ -133,5 +141,6 @@ export default [
   onLogout,
   onLoginSuccess,
   onRegisterSuccess,
+  loadAccountOnWalletCreation,
   listenStellarPaymentsOnLoginSuccess,
 ];

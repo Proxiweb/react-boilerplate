@@ -17,6 +17,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
     onChangeList: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     header: PropTypes.node.isRequired,
+    showPorteMonnaie: PropTypes.bool.isRequired,
     user: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.bool,
@@ -24,7 +25,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
     logout: PropTypes.func.isRequired,
   }
   render() {
-    const { open, header, onRequestChange, onChangeList, user } = this.props;
+    const { open, header, onRequestChange, onChangeList, user, showPorteMonnaie } = this.props;
     return (
       <Drawer open={open} docked={false} onRequestChange={onRequestChange}>
         {header}
@@ -51,11 +52,15 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               primaryText="Votre compte"
               primaryTogglesNestedList
               leftIcon={<PersonIcon />}
-              nestedItems={[
-                <ListItem primaryText="Profil" value={`/users/${user.id}/profile?tab=profil`} />,
-                <ListItem primaryText="Historique" value={`/users/${user.id}/commandes`} />,
-                <ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />,
-              ]}
+              nestedItems={[].concat(
+                [
+                  <ListItem primaryText="Profil" value={`/users/${user.id}/profile?tab=profil`} />,
+                  <ListItem primaryText="Historique" value={`/users/${user.id}/commandes`} />,
+                ]
+                , showPorteMonnaie
+                  ? [<ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />]
+                  : []
+              )}
             />
           )}
           {user && user.roles.includes('ADMIN') && (
@@ -101,6 +106,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               leftIcon={<TestIcon />}
               nestedItems={[
                 <ListItem primaryText="Catalogue" value={`/fournisseurs/${user.fournisseurId}/catalogue`} />,
+                <ListItem primaryText="Factures" value={`/fournisseurs/${user.fournisseurId}/factures`} />,
               ]}
             />
           )}

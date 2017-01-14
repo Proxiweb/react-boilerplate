@@ -329,6 +329,30 @@ export default function createRoutes(store) {
         },
       ],
     }, {
+      path: 'fournisseurs/:fournisseurId/factures',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/FacturesFournisseur/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      childRoutes: [{
+        path: ':commandeId',
+        name: 'FactureCommande',
+        getComponent(nextState, cb) {
+          System.import('containers/FacturesFournisseur/containers/FactureFournisseur')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+      }],
+    }, {
       path: 'fournisseurs/:fournisseurId/catalogue',
       getComponent(location, cb) {
         const importModules = Promise.all([
@@ -345,21 +369,12 @@ export default function createRoutes(store) {
       },
       childRoutes: [{
         path: ':produitId',
-        name: 'utilisateursCommande',
+        name: 'AdminProduit',
         getComponent(nextState, cb) {
           System.import('containers/AdminFournisseur/components/AdminProduit')
             .then(loadModule(cb))
             .catch(errorLoading);
         },
-        // childRoutes: [{
-        //   path: 'utilisateurs/:utilisateurId',
-        //   name: 'utilisateurCommande',
-        //   getComponent(nextState, cb) {
-        //     System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
-        //       .then(loadModule(cb))
-        //       .catch(errorLoading);
-        //   },
-        // }],
       }],
     }, {
       path: '/communications/:communicationId',

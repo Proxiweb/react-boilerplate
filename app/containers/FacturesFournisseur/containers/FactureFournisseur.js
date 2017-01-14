@@ -1,12 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import moment from 'moment';
 import round from 'lodash/round';
+import classnames from 'classnames';
 
 import {
-  selectCommandeCommandeUtilisateurs,
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
   selectOffres,
   selectFournisseurs,
   selectProduits,
@@ -24,12 +23,11 @@ import {
 import { fetchUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import { trouveTarification } from
-  'containers/CommandeEdit/components/components/AffichePrix';
-import Adresse from './components/Adresse';
-import moment from 'moment';
-import classnames from 'classnames';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 
+import Adresse from './Adresse';
 import styles from './styles.css';
 
 class FactureFournisseur extends Component { // eslint-disable-line
@@ -38,41 +36,58 @@ class FactureFournisseur extends Component { // eslint-disable-line
     params: PropTypes.object.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
     commandeContenus: PropTypes.array.isRequired,
-    commande: PropTypes.object.isRequired,
     contenus: PropTypes.object.isRequired,
+    commande: PropTypes.object.isRequired,
     produits: PropTypes.object.isRequired,
-    utilisateurs: PropTypes.object.isRequired,
-    fournisseurs: PropTypes.object.isRequired,
+    utilisateurs: PropTypes.array.isRequired,
+    fournisseurs: PropTypes.array.isRequired,
     loadU: PropTypes.func.isRequired,
     loadF: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
     const {
-      commandeUtilisateurs,
-      utilisateurs,
       fournisseurs,
-      loadU,
       loadF,
       params,
     } = this.props;
     const { fournisseurId } = params;
+    this.loadAcheteurs();
+    if (!fournisseurs.find((f) => f.id === fournisseurId)) {
+      loadF({ fournisseurId });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { commandeUtilisateurs: thisCu } = this.props;
+    const { commandeUtilisateurs: nextCu } = nextProps;
+    if (nextCu && thisCu[0].id !== nextCu[0].id) {
+      this.loadAcheteurs();
+    }
+  }
+
+  loadAcheteurs() {
+    const {
+      commandeUtilisateurs,
+      utilisateurs,
+      loadU,
+    } = this.props;
     const utilisateursIds =
       commandeUtilisateurs
-        .filter((cu) => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
+        .filter((cu) => !utilisateurs.find((u) => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
         .map((cu) => cu.utilisateurId);
 
     loadU(utilisateursIds);
-
-    if (!fournisseurs[fournisseurId]) {
-      loadF({ fournisseurId });
-    }
   }
 
   buildProducts = (utilisateurId) => {
     const { commandeContenus: cc, contenus: c, offres, produits, params } = this.props;
     const commandeContenus = cc.map((id) => c[id]);
-    const contenus = commandeContenus.filter((cC) => cC.utilisateurId === utilisateurId);
+    const contenus = commandeContenus
+                      .filter((cC) =>
+                        cC.utilisateurId === utilisateurId &&
+                        produits[offres[cC.offreId].produitId].fournisseurId === params.fournisseurId
+                      );
     const { commandeId } = params;
     const totaux = calculeTotauxCommande({
       contenus,
@@ -100,7 +115,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
           );
 
           return (<tr className={styles.item}>
-            <td>{produits[offres[contenu.offreId].produitId].description}</td>
+            <td>{produits[offres[contenu.offreId].produitId].nom.toUpperCase()}</td>
             <td className={styles.center}>{contenu.quantite}</td>
             <td className={styles.center}>{parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}</td>
             <td className={styles.totaux}>{parseFloat(round(tarif.prix / 100, 2)).toFixed(2)} €</td>
@@ -125,11 +140,24 @@ class FactureFournisseur extends Component { // eslint-disable-line
   render() {
     const {
       commandeUtilisateurs,
+      commandeContenus,
+      contenus,
       commande,
       utilisateurs,
       fournisseurs,
       params,
     } = this.props;
+
+    if (
+      !fournisseurs ||
+      !commande ||
+      !commandeUtilisateurs ||
+      !commandeContenus ||
+      !contenus ||
+      !utilisateurs
+    ) {
+      return null;
+    }
 
     const fournisseur = fournisseurs.find((f) => f.id === params.fournisseurId);
 
@@ -207,10 +235,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
   commande: selectCommande(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  contenus: selectCommandeContenus(),
   produits: selectProduits(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   utilisateurs: selectUtilisateurs(),
   fournisseurs: selectFournisseurs(),
   offres: selectOffres(),

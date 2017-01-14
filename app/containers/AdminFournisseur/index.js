@@ -11,7 +11,7 @@ import styles from './styles.css';
 
 const SelectableList = makeSelectable(List);
 
-class Catalogue extends Component {
+class CatalogueFournisseur extends Component {
   static propTypes = {
     load: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -60,4 +60,4 @@ const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);
+export default connect(mapStateToProps, mapDispatchToProps)(CatalogueFournisseur);

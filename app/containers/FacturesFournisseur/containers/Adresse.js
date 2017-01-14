@@ -9,6 +9,7 @@ export default class Adresse extends Component { // eslint-disable-line
 
   render() {
     const { datas: d, label } = this.props;
+    if (!d) return null;
     return (
       <div>
         <strong>{label}</strong><br />

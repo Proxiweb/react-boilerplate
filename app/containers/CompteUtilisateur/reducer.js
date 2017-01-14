@@ -107,6 +107,8 @@ function compteUtilisateurReducer(state = initialState, action) {
       const incoming = action.payload.compteUtilisateur;
       return { ...state, ...incoming, loading: false };
     }
+    case 'WS/STELLAR_WALLET_UTILISATEUR':
+      return update(state, { auth: { $set: { ...state.auth, stellarKeys: { adresse: action.datas.stellarKeys } } } });
     default:
       return state;
   }

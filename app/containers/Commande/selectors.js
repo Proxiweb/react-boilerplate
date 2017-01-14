@@ -349,6 +349,19 @@ export const selectFournisseurProduits = () => createSelector(
   }
 );
 
+/* commandes d'un fournisseur */
+export const selectFournisseurCommandes = () => createSelector(
+  selectCommandes(),
+  selectFournisseurId(),
+  selectFournisseursIds(),
+  (commandes, fournisseurId, fournisseursIds) => {
+    if (!commandes || !fournisseurId || !fournisseursIds) return null;
+    return fournisseursIds[fournisseurId]
+            .commandes
+            .map((id) => commandes[id]);
+  }
+);
+
 //
 // export const selectedTypeProduct = () => createSelector(
 //     selectTypeProduitId(),

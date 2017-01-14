@@ -31,6 +31,7 @@ produits.define({
 
 fournisseurs.define({
   produits: arrayOf(produits),
+  commandes: arrayOf(commandes),
 });
 
 commandes.define({
