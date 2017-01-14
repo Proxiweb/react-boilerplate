@@ -146,8 +146,12 @@ class DetailOffres extends Component {
                 {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
               </div>
               <div className="col-md-6">
-                {viewOffre && <p dangerouslySetInnerHTML={{ __html: produit.description }} />}
-                {!viewOffre && <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} />}
+                {viewOffre &&
+                  <p dangerouslySetInnerHTML={{ __html: produit.description }} /> // eslint-disable-line
+                }
+                {!viewOffre &&
+                  <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} /> // eslint-disable-line
+                }
               </div>
             </div>
           </div>

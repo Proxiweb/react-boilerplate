@@ -96,8 +96,8 @@ class PanierCard extends Component { // eslint-disable-line
             {'\u00A0'}Fonds porte-monnaie suffisants
           </small>)
           : (<small style={{ color: muiTheme.palette.warningColor }}>
-              {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
-              <AlertWarningIcon style={{ verticalAlign: 'middle', color: muiTheme.palette.warningColor }} />
+            {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
+            <AlertWarningIcon style={{ verticalAlign: 'middle', color: muiTheme.palette.warningColor }} />
             {'\u00A0'}Fonds porte-monnaie insuffisants
           </small>);
     }

@@ -155,7 +155,6 @@ class NouvelleCommande extends Component { // eslint-disable-line
   }
 
   handleDestroy = () => {
-    console.log('suppression confirmée');
     this.handleClose();
   }
 

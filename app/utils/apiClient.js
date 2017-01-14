@@ -28,7 +28,7 @@ export function post(url, options = { headers: {}, query: {}, datas: {} }) {
       resolve({ datas: response.data });
     })
     .catch((error) => {
-        console.log(error);
+        console.log(error); // eslint-disable-line
       if (error.response) {
         // try {
         reject({ message: error.response.data });

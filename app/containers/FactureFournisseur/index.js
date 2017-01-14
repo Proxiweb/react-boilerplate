@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -222,3 +223,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureFournisseur);
+/* eslint-enable */

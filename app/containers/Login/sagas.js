@@ -68,7 +68,7 @@ function effects(accountId) { // accountId
                                           emitter({ op, trx });
                                         });
                                     }),
-        onerror: (err) => console.log(err),
+        onerror: (err) => console.log(err), // eslint-disable-line
       });
   });
 }
@@ -101,7 +101,6 @@ export function* onRegisterSuccess() {
 export function* loadAccountOnWalletCreation() {
   while(true) { // eslint-disable-line
     const action = yield take('WS/STELLAR_WALLET_UTILISATEUR');
-    console.log('nouveau wallet', action)
     yield fork(loadAccountSaga, action.datas.stellarKeys.adresse);
   }
 }

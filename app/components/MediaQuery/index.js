@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import matchMedia from 'matchmedia';
 import hyphenate from 'hyphenate-style-name';
@@ -115,3 +116,5 @@ export default class MediaQuery extends React.Component {
     }
   }
 }
+
+/* eslint-enable */

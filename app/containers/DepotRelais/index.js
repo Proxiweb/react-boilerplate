@@ -7,10 +7,8 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import ActionDoneIcon from 'material-ui/svg-icons/action/done';
 import { ajouterDepot } from 'containers/AdminDepot/actions';
 import { selectRoles } from 'containers/CompteUtilisateur/selectors';
-import shader from 'shader';
 import styles from './styles.css';
 
 class DepotRelais extends Component { // eslint-disable-line

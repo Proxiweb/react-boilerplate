@@ -1,3 +1,4 @@
+/* eslint-disable */
 import hyphenate from 'hyphenate-style-name';
 import mq from './mediaQuery';
 
@@ -33,3 +34,5 @@ export default function (obj) {
   });
   return join(rules);
 }
+
+/* eslint-enable */

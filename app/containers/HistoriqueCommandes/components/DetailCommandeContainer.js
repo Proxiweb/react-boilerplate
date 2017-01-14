@@ -46,7 +46,7 @@ class DetailCommandeContainer extends Component {
   }
 
   render() {
-    const { produits, offres, commandeUtilisateur, commandeContenus, contenus } = this.props;
+    const { produits, offres, commandeUtilisateur, commandeContenus, contenus } = this.props; // eslint-disable-line
     if (!commandeUtilisateur) {
       return (
         <RefreshIndicator
@@ -58,8 +58,7 @@ class DetailCommandeContainer extends Component {
         />
       );
     }
-    console.log(commandeContenus, contenus);
-    return null;
+
     return (
       <DetailCommande
         contenus={commandeUtilisateur.contenus}

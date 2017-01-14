@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Paper from 'material-ui/Paper';
 import { Toggle } from 'material-ui';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
-import Panel from 'components/Panel';
 
 class Notifications extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {

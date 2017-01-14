@@ -44,13 +44,13 @@ export function motdepasse({ username, redirectPathname = null }) {
   };
 }
 
-export function googleLogin(googleLoginResponse, redirectPathname = null) {
-  return {
-    type: GOOGLE_LOGIN_START,
-    datas: googleLoginResponse,
-    redirectPathname,
-  };
-}
+// export function googleLogin(googleLoginResponse, redirectPathname = null) {
+//   return {
+//     type: GOOGLE_LOGIN_START,
+//     datas: googleLoginResponse,
+//     redirectPathname,
+//   };
+// }
 
 export function logout(redirectPathname = null) {
   return {

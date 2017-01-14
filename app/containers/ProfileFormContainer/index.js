@@ -40,7 +40,7 @@ class ProfileFormContainer extends React.Component {
     try {
       this.props.dispatch(saving);
     } catch (e) {
-      console.log(e);
+      console.log(e); // eslint-disable-line
     }
   }
 

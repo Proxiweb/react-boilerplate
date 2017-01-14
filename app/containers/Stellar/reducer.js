@@ -33,7 +33,7 @@ const initialState = {
 
 function syncContact(state, payload) {
   const { accountId, fedId } = payload;
-  if (state.contacts.find(contact => contact.accountId === accountId || (fedId !== null && contact.fedId === fedId))) {
+  if (state.contacts.find((contact) => contact.accountId === accountId || (fedId !== null && contact.fedId === fedId))) {
     return state;
   }
 

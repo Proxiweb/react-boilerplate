@@ -1,4 +1,5 @@
-.bordered, .borderedFull {
+.bordered,
+.borderedFull {
   border-left: solid 1px gray;
   border-right: solid 1px gray;
   border-top: solid 1px gray;
@@ -23,7 +24,8 @@
   padding-right: 10;
 }
 
-.smallCol, .lessSmallCol {
+.smallCol,
+.lessSmallCol {
   width: 10%;
   padding-left: 10;
   padding-right: 10;

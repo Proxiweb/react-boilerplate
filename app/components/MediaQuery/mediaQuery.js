@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { PropTypes } from 'react';
 
 const stringOrNumber = PropTypes.oneOfType([
@@ -92,3 +93,5 @@ export default {
   matchers: matchers,
   features: features,
 };
+
+/* eslint-enable */

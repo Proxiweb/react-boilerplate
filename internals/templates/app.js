@@ -20,10 +20,12 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import LanguageProvider from 'containers/LanguageProvider';
+/* eslint-disable import/no-unresolved, import/extensions */
 import configureStore from './store';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
+/* eslint-enable import/no-unresolved, import/extensions */
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
 import 'sanitize.css/sanitize.css';
@@ -45,7 +47,9 @@ const history = syncHistoryWithStore(browserHistory, store, {
 
 // Set up the router, wrapping all Routes in the App component
 import App from 'containers/App';
+/* eslint-disable import/no-unresolved, import/extensions */
 import createRoutes from './routes';
+/* eslint-enable import/no-unresolved, import/extensions */
 const rootRoute = {
   component: App,
   childRoutes: createRoutes(store),

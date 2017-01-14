@@ -1,6 +1,12 @@
 import React, { PropTypes, Component } from 'react';
 import DetailCommandeProduit from './DetailCommandeProduit';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from 'material-ui/Table';
 
 export default class DetailsCommande extends Component { // eslint-disable-line
   static propTypes = {
@@ -19,7 +25,7 @@ export default class DetailsCommande extends Component { // eslint-disable-line
   }
 
   handleRowSelection = (selectedRows) =>
-    console.log(selectedRows);
+    console.log(selectedRows);  // eslint-disable-line
 
   render() {
     const { produits, contenus, commandeContenus, selectable } = this.props;

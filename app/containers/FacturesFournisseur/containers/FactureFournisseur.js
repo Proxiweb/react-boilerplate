@@ -123,18 +123,18 @@ class FactureFournisseur extends Component { // eslint-disable-line
         }
       );
 
-      rows.push(
-        <tr className={styles.total}>
-            <td />
-            <td />
-            <td />
-            <td className={styles.right}>
-               Total: {parseFloat(totaux.prix).toFixed(2)} €
-            </td>
-        </tr>
-      );
+    rows.push(
+      <tr className={styles.total}>
+        <td />
+        <td />
+        <td />
+        <td className={styles.right}>
+          Total: {parseFloat(totaux.prix).toFixed(2)} €
+        </td>
+      </tr>
+    );
 
-      return rows;
+    return rows;
   }
 
   render() {
@@ -163,70 +163,70 @@ class FactureFournisseur extends Component { // eslint-disable-line
 
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
-          {
-            commandeUtilisateurs
-              .map((cu, idx) =>
+        {
+          commandeUtilisateurs
+            .map((cu, idx) =>
               <table cellPadding="0" cellSpacing="0">
-                  <tr className={styles.top}>
-                      <td colSpan="4">
-                          <table>
-                              <tr>
-                                  <td className={styles.title}>
-                                      <h3>Facture Proxiweb <small>{cu.commandeId}_{idx}</small></h3>
-                                  </td>
+                <tr className={styles.top}>
+                  <td colSpan="4">
+                    <table>
+                      <tr>
+                        <td className={styles.title}>
+                          <h3>Facture Proxiweb <small>{cu.commandeId}_{idx}</small></h3>
+                        </td>
 
-                                  <td className={styles.title}>
-                                      <h3>{moment(commande.dateCommande).format('LL')}</h3>
-                                  </td>
-                              </tr>
-                          </table>
-                      </td>
-                  </tr>
+                        <td className={styles.title}>
+                          <h3>{moment(commande.dateCommande).format('LL')}</h3>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
 
-                  <tr className={styles.information}>
-                      <td colSpan="4">
-                          <table>
-                              <tr>
-                                  <td>
-                                    {
-                                      fournisseur &&
-                                        <Adresse
-                                          label="Fournisseur"
-                                          datas={fournisseur}
-                                        />
-                                    }
-                                  </td>
-                                  <td>
-                                    <Adresse
-                                      label="Client"
-                                      datas={utilisateurs.find((u) =>
-                                        u.id === cu.utilisateurId
-                                      )}
-                                    />
-                                  </td>
-                              </tr>
-                          </table>
-                      </td>
-                  </tr>
+                <tr className={styles.information}>
+                  <td colSpan="4">
+                    <table>
+                      <tr>
+                        <td>
+                          {
+                            fournisseur &&
+                              <Adresse
+                                label="Fournisseur"
+                                datas={fournisseur}
+                              />
+                          }
+                        </td>
+                        <td>
+                          <Adresse
+                            label="Client"
+                            datas={utilisateurs.find((u) =>
+                              u.id === cu.utilisateurId
+                            )}
+                          />
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
 
-                  <tr className={styles.heading}>
-                      <td>
-                          Produit
-                      </td>
-                      <td className={styles.center}>
-                          Quantité
-                      </td>
-                      <td className={styles.center}>
-                          Prix unitaire HT
-                      </td>
-                      <td className={styles.totaux}>
-                          Prix TTC
-                      </td>
-                  </tr>
-                  {this.buildProducts(cu.utilisateurId)}
+                <tr className={styles.heading}>
+                  <td>
+                    Produit
+                  </td>
+                  <td className={styles.center}>
+                    Quantité
+                  </td>
+                  <td className={styles.center}>
+                      Prix unitaire HT
+                  </td>
+                  <td className={styles.totaux}>
+                    Prix TTC
+                  </td>
+                </tr>
+                {this.buildProducts(cu.utilisateurId)}
               </table>
-              )
-          }
+            )
+        }
       </div>
     );
   }

@@ -71,7 +71,9 @@ export default class Produit extends Component {
           />
         </div>
         <div className={`col-md-12 ${styles.photo}`}>
-          {!editMode && <div dangerouslySetInnerHTML={{ __html: produit.description }} />}
+          {!editMode &&
+            <div dangerouslySetInnerHTML={{ __html: produit.description }} /> // eslint-disable-line
+          }
           {false && (
             <Editor
               editorClassName={styles.editorClass}

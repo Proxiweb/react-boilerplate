@@ -15,9 +15,9 @@ class StellarMain extends Component { // eslint-disable-line
     account: PropTypes.object.isRequired,
     loadAccount: PropTypes.func.isRequired,
     trust: PropTypes.func.isRequired,
-    pay: PropTypes.func.isRequired,
+    // pay: PropTypes.func.isRequired,
     lookup: PropTypes.func.isRequired,
-    contacts: PropTypes.array.isRequired,
+    // contacts: PropTypes.array.isRequired,
   }
 
   constructor(props) {
@@ -53,13 +53,17 @@ class StellarMain extends Component { // eslint-disable-line
           </select>
         </div>
       </form>
-        {account.pending && <h1>Patientez...</h1>}
-        {account.balances && !account.pending && (
-          <div className="alert alert-info text-center">
-            <ul className="list-unstyled">
-              {account.balances.map(bal => <li key={bal.asset_type === 'native' ? 'XLM' : bal.asset_code}>{parseFloat(bal.balance)} {bal.asset_type === 'native' ? 'XLM' : bal.asset_code}</li>)}
-            </ul>
-          </div>
+      {account.pending && <h1>Patientez...</h1>}
+      {account.balances && !account.pending && (
+        <div className="alert alert-info text-center">
+          <ul className="list-unstyled">
+            {account.balances.map((bal) =>
+              <li key={bal.asset_type === 'native' ? 'XLM' : bal.asset_code}>
+                {parseFloat(bal.balance)} {bal.asset_type === 'native' ? 'XLM' : bal.asset_code}
+              </li>
+            )}
+          </ul>
+        </div>
         )}
       { this.state.action === 'show_trust' && <TrustForm stellarKeys={stellarKeys} trust={trust} />}
       { this.state.action === 'show_payment' && (
