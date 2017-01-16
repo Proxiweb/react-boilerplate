@@ -32,21 +32,43 @@ class ProduitForm extends Component { // eslint-disable-line react/prefer-statel
     const { handleSubmit, pending, pristine } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <div className="row">
-          <div className="col-xs-12">
-            <Field floatingLabelText="Nom" name="nom" component={TextField} />
-            <Field floatingLabelText="Description" name="description" component={TextField} />
-            <Field floatingLabelText="Stock" name="stock" component={TextField} />
-            <Field floatingLabelText="Tva" name="tva" component={TextField} />
-          </div>
-          <div className="col-lg-12" style={{ minHeight: 52 }}>
-            {!pristine && (<div className="row center-md">
-              <div className={`col-md-4 ${styles.formFooter}`}>
-                <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
-              </div>
-            </div>)}
+        <div className="row center-md">
+          <div className="col-md-8">
+            <Field floatingLabelText="Nom" name="nom" component={TextField} fullWidth />
+            <Field floatingLabelText="Description" name="description" component={TextField} fullWidth />
           </div>
         </div>
+        <div className="row center-md">
+          <div className="col-md-4">
+            <Field floatingLabelText="Stock" name="stock" component={TextField} fullWidth />
+          </div>
+          <div className="col-md-4">
+            <Field floatingLabelText="Tva" name="tva" component={TextField} fullWidth />
+          </div>
+        </div>
+        <div className="row center-md">
+          <div className="col-md-4">
+            <Field
+              floatingLabelText="Conservation garantie"
+              name="garantieConservation.nombre"
+              component={TextField}
+              fullWidth
+            />
+          </div>
+          <div className="col-md-4">
+            <Field
+              floatingLabelText="Unité conservation"
+              name="garantieConservation.type"
+              component={TextField}
+              fullWidth
+            />
+          </div>
+        </div>
+        {!pristine && <div className="row center-md">
+          <div className={`col-md-8 ${styles.formFooter}`} style={{ minHeight: 52 }}>
+            <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+          </div>
+        </div>}
       </form>
     );
   }

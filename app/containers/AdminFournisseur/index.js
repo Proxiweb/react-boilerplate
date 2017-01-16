@@ -24,8 +24,13 @@ class CatalogueFournisseur extends Component {
     this.props.load(this.props.params.fournisseurId);
   }
 
-  handleChangeList = (event, value) =>
-    this.props.pushState(value);
+  handleChangeList = (event, produitId) =>
+    this.props.pushState(
+      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`
+    );
+
+  crop = (args) =>
+    console.log(args);
 
   render() {
     const { produits, params } = this.props;
@@ -33,18 +38,20 @@ class CatalogueFournisseur extends Component {
 
     return (
       <div className="row">
-        <div className={classnames('col-md-2', styles.panel)}>
-          <SelectableList value={location.pathname} onChange={this.handleChangeList}>
-            {produits.map((pdt, idx) =>
-              <ListItem
-                key={idx}
-                primaryText={pdt.nom}
-                value={`/fournisseurs/${params.fournisseurId}/catalogue/${pdt.id}`}
-              />
+        <div className={classnames('col-md-3', styles.panel)}>
+          <SelectableList value={params.produitId} onChange={this.handleChangeList}>
+            {produits
+              .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
+              .map((pdt, idx) =>
+                <ListItem
+                  key={idx}
+                  primaryText={pdt.nom.toUpperCase()}
+                  value={pdt.id}
+                />
             )}
           </SelectableList>
         </div>
-        <div className={classnames('col-md-10', styles.panel)}>
+        <div className={classnames('col-md-9', styles.panel)}>
           {this.props.children && React.cloneElement(this.props.children, { produit: produits.find((pdt) => pdt.id === params.produitId), params })}
         </div>
       </div>

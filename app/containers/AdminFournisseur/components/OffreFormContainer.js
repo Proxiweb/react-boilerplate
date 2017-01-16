@@ -21,15 +21,6 @@ class OffreFormContainer extends React.Component {
     tva: PropTypes.number.isRequired,
   }
 
-  // handleSubmit = (values) => {
-  //   const saving = saveAccount(this.props.profile.id, values);
-  //   try {
-  //     this.props.dispatch(saving);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-
   render() {
     const { pending, offre, pristine, tva, handleToggeState } = this.props;
     return (
