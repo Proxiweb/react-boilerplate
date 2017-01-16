@@ -33,3 +33,11 @@
 .capit {
   text-transform: capitalize;
 }
+
+.label {
+  line-height: 22px;
+  font-size: 14px;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 5px;
+}

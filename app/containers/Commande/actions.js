@@ -28,11 +28,27 @@ export const createCommande = (commande) => ({
   msgPending: 'Création commande',
 });
 
+export const saveProduit = (produit) => ({
+  type: findActionType('save_produit', c, 'START'),
+  url: `produits${produit.id ? `/${produit.id}` : ''}`,
+  method: (produit.id ? 'put' : 'post'),
+  datas: { ...produit },
+  msgPending: 'Sauvegarde en cours...',
+  msgSuccess: 'Produit sauvegardé',
+});
+
 export const loadFournisseurs = (query) => ({
   type: findActionType('load_fournisseurs', c, 'START'),
   url: 'fournisseurs',
   query,
   msgPending: 'Chargement fournisseurs',
+});
+
+export const loadTypesProduits = (query) => ({
+  type: findActionType('load_types_produits', c, 'START'),
+  url: 'type_produits',
+  query,
+  msgPending: 'Chargement types produits',
 });
 
 export const loadRelais = (query) => ({

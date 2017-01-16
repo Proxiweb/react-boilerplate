@@ -44,6 +44,11 @@ export const selectFournisseursIds = () => createSelector(
   (substate) => getModel(substate, 'fournisseurs')
 );
 
+export const selectTypesProduitsByIds = () => createSelector(
+  selectCommandeDomain(),
+  (substate) => getModel(substate, 'typesProduits')
+);
+
 export const selectFournisseurs = () => createSelector(
   selectFournisseursIds(),
   (fournisseurs) => (fournisseurs ?

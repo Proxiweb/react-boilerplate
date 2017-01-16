@@ -34,6 +34,7 @@ class Offres extends Component {
   render() {
     const { offres, typesProduits, produit } = this.props;
     const { type, editMode, itemEditIndex } = this.state;
+    if (!offres) return null;
     const offresFltr = offres.filter((off) => off.active === (type === 'actives'));
     const typeProduit = typesProduits[produit.typeProduitId];
     return (

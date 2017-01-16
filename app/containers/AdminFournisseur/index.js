@@ -7,6 +7,7 @@ import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
 import { selectFournisseurProduits } from 'containers/Commande/selectors';
+import { loadTypesProduits } from 'containers/Commande/actions';
 import styles from './styles.css';
 
 const SelectableList = makeSelectable(List);
@@ -14,6 +15,7 @@ const SelectableList = makeSelectable(List);
 class CatalogueFournisseur extends Component {
   static propTypes = {
     load: PropTypes.func.isRequired,
+    loadTypes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
@@ -22,6 +24,7 @@ class CatalogueFournisseur extends Component {
 
   componentDidMount() {
     this.props.load(this.props.params.fournisseurId);
+    this.props.loadTypes();
   }
 
   handleChangeList = (event, produitId) =>
@@ -64,6 +67,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   load: (id) => dispatch(loadFournisseur(id)),
+  loadTypes: (id) => dispatch(loadTypesProduits(id)),
   pushState: (url) => dispatch(push(url)),
 });
 

@@ -9,7 +9,7 @@ const offres = new Schema('offres');
 const livraisons = new Schema('livraisons');
 const relais = new Schema('relais');
 const produits = new Schema('produits');
-const typeProduits = new Schema('typeProduits');
+const typesProduits = new Schema('typesProduits');
 
 commandeUtilisateurs.define({
   // utilisateur,
@@ -26,7 +26,7 @@ livraisons.define({
 
 produits.define({
   offres: arrayOf(offres),
-  typeProduit: typeProduits,
+  typeProduit: typesProduits,
 });
 
 fournisseurs.define({
@@ -44,6 +44,7 @@ export const schemas = {
   RELAIS: relais,
   FOURNISSEURS: fournisseurs,
   PRODUITS: produits,
+  TYPES_PRODUITS: typesProduits,
   COMMANDE_UTILISATEURS: commandeUtilisateurs,
   COMMANDE_CONTENUS: commandeContenus,
   COMMANDES: commandes,

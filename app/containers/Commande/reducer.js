@@ -94,6 +94,19 @@ function commandeReducer(state = initialState, action) {
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
     }
 
+    case c.ASYNC_SAVE_PRODUIT_SUCCESS: {
+      const datas = normalize(action.datas, schemas.PRODUITS);
+
+      return update(
+        state, {
+          datas: { entities: { produits: { [action.datas.id]: { $set: datas.entities.produits[action.datas.id] } }, pending: { $set: false } } },
+        });
+    }
+    case c.ASYNC_LOAD_TYPES_PRODUITS_SUCCESS: {
+      const datas = normalize(action.datas.type_produits, arrayOf(schemas.TYPES_PRODUITS));
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
+    }
+
     case c.ASYNC_LOAD_FOURNISSEUR_SUCCESS:
     case cF.ASYNC_LOAD_FOURNISSEUR_SUCCESS: {
       const datas = normalize(action.datas, schemas.FOURNISSEURS);
