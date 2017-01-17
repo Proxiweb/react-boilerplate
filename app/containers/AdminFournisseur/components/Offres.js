@@ -20,6 +20,7 @@ class Offres extends Component {
 
   state = {
     editMode: false,
+    new: false,
     type: 'actives',
     itemEditIndex: null,
   }
@@ -32,23 +33,36 @@ class Offres extends Component {
 
   handleTypeChange = (event, value) => this.setState({ ...this.state, type: value })
 
-  toggleState = (idx) => this.setState({ editMode: !this.state.editMode, itemEditIndex: idx })
+  toggleState = (itemEditIndex) =>
+    this.setState({
+      ...this.state,
+      editMode: !this.state.editMode,
+      itemEditIndex,
+      nouvelle: false,
+    })
+
+  createOffre = () =>
+    this.setState({ ...this.state, editMode: true, nouvelle: true })
 
   render() {
     const { offres, typesProduits, produit } = this.props;
-    const { type, editMode, itemEditIndex } = this.state;
+    const { type, editMode, itemEditIndex, nouvelle } = this.state;
 
     if (!offres || !typesProduits) return null;
-    const offresFltr = offres.filter((off) => off.active === (type === 'actives'));
+
     const typeProduit = typesProduits[produit.typeProduitId];
     return (
       <div className="row">
         {!editMode && (
           <div className="col-md-12">
-            <OffresTopBar onChangeType={this.handleTypeChange} onNewOffer={null} type={type} />
+            <OffresTopBar onChangeType={this.handleTypeChange} onNewOffer={this.createOffre} type={type} />
             <div className="row">
               <div className="col-md-12">
-                {offresFltr.map((off, idx) => (
+                {offres.filter(
+                  (off) =>
+                    off.active === (type === 'actives') &&
+                    off.relaiId === null,
+                ).map((off, idx) => (
                   <Offre
                     index={idx}
                     offre={off}
@@ -59,10 +73,27 @@ class Offres extends Component {
             </div>
           </div>
         )}
-        {editMode && (
+        {editMode && !nouvelle && (
           <div style={{ padding: '2em' }} className="col-md-12">
             <OffreFormContainer
               offre={offres[itemEditIndex]}
+              tva={produit.tva}
+              handleToggeState={this.toggleState}
+            />
+          </div>
+        )}
+        {editMode && nouvelle && (
+          <div style={{ padding: '2em' }} className="col-md-12">
+            <OffreFormContainer
+              offre={{
+                produitId: produit.id,
+                relaiId: null,
+                active: true,
+                tarifications: [{
+                  qteMinRelais: 0,
+                  prix: 100,
+                }],
+              }}
               tva={produit.tva}
               handleToggeState={this.toggleState}
             />

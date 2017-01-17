@@ -48,6 +48,14 @@ export const formatterPoids = (offre) => {
 
 export const detailPrix = (offre, qteCommande, format = 'component') => {
   const tarif = trouveTarification(offre.tarifications, offre.quantiteTotal, qteCommande);
+  if (!tarif) {
+    console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre);
+    return {
+      descriptionPdt: `${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ' '}`,
+      prix: 0,
+      ancienTarif: null,
+    };
+  }
   let ancien = null;
   if (tarif.qteMinRelais !== offre.tarifications[0].qteMinRelais) {
     const t = offre.tarifications[0];

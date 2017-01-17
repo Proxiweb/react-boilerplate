@@ -133,7 +133,7 @@ class ProduitForm extends Component { // eslint-disable-line react/prefer-statel
     } = this.props;
 
     const categoriesSecondaires =
-      valeurs.produit
+      valeurs.produit && valeurs.produit.values.typeProduitId
       ? typesProduits[valeurs.produit.values.typeProduitId].categoriesSecondaires
       : [];
 

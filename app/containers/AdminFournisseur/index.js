@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
+import AddIcon from 'material-ui/svg-icons/content/add';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
@@ -35,6 +37,11 @@ class CatalogueFournisseur extends Component {
   crop = (args) =>
     console.log(args);
 
+  handleNewProduct = () =>
+    this.props.pushState(
+      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`
+    );
+
   render() {
     const { produits, params } = this.props;
     if (!produits) return null;
@@ -42,6 +49,17 @@ class CatalogueFournisseur extends Component {
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>
+          <div className="row end-md">
+            <div className="col-md-1" style={{ marginRight: '1em' }}>
+              <IconButton
+                style={{ padding: 0, width: '27px', height: '27px' }}
+                tooltip="Nouveau produit"
+                onClick={this.handleNewProduct}
+              >
+                <AddIcon />
+              </IconButton>
+            </div>
+          </div>
           <SelectableList value={params.produitId} onChange={this.handleChangeList}>
             {produits
               .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)

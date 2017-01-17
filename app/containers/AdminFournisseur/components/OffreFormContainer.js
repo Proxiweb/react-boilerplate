@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { isPristine } from 'redux-form';
 import round from 'lodash/round';
 
-// import { saveAccount } from 'containers/CompteUtilisateur/actions';
+import { saveOffre } from 'containers/Commande/actions';
 import { selectPending } from 'containers/App/selectors';
 import OffreForm from './OffreForm';
 
@@ -20,16 +20,17 @@ class OffreFormContainer extends React.Component {
     valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     handleToggeState: PropTypes.func.isRequired,
-    tva: PropTypes.number.isRequired,
+    save: PropTypes.func.isRequired,
   }
 
   handleSubmit = (values) => {
+    const { save, offre } = this.props;
     const tarifications = values.tarifications.map((t) => ({
       ...t,
       prix: parseInt(t.prix * 100, 10),
       recolteFond: parseInt(t.recolteFond * 100, 10),
     }));
-    console.log({ ...values, tarifications });
+    save({ ...offre, tarifications });
   }
 
   render() {
@@ -37,7 +38,6 @@ class OffreFormContainer extends React.Component {
       pending,
       offre,
       pristine,
-      tva,
       handleToggeState,
       valeurs,
     } = this.props;
@@ -53,7 +53,6 @@ class OffreFormContainer extends React.Component {
         pending={pending}
         pristine={pristine}
         valeurs={valeurs}
-        tva={tva}
         handleToggeState={handleToggeState}
       />
       );
@@ -68,6 +67,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
+  save: (datas) => dispatch(saveOffre(datas)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OffreFormContainer);

@@ -37,6 +37,15 @@ export const saveProduit = (produit) => ({
   msgSuccess: 'Produit sauvegardé',
 });
 
+export const saveOffre = (offre) => ({
+  type: findActionType('save_offre', c, 'START'),
+  url: `offre_produits${offre.id ? `/${offre.id}` : ''}`,
+  method: (offre.id ? 'put' : 'post'),
+  datas: { ...offre },
+  msgPending: 'Sauvegarde en cours...',
+  msgSuccess: 'Offre sauvegardée',
+});
+
 export const loadFournisseurs = (query) => ({
   type: findActionType('load_fournisseurs', c, 'START'),
   url: 'fournisseurs',

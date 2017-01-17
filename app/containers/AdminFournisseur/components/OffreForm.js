@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, FieldArray } from 'redux-form';
+import round from 'lodash.round';
 import {
   TextField,
 } from 'redux-form-material-ui';
@@ -22,8 +23,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 //     });
 // });
 
-const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { // eslint-disable-line
-  return (
+const renderTarifications =
+  ({ fields, meta: { error }, tarifications }) => // eslint-disable-line
     <div className="row">
       <div className="col-md-12" style={{ textAlign: 'right', marginBottom: '1em', marginTop: '2em' }}>
         <RaisedButton primary label=" + Nouvelle tarification" onTouchTap={() => fields.push()} />
@@ -31,7 +32,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
       <div className="col-md-12">
         {fields.map((tarification, index) =>
           <div className="row" key={index} style={{ marginBottom: '0.5em', padding: '0 1em 0.5em 1em 1em', border: 'solid 1px silver' }}>
-            <div className="col-md-3">
+            <div className="col-md-2">
               <Field
                 name={`${tarification}.qteMinRelais`}
                 floatingLabelText="Qté min relais"
@@ -41,7 +42,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-2">
               <Field
                 name={`${tarification}.qteMinProxiweb`}
                 floatingLabelText="Qté min globale"
@@ -51,7 +52,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-3">
+            <div className="col-md-2">
               <Field
                 name={`${tarification}.prix`}
                 floatingLabelText="prix fournisseur"
@@ -61,23 +62,16 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
                 style={{ lineHeight: '30px', fontSize: 14 }}
               />
             </div>
-            <div className="col-md-3">
-              <Field
-                name={`${tarification}.recolteFond`}
-                floatingLabelText="Prix distributeur"
-                component={TextField}
-                fullWidth
-                disabled
-                style={{ lineHeight: '30px', fontSize: 14 }}
-                normalize={
-                  (value, previousValue, allValues) => {
-                    console.log(allValues);
-                    return allValues.prix;
-                  }
-                }
-              />
+            <div className="col-md-4">
+              {tarifications && tarifications[index] && tarifications[index].prix &&
+                <TextField
+                  disabled
+                  floatingLabelText="prix distributeur (indicatif)"
+                  fullWidth
+                  value={round(tarifications[index].prix * 0.110, 2)}
+                />}
             </div>
-            <div className="col-md-12" style={{ marginBottom: '0.5em' }}>
+            <div className="col-md-2" style={{ marginTop: '1.5em' }}>
               <RaisedButton
                 label="supprimer"
                 onTouchTap={() => fields.remove(index)}
@@ -85,11 +79,13 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
                 labelStyle={{ color: 'white' }}
               />
             </div>
+            <div className="col-md-6" style={{ marginBottom: '0.5em' }}>
+            </div>
           </div>
         )}
       </div>
-    </div>);
-};
+    </div>;
+
 
 class offreForm extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -97,9 +93,7 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
     handleToggeState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
-    formvals: PropTypes.object,
     valeurs: PropTypes.object.isRequired,
-    tva: PropTypes.number.isRequired,
   }
 
   render() {
@@ -107,12 +101,19 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
       handleSubmit,
       pending,
       pristine,
-      formvals,
-      tva,
       handleToggeState,
       valeurs,
     } = this.props;
-    console.log(valeurs);
+
+    // tarifications modifiées pour
+    // calcul automatique part distributeur
+    let tarifications;
+    try {
+      tarifications = valeurs.offre.values.tarifications;
+    } catch (e) {
+      tarifications = null;
+    }
+
     return (
       <form onSubmit={handleSubmit}>
         <div className="row">
@@ -131,7 +132,7 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
               fullWidth
               component={TextField}
             />
-            <FieldArray name="tarifications" component={renderTarifications} props={{ formvals, tva }} />
+            <FieldArray name="tarifications" component={renderTarifications} props={{ tarifications }} />
           </div>
           <div className={`col-md-6 ${styles.formFooter}`} style={{ minHeight: 52 }}>
             {!pristine && <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />}

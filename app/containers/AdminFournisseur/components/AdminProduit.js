@@ -10,14 +10,17 @@ class AdminProduit extends Component {
     params: PropTypes.object.isRequired,
   }
 
-  state = {
-    // produit || offre || null
-    editView: null,
+  constructor(props) {
+    super(props);
+    this.state = {
+      // null || produit || offre
+      editView: props.params.produitId === 'new' ? 'produit' : null,
+    };
   }
 
   componentWillReceiveProps = (nextProps) => {
     if (this.props.params.produitId !== nextProps.params.produitId) {
-      this.setState({ editView: null });
+      this.setState({ editView: nextProps.params.produitId === 'new' ? 'produit' : null });
     }
   }
 
@@ -27,15 +30,19 @@ class AdminProduit extends Component {
   render() {
     const { produit, params } = this.props;
     const { editView } = this.state;
-
     if (editView === 'produit') {
+      const pdt = produit ||
+        { nom: 'Nouveau produit',
+          description: '<p>Le nouveau produit</p>',
+          fournisseurId: params.fournisseurId,
+        };
       return (
         <div className="row">
           <div className="col-md-4">
-            <PhotoEditor produit={produit} />
+            {produit && <PhotoEditor produit={pdt} />}
           </div>
           <div className="col-md-8">
-            <ProduitFormContainer produit={produit} />
+            <ProduitFormContainer produit={pdt} />
           </div>
         </div>);
     }
