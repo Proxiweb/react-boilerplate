@@ -2,7 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { selectOffresDuProduit, selectTypesProduits } from 'containers/Commande/selectors';
+import {
+  selectOffresDuProduit,
+  selectTypesProduitsByIds,
+} from 'containers/Commande/selectors';
 
 import Offre from './Offre';
 import OffreFormContainer from './OffreFormContainer';
@@ -34,7 +37,8 @@ class Offres extends Component {
   render() {
     const { offres, typesProduits, produit } = this.props;
     const { type, editMode, itemEditIndex } = this.state;
-    if (!offres) return null;
+
+    if (!offres || !typesProduits) return null;
     const offresFltr = offres.filter((off) => off.active === (type === 'actives'));
     const typeProduit = typesProduits[produit.typeProduitId];
     return (
@@ -71,7 +75,7 @@ class Offres extends Component {
 
 const mapStateToProps = createStructuredSelector({
   offres: selectOffresDuProduit(),
-  typesProduits: selectTypesProduits(),
+  typesProduits: selectTypesProduitsByIds(),
 });
 
 export default connect(mapStateToProps)(Offres);

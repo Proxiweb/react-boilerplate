@@ -33,7 +33,7 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
           <div className="row" key={index} style={{ marginBottom: '0.5em', padding: '0 1em 0.5em 1em 1em', border: 'solid 1px silver' }}>
             <div className="col-md-3">
               <Field
-                name={`${tarification}.qteMinRelai`}
+                name={`${tarification}.qteMinRelais`}
                 floatingLabelText="Qté min relais"
                 component={TextField}
                 fullWidth
@@ -67,8 +67,14 @@ const renderTarifications = ({ fields, meta: { error }, formvals, tva }) => { //
                 floatingLabelText="Prix distributeur"
                 component={TextField}
                 fullWidth
-                disabled={false}
+                disabled
                 style={{ lineHeight: '30px', fontSize: 14 }}
+                normalize={
+                  (value, previousValue, allValues) => {
+                    console.log(allValues);
+                    return allValues.prix;
+                  }
+                }
               />
             </div>
             <div className="col-md-12" style={{ marginBottom: '0.5em' }}>
@@ -92,11 +98,21 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
     pending: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
     formvals: PropTypes.object,
+    valeurs: PropTypes.object.isRequired,
     tva: PropTypes.number.isRequired,
   }
 
   render() {
-    const { handleSubmit, pending, pristine, formvals, tva, handleToggeState } = this.props;
+    const {
+      handleSubmit,
+      pending,
+      pristine,
+      formvals,
+      tva,
+      handleToggeState,
+      valeurs,
+    } = this.props;
+    console.log(valeurs);
     return (
       <form onSubmit={handleSubmit}>
         <div className="row">

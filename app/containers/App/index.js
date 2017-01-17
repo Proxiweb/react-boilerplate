@@ -100,6 +100,10 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   render() {
     const { user, pending, destinataires, pushState, compte } = this.props;
     const drawerStyle = getDrawerHeaderStyle(this.context);
+    let showPorteMonnaie = false;
+    if (compte) {
+      showPorteMonnaie = true;
+    }
     return (
       <div className={styles.allContent}>
         <AppBar
@@ -113,7 +117,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             onSelect={this.navigateTo}
             onChangeList={this.handleChangeList}
             user={user}
-            showPorteMonnaie={compte}
+            showPorteMonnaie={showPorteMonnaie}
             onRequestChange={(open) => this.setState({ drawerOpen: open })}
             logout={this.props.logout}
             header={(

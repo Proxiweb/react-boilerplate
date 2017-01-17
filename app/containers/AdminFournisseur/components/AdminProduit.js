@@ -31,10 +31,10 @@ class AdminProduit extends Component {
     if (editView === 'produit') {
       return (
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-4">
             <PhotoEditor produit={produit} />
           </div>
-          <div className="col-md-9">
+          <div className="col-md-8">
             <ProduitFormContainer produit={produit} />
           </div>
         </div>);
