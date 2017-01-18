@@ -65,7 +65,7 @@ export const selectProduits = () => createSelector(
 
 export const selectTypesProduits = () => createSelector(
   selectCommandeDomain(),
-  (substate) => getModel(substate, 'typeProduits')
+  (substate) => getModel(substate, 'typesProduits')
 );
 
 export const selectOffres = () => createSelector(

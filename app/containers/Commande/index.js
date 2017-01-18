@@ -93,8 +93,16 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       );
 
   render() {
-    const { commandes, relaiId, pushState, pending, utilisateurId } = this.props;
-    if (commandes && Object.keys(commandes).length > 0) {
+    const {
+      commandes,
+      relaiId,
+      pushState,
+      pending,
+      utilisateurId,
+      typesProduits,
+    } = this.props;
+    console.log(this.props);
+    if (commandes && Object.keys(commandes).length > 0 && typesProduits) {
       return (
         <div className="row">
           <Semainier

@@ -5,8 +5,9 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
+import reduxCatch from 'redux-catch';
 import createSocketIoMiddleware from 'redux-socket.io';
-import { autoRehydrate } from 'redux-persist';
+// import { autoRehydrate } from 'redux-persist';
 
 // import * as storage from 'redux-storage';
 // import createEngine from 'redux-storage-engine-localstorage';
@@ -18,6 +19,13 @@ import io from 'socket.io-client/socket.io';
 // import { ADD_EFFECT } from 'containers/Login/constants';
 
 import createReducer from './reducers';
+
+const errorHandler = (error, getState, lastAction/* , dispatch*/) => {
+  console.error(error);
+  console.debug('current state', getState());
+  console.debug('last action was', lastAction);
+  // optionally dispatch an action due to the error using the dispatch parameter
+};
 
 const sagaMiddleware = createSagaMiddleware();
 const devtools = window.devToolsExtension || (() => (noop) => noop);
@@ -44,12 +52,13 @@ export default function configureStore(initialState = {}, history) {
     // storageMiddleware,
     routerMiddleware(history),
     socketIoMiddleware,
+    reduxCatch(errorHandler),
   ];
 
   const enhancers = [
     applyMiddleware(...middlewares),
     devtools(),
-    autoRehydrate(),
+    // autoRehydrate(),
   ];
 
   const store = createStore(

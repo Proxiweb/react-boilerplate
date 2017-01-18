@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import includes from 'lodash/includes';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import EuroIcon from 'material-ui/svg-icons/action/euro-symbol';
 import PeopleIcon from 'material-ui/svg-icons/social/person';
-import includes from 'lodash/includes';
+import FournisseursIcon from 'material-ui/svg-icons/maps/local-shipping';
 // import assign from 'lodash/assign';
 
 import styles from './styles.css';
@@ -15,6 +16,7 @@ import { selectRelais } from 'containers/AdminDepot/selectors';
 
 import DepotsRelais from './containers/DepotsRelais';
 import Utilisateur from './containers/Utilisateur';
+import FournisseursRelais from './containers/FournisseursRelais';
 import ListeUtilisateurs from 'containers/ListeUtilisateurs';
 // import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 import { push } from 'react-router-redux';
@@ -75,7 +77,7 @@ class AdminRelais extends Component {
     const admin = includes(roles, 'ADMIN');
 
     return (<div className="row">
-      <div className={classnames('col-md-3', styles.panel)}>
+      <div className={classnames('col-md-2', styles.panel)}>
         <SelectableList value={relaiId} onChange={this.handleChangeList}>
           {Object.keys(relais)
             .filter((r) => admin || r.id === authRelaiId)
@@ -88,7 +90,7 @@ class AdminRelais extends Component {
           )}
         </SelectableList>
       </div>
-      <div className={classnames('col-md-9', styles.panel)}>
+      <div className={classnames('col-md-10', styles.panel)}>
         <div className="row end-md">
           <div classNames="col-md-4">
             {relaisSelected &&
@@ -112,12 +114,24 @@ class AdminRelais extends Component {
                 onClick={() => this.setState({ viewSelected: 'adherents' })}
               />
             }
+            {relaisSelected &&
+              <FlatButton
+                label="Fournisseurs"
+                icon={<FournisseursIcon />}
+                onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
+              />
+            }
           </div>
         </div>
         {viewSelected === 'depot' && utilisateurs &&
           <DepotsRelais
             relaiId={relaiId}
             utilisateurs={utilisateurs}
+          />}
+        {viewSelected === 'fournisseurs' &&
+          <FournisseursRelais
+            relaiId={relaiId}
+            params={params}
           />}
         {viewSelected === 'adherents' &&
           <div className="row">

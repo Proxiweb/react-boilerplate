@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field, FieldArray } from 'redux-form';
-import round from 'lodash.round';
+import round from 'lodash/round';
 import {
   TextField,
 } from 'redux-form-material-ui';
