@@ -1,13 +1,20 @@
 import React, { Component, PropTypes } from 'react';
-import Produit from './Produit';
-import Offres from './Offres';
+import { connect } from 'react-redux';
+import Toggle from 'material-ui/Toggle';
+
+import { saveProduit } from 'containers/Commande/actions';
+
 import ProduitFormContainer from './ProduitFormContainer';
 import PhotoEditor from './PhotoEditor';
+import Produit from './Produit';
+import Offres from './Offres';
+import styles from './styles.css';
 
 class AdminProduit extends Component {
   static propTypes = {
     produit: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    save: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -26,6 +33,14 @@ class AdminProduit extends Component {
 
   changeView = (editView) =>
     this.setState({ editView })
+
+  toggleStock = () => {
+    const { produit } = this.props;
+    this.props.save(
+      { ...produit, enStock: !produit.enStock },
+      null,
+    );
+  }
 
   render() {
     const { produit, params } = this.props;
@@ -54,6 +69,12 @@ class AdminProduit extends Component {
             produit={produit}
             setEditView={this.changeView}
           />
+          <Toggle
+            toggled={produit.enStock}
+            label={produit.enStock ? 'En stock' : 'Non disponible'}
+            className={styles.toggleStock}
+            onToggle={this.toggleStock}
+          />
         </div>
         <div className="col-md-9">
           {editView === null && <Offres produit={produit} params={params} />}
@@ -64,4 +85,8 @@ class AdminProduit extends Component {
   }
 }
 
-export default AdminProduit;
+const mapDispatchToProps = (dispatch) => ({
+  save: (produit) => dispatch(saveProduit(produit)),
+});
+
+export default connect(null, mapDispatchToProps)(AdminProduit);

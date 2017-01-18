@@ -28,13 +28,13 @@ export const createCommande = (commande) => ({
   msgPending: 'Création commande',
 });
 
-export const saveProduit = (produit) => ({
+export const saveProduit = (produit, msgSuccess: 'Produit sauvegardé') => ({
   type: findActionType('save_produit', c, 'START'),
   url: `produits${produit.id ? `/${produit.id}` : ''}`,
   method: (produit.id ? 'put' : 'post'),
   datas: { ...produit },
   msgPending: 'Sauvegarde en cours...',
-  msgSuccess: 'Produit sauvegardé',
+  msgSuccess,
 });
 
 export const changePhoto = (produitId, imageBase64) => ({

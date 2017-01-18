@@ -68,6 +68,7 @@ class CatalogueFournisseur extends Component {
                   key={idx}
                   primaryText={pdt.nom.toUpperCase()}
                   value={pdt.id}
+                  style={{ color: pdt.enStock ? 'black' : 'gray' }}
                 />
             )}
           </SelectableList>
