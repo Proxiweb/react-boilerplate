@@ -49,13 +49,13 @@ class AdminProduit extends Component {
 
     return (
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <Produit
             produit={produit}
             setEditView={this.changeView}
           />
         </div>
-        <div className="col-md-8">
+        <div className="col-md-9">
           {editView === null && <Offres produit={produit} params={params} />}
           {editView === 'offre' &&
             <Offres produit={produit} params={params} />}

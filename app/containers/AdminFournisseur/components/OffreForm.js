@@ -45,7 +45,7 @@ const renderTarifications =
             <div className="col-md-2">
               <Field
                 name={`${tarification}.qteMinProxiweb`}
-                floatingLabelText="Qté min globale"
+                floatingLabelText="Qté min glob."
                 component={TextField}
                 fullWidth
                 disabled={false}
@@ -55,7 +55,7 @@ const renderTarifications =
             <div className="col-md-2">
               <Field
                 name={`${tarification}.prix`}
-                floatingLabelText="prix fournisseur"
+                floatingLabelText="prix fourn."
                 fullWidth
                 component={TextField}
                 disabled={false}

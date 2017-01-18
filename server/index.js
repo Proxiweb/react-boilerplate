@@ -11,13 +11,14 @@ const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngr
 const resolve = require('path').resolve;
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+app.use(bodyParser.json({ limit: '5mb', extended: true }));
 
 app.use((err, req, res, next) => {  // eslint-disable-line
   if (err.name === 'UnauthorizedError') {
     res.status(401).send({ error: 'La session a expirée' });
   }
+  console.log(err);
   res.status(500).send('Something broke!');
 });
 

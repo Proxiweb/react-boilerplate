@@ -73,7 +73,7 @@ const OffreDetailsCard = (props) => {
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
             {offre.tarifications.map((t, index, tarifications) =>
-              <TableRow>
+              <TableRow key={index}>
                 <TableRowColumn>
                   {generateTarifMin(tarifications, index)}
                 </TableRowColumn>

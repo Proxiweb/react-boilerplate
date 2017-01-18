@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
+import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
 import Toggle from 'material-ui/Toggle';
 import { createStructuredSelector } from 'reselect';
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
@@ -70,22 +72,24 @@ class FournisseursRelais extends Component {
     })
 
   render() {
-    const { fournisseurs, produits, offres, params, typesProduits } = this.props;
+    const { fournisseurs, produits, offres: offresById, params, typesProduits } = this.props;
     const { fournisseurSelected, produitSelected } = this.state;
     const produitsFournisseur = fournisseurSelected && produits
                                 ? Object.keys(produits)
                                     .map((k) => produits[k])
                                     .filter((p) => p.fournisseurId === fournisseurSelected)
                                 : [];
+
+    const offres = offresById ? Object.keys(offresById).map((id) => offresById[id]) : [];
     const offresProduit = produitSelected
-                          ? Object.keys(offres)
-                            .map((id) => offres[id])
-                            .filter((o) =>
-                              o.produitId === produitSelected &&
+                          ? offres.filter((o) => {
+                            console.log(o);
+                            return o.produitId === produitSelected &&
                               o.relaiId === params.relaiId
+                          }
                             )
                           : [];
-
+    console.log(offresProduit);
     return (
       <div className="row">
         <div className="col-md-4">
@@ -96,18 +100,31 @@ class FournisseursRelais extends Component {
               onChange={this.handleChangeFournisseur}
             >
               {fournisseurs.map((data) =>
-                <MenuItem key={data.id} value={data.id} primaryText={data.nom} />
+                <MenuItem key={data.id} value={data.id} primaryText={data.nom.toUpperCase()} />
               )}
             </SelectField>
           }
           { produitsFournisseur.length > 0 &&
-            <SelectableList value={produitSelected} onChange={this.handleSelectProduit}>
+            <SelectableList value={produitSelected} onChange={this.handleSelectProduit} className={styles.listePdts}>
               {produitsFournisseur
                 .map((pdt, idx) =>
                   <ListItem
                     key={idx}
                     primaryText={pdt.nom.toUpperCase()}
                     value={pdt.id}
+                    leftIcon={
+                      <PastilleIcon
+                        color={
+                          offres.find((o) =>
+                              o.produitId === pdt.id &&
+                              o.active &&
+                              o.relaiId === params.relaiId
+                            )
+                          ? 'green'
+                          : 'silver'
+                        }
+                      />
+                    }
                   />
               )}
             </SelectableList>
@@ -115,8 +132,10 @@ class FournisseursRelais extends Component {
         </div>
         <div className="col-md-8" style={{ marginTop: '2em' }}>
           {offresProduit.length > 0 && typesProduits &&
-            offresProduit.map((o, idx) =>
-              <div className="row">
+            offresProduit
+            .sort((o1, o2) => o1.active > o2.active)
+            .map((o, idx) =>
+              <div className={`row ${styles.offre}`}>
                 <div className="col-md-8">
                   <OffreDetailsCard
                     key={idx}
@@ -129,10 +148,22 @@ class FournisseursRelais extends Component {
                   <Toggle
                     label={o.active ? 'active' : 'inactive'}
                     className={styles.toggle}
+                    toggled={o.active}
                   />
                 </div>
               </div>
             )
+          }
+          {produitSelected && offresProduit.length === 0 &&
+            <div className="row center-md">
+              <div className="col-md-6">
+                <RaisedButton
+                  primary
+                  label="Importer l'offre"
+                  fullWidth
+                />
+              </div>
+            </div>
           }
         </div>
       </div>

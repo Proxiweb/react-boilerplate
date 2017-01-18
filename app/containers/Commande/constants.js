@@ -10,6 +10,7 @@ const commandesConst = generateConstants('app/Commande', 'load_commandes');
 const commandeConst = generateConstants('app/Commande', 'load_commande');
 const crCdeConst = generateConstants('app/Commande', 'create_commande');
 const savePdtConst = generateConstants('app/Commande', 'save_produit');
+const changePhotoConst = generateConstants('app/Commande', 'change_photo_produit');
 const saveOffreConst = generateConstants('app/Commande', 'save_offre');
 const userCommandesConst = generateConstants('app/Commande', 'load_user_commandes');
 const utilisateursConst = generateConstants('app/Commande', 'load_utilisateurs');
@@ -25,6 +26,7 @@ export default assign(
   commandesConst,
   commandeConst,
   savePdtConst,
+  changePhotoConst,
   saveOffreConst,
   userCommandesConst,
   fournisseursConst,

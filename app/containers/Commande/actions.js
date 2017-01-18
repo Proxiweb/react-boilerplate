@@ -37,6 +37,15 @@ export const saveProduit = (produit) => ({
   msgSuccess: 'Produit sauvegardé',
 });
 
+export const changePhoto = (produitId, imageBase64) => ({
+  type: findActionType('change_photo_produit', c, 'START'),
+  url: 'upload_image',
+  method: 'post',
+  datas: { produitId, imageBase64 },
+  msgPending: 'Modification de la photo...',
+  msgSuccess: 'Photo modifiée',
+});
+
 export const saveOffre = (offre) => ({
   type: findActionType('save_offre', c, 'START'),
   url: `offre_produits${offre.id ? `/${offre.id}` : ''}`,

@@ -22,6 +22,11 @@ const options = {
     className: undefined,
     options: ['bold', 'italic', 'underline', 'strikethrough'],
   },
+  list: {
+    inDropdown: false,
+    className: undefined,
+    options: ['unordered', 'ordered'],
+  },
 };
 
 const renderSelectField = (datas) =>

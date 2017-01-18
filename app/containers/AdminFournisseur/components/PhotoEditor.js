@@ -1,11 +1,14 @@
 import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import AvatarEditor from 'components/AvatarEditor';
 import Slider from 'material-ui/Slider';
 import RaisedButton from 'material-ui/RaisedButton';
+import { changePhoto } from 'containers/Commande/actions';
 
-export default class PhotoEditor extends Component {
+class PhotoEditor extends Component {
   static propTypes = {
     produit: PropTypes.object.isRequired,
+    change: PropTypes.func.isRequired,
   }
 
   state = {
@@ -15,6 +18,12 @@ export default class PhotoEditor extends Component {
 
   changeZoom = (event, value) =>
     this.setState({ ...this.state, zoom: value })
+
+  changePhoto = () =>
+    this.props.change(
+      this.props.produit.id,
+      this.editor.getImage().toDataURL()
+    )
 
   render() {
     const { produit } = this.props;
@@ -45,7 +54,12 @@ export default class PhotoEditor extends Component {
             </div>
             {this.state.editing &&
               <div className="col-md-8">
-                <RaisedButton fullWidth primary label="Modifier la photo" />
+                <RaisedButton
+                  fullWidth
+                  primary
+                  label="Modifier la photo"
+                  onClick={this.changePhoto}
+                />
               </div>}
           </div>
         </div>
@@ -53,3 +67,9 @@ export default class PhotoEditor extends Component {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  change: (produitId, image) => dispatch(changePhoto(produitId, image)),
+});
+
+export default connect(null, mapDispatchToProps)(PhotoEditor);
