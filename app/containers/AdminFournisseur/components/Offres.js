@@ -31,8 +31,6 @@ class Offres extends Component {
     }
   }
 
-  handleTypeChange = (event, value) => this.setState({ ...this.state, type: value })
-
   toggleState = (itemEditIndex) =>
     this.setState({
       ...this.state,
@@ -55,20 +53,21 @@ class Offres extends Component {
       <div className="row">
         {!editMode && (
           <div className="col-md-12">
-            <OffresTopBar onChangeType={this.handleTypeChange} onNewOffer={this.createOffre} type={type} />
+            <OffresTopBar onNewOffer={this.createOffre} type={type} />
             <div className="row">
               <div className="col-md-12">
-                {offres.filter(
-                  (off) =>
-                    off.active === (type === 'actives') &&
-                    off.relaiId === null,
-                ).map((off, idx) => (
-                  <Offre
-                    index={idx}
-                    offre={off}
-                    typeProduit={typeProduit}
-                    handleToggeState={() => this.toggleState(idx)}
-                  />))}
+                {offres
+                  .filter((off) => off.relaiId === null)
+                  .sort((o1, o2) => o1.active > o2.active)
+                  .map((off, idx) => (
+                    <Offre
+                      index={idx}
+                      offre={off}
+                      typeProduit={typeProduit}
+                      handleToggeState={() => this.toggleState(idx)}
+                    />
+                  ))
+                }
               </div>
             </div>
           </div>

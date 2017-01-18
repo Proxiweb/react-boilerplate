@@ -46,13 +46,13 @@ export const changePhoto = (produitId, imageBase64) => ({
   msgSuccess: 'Photo modifiée',
 });
 
-export const saveOffre = (offre) => ({
+export const saveOffre = (offre, msgSuccess = 'Offre sauvegardée') => ({
   type: findActionType('save_offre', c, 'START'),
   url: `offre_produits${offre.id ? `/${offre.id}` : ''}`,
   method: (offre.id ? 'put' : 'post'),
   datas: { ...offre },
   msgPending: 'Sauvegarde en cours...',
-  msgSuccess: 'Offre sauvegardée',
+  msgSuccess,
 });
 
 export const loadFournisseurs = (query) => ({

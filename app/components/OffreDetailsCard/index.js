@@ -46,7 +46,7 @@ const OffreDetailsCard = (props) => {
           {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
           {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
         </span>}
-        subtitle={tR && showSubtitle && 'Tarif dégressif (cliquez pour plus de détails)'}
+        subtitle={tR && showSubtitle && 'Tarif dégressif (En savoir plus...)'}
       />
       <CardText expandable>
         <Table
