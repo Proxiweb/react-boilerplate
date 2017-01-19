@@ -56,19 +56,19 @@ class Offre extends Component { // eslint-disable-line
             <div className="col-md-2">
               <IconButton
                 onClick={this.handleDelete}
-                tooltip="Supprimer"
+                tooltip="Supprimer (non implémenté)"
                 tooltipPosition="top-center"
               >
-                <TrashIcon />
+                <TrashIcon color="gray" />
               </IconButton>
             </div>
             <div className="col-md-2">
               <IconButton
                 onClick={this.handleStore}
-                tooltip="Archiver"
+                tooltip="Archiver (non implémenté)"
                 tooltipPosition="top-center"
               >
-                <ArchiveIcon />
+                <ArchiveIcon color="gray" />
               </IconButton>
             </div>
           </div>
