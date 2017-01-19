@@ -30,7 +30,11 @@ class OffreFormContainer extends React.Component {
       prix: parseInt(t.prix * 100, 10),
       recolteFond: parseInt(t.recolteFond * 100, 10),
     }));
-    save({ ...offre, tarifications });
+    save({
+      ...offre,
+      tarifications,
+      poids: values.poids ? parseInt(values.poids, 10) : null,
+    });
   }
 
   render() {
