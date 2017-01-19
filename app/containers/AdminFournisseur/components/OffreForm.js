@@ -123,7 +123,7 @@ class offreForm extends Component { // eslint-disable-line react/prefer-stateles
                 <Field floatingLabelText="Description" fullWidth name="description" component={TextField} />
               </div>
               <div className="col-xs-6">
-                <Field floatingLabelText="poids" name="poids" fullWidth component={TextField} />
+                <Field floatingLabelText="poids (mg)" name="poids" fullWidth component={TextField} />
               </div>
             </div>
             <Field
