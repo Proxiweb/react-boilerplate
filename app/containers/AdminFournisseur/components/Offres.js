@@ -92,6 +92,7 @@ class Offres extends Component {
                   qteMinRelais: 0,
                   prix: 100,
                 }],
+                poids: 10000,
               }}
               tva={produit.tva}
               handleToggeState={this.toggleState}
