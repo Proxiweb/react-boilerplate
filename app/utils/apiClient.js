@@ -14,6 +14,8 @@ export function get(url, options = { headers: {}, query: {} }) {
         // } catch (e) {
         //   reject({ message: error.text });
         // }
+      } else if (error.data) {
+        reject({ data: { message: error.data.message || error } });
       } else {
         // Something happened in setting up the request that triggered an Error
         reject(error.message);
