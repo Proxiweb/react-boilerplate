@@ -11,15 +11,16 @@ import { addMessage } from 'containers/App/actions';
 import {
   accountLoaded,
   loadAccountError,
+  storeStellarKeys,
 } from 'containers/CompteUtilisateur/actions';
 
 // import {
 //   selectPayments
 // } from 'containers/CompteUtilisateur/selectors';
 //
-// import {
-//   LOAD_ACCOUNT,
-// } from '../CompteUtilisateur/constants';
+import {
+  saveAccountConst,
+} from 'containers/CompteUtilisateur/constants';
 
 import api from '../../utils/stellarApi';
 
@@ -101,7 +102,15 @@ export function* onRegisterSuccess() {
 export function* loadAccountOnWalletCreation() {
   while(true) { // eslint-disable-line
     const action = yield take('WS/STELLAR_WALLET_UTILISATEUR');
+    yield put(storeStellarKeys(action.datas.stellarKeys));
     yield fork(loadAccountSaga, action.datas.stellarKeys.adresse);
+  }
+}
+
+export function* onFirstLoginSaved() {
+  while(true) { // eslint-disable-line
+    const action = yield take('WS/FIRST_PROFILE_SAVED');
+    yield put(push(`/relais/${action.datas.relaiId}/commandes`));
   }
 }
 
@@ -136,7 +145,7 @@ export function* onLogout() {
 
 // All sagas to be loaded
 export default [
-  // googleLoginSaga,
+  onFirstLoginSaved,
   onLogout,
   onLoginSuccess,
   onRegisterSuccess,

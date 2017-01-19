@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { logout } from '../Login/actions';
-import { selectPayments, selectBalance } from './selectors';
+import { selectPayments, selectBalance, selectRelaiId } from './selectors';
 import { selectLocationState } from 'containers/App/selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
 import NotificationsForm from 'components/NotificationsForm';
@@ -19,6 +19,7 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
 
   static propTypes = {
     locationState: PropTypes.object.isRequired,
+    relaiId: PropTypes.string.isRequired,
     params: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
   }
@@ -43,7 +44,7 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
             onChange={this.handleChange}
           >
             <Tab label="Profil" value="profil">
-              <ProfileFormContainer afterSubmit={this.toggleState} />
+              <ProfileFormContainer relaiId={this.props.relaiId} afterSubmit={this.toggleState} />
             </Tab>
             <Tab label="Notifications" value="notifications">
               <NotificationsForm />
@@ -59,6 +60,7 @@ const mapStateToProps = createStructuredSelector({
   payments: selectPayments(),
   compte: selectBalance(),
   locationState: selectLocationState(),
+  relaiId: selectRelaiId(),
 });
 
 function mapDispatchToProps(dispatch) {

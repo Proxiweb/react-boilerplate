@@ -18,6 +18,7 @@ const isProfilePristine = () => (state) => isPristine('profile')(state);
 class ProfileFormContainer extends React.Component {
   static propTypes = {
     profile: PropTypes.object.isRequired,
+    relaiId: PropTypes.string.isRequired,
     pristine: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
@@ -34,7 +35,7 @@ class ProfileFormContainer extends React.Component {
       },
       null,
       sauvegardeInitiale
-        ? `/users/${this.props.profile.id}/profile?tab=notifications`
+        ? `/relais/${this.props.relaiId}/commandes`
         : null,
     );
     try {

@@ -18,6 +18,7 @@ import {
 import {
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
+  STORE_STELLAR_KEYS,
   progVirConst,
   loadVirConst,
   supprVirConst,
@@ -107,8 +108,10 @@ function compteUtilisateurReducer(state = initialState, action) {
       const incoming = action.payload.compteUtilisateur;
       return { ...state, ...incoming, loading: false };
     }
-    case 'WS/STELLAR_WALLET_UTILISATEUR':
-      return update(state, { auth: { $set: { ...state.auth, stellarKeys: { adresse: action.datas.stellarKeys } } } });
+    case STORE_STELLAR_KEYS: {
+      const stellarKeys = action.payload.stellarKeys;
+      return update(state, { auth: { $set: { ...state.auth, stellarKeys } } });
+    }
     default:
       return state;
   }

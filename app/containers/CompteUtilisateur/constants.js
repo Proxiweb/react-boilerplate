@@ -9,3 +9,4 @@ export const depotCbConst = generateConstants('app/compte_utilisateur', 'DEPOT_C
 export const LOAD_ACCOUNT = 'app/compte_utilisateur/LOAD_ACCOUNT';
 export const LOAD_ACCOUNT_SUCCESS = 'app/compte_utilisateur/LOAD_ACCOUNT_SUCCESS';
 export const LOAD_ACCOUNT_ERROR = 'app/compte_utilisateur/LOAD_ACCOUNT_ERROR';
+export const STORE_STELLAR_KEYS = 'app/compte_utilisateur/STORE_STELLAR_KEYS';

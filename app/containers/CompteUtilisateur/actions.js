@@ -8,6 +8,7 @@ import {
   LOAD_ACCOUNT,
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
+  STORE_STELLAR_KEYS,
 } from './constants';
 
 export const loadAccount = (accountId) => ({
@@ -70,4 +71,9 @@ export const deposerCB = (datas) => ({
   type: depotCbConst.ASYNC_DEPOT_CB_START,
   url: 'charges',
   datas,
+});
+
+export const storeStellarKeys = (stellarKeys) => ({
+  type: STORE_STELLAR_KEYS,
+  payload: { stellarKeys },
 });

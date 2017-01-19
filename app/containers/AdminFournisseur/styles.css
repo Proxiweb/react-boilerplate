@@ -3,5 +3,5 @@
   padding: 1rem;
   max-height: calc(100vh - 105px);
   min-height: calc(100vh - 105px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
