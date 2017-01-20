@@ -78,7 +78,7 @@ function commandeReducer(state = initialState, action) {
         livraisons: {},
         fournisseurs: {},
       };
-      return update(state, { datas: { entities: { $set: assign(defaults, datas.entities) }, result: { $push: datas.result } }, pending: { $set: false } });
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, assign(defaults, datas.entities)) }, result: { $push: datas.result } }, pending: { $set: false } });
     }
     case cE.ASYNC_SAUVEGARDER_SUCCESS: {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
