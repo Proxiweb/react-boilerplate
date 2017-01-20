@@ -56,7 +56,7 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>
-          <SelectableList value={location.pathname} onChange={this.handleChangeList}>
+          <SelectableList value={commande} onChange={this.handleChangeList}>
             {commandes.map((cde, idx) =>
               <ListItem
                 key={idx}

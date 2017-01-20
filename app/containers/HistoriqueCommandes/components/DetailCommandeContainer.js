@@ -47,7 +47,7 @@ class DetailCommandeContainer extends Component {
 
   render() {
     const { produits, offres, commandeUtilisateur, commandeContenus, contenus } = this.props; // eslint-disable-line
-    if (!commandeUtilisateur) {
+    if (!commandeUtilisateur || !offres || !produits) {
       return (
         <RefreshIndicator
           size={40}
@@ -61,11 +61,17 @@ class DetailCommandeContainer extends Component {
 
     return (
       <DetailCommande
-        contenus={commandeUtilisateur.contenus}
+        contenus={
+          Object.keys(contenus)
+            .filter((id) =>
+              contenus[id].commandeUtilisateurId === commandeUtilisateur.id
+            )
+            .map((id) => contenus[id])
+        }
+        commandeContenus={commandeContenus}
+        commandeId={commandeUtilisateur.commandeId}
         offres={offres}
         produits={produits}
-        montant={commandeUtilisateur.montant}
-        recolteFond={commandeUtilisateur.recolteFond}
         readOnly
       />
     );
