@@ -34,8 +34,8 @@ export default class DetailCommande extends Component { // eslint-disable-line
     commandeContenus: PropTypes.object.isRequired,
     commandeId: PropTypes.string,
     produits: PropTypes.object.isRequired,
-    diminuer: PropTypes.func.isRequired,
-    augmenter: PropTypes.func.isRequired,
+    diminuer: PropTypes.func,
+    augmenter: PropTypes.func,
     readOnly: PropTypes.bool,
     panierExpanded: PropTypes.bool.isRequired,
   }
@@ -46,6 +46,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
 
   static defaultProps = {
     readOnly: false,
+    panierExpanded: false,
   }
 
   render() {
