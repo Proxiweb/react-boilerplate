@@ -20,7 +20,7 @@ const adminRelaisReducer = (state = initialState, action) => {
     case c.ASYNC_LOAD_RELAIS_SUCCESS:
       return { ...state, datas: action.datas.relais };
     case c.ASYNC_SAVE_RELAIS_SUCCESS:
-      return majRelais(state);
+      return majRelais(state, action.datas);
     default:
       return state;
   }

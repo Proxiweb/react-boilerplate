@@ -23,6 +23,7 @@ import {
 import styles from './styles.css';
 
 import OffreDetailsCard from 'components/OffreDetailsCard';
+import FournisseurHebdoSwitch from './FournisseurHebdoSwitch';
 
 const SelectableList = makeSelectable(List);
 
@@ -61,7 +62,7 @@ class FournisseursRelais extends Component {
   }
 
   handleChangeFournisseur = (event, index, value) => {
-    this.setState({ fournisseurSelected: value });
+    this.setState({ fournisseurSelected: value, produitSelected: null });
     this.props.loadF(value);
   }
 
@@ -74,6 +75,10 @@ class FournisseursRelais extends Component {
   render() {
     const { fournisseurs, produits, offres: offresById, params, typesProduits } = this.props;
     const { fournisseurSelected, produitSelected } = this.state;
+    const fournisseur = fournisseurSelected
+                         ? fournisseurs.find((f) => f.id === fournisseurSelected)
+                         : null;
+
     const produitsFournisseur = fournisseurSelected && produits
                                 ? Object.keys(produits)
                                     .map((k) => produits[k])
@@ -163,6 +168,13 @@ class FournisseursRelais extends Component {
                 />
               </div>
             </div>
+          }
+          {!produitSelected && fournisseurSelected &&
+            <FournisseurHebdoSwitch
+              fournisseurId={fournisseurSelected}
+              params={params}
+              fournisseur={fournisseur.nom.toUpperCase()}
+            />
           }
         </div>
       </div>

@@ -1,4 +1,4 @@
-.toggle {
+.toggle, .fournisseursHebdoSwitch {
   margin-top: 1em;
 }
 
@@ -10,4 +10,10 @@
 
 .offre {
   margin-bottom: 1em;
+}
+
+.fournisseursHebdoSwitch {
+  border: solid 1px silver;
+  padding: 1em;
+  font-size: 1.2em;
 }
