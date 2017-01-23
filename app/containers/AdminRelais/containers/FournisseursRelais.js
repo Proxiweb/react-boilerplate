@@ -82,14 +82,11 @@ class FournisseursRelais extends Component {
 
     const offres = offresById ? Object.keys(offresById).map((id) => offresById[id]) : [];
     const offresProduit = produitSelected
-                          ? offres.filter((o) => {
-                            console.log(o);
-                            return o.produitId === produitSelected &&
+                          ? offres.filter((o) =>
+                              o.produitId === produitSelected &&
                               o.relaiId === params.relaiId
-                          }
                             )
                           : [];
-    console.log(offresProduit);
     return (
       <div className="row">
         <div className="col-md-4">
@@ -98,6 +95,8 @@ class FournisseursRelais extends Component {
               fullWidth
               value={fournisseurSelected}
               onChange={this.handleChangeFournisseur}
+              floatingLabelText="Fournisseur"
+              hintText="Sélectionnez un fournisseur"
             >
               {fournisseurs.map((data) =>
                 <MenuItem key={data.id} value={data.id} primaryText={data.nom.toUpperCase()} />

@@ -6,13 +6,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
-import { loadFournisseurs, createCommande } from 'containers/Commande/actions';
+import { loadFournisseurs, createCommande, loadRelais } from 'containers/Commande/actions';
 import {
   selectFournisseursRelais,
   selectFournisseursCommande,
   selectCommandeLivraisons,
   selectCommandeCommandeUtilisateurs,
-  selectRelaisSelected,
 } from 'containers/Commande/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
@@ -24,11 +23,11 @@ class NouvelleCommande extends Component { // eslint-disable-line
   static propTypes = {
     commande: PropTypes.object,
     relais: PropTypes.object.isRequired,
-    create: PropTypes.func.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     fournisseursCommande: PropTypes.array,
     commandeUtilisateurs: PropTypes.array.isRequired,
     livraisonsCommande: PropTypes.array,
+    create: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -43,7 +42,12 @@ class NouvelleCommande extends Component { // eslint-disable-line
   }
 
   componentDidMount() {
-    const { fournisseursCommande, commande, livraisonsCommande } = this.props;
+    const {
+      fournisseursCommande,
+      commande,
+      livraisonsCommande,
+    } = this.props;
+
     if (fournisseursCommande && fournisseursCommande.length) {
       this.initCmde(fournisseursCommande, commande, livraisonsCommande);
     }
@@ -87,7 +91,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
     const { relais } = this.props;
     if (
       !distributions.length &&
-      relais.livraisons.length &&
+      relais.distributionJours.length &&
       parametres.heureLimite &&
       parametres.dateLimite
     ) {
@@ -249,11 +253,11 @@ const mapStateToProps = createStructuredSelector({
   fournisseursCommande: selectFournisseursCommande(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   livraisonsCommande: selectCommandeLivraisons(),
-  relais: selectRelaisSelected(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   load: () => dispatch(loadFournisseurs()),
+  loadR: (query) => dispatch(loadRelais(query)),
   create: (commande) => dispatch(createCommande(commande)),
 });
 

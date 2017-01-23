@@ -5,8 +5,13 @@ import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import classnames from 'classnames';
 
-import { loadCommandes, loadFournisseurs, loadUtilisateurs } from 'containers/Commande/actions';
-import { selectCommandesRelais, selectCommandeId } from 'containers/Commande/selectors';
+import {
+  loadCommandes,
+  loadFournisseurs,
+  loadUtilisateurs,
+  loadRelais,
+} from 'containers/Commande/actions';
+import { selectCommandesRelais, selectCommandeId, selectRelaisSelected } from 'containers/Commande/selectors';
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
@@ -20,10 +25,12 @@ const SelectableList = makeSelectable(List);
 class AdminRelaisCommandes extends Component {
   static propTypes = {
     commandes: PropTypes.object,
+    relais: PropTypes.object,
     commandeId: PropTypes.string,
     loadCommandes: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
+    loadRelais: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
@@ -31,6 +38,9 @@ class AdminRelaisCommandes extends Component {
 
   componentDidMount() {
     const { relaiId } = this.props.params;
+    if (!this.props.relais) {
+      this.props.loadRelais();
+    }
     this.props.loadCommandes({ relaiId });
     this.props.loadFournisseurs();
     this.props.loadUtilisateurs({ relaiId });
@@ -55,7 +65,7 @@ class AdminRelaisCommandes extends Component {
   }
 
   render() {
-    const { commandes, params } = this.props;
+    const { commandes, params, relais } = this.props;
     const { action, commandeId } = params;
     if (!commandes) return null;
     const commande = commandes ? commandes[commandeId] : null;
@@ -109,13 +119,18 @@ class AdminRelaisCommandes extends Component {
             )
           }
         >
-          {this.props.children && React.cloneElement(this.props.children, { commande, commandes, commandeId, params })}
+          {this.props.children &&
+            React.cloneElement(
+              this.props.children,
+              { commande, commandes, commandeId, params, relais }
+            )}
         </div>
       </div>
     );
   }
 }
 const mapStateToProps = createStructuredSelector({
+  relais: selectRelaisSelected(),
   commandes: selectCommandesRelais(),
   commandeId: selectCommandeId(),
 });
@@ -124,6 +139,7 @@ const mapDispatchToProps = (dispatch) => ({
   loadCommandes: (query) => dispatch(loadCommandes(query)),
   loadUtilisateurs: (query) => dispatch(loadUtilisateurs(query)),
   loadFournisseurs: () => dispatch(loadFournisseurs()),
+  loadRelais: () => dispatch(loadRelais()),
   pushState: (url) => dispatch(push(url)),
 });
 
