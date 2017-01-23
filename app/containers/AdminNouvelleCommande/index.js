@@ -93,7 +93,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
     ) {
       const dateCommande = this.calculeDateCommande();
       const livraisons =
-        relais.livraisons
+        relais.distributionJours
           .map((livr) => {
             const dateDebut = moment(dateCommande)
               .weekday(livr.jour)

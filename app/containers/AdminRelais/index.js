@@ -5,6 +5,7 @@ import { List, ListItem, makeSelectable } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import EuroIcon from 'material-ui/svg-icons/action/euro-symbol';
+import InfoIcon from 'material-ui/svg-icons/action/info';
 import PeopleIcon from 'material-ui/svg-icons/social/person';
 import FournisseursIcon from 'material-ui/svg-icons/maps/local-shipping';
 // import assign from 'lodash/assign';
@@ -18,6 +19,7 @@ import DepotsRelais from './containers/DepotsRelais';
 import Utilisateur from './containers/Utilisateur';
 import FournisseursRelais from './containers/FournisseursRelais';
 import ListeUtilisateurs from 'containers/ListeUtilisateurs';
+import InfosRelais from './containers/InfosRelais';
 // import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 import { push } from 'react-router-redux';
 import { loadRelais } from './actions';
@@ -101,25 +103,28 @@ class AdminRelais extends Component {
               />
             }
             {relaisSelected &&
-              <FlatButton
-                label="Depots"
-                icon={<EuroIcon />}
-                onClick={() => this.setState({ viewSelected: 'depot' })}
-              />
-            }
-            {relaisSelected &&
-              <FlatButton
-                label="Adhérents"
-                icon={<PeopleIcon />}
-                onClick={() => this.setState({ viewSelected: 'adherents' })}
-              />
-            }
-            {relaisSelected &&
-              <FlatButton
-                label="Fournisseurs"
-                icon={<FournisseursIcon />}
-                onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
-              />
+              [
+                <FlatButton
+                  label="Depots"
+                  icon={<EuroIcon />}
+                  onClick={() => this.setState({ viewSelected: 'depot' })}
+                />,
+                <FlatButton
+                  label="Adhérents"
+                  icon={<PeopleIcon />}
+                  onClick={() => this.setState({ viewSelected: 'adherents' })}
+                />,
+                <FlatButton
+                  label="Fournisseurs"
+                  icon={<FournisseursIcon />}
+                  onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
+                />,
+                <FlatButton
+                  label="Infos"
+                  icon={<InfoIcon />}
+                  onClick={() => this.setState({ viewSelected: 'infos' })}
+                />,
+              ]
             }
           </div>
         </div>
@@ -131,6 +136,11 @@ class AdminRelais extends Component {
         {viewSelected === 'fournisseurs' &&
           <FournisseursRelais
             relaiId={relaiId}
+            params={params}
+          />}
+        {viewSelected === 'infos' &&
+          <InfosRelais
+            relais={relaisSelected}
             params={params}
           />}
         {viewSelected === 'adherents' &&
