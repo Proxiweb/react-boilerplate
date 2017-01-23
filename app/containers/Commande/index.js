@@ -101,7 +101,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       utilisateurId,
       typesProduits,
     } = this.props;
-    console.log(this.props);
+
     if (commandes && Object.keys(commandes).length > 0 && typesProduits) {
       return (
         <div className="row">

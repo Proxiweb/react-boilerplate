@@ -1,0 +1,14 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 485px);
+  min-height: calc(100vh - 485px);
+}
+
+.noScroll {
+  overflow-y: auto;
+}
+
+.nouvelleCommande {
+  background-color: transparent;
+}
