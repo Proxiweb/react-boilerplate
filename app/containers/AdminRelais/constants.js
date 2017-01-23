@@ -1,5 +1,6 @@
 import generateConstants from 'utils/asyncSagaConstants';
 
-const c = generateConstants('app/AdminRelais', 'load_relais');
+const load = generateConstants('app/AdminRelais', 'load_relais');
+const save = generateConstants('app/AdminRelais', 'save_relais');
 
-export default c;
+export default { ...load, ...save };

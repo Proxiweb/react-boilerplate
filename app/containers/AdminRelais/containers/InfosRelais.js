@@ -7,6 +7,7 @@ import {
 } from 'redux-form';
 import RelaisForm from 'containers/AdminRelais/components/RelaisForm';
 import { selectPending } from 'containers/App/selectors';
+import { saveRelais } from 'containers/AdminRelais/actions';
 
 const isProfilePristine = () => (state) => isPristine('profile')(state);
 
@@ -16,10 +17,11 @@ class InfosRelais extends Component { // eslint-disable-line
     relais: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
+    save: PropTypes.func.isRequired,
   }
 
   handleSubmit = (values) => {
-    console.log(values);
+    this.props.save(values);
   }
 
   render() {
@@ -45,6 +47,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   changeValue: (form, field, val) => dispatch(change(form, field, val)),
+  save: (relais) => dispatch(saveRelais(relais)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfosRelais);

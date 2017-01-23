@@ -360,7 +360,8 @@ export const selectFournisseurCommandes = () => createSelector(
   selectFournisseurId(),
   selectFournisseursIds(),
   (commandes, fournisseurId, fournisseursIds) => {
-    if (!commandes || !fournisseurId || !fournisseursIds) return null;
+    if (!commandes || !fournisseurId || !fournisseursIds || !fournisseursIds[fournisseurId].commandes) return null;
+
     return fournisseursIds[fournisseurId]
             .commandes
             .map((id) => commandes[id]);

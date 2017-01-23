@@ -52,6 +52,7 @@ class FacturesFournisseur extends Component {
       contenus,
       commandeContenus,
     } = this.props;
+
     if (!commandes) return null;
 
     return (
