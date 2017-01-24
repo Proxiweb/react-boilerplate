@@ -6,7 +6,7 @@ import { loadDepots } from './actions';
 import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import { Column, Table } from 'react-virtualized';
 import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
-import authorization from 'containers/Authorization'
+import authorization from 'containers/Authorization';
 import { selectDepots, selectTotal } from './selectors';
 import moment from 'moment';
 import styles from './index.css';

@@ -1,8 +1,6 @@
 import c from './constants';
 import { findActionType } from 'utils/asyncSagaConstants';
 
-console.log(c);
-
 export const loadRelais = (query = {}) => ({
   type: findActionType('load_relais', c, 'START'),
   url: 'relais',

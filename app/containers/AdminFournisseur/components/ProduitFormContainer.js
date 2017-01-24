@@ -27,13 +27,7 @@ class ProduitFormContainer extends React.Component {
 
   handleSubmit = (values) => {
     const { produit, save } = this.props;
-    const newProd = { ...produit, ...values };
-    console.log(newProd, this.props);
-    try {
-      save(newProd);
-    } catch (e) {
-      console.log(e);
-    }
+    save({ ...produit, ...values });
   }
 
   render() {

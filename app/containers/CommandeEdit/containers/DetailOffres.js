@@ -147,10 +147,14 @@ class DetailOffres extends Component {
               </div>
               <div className="col-md-6">
                 {viewOffre &&
-                  <p dangerouslySetInnerHTML={{ __html: produit.description }} /> // eslint-disable-line
+                  <p
+                    dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
+                  />
                 }
                 {!viewOffre &&
-                  <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} /> // eslint-disable-line
+                  <p
+                    dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} // eslint-disable-line
+                  />
                 }
               </div>
             </div>

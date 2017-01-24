@@ -18,9 +18,9 @@ import {
 //   selectPayments
 // } from 'containers/CompteUtilisateur/selectors';
 //
-import {
-  saveAccountConst,
-} from 'containers/CompteUtilisateur/constants';
+// import {
+//   saveAccountConst,
+// } from 'containers/CompteUtilisateur/constants';
 
 import api from '../../utils/stellarApi';
 

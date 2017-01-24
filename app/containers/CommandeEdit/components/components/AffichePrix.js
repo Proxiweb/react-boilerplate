@@ -49,7 +49,7 @@ export const formatterPoids = (offre) => {
 export const detailPrix = (offre, qteCommande, format = 'component') => {
   const tarif = trouveTarification(offre.tarifications, offre.quantiteTotal, qteCommande);
   if (!tarif) {
-    console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre);
+    console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre);  // eslint-disable-line
     return {
       descriptionPdt: `${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ' '}`,
       prix: 0,

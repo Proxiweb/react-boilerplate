@@ -34,9 +34,6 @@ class CatalogueFournisseur extends Component {
       `/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`
     );
 
-  crop = (args) =>
-    console.log(args);
-
   handleNewProduct = () =>
     this.props.pushState(
       `/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`

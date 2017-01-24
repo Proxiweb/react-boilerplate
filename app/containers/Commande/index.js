@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import Paper from 'material-ui/Paper';
 // import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -21,8 +23,6 @@ import {
   selectPending,
 } from 'containers/App/selectors';
 
-import RefreshIndicator from 'material-ui/RefreshIndicator';
-import Paper from 'material-ui/Paper';
 import styles from './styles.css';
 import choux from './choux.jpg';
 import Semainier from './components/Semainier';

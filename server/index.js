@@ -18,7 +18,7 @@ app.use((err, req, res, next) => {  // eslint-disable-line
   if (err.name === 'UnauthorizedError') {
     res.status(401).send({ error: 'La session a expirée' });
   }
-  console.log(err);
+  console.log(err); // eslint-disable
   res.status(500).send('Something broke!');
 });
 

@@ -21,9 +21,11 @@ import io from 'socket.io-client/socket.io';
 import createReducer from './reducers';
 
 const errorHandler = (error, getState, lastAction/* , dispatch*/) => {
+  /* eslint-disable */
   console.error(error);
   console.debug('current state', getState());
   console.debug('last action was', lastAction);
+  /* eslint-enable */
   // optionally dispatch an action due to the error using the dispatch parameter
 };
 
