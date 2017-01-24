@@ -6,7 +6,7 @@ import styles from './AffichePrix.css';
 const trouveTarificationFn = (tarifications, totalGlobal = 0, totalCommande = 0) => {
   const total = totalGlobal + totalCommande;
   return tarifications
-          .sort((a, b) => a.qteMinRelais > b.qteMinRelais)
+          .slice().sort((a, b) => a.qteMinRelais > b.qteMinRelais)
           .find((tar, idx, arr) =>
             total >= tar.qteMinRelais &&
             (!arr[idx + 1] || arr[idx + 1].qteMinRelais >= (total + 1))

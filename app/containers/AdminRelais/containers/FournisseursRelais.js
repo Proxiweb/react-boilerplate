@@ -137,7 +137,7 @@ class FournisseursRelais extends Component {
         <div className="col-md-8" style={{ marginTop: '2em' }}>
           {offresProduit.length > 0 && typesProduits &&
             offresProduit
-            .sort((o1, o2) => o1.active > o2.active)
+            .slice().sort((o1, o2) => o1.active > o2.active)
             .map((o, idx) =>
               <div className={`row ${styles.offre}`}>
                 <div className="col-md-8">

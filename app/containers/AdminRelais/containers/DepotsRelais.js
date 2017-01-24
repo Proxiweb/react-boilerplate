@@ -61,7 +61,7 @@ class DepotsRelais extends Component {
           {depots && utilisateurs.length > 0 &&
             <SelectableList value={bordereauSelected} onChange={this.handleChangeList}>
               {Object.keys(borderauxG)
-                .sort((a, b) => a < b || a === 'actuel')
+                .slice().sort((a, b) => a < b || a === 'actuel')
                 .map((key, idx) =>
                   <ListItem
                     key={idx}

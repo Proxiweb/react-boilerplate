@@ -145,7 +145,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
     const { relais, addDest } = this.props;
     const palette = this.context.muiTheme.palette;
 
-    const datas = this.getFiltredDatas().sort((a, b) => {
+    const datas = this.getFiltredDatas().slice().sort((a, b) => {
       if (sortBy === 'nom') {
         if (!a.nom || !a.prenom) return false;
         return sortDirection === 'ASC' ?

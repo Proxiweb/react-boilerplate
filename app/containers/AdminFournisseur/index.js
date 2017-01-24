@@ -59,7 +59,7 @@ class CatalogueFournisseur extends Component {
           </div>
           <SelectableList value={params.produitId} onChange={this.handleChangeList}>
             {produits
-              .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
+              .slice().sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
               .map((pdt, idx) =>
                 <ListItem
                   key={idx}

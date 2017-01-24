@@ -80,7 +80,7 @@ class ListeUtilisateursRelais extends Component {
                customFilter(util);
       })
       .map((id) => utilisateurs[id])
-      .sort((a, b) => a.nom > b.nom);
+      .slice().sort((a, b) => a.nom > b.nom);
 
     return (
       <div>

@@ -88,7 +88,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       Object.keys(this.props.commandes)
       .filter((key) =>
         !this.props.commandes[key].terminee && this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
-      ).sort(
+      ).slice().sort(
         (key) => !this.props.commandes[key].noCommande
       );
 

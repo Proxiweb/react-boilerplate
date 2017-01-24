@@ -58,7 +58,7 @@ class Offres extends Component {
               <div className="col-md-12">
                 {offres
                   .filter((off) => off.relaiId === null)
-                  .sort((o1, o2) => o1.active > o2.active)
+                  .slice().sort((o1, o2) => o1.active > o2.active)
                   .map((off, idx) => (
                     <Offre
                       index={idx}

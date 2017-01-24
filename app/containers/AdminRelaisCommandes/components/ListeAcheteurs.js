@@ -150,7 +150,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
               commandeUtilisateurs
                 .map((cu) => ({ ...cu, utilisateur: utilisateurs.find((u) => u.id === cu.utilisateurId) }))
                 .filter((cu) => cu.commandeId === params.commandeId && cu.utilisateur && cu.utilisateur.nom)
-                .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
+                .slice().sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
                 .map((cu, idx) => {
                   const datas = this.computeDatas(cu.utilisateurId);
                   return (

@@ -46,7 +46,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
     return (
       <div className="row">
         <div className={`col-md-6 ${styles.panel} ${styles.dest}`}>
-          {destinataires.sort((a, b) => a.identite > b.identite).map((dest, idx) => (
+          {destinataires.slice().sort((a, b) => a.identite > b.identite).map((dest, idx) => (
             <div key={idx} className="row end-md">
               <div className="col-md-4">
                 {dest.email && <Chip
