@@ -7,6 +7,7 @@ import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import reduxCatch from 'redux-catch';
 import createSocketIoMiddleware from 'redux-socket.io';
+// import Raven from 'raven-js';
 // import { autoRehydrate } from 'redux-persist';
 
 // import * as storage from 'redux-storage';
@@ -20,11 +21,14 @@ import io from 'socket.io-client/socket.io';
 
 import createReducer from './reducers';
 
+// Raven.config('https://1a73e161db764041ae0c12734942e6ab@sentry.io/131956').install();
+
 const errorHandler = (error, getState, lastAction/* , dispatch*/) => {
   /* eslint-disable */
   console.error(error);
   console.debug('current state', getState());
   console.debug('last action was', lastAction);
+  // Raven.captureException(error);
   /* eslint-enable */
   // optionally dispatch an action due to the error using the dispatch parameter
 };
