@@ -192,8 +192,8 @@ class DetailOffres extends Component {
                 >
                   <MediaQuery query="(max-device-width: 1600px)">
                     <DetailOffreHeader
-                      paddingRight={390}
-                      width={360}
+                      paddingRight={90}
+                      width={660}
                       label="Ajouter au panier"
                       title={title}
                       enStock={enStock}

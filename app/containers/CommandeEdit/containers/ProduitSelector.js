@@ -68,7 +68,7 @@ class ProduitSelector extends React.Component {
 
     const listeProduits =
       typeProduitId !== 'favoris'
-        ? produits
+        ? produits.filter((p) => p.enStock)
         : Object.keys(allProduits)
           .filter((id) => includes(auth.produitsFavoris, id))
           .map((id) => allProduits[id]);
