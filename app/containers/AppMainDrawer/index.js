@@ -73,7 +73,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
                 <ListItem primaryText="Depots" value="/depots" />,
                 <ListItem
                   primaryText="Commandes"
-                  value={`admin/relais/${user.relaiId}/commandes`}
+                  value={`/admin/relais/${user.relaiId}/commandes`}
                 />,
                 <ListItem primaryText="Logs" value="/logs" />,
                 <ListItem primaryText="Utilisateurs" value="/utilisateurs" />,
@@ -96,6 +96,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               leftIcon={<TestIcon />}
               nestedItems={[
                 <ListItem primaryText="Commandes" value={`/admin/relais/${user.relaiId}/commandes`} />,
+                <ListItem primaryText="Relais" value="/relais" />,
               ]}
             />
           )}

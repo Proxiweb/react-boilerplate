@@ -18,6 +18,7 @@ import {
 import {
   loadFournisseurs,
   loadTypesProduits,
+  importeOffres,
 } from 'containers/Commande/actions';
 
 import styles from './styles.css';
@@ -33,10 +34,11 @@ class FournisseursRelais extends Component {
     load: PropTypes.func.isRequired,
     loadF: PropTypes.func.isRequired,
     loadT: PropTypes.func.isRequired,
-    fournisseurs: PropTypes.array.isRequired,
+    importe: PropTypes.func.isRequired,
+    fournisseurs: PropTypes.array,
     produits: PropTypes.object,
     params: PropTypes.object.isRequired,
-    typesProduits: PropTypes.object.isRequired,
+    typesProduits: PropTypes.object,
     offres: PropTypes.object,
   }
 
@@ -72,6 +74,16 @@ class FournisseursRelais extends Component {
       produitSelected: value,
     })
 
+  handleImporterOffres = () => {
+    const { produitSelected, fournisseurSelected } = this.state;
+    const { relaiId: relaiDestinationId } = this.props.params;
+    this.props.importe(
+      fournisseurSelected,
+      produitSelected,
+      relaiDestinationId,
+    );
+  }
+
   render() {
     const { fournisseurs, produits, offres: offresById, params, typesProduits } = this.props;
     const { fournisseurSelected, produitSelected } = this.state;
@@ -103,8 +115,8 @@ class FournisseursRelais extends Component {
               floatingLabelText="Fournisseur"
               hintText="Sélectionnez un fournisseur"
             >
-              {fournisseurs.map((data) =>
-                <MenuItem key={data.id} value={data.id} primaryText={data.nom.toUpperCase()} />
+              {fournisseurs.map((data, idx) =>
+                <MenuItem key={idx} value={data.id} primaryText={data.nom.toUpperCase()} />
               )}
             </SelectField>
           }
@@ -139,7 +151,7 @@ class FournisseursRelais extends Component {
             offresProduit
             .slice().sort((o1, o2) => o1.active > o2.active)
             .map((o, idx) =>
-              <div className={`row ${styles.offre}`}>
+              <div className={`row ${styles.offre}`} key={idx}>
                 <div className="col-md-8">
                   <OffreDetailsCard
                     key={idx}
@@ -165,6 +177,7 @@ class FournisseursRelais extends Component {
                   primary
                   label="Importer l'offre"
                   fullWidth
+                  onClick={this.handleImporterOffres}
                 />
               </div>
             </div>
@@ -193,6 +206,8 @@ const mapDispatchToProps = (dispatch) => ({
   load: (relaisId) => dispatch(loadFournisseurs(relaisId)),
   loadF: (id) => dispatch(loadFournisseur(id)),
   loadT: () => dispatch(loadTypesProduits()),
+  importe: (fournisseurId, produitId, relaiDestinationId) =>
+    dispatch(importeOffres(fournisseurId, produitId, relaiDestinationId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FournisseursRelais);

@@ -81,20 +81,20 @@ class AdminRelais extends Component {
     return (<div className="row">
       <div className={classnames('col-md-2', styles.panel)}>
         <SelectableList value={relaiId} onChange={this.handleChangeList}>
-          {Object.keys(relais)
+          {relais
             .filter((r) => admin || r.id === authRelaiId)
-            .map((key, idx) =>
+            .map((rel, idx) =>
               <ListItem
                 key={idx}
-                primaryText={relais[key].nom.toUpperCase()}
-                value={relais[key].id}
+                primaryText={rel.nom.toUpperCase()}
+                value={rel.id}
               />
           )}
         </SelectableList>
       </div>
       <div className={classnames('col-md-10', styles.panel)}>
         <div className="row end-md">
-          <div classNames="col-md-4">
+          <div className="col-md-12">
             {relaisSelected &&
               <FlatButton
                 label="Commandes en cours"

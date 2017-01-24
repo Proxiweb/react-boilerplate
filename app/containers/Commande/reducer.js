@@ -112,6 +112,11 @@ function commandeReducer(state = initialState, action) {
         });
     }
 
+    case c.ASYNC_IMPORTE_OFFRES_SUCCESS: {
+      const datas = normalize(action.datas.offres, schemas.OFFRES);
+      return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
+    }
+
     case c.ASYNC_LOAD_TYPES_PRODUITS_SUCCESS: {
       const datas = normalize(action.datas.type_produits, arrayOf(schemas.TYPES_PRODUITS));
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });

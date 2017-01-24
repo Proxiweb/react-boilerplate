@@ -55,6 +55,15 @@ export const saveOffre = (offre, msgSuccess = 'Offre sauvegardée') => ({
   msgSuccess,
 });
 
+export const importeOffres = (fournisseurId, produitId, relaiDestinationId) => ({
+  type: findActionType('importe_offres', c, 'START'),
+  url: 'offre_produits/importer',
+  method: 'post',
+  datas: { fournisseurId, produitId, relaiDestinationId },
+  msgPending: 'Sauvegarde en cours...',
+  msgSuccess: 'Offre importée',
+});
+
 export const loadFournisseurs = (query) => ({
   type: findActionType('load_fournisseurs', c, 'START'),
   url: 'fournisseurs',
