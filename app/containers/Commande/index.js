@@ -47,6 +47,10 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     pending: PropTypes.bool.isRequired,
   }
 
+  state = {
+    buttonClicked: false,
+  }
+
   componentDidMount() {
     const { commandes, loadCommandes, relaiId, loadCommande, route } = this.props; // eslint-disable-line
     loadCommandes({ relaiId });
@@ -102,7 +106,9 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
       typesProduits,
     } = this.props;
 
-    if (commandes && Object.keys(commandes).length > 0 && typesProduits) {
+    const { buttonClicked } = this.state;
+
+    if (!buttonClicked && commandes && Object.keys(commandes).length > 0 && typesProduits) {
       return (
         <div className="row">
           <Semainier
@@ -115,6 +121,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             pending={pending}
             utilisateurId={utilisateurId}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
+            buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <Semainier
             titreCol="La semaine prochaine"
@@ -147,6 +154,24 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
               prct={40}
               fav
             />
+          </div>
+        </div>
+      );
+    }
+
+    if (buttonClicked) {
+      return (
+        <div className="row center-md">
+          <div className="col-md-6">
+            <div style={{ margin: 'auto', width: '70px' }}>
+              <RefreshIndicator
+                size={70}
+                left={0}
+                top={20}
+                status="loading"
+                style={{ display: 'inline-block', position: 'relative' }}
+              />
+            </div>
           </div>
         </div>
       );

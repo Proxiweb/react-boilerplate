@@ -124,11 +124,16 @@ class NouvelleCommande extends Component { // eslint-disable-line
 
   validate = () => {
     const { cdeFourns, parametres } = this.state;
-    return cdeFourns.length > 0 && parametres.dateLimite instanceof Date && parametres.heureLimite instanceof Date;
+    return cdeFourns.length > 0;
+    //  &&
+    //   ( parametres.dateLimite instanceof Date &&
+    //     parametres.heureLimite instanceof Date
+    //   );
   }
 
   calculeDateCommande = () => {
     const { dateLimite, heureLimite } = this.state.parametres;
+    if (!dateLimite || !heureLimite) return null;
     const hLim = parseInt(moment(heureLimite).format('HH'), 10);
     const mLim = parseInt(moment(heureLimite).format('mm'), 10);
     return moment(dateLimite).hours(hLim).minutes(mLim);
@@ -137,9 +142,9 @@ class NouvelleCommande extends Component { // eslint-disable-line
   create = () => {
     const { parametres, distributions, cdeFourns } = this.state;
     const { resume, montantMin, montantMinRelais } = parametres;
-
+    const dateCommande = this.calculeDateCommande();
     const commande = {
-      dateCommande: this.calculeDateCommande().toISOString(),
+      dateCommande: dateCommande ? dateCommande.toISOString() : null,
       resume,
       montantMin,
       montantMinRelai: montantMinRelais,
