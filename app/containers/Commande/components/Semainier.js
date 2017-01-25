@@ -13,6 +13,7 @@ const Semainier = ({
   commandeUtilisateurExiste,
   utilisateurId,
   pending,
+  buttonClicked,
 }) =>
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
@@ -29,9 +30,12 @@ const Semainier = ({
             key={idx}
             commandeId={`${key}`}
             disabled={pending}
-            clickHandler={() => pushState(
-              `/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`
-            )}
+            clickHandler={() => {
+              buttonClicked();
+              pushState(
+                `/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`
+              );
+            }}
           />
         );
       }
@@ -43,6 +47,7 @@ Semainier.propTypes = {
   getCommandeInfos: PropTypes.func.isRequired,
   commandeUtilisateurExiste: PropTypes.func.isRequired,
   pushState: PropTypes.func.isRequired,
+  buttonClicked: PropTypes.func.isRequired,
   commandes: PropTypes.object.isRequired,
   commandesIds: PropTypes.array.isRequired,
   relaiId: PropTypes.string.isRequired,

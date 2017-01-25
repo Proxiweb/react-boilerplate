@@ -11,7 +11,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
     delDistrib: PropTypes.func.isRequired,
     addDistrib: PropTypes.func.isRequired,
     distributions: PropTypes.array.isRequired,
-    dateLimiteCommande: PropTypes.object.isRequired,
+    dateLimiteCommande: PropTypes.object,
   }
 
   state = {
