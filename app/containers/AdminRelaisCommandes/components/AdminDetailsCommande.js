@@ -7,10 +7,12 @@ import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectOffres,
+  selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { fetchUtilisateurs } from 'containers/AdminUtilisateurs/actions';
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import {
+  fetchUtilisateurs,
+} from 'containers/Commande/actions';
 
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
@@ -41,14 +43,24 @@ class AdminDetailsCommande extends Component {
   }
 
   componentDidMount() {
-    const { commandeUtilisateurs, utilisateurs, params } = this.props;
+    this.loadUtilisateursCommande();
+    this.props.loadDepots(this.props.params.relaiId);
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.params.commandeId !== this.props.params.commandeId) {
+      this.loadUtilisateursCommande();
+    }
+  }
+
+  loadUtilisateursCommande = () => {
+    const { commandeUtilisateurs, utilisateurs } = this.props;
     const utilisateursIds =
       commandeUtilisateurs
         .filter((cu) => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
         .map((cu) => cu.utilisateurId);
 
     this.props.loadUtilisateurs(utilisateursIds);
-    this.props.loadDepots(params.relaiId);
   }
 
   handleChangeList = (event, value) => {
@@ -70,6 +82,9 @@ class AdminDetailsCommande extends Component {
       roles,
       children,
     } = this.props;
+    const utils = utilisateurs
+                  ? Object.keys(utilisateurs).map((id) => utilisateurs[id])
+                  : null;
     return (
       <div className="row">
         <div className="col-md-4">
@@ -77,14 +92,15 @@ class AdminDetailsCommande extends Component {
             commandeUtilisateurs &&
             commandeContenus &&
             contenus &&
-            utilisateurs.length > 0 &&
+            utils &&
+            utils.length > 0 &&
             depots &&
             offres &&
             <ListeAcheteurs
               commandeUtilisateurs={commandeUtilisateurs}
               commandeContenus={commandeContenus}
               contenus={contenus}
-              utilisateurs={utilisateurs}
+              utilisateurs={utils}
               depots={depots}
               offres={offres}
               params={params}
@@ -95,12 +111,12 @@ class AdminDetailsCommande extends Component {
         </div>
         <div className="col-md-8">
           {!children && <DetailsParFournisseur params={params} commandeUtilisateurs={commandeUtilisateurs} />}
-          {children && (
+          {children && utils && (
             <DetailsParUtilisateur
               params={params}
               commande={commande}
               commandeUtilisateur={commandeUtilisateurs.find((cu) => cu.utilisateurId === params.utilisateurId)}
-              utilisateur={utilisateurs.find((ut) => ut.id === params.utilisateurId)}
+              utilisateur={utils.find((ut) => ut.id === params.utilisateurId)}
             />)}
         </div>
       </div>

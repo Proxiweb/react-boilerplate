@@ -12,18 +12,18 @@ import {
   selectFournisseurs,
   selectProduits,
   selectCommande,
+  selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
 import {
   loadFournisseurs,
+  fetchUtilisateurs,
 } from 'containers/Commande/actions';
 
 import {
   selectPending,
 } from 'containers/App/selectors';
 
-import { fetchUtilisateurs } from 'containers/AdminUtilisateurs/actions';
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import { trouveTarification } from
   'containers/CommandeEdit/components/components/AffichePrix';
@@ -133,7 +133,9 @@ class FactureFournisseur extends Component { // eslint-disable-line
     } = this.props;
 
     const fournisseur = fournisseurs.find((f) => f.id === params.fournisseurId);
-
+    const utils = utilisateurs
+                  ? Object.keys(utilisateurs).map((id) => utilisateurs[id])
+                  : null;
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
           {
@@ -172,7 +174,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
                                   <td>
                                     <Adresse
                                       label="Client"
-                                      datas={utilisateurs.find((u) =>
+                                      datas={utils.find((u) =>
                                         u.id === cu.utilisateurId
                                       )}
                                     />

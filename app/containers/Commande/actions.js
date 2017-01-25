@@ -92,6 +92,12 @@ export const loadUtilisateurs = (query) => ({
   msgPending: 'Chargement utilisateurs',
 });
 
+export const fetchUtilisateurs = (ids) => ({
+  type: findActionType('load_utilisateurs', c, 'START'),
+  method: 'post',
+  url: 'utilisateurs/byIds',
+  datas: { ids },
+});
 
 export const loadUserCommandes = (userId) => ({
   type: findActionType('load_user_commandes', c, 'START'),

@@ -10,18 +10,18 @@ import {
   selectFournisseurs,
   selectProduits,
   selectCommande,
+  selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
 import {
   loadFournisseurs,
+  fetchUtilisateurs,
 } from 'containers/Commande/actions';
 
 import {
   selectPending,
 } from 'containers/App/selectors';
 
-import { fetchUtilisateurs } from 'containers/AdminUtilisateurs/actions';
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import {
   trouveTarification,
