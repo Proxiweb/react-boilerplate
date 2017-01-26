@@ -4,7 +4,6 @@ import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import { createStructuredSelector } from 'reselect';
-import round from 'lodash/round';
 import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import OffreDetailsCard from 'components/OffreDetailsCard';
 
@@ -16,6 +15,7 @@ import {
     selectProduitsRelaisByTypeProduit,
 } from 'containers/Commande/selectors';
 
+import OffreDetails from 'components/OffreDetails';
 import styles from './styles.css';
 
 class DetailOffres extends Component {
@@ -93,72 +93,15 @@ class DetailOffres extends Component {
         </div>
         { viewOffre && offres.filter((o) => o.active && o.relaiId === relaiId).map((offre, idx) => {
           const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
-          const dPrix = detailPrix(offre, 0, 'json');
-          const pAuKg = prixAuKg(offre, typeProduit, 'json');
           const tR = offre.tarifications.length > 1;
-          return <OffreDetailsCard typeProduit={typeProduit} offre={offre} showSubtitle />;
           return (
-            <div key={idx} className={`row ${styles.offre}`}>
-              <div className="col-md-12">
-                <Card
-                  style={{
-                    backgroundColor: muiTheme.palette.groupColor,
-                    border: `solid 1px ${muiTheme.palette.groupColorBorder}`,
-                    boxShadow: 'none',
-                  }}
-                >
-                  <CardHeader
-                    actAsExpander={tR}
-                    showExpandableButton={tR}
-                    textStyle={{ textAlign: 'left', paddingRight: 215 }}
-                    title={<span>
-                      {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
-                      {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
-                    </span>}
-                    subtitle={tR && 'Tarif dégressif (cliquez pour plus de détails)'}
-                  />
-                  <CardText expandable>
-                    <Table
-                      selectable={false}
-                      multiSelectable={false}
-                    >
-                      <TableHeader
-                        displaySelectAll={false}
-                        adjustForCheckbox={false}
-                        style={{ color: 'black' }}
-                      >
-                        <TableRow>
-                          <TableHeaderColumn
-                            style={{ textAlign: 'left', color: 'black' }}
-                          >
-                            Quantité achetée <sup>*</sup></TableHeaderColumn>
-                          <TableHeaderColumn
-                            style={{ textAlign: 'right', color: 'black' }}
-                          >
-                            Tarif
-                          </TableHeaderColumn>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody displayRowCheckbox={false}>
-                        {offre.tarifications.map((t, index, tarifications) =>
-                          <TableRow>
-                            <TableRowColumn>
-                              {generateTarifMin(tarifications, index)}
-                            </TableRowColumn>
-                            <TableRowColumn
-                              style={{ textAlign: 'right' }}
-                            >
-                              {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
-                            </TableRowColumn>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                    <p><sup>*</sup> Quantité globale achetée par tous les participants de la commande</p>
-                  </CardText>
-                </Card>
-              </div>
-            </div>);
+            <OffreDetails
+              key={idx}
+              typeProduit={typeProduit}
+              offre={offre}
+              subTitle="Tarif dégressif (cliquez pour plus de détails)"
+              expandable={tR}
+            />);
         })}
       </div>
     );

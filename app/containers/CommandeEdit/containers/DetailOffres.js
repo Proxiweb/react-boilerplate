@@ -35,7 +35,7 @@ import {
   ajouter,
 } from 'containers/CommandeEdit/actions';
 import round from 'lodash/round';
-
+import OffreDetails from 'components/OffreDetails';
 import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
 
@@ -166,103 +166,40 @@ class DetailOffres extends Component {
 
           const offreCommande = contenus.find((cont) => cont.offreId === offre.id);
           const qteCommande = offreCommande ? offreCommande.quantite : 0;
-          const dPrix = detailPrix(offre, qteCommande, 'json');
-          const pAuKg = prixAuKg(offre, typeProduit, 'json');
           const tR = offre.tarifications.length > 1;
-
-          const title =
-            (<span>
-              <strong>
-                {parseFloat(dPrix.prix).toFixed(2)} € - <small>{dPrix.descriptionPdt}</small>
-              </strong>
-              {'      '}
-              {offre.poids && <small style={{ color: 'gray' }}>{`${pAuKg.prixAuKg} € / Kg`}</small>}
-            </span>);
 
           return (
             <div key={idx} className={`row ${styles.offre}`}>
               <div className="col-md-12">
                 <MediaQuery query="(max-device-width: 1600px)">
-                  <DetailOffreHeader
-                    paddingRight={90}
-                    width={660}
-                    label="Ajouter au panier"
-                    title={title}
-                    enStock={enStock}
-                    handleClick={() =>
+                  <OffreDetails
+                    typeProduit={typeProduit}
+                    offre={offre}
+                    qteCommande={qteCommande}
+                    subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                    onClick={() =>
                       this.props.ajouter(
                         commandeId,
                         { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
                       )
                     }
-                    showExp={tR}
+                    expandable={tR}
                   />
                 </MediaQuery>
                 <MediaQuery query="(min-device-width: 1600px)">
-                  <Card
-                    style={{
-                      backgroundColor: 'white',
-                      border: 'solid 1px #a5a1a1',
-                      boxShadow: 'none',
-                      padding: '5px 0 5px 15px',
-                    }}
-                    expandable
-                    expanded={false}
-                  >
-                    <DetailOffreHeader
-                      paddingRight={0}
-                      width={350}
-                      label={null}
-                      title={title}
-                      enStock={enStock}
-                      handleClick={() =>
-                        this.props.ajouter(
-                          commandeId,
-                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
-                        )
-                      }
-                      showExp={tR}
-                    />
-                    <CardText expandable >
-                      <Table
-                        selectable={false}
-                        multiSelectable={false}
-                      >
-                        <TableHeader
-                          displaySelectAll={false}
-                          adjustForCheckbox={false}
-                        >
-                          <TableRow>
-                            <TableHeaderColumn
-                              style={{ color: 'black' }}
-                            >
-                              Quantité achetée <sup>*</sup>
-                            </TableHeaderColumn>
-                            <TableHeaderColumn
-                              style={{ textAlign: 'right', color: 'black' }}
-                            >
-                              Tarif
-                            </TableHeaderColumn>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody displayRowCheckbox={false}>
-                          {offre.tarifications.map((t, index, tarifications) =>
-                            <TableRow>
-                              <TableRowColumn>
-                                {generateTarifMin(tarifications, index)}
-                              </TableRowColumn>
-                              <TableRowColumn
-                                style={{ textAlign: 'right' }}
-                              >
-                                {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
-                              </TableRowColumn>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                      <p><sup>*</sup> Quantité globale achetée par tous les participants de la commande</p>
-                    </CardText>
-                  </Card>
+                  <OffreDetails
+                    typeProduit={typeProduit}
+                    offre={offre}
+                    qteCommande={qteCommande}
+                    subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                    onClick={() =>
+                      this.props.ajouter(
+                        commandeId,
+                        { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                      )
+                    }
+                    expandable={tR}
+                  />
                 </MediaQuery>
               </div>
             </div>);
