@@ -12,7 +12,8 @@ import {
   selectTypesProduits,
   selectFournisseurs,
   selectCommandesUtilisateurs,
-  selectProduits } from './selectors';
+  selectProduits,
+} from './selectors';
 
 import {
   selectAuthUtilisateurId,

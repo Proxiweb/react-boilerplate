@@ -93,17 +93,26 @@ class FactureFournisseur extends Component { // eslint-disable-line
               .reduce((memo, cont) =>
                 memo + cont.quantite + cont.qteRegul
               , 0);
-
+          const offre = offres[contenu.offreId];
           const tarif = trouveTarification(
-            offres[contenu.offreId].tarifications,
+            offre.tarifications,
             qteTotalOffre,
-            contenu.quantite
+            0
           );
+
+          const tarifEnBaisse = offres[contenu.offreId].tarifications[0].prix > tarif.prix;
 
           return (<tr className={styles.item}>
             <td>{produits[offres[contenu.offreId].produitId].description}</td>
             <td className={styles.center}>{contenu.quantite}</td>
-            <td className={styles.center}>{parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}</td>
+            <td className={styles.center}>
+              {parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}
+              {tarifEnBaisse &&
+                <span style={{ color: 'red' }}>
+                  {' '}<s>{parseFloat(round(offre.tarifications[0].prix / 100 / 1.055, 2)).toFixed(2)}</s>
+                </span>
+              }
+            </td>
             <td className={styles.totaux}>{parseFloat(round(tarif.prix / 100, 2)).toFixed(2)} €</td>
           </tr>);
         }

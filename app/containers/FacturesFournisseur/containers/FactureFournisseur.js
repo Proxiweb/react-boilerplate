@@ -111,7 +111,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
           const tarif = trouveTarification(
             offres[contenu.offreId].tarifications,
             qteTotalOffre,
-            contenu.quantite
+            // contenu.quantite
           );
 
           return (<tr className={styles.item}>

@@ -14,8 +14,8 @@ export default class CommnandeParProduitFournisseur extends Component { // eslin
 
   render() {
     const { produit, contenus, offre, qteTotalOffre, idx } = this.props;
-    const quantite = contenus.reduce((memo, c) => memo + c.quantite + c.qteRegul, 0);
-    const tarif = trouveTarification(offre.tarifications, qteTotalOffre, quantite);
+    // const quantite = contenus.reduce((memo, c) => memo + c.quantite + c.qteRegul, 0);
+    const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
     const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
     const rows = buildCommandeRow({
       contenu: contenus[0],

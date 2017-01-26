@@ -1,19 +1,21 @@
 import React from 'react';
 import round from 'lodash/round';
-import memoize from 'lodash/memoize';
+// import memoize from 'lodash/memoize';
 import styles from './AffichePrix.css';
 
-const trouveTarificationFn = (tarifications, totalGlobal = 0, totalCommande = 0) => {
+export function trouveTarification(tarifications, totalGlobal = 0, totalCommande = 0) {
   const total = totalGlobal + totalCommande;
+  // console.log(tarifications.slice().sort((a, b) => a.qteMinRelais < b.qteMinRelais));
   return tarifications
-          .slice().sort((a, b) => a.qteMinRelais > b.qteMinRelais)
-          .find((tar, idx, arr) =>
-            total >= tar.qteMinRelais &&
-            (!arr[idx + 1] || arr[idx + 1].qteMinRelais >= (total + 1))
+          .slice()
+          .sort((a, b) => a.qteMinRelais < b.qteMinRelais)
+          .find((tar) =>
+            total >= tar.qteMinRelais
           );
-};
+}
 
-export const trouveTarification = memoize(trouveTarificationFn);
+// export trouveTarification;
+ // = memoize(trouveTarificationFn);
 
 const convertisseurs = {
   mg: (poids) => {

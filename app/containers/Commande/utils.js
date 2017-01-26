@@ -22,8 +22,10 @@ const calculeTotauxCommandeFn = ({
         commandeContenus[key].offreId === offre.id
       ).map((key) => commandeContenus[key]);
 
-    const qteTotalOffre = commandeCommandeContenus
-    .reduce((mem, item) => mem + item.quantite, 0);
+    const qteTotalOffre =
+      commandeCommandeContenus
+        .filter((cC) => cC.utilisateurId !== commandeContenus[Object.keys(commandeContenus)[0]].utilisateurId)
+        .reduce((mem, item) => mem + item.quantite, 0);
 
     const tarif = trouveTarification(
       offre.tarifications,

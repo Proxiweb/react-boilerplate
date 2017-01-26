@@ -103,9 +103,15 @@ export default class DetailCommande extends Component { // eslint-disable-line
                 ).map((key) => commandeContenus[key]);
 
               const qteTotalOffre = commandeCommandeContenus
+                                      .filter((cC) => cC.utilisateurId !== contenu.utilisateurId)
                                       .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0);
 
-              const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
+              const tarif = trouveTarification(
+                offre.tarifications,
+                qteTotalOffre,
+                contenu.quantite
+              );
+
               const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
 
               const rows = buildCommandeRow({
