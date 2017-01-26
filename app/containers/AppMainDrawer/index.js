@@ -37,8 +37,8 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
             <ListItem
               leftIcon={<ShoppingCartIcon />}
               primaryText="Commandes"
-              value={`/relais/${user.relaiId}/commandes`}
-            />
+              value={'/'}
+            /> // relais/${user.relaiId}/commandes
           )}
           {user && (
             <ListItem

@@ -11,68 +11,33 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
-import { loadDatas1Start, loadDatas2Start } from './actions';
-import styles from './styles.css';
-import MessageBox from 'components/MessageBox';
-import LocaleToggle from 'containers/LocaleToggle';
-
-import { selectAsyncDatas1, selectAsyncDatas2 } from './selectors';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+// import styles from './styles.css';
+import { createStructuredSelector } from 'reselect';
+import Commandes from 'containers/Commande';
 
 class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    loadDatas1: PropTypes.func.isRequired,
-    loadDatas2: PropTypes.func.isRequired,
-    asyncDatas1: PropTypes.object.isRequired,
-    asyncDatas2: PropTypes.object.isRequired,
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = { effecs: [] };
+    auth: PropTypes.object.isRequired,
   }
 
   render() {
-    const { asyncDatas1, asyncDatas2 } = this.props;
+    const { auth } = this.props;
+    if (auth && auth.relaiId) {
+      return <Commandes params={{ relaiId: auth.relaiId }} />;
+    }
+
     return (
-      <div className="row text-center">
-        <div className={`col-md-12 ${styles.commandes}`}>
-          <h1>
-            <FormattedMessage {...messages.header} />
-          </h1>
-        </div>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <MessageBox asyncState={asyncDatas1} />
-          <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
-        </div>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <button
-            onClick={() => this.props.loadDatas2(1)}
-            className="btn btn-primary"
-          >
-            <span>{ !asyncDatas2.pending && 'Load Datas 2'} { asyncDatas2.pending && 'loading...' }</span>
-          </button>
-        </div>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <LocaleToggle />
-        </div>
+      <div className="row">
+        <h1>Homepage</h1>
       </div>
     );
   }
 }
 
 
-const mapStateToProps = (state) => ({
-  asyncDatas1: selectAsyncDatas1(state),
-  asyncDatas2: selectAsyncDatas2(state),
+const mapStateToProps = createStructuredSelector({
+  auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  loadDatas1: (id) => dispatch(loadDatas1Start(id)),
-  loadDatas2: (id) => dispatch(loadDatas2Start(id)),
-});
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps)(HomePage);

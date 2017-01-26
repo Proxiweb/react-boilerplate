@@ -37,7 +37,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     commandes: PropTypes.object,
     commandesUtilisateurs: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
-    relaiId: PropTypes.string,
+    relaiId: PropTypes.string.isRequired,
     produits: PropTypes.object,
     route: PropTypes.object,
     fournisseurs: PropTypes.array,
@@ -133,6 +133,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             pushState={pushState}
             utilisateurId={utilisateurId}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
+            buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <Semainier
             titreCol="Dans quinze jours"
@@ -144,6 +145,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             pushState={pushState}
             utilisateurId={utilisateurId}
             commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
+            buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <div className="col-xs">
             <Panel>Dans 3 semaines</Panel>
