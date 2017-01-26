@@ -6,6 +6,9 @@ import FlatButton from 'material-ui/FlatButton';
 import { createStructuredSelector } from 'reselect';
 import round from 'lodash/round';
 import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
+import OffreDetailsCard from 'components/OffreDetailsCard';
+
+
 import {
     selectOffresDuProduit,
     selectTypesProduitsRelais,
@@ -56,13 +59,13 @@ class DetailOffres extends Component {
     const fournisseur = fournisseurs.find((f) => f.id === produit.fournisseurId);
     const muiTheme = this.context.muiTheme;
 
-    const generateTarifMin = (tarifications, idx) => {
-      if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
-      const tarif = tarifications[idx];
-      return tarifications[idx + 1]
-        ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
-        : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
-    };
+    // const generateTarifMin = (tarifications, idx) => {
+    //   if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
+    //   const tarif = tarifications[idx];
+    //   return tarifications[idx + 1]
+    //     ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
+    //     : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
+    // };
 
     return (
       <div className={styles.offres}>
@@ -93,6 +96,7 @@ class DetailOffres extends Component {
           const dPrix = detailPrix(offre, 0, 'json');
           const pAuKg = prixAuKg(offre, typeProduit, 'json');
           const tR = offre.tarifications.length > 1;
+          return <OffreDetailsCard typeProduit={typeProduit} offre={offre} showSubtitle />;
           return (
             <div key={idx} className={`row ${styles.offre}`}>
               <div className="col-md-12">

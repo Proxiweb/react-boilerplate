@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import round from 'lodash/round';
 
 import { Card, CardHeader, CardText } from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   Table,
   TableHeader,
@@ -16,20 +17,23 @@ import {
   prixAuKg,
 } from 'containers/CommandeEdit/components/components/AffichePrix';
 
+import DetailOffreHeader from './components/DetailOffreHeader';
+
+const generateTarifMin = (tarifications, idx) => {
+  if (idx === 0) return <span><strong>1</strong>{tarifications[1] && <span> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>}</span>;
+
+  const tarif = tarifications[idx];
+  return tarifications[idx + 1]
+    ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
+    : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
+};
+
 const OffreDetailsCard = (props) => {
   const { offre, typeProduit, showSubtitle } = props;
   const dPrix = detailPrix(offre, 0, 'json');
   const pAuKg = prixAuKg(offre, typeProduit, 'json');
   const tR = offre.tarifications.length > 1;
 
-  const generateTarifMin = (tarifications, idx) => {
-    if (idx === 0) return <span><strong>1</strong>{tarifications[1] && <span> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>}</span>;
-
-    const tarif = tarifications[idx];
-    return tarifications[idx + 1]
-      ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
-      : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
-  };
   return (
     <Card
       style={{
@@ -38,18 +42,36 @@ const OffreDetailsCard = (props) => {
         boxShadow: 'none',
       }}
     >
-      <CardHeader
-        actAsExpander={tR}
-        showExpandableButton={tR}
-        textStyle={{ textAlign: 'left', paddingRight: 215 }}
+      {false && <DetailOffreHeader
+        paddingRight={90}
+        width={460}
+        label="Ajouter au panier"
         title={<span>
           {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
           {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
         </span>}
-        subtitle={tR && showSubtitle && 'Tarif dégressif (En savoir plus...)'}
-      />
+        enStock
+        handleClick={() => console.log('click')}
+        showExp={tR}
+        showSubtitle={tR && showSubtitle && 'Tarif dégressif (En savoir plus...)'}
+      />}
+    {true && <CardHeader
+        actAsExpander={tR}
+        showExpandableButton={tR}
+        textStyle={{
+          display: 'flex',
+          textAlign: 'left',
+          fontSize: '1.2em',
+          color: '#1565c0',
+        }}
+        title={<div style={{ display: 'flex', justifyContent: 'space-between'}}><div style={{ flex: 1 }}>
+          {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
+        {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
+      </div><div style={{flex: 1}}><RaisedButton primary label="Acheter"/></div></div>}
+      />}
       <CardText expandable>
         <Table
+        subtitle={tR && showSubtitle && 'Tarif dégressif (En savoir plus...)'}
           selectable={false}
           multiSelectable={false}
         >
