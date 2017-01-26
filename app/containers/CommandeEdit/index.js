@@ -198,8 +198,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     const { commande } = this.props;
 
     if (
-      commande.id &&
-      !commande.modifiee &&
+      (commande.id &&
+      !commande.modifiee) ||
       commande.contenus.length === 0
     ) return true;
 

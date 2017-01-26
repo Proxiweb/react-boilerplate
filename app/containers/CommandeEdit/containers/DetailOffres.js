@@ -182,34 +182,36 @@ class DetailOffres extends Component {
           return (
             <div key={idx} className={`row ${styles.offre}`}>
               <div className="col-md-12">
-                <Card
-                  style={{
-                    backgroundColor: 'white',
-                    border: 'solid 1px #a5a1a1',
-                    boxShadow: 'none',
-                    padding: '5px 0 5px 15px',
-                  }}
-                >
-                  <MediaQuery query="(max-device-width: 1600px)">
-                    <DetailOffreHeader
-                      paddingRight={90}
-                      width={660}
-                      label="Ajouter au panier"
-                      title={title}
-                      enStock={enStock}
-                      handleClick={() =>
-                        this.props.ajouter(
-                          commandeId,
-                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
-                        )
-                      }
-                      showExp={tR}
-                    />
-                  </MediaQuery>
-                  <MediaQuery query="(min-device-width: 1600px)">
+                <MediaQuery query="(max-device-width: 1600px)">
+                  <DetailOffreHeader
+                    paddingRight={90}
+                    width={660}
+                    label="Ajouter au panier"
+                    title={title}
+                    enStock={enStock}
+                    handleClick={() =>
+                      this.props.ajouter(
+                        commandeId,
+                        { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                      )
+                    }
+                    showExp={tR}
+                  />
+                </MediaQuery>
+                <MediaQuery query="(min-device-width: 1600px)">
+                  <Card
+                    style={{
+                      backgroundColor: 'white',
+                      border: 'solid 1px #a5a1a1',
+                      boxShadow: 'none',
+                      padding: '5px 0 5px 15px',
+                    }}
+                    expandable
+                    expanded={false}
+                  >
                     <DetailOffreHeader
                       paddingRight={0}
-                      width={300}
+                      width={350}
                       label={null}
                       title={title}
                       enStock={enStock}
@@ -221,47 +223,47 @@ class DetailOffres extends Component {
                       }
                       showExp={tR}
                     />
-                  </MediaQuery>
-                  <CardText expandable>
-                    <Table
-                      selectable={false}
-                      multiSelectable={false}
-                    >
-                      <TableHeader
-                        displaySelectAll={false}
-                        adjustForCheckbox={false}
+                    <CardText expandable >
+                      <Table
+                        selectable={false}
+                        multiSelectable={false}
                       >
-                        <TableRow>
-                          <TableHeaderColumn
-                            style={{ color: 'black' }}
-                          >
-                            Quantité achetée <sup>*</sup>
-                          </TableHeaderColumn>
-                          <TableHeaderColumn
-                            style={{ textAlign: 'right', color: 'black' }}
-                          >
-                            Tarif
-                          </TableHeaderColumn>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody displayRowCheckbox={false}>
-                        {offre.tarifications.map((t, index, tarifications) =>
+                        <TableHeader
+                          displaySelectAll={false}
+                          adjustForCheckbox={false}
+                        >
                           <TableRow>
-                            <TableRowColumn>
-                              {generateTarifMin(tarifications, index)}
-                            </TableRowColumn>
-                            <TableRowColumn
-                              style={{ textAlign: 'right' }}
+                            <TableHeaderColumn
+                              style={{ color: 'black' }}
                             >
-                              {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
-                            </TableRowColumn>
+                              Quantité achetée <sup>*</sup>
+                            </TableHeaderColumn>
+                            <TableHeaderColumn
+                              style={{ textAlign: 'right', color: 'black' }}
+                            >
+                              Tarif
+                            </TableHeaderColumn>
                           </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                    <p><sup>*</sup> Quantité globale achetée par tous les participants de la commande</p>
-                  </CardText>
-                </Card>
+                        </TableHeader>
+                        <TableBody displayRowCheckbox={false}>
+                          {offre.tarifications.map((t, index, tarifications) =>
+                            <TableRow>
+                              <TableRowColumn>
+                                {generateTarifMin(tarifications, index)}
+                              </TableRowColumn>
+                              <TableRowColumn
+                                style={{ textAlign: 'right' }}
+                              >
+                                {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
+                              </TableRowColumn>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                      <p><sup>*</sup> Quantité globale achetée par tous les participants de la commande</p>
+                    </CardText>
+                  </Card>
+                </MediaQuery>
               </div>
             </div>);
         })}

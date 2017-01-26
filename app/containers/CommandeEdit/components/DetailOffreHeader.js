@@ -27,9 +27,18 @@ export default class DetailOffreHeader extends Component { // eslint-disable-lin
       showExp,
     } = this.props;
 
+    // return (
+    //   <CardHeader
+    //     actAsExpander
+    //     showExpandableButton
+    //     title="test"
+    //   />
+    // );
+
     return (
       <CardHeader
-        actAsExpander={false}
+        expandable
+        actAsExpander
         showExpandableButton={showExp}
         style={{ padding: '1px' }}
         textStyle={{
