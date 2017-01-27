@@ -18,7 +18,7 @@ const Semainier = ({
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
     <div>
-      {commandesIds.map((key, idx) => {
+      {commandesIds && commandesIds.map((key, idx) => {
         const infos = getCommandeInfos(key);
         return (
           <CommandePanel

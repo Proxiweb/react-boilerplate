@@ -64,7 +64,8 @@ const OffreDetailsCard = (props) => {
           fontSize: '1.2em',
           color: '#1565c0',
         }}
-        title={<div style={{ display: 'flex', justifyContent: 'space-between'}}><div style={{ flex: 1 }}>
+        titleStyle={{ display: 'flex' }}
+        title={<div style={{ }}><div style={{ flex: 1 }}>
           {dPrix.descriptionPdt} : <strong>{parseFloat(dPrix.prix).toFixed(2)} €</strong>
         {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
       </div><div style={{flex: 1}}><RaisedButton primary label="Acheter"/></div></div>}

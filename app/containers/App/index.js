@@ -16,6 +16,7 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
+import runtime from 'offline-plugin/runtime';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -70,20 +71,39 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     muiTheme: PropTypes.object.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      drawerOpen: false,
-    };
+  state = {
+    drawerOpen: false,
   }
 
-  toggleDrawer = () => {
-    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
+  componentDidMount = () => {
+    console.log('text service workers');
+    runtime.install({
+      onUpdating: () => {
+        console.log('SW Event:', 'onUpdating');
+      },
+      onUpdateReady: () => {
+        console.log('SW Event:', 'onUpdateReady');
+        // Update is applied here
+        runtime.applyUpdate();
+      },
+      onUpdated: () => {
+        console.log('SW Event:', 'onUpdated');
+        // Force reload happens here
+        window.location.reload(true);
+      },
+
+      onUpdateFailed: () => {
+        console.log('SW Event:', 'onUpdateFailed');
+      },
+    });
   }
 
-  closeDrawer = () => {
-    this.setState({ ...this.state, drawerOpen: false });
-  }
+  toggleDrawer = () =>
+    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen })
+
+
+  closeDrawer = () =>
+    this.setState({ ...this.state, drawerOpen: false })
 
   handleChangeList = (event, value) => {
     event.preventDefault();

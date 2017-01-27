@@ -13,6 +13,7 @@ import {
 import IconButton from 'material-ui/IconButton';
 import KeyboardDownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import KeyboardUpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+
 import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
 
@@ -75,9 +76,7 @@ class OffreDetails extends Component {
           <div className={styles.action}>
             {onClick && <RaisedButton
               primary
-              label="Ajouter au panier"
               onClick={onClick}
-              fullWidth
               icon={<AddShoppingCart />}
             />}
           </div>

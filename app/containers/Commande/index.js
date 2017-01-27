@@ -9,6 +9,7 @@ import {
   selectAsyncState,
   selectRelaisId,
   selectCommandesRelais,
+  selectLivraisons,
   selectTypesProduits,
   selectFournisseurs,
   selectCommandesUtilisateurs,
@@ -25,10 +26,8 @@ import {
 } from 'containers/App/selectors';
 
 import styles from './styles.css';
-import choux from './choux.jpg';
 import Semainier from './components/Semainier';
-import Offre from 'components/Offre';
-import Panel from 'components/Panel';
+import CommandesLongTerme from './containers/CommandesLongTerme';
 import moment from 'moment';
 
 import { loadCommandes, ajouter, loadCommande } from './actions';
@@ -36,6 +35,7 @@ import { loadCommandes, ajouter, loadCommande } from './actions';
 export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
+    livraisons: PropTypes.object,
     commandesUtilisateurs: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
@@ -90,12 +90,24 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
   }
 
   filterByWeek = (weekOffset = 0) =>
-      Object.keys(this.props.commandes)
-      .filter((key) =>
-        !this.props.commandes[key].terminee && this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
-      ).slice().sort(
-        (key) => !this.props.commandes[key].noCommande
-      );
+    Object.keys(this.props.commandes)
+    .filter((key) =>
+      !this.props.commandes[key].terminee && this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
+    ).slice().sort(
+      (key) => !this.props.commandes[key].noCommande
+    );
+
+  commandesLongTerme = () => {
+    const { commandes, livraisons } = this.props;
+    return Object.keys(this.props.commandes)
+    .filter((key) =>
+      !commandes[key].dateCommande &&
+      livraisons[commandes[key].livraisons[0]].debut === null
+    ).slice().sort(
+      (key) => !this.props.commandes[key].noCommande
+    );
+  }
+
 
   render() {
     const {
@@ -149,13 +161,14 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <div className="col-xs">
-            <Panel>Dans 3 semaines</Panel>
-            <Offre
-              nom="Fromages & charcuterie"
-              tarif="1.05 € au lieu de 1.25 €"
-              imageSrc={choux}
-              prct={40}
-              fav
+            <CommandesLongTerme
+              commandesIds={this.commandesLongTerme()}
+              getCommandeInfos={(key) => this.getCommandeInfos(key)}
+              commandes={commandes}
+              buttonClicked={() => this.setState({ buttonClicked: true })}
+              pushState={pushState}
+              relaiId={relaiId}
+              utilisateurId={utilisateurId}
             />
           </div>
         </div>
@@ -214,6 +227,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
 const mapStateToProps = createStructuredSelector({
   commandes: selectCommandesRelais(),
+  livraisons: selectLivraisons(),
   commandesUtilisateurs: selectCommandesUtilisateurs(),
   relaiId: selectRelaisId(),
   utilisateurId: selectAuthUtilisateurId(),

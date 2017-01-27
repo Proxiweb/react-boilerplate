@@ -3,21 +3,9 @@ import { connect } from 'react-redux';
 import FlatButton from 'material-ui/FlatButton';
 import includes from 'lodash/includes';
 import shader from 'shader';
-
 import MediaQuery from 'components/MediaQuery';
 
-import { Card, CardText } from 'material-ui/Card';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableRowColumn,
-  TableHeaderColumn,
-} from 'material-ui/Table';
-
 import StarIcon from 'material-ui/svg-icons/toggle/star';
-import DetailOffreHeader from 'containers/CommandeEdit/components/DetailOffreHeader';
 import { createStructuredSelector } from 'reselect';
 import {
     selectOffresProduitAvecTotalAchats,
@@ -34,9 +22,7 @@ import { saveAccount } from 'containers/CompteUtilisateur/actions';
 import {
   ajouter,
 } from 'containers/CommandeEdit/actions';
-import round from 'lodash/round';
 import OffreDetails from 'components/OffreDetails';
-import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
 
 class DetailOffres extends Component {
@@ -97,14 +83,6 @@ class DetailOffres extends Component {
     const { produitId, commandeId } = params;
     const produit = produitsById[produitId];
     const contenus = commande.contenus;
-
-    const generateTarifMin = (tarifications, idx) => {
-      if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
-      const tarif = tarifications[idx];
-      return tarifications[idx + 1]
-        ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
-        : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
-    };
 
     const estFavoris = auth.produitsFavoris.find((item) => item === produitId);
     return (
@@ -191,7 +169,7 @@ class DetailOffres extends Component {
                     typeProduit={typeProduit}
                     offre={offre}
                     qteCommande={qteCommande}
-                    subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                    subTitle="Tarif dégressif (+ infos...)"
                     onClick={() =>
                       this.props.ajouter(
                         commandeId,

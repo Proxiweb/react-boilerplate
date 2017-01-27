@@ -229,7 +229,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
 
     let autreUtilisateur = null;
-    if (utilisateurId !== authUtilisateurId) {
+    if (utilisateurs && utilisateurId !== authUtilisateurId) {
       autreUtilisateur = utilisateurs[utilisateurId];
     }
 

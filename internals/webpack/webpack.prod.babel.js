@@ -41,9 +41,10 @@ module.exports = require('./webpack.base.babel')({
 
     // Minify and optimize the JavaScript
     new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false, // ...but do not show warnings in the console (there is a lot of them)
-      },
+      // compress: {
+      //   warnings: false, // ...but do not show warnings in the console (there is a lot of them)
+      // },
+      sourceMap: true,
     }),
 
     // Minify and optimize the index.html
@@ -91,6 +92,9 @@ module.exports = require('./webpack.base.babel')({
       safeToUseOptionalCaches: true,
 
       AppCache: false,
+      ServiceWorker: { events: true },
     }),
   ],
+  debug: true,
+  devtool: 'source-map',
 });

@@ -149,7 +149,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
       montantMin,
       montantMinRelai: montantMinRelais,
       fournisseurs: cdeFourns.map((f) => f.id),
-      livraisons: distributions,
+      livraisons: dateCommande ? distributions : [{ debut: null, fin: null }],
     };
 
     this.props.create(commande);
