@@ -43,3 +43,45 @@
   font-size: 1.4rem;
   margin: 10px 0;
 }
+
+.wrapper {
+  border: solid 1px silver;
+  padding: 0.5em;
+  background-color: white;
+  margin-bottom: 1em;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
+  background-color: white;
+  cursor: pointer;
+}
+
+.title {
+  color: '#1565c0';
+  font-size: 1.3em;
+}
+
+.subTitle {
+  font-size: 0.9em;
+  color: gray;
+}
+
+.text {
+  flex: 10;
+  text-align: left;
+}
+
+.action {
+  flex: 3;
+  text-align: right;
+}
+
+.expand {
+  flex: 1;
+  text-align: right;
+}

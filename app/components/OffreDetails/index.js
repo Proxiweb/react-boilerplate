@@ -64,7 +64,7 @@ class OffreDetails extends Component {
           <div className={styles.text} onClick={expandable ? this.toggleState : null}>
             <div className={styles.title}>
               <span>
-                <strong>
+                <strong style={{ color: '#1565C0' }}>
                   {parseFloat(dPrix.prix).toFixed(2)} €
                   - <small>{dPrix.descriptionPdt}</small>
                 </strong>

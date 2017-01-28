@@ -45,6 +45,7 @@ import ProduitSelector from './containers/ProduitSelector';
 import OrderValidate from './containers/OrderValidate';
 import DetailOffres from './containers/DetailOffres';
 import PanierCard from './containers/PanierCard';
+import PanierCollapsable from './containers/PanierCollapsable';
 import styles from './styles.css';
 
 import api from 'utils/stellarApi';
@@ -190,9 +191,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     this.setState({ ...this.state, balance });
   }
 
-  toggleState = () => {
-    this.setState({ ...this.state, panierExpanded: !this.state.panierExpanded });
-  }
+  toggleState = () =>
+    this.setState({ ...this.state, panierExpanded: !this.state.panierExpanded })
 
   routerWillLeave = () => {
     const { commande } = this.props;
@@ -244,7 +244,25 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         <ProduitSelector params={params} utilisateurId={utilisateurId} />
         <MediaQuery query="(max-device-width: 1600px)">
           <div className="col-md-8 col-xs-12 col-lg-9">
-            <PanierCard
+            {false &&
+              <PanierCard
+                nbreProduits={nbreProduits}
+                panierExpanded={panierExpanded}
+                balance={balance}
+                commandeId={params.commandeId}
+                contenus={commande.contenus}
+                params={params}
+                toggleState={this.toggleState}
+                utilisateurId={utilisateurId}
+                commandeUtilisateur={commandeUtilisateur}
+                autreUtilisateur={
+                  autreUtilisateur
+                   ? `${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`
+                   : null
+                }
+              />
+            }
+            <PanierCollapsable
               nbreProduits={nbreProduits}
               panierExpanded={panierExpanded}
               balance={balance}
@@ -253,6 +271,8 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               params={params}
               toggleState={this.toggleState}
               utilisateurId={utilisateurId}
+              modifiee={commande.modifiee}
+              nouvelle={!commande.id}
               commandeUtilisateur={commandeUtilisateur}
               autreUtilisateur={
                 autreUtilisateur

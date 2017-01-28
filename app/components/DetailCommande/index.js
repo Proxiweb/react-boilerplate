@@ -1,7 +1,17 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash/round';
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
+
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableRowColumn,
+  TableHeaderColumn,
+  TableFooter,
+} from 'material-ui/Table';
+
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import buildCommandeRow from 'components/DetailCommandeColumns';
 import styles from './styles.css';
@@ -134,6 +144,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
               ); })
             }
           </TableBody>
+          <TableFooter />
         </Table>
         {!panierExpanded && (
           <div style={{ textAlign: 'center', padding: '1rem 0', backgroundColor: 'white', border: 'solid 1px gray' }}>
