@@ -8,11 +8,14 @@
  *
  */
 
+import { findActionType } from 'utils/asyncSagaConstants';
+
 import {
  ADD_MESSAGE,
  REMOVE_MESSAGE,
  GLOBAL_PENDING_START,
  GLOBAL_PENDING_STOP,
+ messagesConst as c,
 } from './constants';
 
 export function addMessage(message) {
@@ -28,6 +31,14 @@ export function removeMessage(id) {
     payload: { id },
   };
 }
+
+
+export const loadMessages = (query) => ({
+  type: findActionType('load_messages', c, 'START'),
+  url: 'commandes',
+  query,
+});
+
 
 export const startGlobalPending = () => ({ type: GLOBAL_PENDING_START });
 export const stopGlobalPending = () => ({ type: GLOBAL_PENDING_STOP });

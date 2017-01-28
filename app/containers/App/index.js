@@ -33,7 +33,13 @@ import {
 
 import {
   selectPending,
+  selectMessagesUtilisateurLoaded,
+  selectMessages,
 } from './selectors';
+
+import {
+  loadMessages,
+} from './actions';
 
 import { logout } from 'containers/Login/actions';
 import Logged from './components/Logged';
@@ -58,6 +64,8 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
     destinataires: PropTypes.array.isRequired,
+    messagesLoaded: PropTypes.bool.isRequired,
+    messages: PropTypes.array.isRequired,
     logout: PropTypes.func.isRequired,
     compte: PropTypes.object,
     user: PropTypes.oneOfType([
@@ -65,6 +73,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
       PropTypes.bool,
     ]),
     pending: PropTypes.bool.isRequired,
+    loadM: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -76,6 +85,12 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 
   componentDidMount = () => {
+    const { messagesLoaded, loadM, user } = this.props;
+
+    if (user && !messagesLoaded) {
+      loadM({ a: user.id });
+    }
+
     console.log('text service workers');
     runtime.install({
       onUpdating: () => {
@@ -172,12 +187,15 @@ const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
   pending: selectPending(),
   destinataires: selectDestinaires(),
+  // messagesLoaded: selectMessagesUtilisateurLoaded(),
+  messages: selectMessages(),
   compte: selectBalance(),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
   logout: () => dispatch(logout()),
+  loadM: (query) => dispatch(loadMessages(query)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
