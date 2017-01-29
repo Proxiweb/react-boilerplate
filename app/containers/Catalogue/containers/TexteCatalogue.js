@@ -21,8 +21,8 @@ class TexteCatalogue extends Component {
 
   render() {
     const { relais, params } = this.props;
-    const ceRelais = relais[params.relaiId];
-    if (!ceRelais) return null;
+
+    const ceRelais = relais ? relais[params.relaiId] : { nom: 'ProxiWeb' };
 
     return (
       <div className="row" style={{ paddingLeft: '1em', paddingRight: '1em' }}>

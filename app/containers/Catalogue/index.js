@@ -1,13 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import ProduitSelector from './containers/ProduitSelector';
 import DetailOffres from './containers/DetailOffres';
 import TexteCatalogue from './containers/TexteCatalogue';
 
 import { loadFournisseurs } from 'containers/Commande/actions';
+import {
+  selectProduitsRelaisByTypeProduit,
+  selectTypesProduitsRelais,
+} from 'containers/Commande/selectors';
+
+import { selectPending } from 'containers/App/selectors';
 
 class Catalogue extends Component { // eslint-disable-line
   static propTypes = {
+    pending: PropTypes.bool.isRequired,
+    typeProduits: PropTypes.array,
+    produits: PropTypes.array,
     params: PropTypes.object.isRequired,
     load: PropTypes.func.isRequired,
   }
@@ -18,12 +28,25 @@ class Catalogue extends Component { // eslint-disable-line
     load({ relaiId, jointures: true });
   }
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  //
+  // }
+
+  componentWillReceiveProps = (nextProps) => {
+    console.log('props', this.props, nextProps);
+  }
+
   render() {
-    const { produitId } = this.props.params;
+    const { typeProduits, produits, params, pending } = this.props;
+    const { produitId } = params;
     return (
       <div className="row center-md">
         <div className="col-md-4">
-          <ProduitSelector params={this.props.params} />
+          {!pending && <ProduitSelector
+            produits={produits}
+            typeProduits={typeProduits}
+            params={this.props.params}
+          />}
         </div>
         <div className="col-md-6">
           {produitId && <DetailOffres params={this.props.params} />}
@@ -34,8 +57,14 @@ class Catalogue extends Component { // eslint-disable-line
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  pending: selectPending(),
+  typeProduits: selectTypesProduitsRelais(),
+  produits: selectProduitsRelaisByTypeProduit(),
+});
+
 const mapDispatchToProps = (dispatch) => ({
   load: (query) => dispatch(loadFournisseurs(query)),
 });
 
-export default connect(null, mapDispatchToProps)(Catalogue);
+export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);

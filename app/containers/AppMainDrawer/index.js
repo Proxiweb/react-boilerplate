@@ -43,7 +43,9 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
             <ListItem
               leftIcon={<ListIcon />}
               primaryText="Catalogue"
-              value={`/catalogue/${user.relaiId}`}
+              value={{
+                url: `/catalogue/${user.relaiId}`, // url dans obj provoque rechargement page
+              }}
             />
           )}
           {user && (

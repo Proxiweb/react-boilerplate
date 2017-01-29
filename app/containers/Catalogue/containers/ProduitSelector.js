@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import uniq from 'lodash/uniq';
 import { List, ListItem } from 'material-ui/List';
@@ -9,16 +8,12 @@ import MenuItem from 'material-ui/MenuItem';
 import classnames from 'classnames';
 import shader from 'shader';
 import styles from './styles.css';
-import {
-  selectProduitsRelaisByTypeProduit,
-  selectTypesProduitsRelais,
-} from 'containers/Commande/selectors';
 
 class ProduitSelector extends React.Component {
   static propTypes = {
     pushState: PropTypes.func.isRequired,
-    typeProduits: PropTypes.array,
-    produits: PropTypes.array,
+    typeProduits: PropTypes.array.isRequired,
+    produits: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
   }
 
@@ -122,13 +117,13 @@ class ProduitSelector extends React.Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  typeProduits: selectTypesProduitsRelais(),
-  produits: selectProduitsRelaisByTypeProduit(),
-});
+// const mapStateToProps = createStructuredSelector({
+//   typeProduits: selectTypesProduitsRelais(),
+//   produits: selectProduitsRelaisByTypeProduit(),
+// });
 
 const mapDispatchToProps = (dispatch) => ({
   pushState: (url) => dispatch(push(url)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProduitSelector);
+export default connect(null, mapDispatchToProps)(ProduitSelector);
