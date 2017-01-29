@@ -40,25 +40,25 @@ const ajouter = (state, action) => {
   });
 };
 
-const majNouvelAchat = (state, commandeContenu) => {
-  const majCu = update(
-    state,
-    { datas:
-      { entities:
-        { commandeUtilisateurs:
-          { [commandeContenu.commandeUtilisateurId]:
-            { contenus: { $push: [commandeContenu] },
-          },
-        },
-      },
-    },
-    },
-  );
-  // const produit = state.datas.entities.produits[state.datas.entities.offres[commandeContenu.offreId].produitId];
-  // const nStock = produit.stock - commandeContenu.quantite;
-  // return update(majCu, { datas: { entities: { produits: { [produit.id]: { stock: { $set: nStock } } } } } });
-  return majCu;
-};
+// const majNouvelAchat = (state, commandeContenu) => {
+//   const majCu = update(
+//     state,
+//     { datas:
+//       { entities:
+//         { commandeUtilisateurs:
+//           { [commandeContenu.commandeUtilisateurId]:
+//             { contenus: { $push: [commandeContenu] },
+//           },
+//         },
+//       },
+//     },
+//     },
+//   );
+//   // const produit = state.datas.entities.produits[state.datas.entities.offres[commandeContenu.offreId].produitId];
+//   // const nStock = produit.stock - commandeContenu.quantite;
+//   // return update(majCu, { datas: { entities: { produits: { [produit.id]: { stock: { $set: nStock } } } } } });
+//   return majCu;
+// };
 
 function commandeReducer(state = initialState, action) {
   switch (action.type) {
@@ -164,8 +164,8 @@ function commandeReducer(state = initialState, action) {
       });
     }
 
-    case 'ws/NOUVEL_ACHAT': // websocket
-      return majNouvelAchat(state, action.datas);
+    // case 'ws/NOUVEL_ACHAT': // websocket
+    //   return majNouvelAchat(state, action.datas);
     case 'ws/OFFRE_MODIF_STOCK':
       return update(state, { datas: { entities: { offres: { [action.datas.id]: { stock: { $set: action.datas.stock } } } } } });
     case REHYDRATE: {

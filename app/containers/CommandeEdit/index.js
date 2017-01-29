@@ -139,11 +139,15 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     }
 
     const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
+    console.log('cc', cdeCommandeContenus, commandeContenus)
     if (commandeUtilisateur) {
       const contenus =
         cdeCommandeContenus
           .map((id) => commandeContenus[id])
-          .filter((cc) => cc.utilisateurId === utilisateurId);
+          .filter((cc) => {
+            //console.log(cc);
+            return cc.utilisateurId === utilisateurId;
+          });
       loadCommandeUtilisateur(assign({}, commandeUtilisateur, { contenus }));
     }
 
