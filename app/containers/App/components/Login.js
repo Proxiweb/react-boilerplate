@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
+import { ToolbarGroup } from 'material-ui/Toolbar';
 
 export default class Login extends Component {
   static muiName = 'FlatButton';
@@ -14,7 +15,9 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <FlatButton {...this.props} label="Connexion" href="/login" onClick={this.handleClick} />
+      <ToolbarGroup>
+        <FlatButton {...this.props} label="Connexion" href="/login" onClick={this.handleClick} />
+      </ToolbarGroup>
     );
   }
 }

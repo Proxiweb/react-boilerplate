@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import IconMenu from 'material-ui/IconMenu';
-import { List, ListItem } from 'material-ui/List';
+import { ToolbarGroup } from 'material-ui/Toolbar';
 import MenuItem from 'material-ui/MenuItem';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import IconButton from 'material-ui/IconButton';
-import Badge from 'material-ui/Badge';
+import FlatButton from 'material-ui/FlatButton';
 
 export default class Logged extends Component {
   static propTypes = {
@@ -18,37 +17,45 @@ export default class Logged extends Component {
 
   render() {
     const { destinataires, pushState, messages } = this.props;
-    return (
-      <div className="row">
-        {destinataires.length > 0 && <div className="col-md">
-          <MenuItem onTouchTap={() => pushState('/communications/courante')} primaryText={`Communication en cours (${destinataires.length})`} />
-        </div>}
-        {messages && messages.length > 0 && <div className="col-md">
-          <IconMenu
-            label="Nouveau message"
-            {...this.props}
-            iconButtonElement={(
-              <IconButton tooltip="Messages non lus" style={{ width: 15 }}>
-                <CommunicationChatBubble />
-              </IconButton>)}
-            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-          >
-            <List>
-              {messages.map((message, idx) =>
-                <ListItem
-                  key={idx}
-                  primaryText={message.objet}
-                  rightIcon={<CommunicationChatBubble />}
-                  onClick={() =>
-                    pushState(`/messages/${message.id}`)
-                  }
-                />
-              )}
-            </List>
-          </IconMenu>
-        </div>}
-      </div>
-    );
+    const elements = [];
+
+    if (destinataires.length > 0) {
+      elements.push(
+        <FlatButton
+          onClick={() => pushState('/communications/courante')}
+          label={`Communication en cours (${destinataires.length})`}
+          style={{ marginTop: 5 }}
+        />
+      );
+    }
+
+    if (messages && messages.length > 0) {
+      elements.push(
+        <IconMenu
+          label="Nouveau message"
+          iconButtonElement={
+            <FlatButton
+              label={
+              `${messages.length} Message${messages.length > 1 ? 's' : ''} non lu${messages.length > 1 ? 's' : ''}`
+              }
+              icon={<CommunicationChatBubble />}
+              style={{ marginTop: 5 }}
+            />
+          }
+        >
+          {messages.map((message, idx) =>
+            <MenuItem
+              key={idx}
+              primaryText={message.objet}
+              onClick={() =>
+                pushState(`/messages/${message.id}`)
+              }
+            />
+          )}
+        </IconMenu>
+      );
+    }
+
+    return <ToolbarGroup>{elements}</ToolbarGroup>;
   }
 }

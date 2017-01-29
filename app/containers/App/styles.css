@@ -62,3 +62,7 @@ body {
 body.fontLoaded {
   font-family: Ubuntu, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+.toolbar {
+  height: 50px;
+}

@@ -14,7 +14,6 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import runtime from 'offline-plugin/runtime';
 import styles from './styles.css';
@@ -22,8 +21,10 @@ import Notifications from 'containers/Notifications';
 import CircularProgress from 'material-ui/CircularProgress';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
-
-import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationMenuIcon from 'material-ui/svg-icons/navigation/menu';
+import FlatButton from 'material-ui/FlatButton';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
 
 import {
@@ -141,7 +142,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
       compte,
       messages,
     } = this.props;
-
+    const { muiTheme } = this.context;
     const drawerStyle = getDrawerHeaderStyle(this.context);
     let showPorteMonnaie = false;
     if (compte) {
@@ -149,10 +150,34 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     }
     return (
       <div className={styles.allContent}>
-        <AppBar
-          title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: 'black' }}>Relais ProxiWeb</Link>}
-          onLeftIconButtonTouchTap={this.toggleDrawer}
-          iconElementRight={
+        <Toolbar
+          className={`${styles.noPrint} ${styles.toolbar}`}
+          style={{
+            backgroundColor: muiTheme.appBar.color,
+            height: '50px',
+          }}
+        >
+          <ToolbarGroup firstChild>
+            <IconButton touch onClick={this.toggleDrawer} style={{ paddingRight: 0 }}>
+              <NavigationMenuIcon />
+            </IconButton>
+            <FlatButton
+              label="Relais ProxiWeb"
+              style={{ color: 'black', marginLeft: 0, marginTop: 5 }}
+              onClick={() => pushState('/')}
+            />
+            {pending && (
+              <div style={{ position: 'relative' }}>
+                <CircularProgress
+                  size={20}
+                  color="white"
+                  status="loading"
+                  style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: 19, left: -35 }}
+                />
+              </div>
+            )}
+          </ToolbarGroup>
+          {
             user
             ?
               <Logged
@@ -163,38 +188,28 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             :
               <Login onClick={this.handleChangeList} />
           }
-          className={styles.noPrint}
-        >
-          <AppMainDrawer
-            open={this.state.drawerOpen}
-            onSelect={this.navigateTo}
-            onChangeList={this.handleChangeList}
-            user={user}
-            showPorteMonnaie={showPorteMonnaie}
-            onRequestChange={(open) => this.setState({ drawerOpen: open })}
-            logout={this.props.logout}
-            messages={messages}
-            header={(
-              <MenuItem
-                primaryText="Menu"
-                rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
-                onTouchTap={this.closeDrawer}
-                style={drawerStyle}
-              />)}
-          />
-        </AppBar>
+        </Toolbar>
+        <AppMainDrawer
+          open={this.state.drawerOpen}
+          onSelect={this.navigateTo}
+          onChangeList={this.handleChangeList}
+          user={user}
+          showPorteMonnaie={showPorteMonnaie}
+          onRequestChange={(open) => this.setState({ drawerOpen: open })}
+          logout={this.props.logout}
+          messages={messages}
+          header={(
+            <MenuItem
+              primaryText="Menu"
+              rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
+              onTouchTap={this.closeDrawer}
+              style={drawerStyle}
+            />)}
+        />
         <div className={`container-fluid ${styles.mainContent}`}>
           {React.Children.toArray(this.props.children)}
         </div>
         <Notifications />
-        {pending && (
-          <CircularProgress
-            size={30}
-            color="white"
-            status="loading"
-            style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: '10px', left: '180px' }}
-          />
-        )}
       </div>
     );
   }
