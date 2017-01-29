@@ -45,6 +45,7 @@ import {
 import { logout } from 'containers/Login/actions';
 import Logged from './components/Logged';
 import Login from './components/Login';
+import MessageMaj from './components/MessageMaj';
 
 const getDrawerHeaderStyle = (context) => {
   const {
@@ -83,6 +84,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
 
   state = {
     drawerOpen: false,
+    maj: false,
   }
 
   componentDidMount = () => {
@@ -105,7 +107,11 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
       onUpdated: () => {
         console.log('SW Event:', 'onUpdated');
         // Force reload happens here
-        window.location.reload(true);
+        this.setState({ maj: true });
+        setTimeout(
+          window.location.reload(true),
+          5000
+        );
       },
 
       onUpdateFailed: () => {
@@ -207,7 +213,8 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             />)}
         />
         <div className={`container-fluid ${styles.mainContent}`}>
-          {React.Children.toArray(this.props.children)}
+          {!this.state.maj && React.Children.toArray(this.props.children)}
+          {this.state.maj && <MessageMaj />}
         </div>
         <Notifications />
       </div>
