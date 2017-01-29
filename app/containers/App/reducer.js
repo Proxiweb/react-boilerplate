@@ -13,6 +13,7 @@ import {
   GLOBAL_PENDING_START,
   GLOBAL_PENDING_STOP,
   messagesConst as c,
+  messageSaveConst as cS,
 } from './constants';
 
 const initialState = {
@@ -24,6 +25,20 @@ const initialState = {
   },
 };
 
+const updateMessage = (state, message) => {
+  const autreMessages =
+    state.utilisateur_messages.datas
+    .find((id) => id === message.id) || [];
+  return update(
+    state,
+    {
+      utilisateur_messages: {
+        datas: { $set: autreMessages.concat(message) },
+      },
+    }
+  );
+};
+
 
 function notificationsReducer(state = initialState, action) {
   switch (action.type) {
@@ -32,7 +47,9 @@ function notificationsReducer(state = initialState, action) {
     case REMOVE_MESSAGE:
       return update(state, { messages: { $set: state.messages.filter((not) => not.id !== action.payload.id) } });
     case c.ASYNC_LOAD_MESSAGES_SUCCESS:
-      return update(state, { utilisateur_messages: { $set: action.datas } });
+      return update(state, { utilisateur_messages: { datas: { $set: action.datas.messages } }, loaded: { $set: true } });
+    case cS.ASYNC_SAVE_MESSAGE_SUCCESS:
+      return updateMessage(state, action.datas);
     case GLOBAL_PENDING_START:
       return { ...state, pending: true };
     case GLOBAL_PENDING_STOP:

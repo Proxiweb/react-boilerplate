@@ -34,7 +34,7 @@ import {
 import {
   selectPending,
   selectMessagesUtilisateurLoaded,
-  selectMessages,
+  selectMessagesUtilisateur,
 } from './selectors';
 
 import {
@@ -85,7 +85,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 
   componentDidMount = () => {
-    const { messagesLoaded, loadM, user } = this.props;
+    const { loadM, user, messagesLoaded } = this.props;
 
     if (user && !messagesLoaded) {
       loadM({ a: user.id });
@@ -133,7 +133,15 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   };
 
   render() {
-    const { user, pending, destinataires, pushState, compte } = this.props;
+    const {
+      user,
+      pending,
+      destinataires,
+      pushState,
+      compte,
+      messages,
+    } = this.props;
+
     const drawerStyle = getDrawerHeaderStyle(this.context);
     let showPorteMonnaie = false;
     if (compte) {
@@ -144,7 +152,17 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
         <AppBar
           title={<Link to={`/relais/${user.relaiId}/commandes`} style={{ textDecoration: 'none', color: 'black' }}>Relais ProxiWeb</Link>}
           onLeftIconButtonTouchTap={this.toggleDrawer}
-          iconElementRight={user ? <Logged destinataires={destinataires} onClick={pushState} /> : <Login onClick={this.handleChangeList} />}
+          iconElementRight={
+            user
+            ?
+              <Logged
+                messages={messages.filter((m) => m.dateConsultation === null)}
+                destinataires={destinataires}
+                pushState={pushState}
+              />
+            :
+              <Login onClick={this.handleChangeList} />
+          }
           className={styles.noPrint}
         >
           <AppMainDrawer
@@ -155,6 +173,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
             showPorteMonnaie={showPorteMonnaie}
             onRequestChange={(open) => this.setState({ drawerOpen: open })}
             logout={this.props.logout}
+            messages={messages}
             header={(
               <MenuItem
                 primaryText="Menu"
@@ -187,8 +206,8 @@ const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
   pending: selectPending(),
   destinataires: selectDestinaires(),
-  // messagesLoaded: selectMessagesUtilisateurLoaded(),
-  messages: selectMessages(),
+  messagesLoaded: selectMessagesUtilisateurLoaded(),
+  messages: selectMessagesUtilisateur(),
   compte: selectBalance(),
 });
 

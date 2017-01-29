@@ -9,21 +9,23 @@ import Badge from 'material-ui/Badge';
 export default class Logged extends Component {
   static propTypes = {
     destinataires: PropTypes.array.isRequired,
-    onClick: PropTypes.func.isRequired,
+    messages: PropTypes.array,
+    pushState: PropTypes.func.isRequired,
   };
 
   static muiName = 'IconMenu';
 
 
   render() {
-    const { destinataires, onClick } = this.props;
+    const { destinataires, pushState, messages } = this.props;
     return (
       <div className="row">
         {destinataires.length > 0 && <div className="col-md">
-          <MenuItem onTouchTap={() => onClick('/communications/courante')} primaryText={`Communication en cours (${destinataires.length})`} />
+          <MenuItem onTouchTap={() => pushState('/communications/courante')} primaryText={`Communication en cours (${destinataires.length})`} />
         </div>}
-        <div className="col-md">
+        {messages && messages.length > 0 && <div className="col-md">
           <IconMenu
+            label="Nouveau message"
             {...this.props}
             iconButtonElement={(
               <IconButton tooltip="Messages non lus" style={{ width: 15 }}>
@@ -33,30 +35,19 @@ export default class Logged extends Component {
             anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
           >
             <List>
-              <ListItem
-                primaryText="Brendan Lim"
-                rightIcon={<CommunicationChatBubble />}
-              />
-              <ListItem
-                primaryText="Eric Hoffman"
-                rightIcon={<CommunicationChatBubble />}
-              />
-              <ListItem
-                primaryText="Grace Ng"
-                rightIcon={<CommunicationChatBubble />}
-              />
-              <ListItem
-                primaryText="Kerem Suer"
-                rightIcon={<CommunicationChatBubble />}
-              />
-              <ListItem
-                primaryText="Raquel Parrado"
-                rightIcon={<CommunicationChatBubble />}
-              />
+              {messages.map((message, idx) =>
+                <ListItem
+                  key={idx}
+                  primaryText={message.objet}
+                  rightIcon={<CommunicationChatBubble />}
+                  onClick={() =>
+                    pushState(`/messages/${message.id}`)
+                  }
+                />
+              )}
             </List>
           </IconMenu>
-          <Badge badgeContent={4} secondary />
-        </div>
+        </div>}
       </div>
     );
   }

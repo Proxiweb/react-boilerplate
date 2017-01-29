@@ -42,6 +42,13 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/messages/:messageId',
+      getComponent(location, cb) {
+        System.import('containers/Messages')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '/users/:userId/profile',
       getComponent(location, cb) {
         System.import('containers/CompteUtilisateur')

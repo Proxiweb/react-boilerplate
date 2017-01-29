@@ -12,7 +12,6 @@ const SelectableList = makeSelectable(List);
 
 export default class AppMainDrawer extends Component { // eslint-disable-line
   static propTypes = {
-    // onSelect: PropTypes.func.isRequired,
     onRequestChange: PropTypes.func.isRequired,
     onChangeList: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,

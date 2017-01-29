@@ -11,3 +11,4 @@ export const GLOBAL_PENDING_START = 'app/App/GLOBAL_PENDING_START';
 export const GLOBAL_PENDING_STOP = 'app/App/GLOBAL_PENDING_STOP';
 
 export const messagesConst = generateConstants('app/App', 'load_messages');
+export const messageSaveConst = generateConstants('app/App', 'save_message');

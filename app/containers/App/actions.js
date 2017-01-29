@@ -16,6 +16,7 @@ import {
  GLOBAL_PENDING_START,
  GLOBAL_PENDING_STOP,
  messagesConst as c,
+ messageSaveConst as cS,
 } from './constants';
 
 export function addMessage(message) {
@@ -35,8 +36,14 @@ export function removeMessage(id) {
 
 export const loadMessages = (query) => ({
   type: findActionType('load_messages', c, 'START'),
-  url: 'commandes',
+  url: 'utilisateur_messages',
   query,
+});
+
+export const marquerCommeLu = (id) => ({
+  type: findActionType('save_message', cS, 'START'),
+  url: `utilisateur_messages/${id}/lu`,
+  method: 'put',
 });
 
 

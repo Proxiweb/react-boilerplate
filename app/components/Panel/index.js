@@ -27,7 +27,7 @@ class Panel extends Component { // eslint-disable-line
       marginBottom: '1rem',
       fontSize: '1.2em',
     };
-    return <div {...this.props} style={style}>{this.props.children}</div>;
+    return <div style={style}>{this.props.children}</div>; // {...this.props}
   }
 }
 

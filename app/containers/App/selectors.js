@@ -3,20 +3,27 @@ import isEqual from 'lodash/isEqual';
 import { createSelector } from 'reselect';
 
 export const selectPending = () => (state) => state.global.pending;
-export const selectMessages = () => (state) => {
-  return state && state.global.utilisateur_messages;
-};
 export const selectParams = () => (state, props) => props.params;
+const selectMessages = () => (state) => state.global.utilisateur_messages;
 
-const selectMessagesUtilisateurLoaded = createSelector(
+export const selectMessagesUtilisateurLoaded = () => createSelector(
   selectMessages(),
   (messages) => messages && messages.loaded,
 );
-//
-// const selectMessagesUtilisateur = createSelector(
-//   selectMessages(),
-//   (msg) => msg.datas,
-// );
+
+export const selectMessagesUtilisateur = () => createSelector(
+  selectMessages(),
+  (msg) => (msg ? msg.datas : null),
+);
+
+export const selectMessage = () => createSelector(
+  selectMessagesUtilisateur(),
+  selectParams(),
+  (messages, params) =>
+    (messages
+      ? messages.find((msg) => msg.id === params.messageId)
+      : null)
+);
 
 const selectLocationState = () => {
   let prevRoutingState;
@@ -34,5 +41,6 @@ const selectLocationState = () => {
 
 export {
   selectLocationState,
-  selectMessagesUtilisateurLoaded,
+  // selectMessagesUtilisateurLoaded,
+  // selectMessagesUtilisateur,
 };
