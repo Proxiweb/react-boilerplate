@@ -194,8 +194,8 @@ class OrderValidate extends Component {
     return (<div>
       { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande) }
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
-      <div style={{ textAlign: 'center' }}>{view !== 'distribution' && !commande.livraisonId && commande.dateCommande && commande.contenus.length > 0 && this.showDistribButton()}</div>
-      {view === 'panier' && (commande.livraisonId || !commande.dateCommande) && (!commande.id || commande.modifiee) && this.showValidate()}
+      <div style={{ textAlign: 'center' }}>{view !== 'distribution' && commandeProxiweb.dateCommande && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
+      {view === 'panier' && (commande.livraisonId || !commandeProxiweb.dateCommande) && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
       {commande.id && balance !== null && view === 'panier' && (
         <Paiement
