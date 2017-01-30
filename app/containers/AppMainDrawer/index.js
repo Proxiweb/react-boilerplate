@@ -22,9 +22,19 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
       PropTypes.bool,
     ]),
     logout: PropTypes.func.isRequired,
+    anonRelaiId: PropTypes.string,
   }
   render() {
-    const { open, header, onRequestChange, onChangeList, user, showPorteMonnaie } = this.props;
+    const {
+      open,
+      header,
+      onRequestChange,
+      onChangeList,
+      user,
+      showPorteMonnaie,
+      anonRelaiId,
+    } = this.props;
+
     return (
       <Drawer open={open} docked={false} onRequestChange={onRequestChange}>
         {header}
@@ -38,6 +48,15 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               primaryText="Commandes"
               value={'/'}
             /> // relais/${user.relaiId}/commandes
+          )}
+          {anonRelaiId && (
+            <ListItem
+              leftIcon={<ListIcon />}
+              primaryText="Catalogue"
+              value={{
+                url: `/catalogue/${anonRelaiId}`, // url dans obj provoque rechargement page
+              }}
+            />
           )}
           {user && (
             <ListItem
@@ -56,7 +75,12 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               nestedItems={[].concat(
                 [
                   <ListItem primaryText="Profil" value={`/users/${user.id}/profile?tab=profil`} />,
-                  <ListItem primaryText="Historique" value={`/users/${user.id}/commandes`} />,
+                  <ListItem
+                    primaryText="Historique"
+                    value={{
+                      url: `/users/${user.id}/commandes`,
+                    }}
+                  />,
                 ]
                 , showPorteMonnaie
                   ? [<ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />]
@@ -118,7 +142,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
             <ListItem
               primaryText="Déconnexion"
               onTouchTap={() => this.props.logout()}
-              value="/"
+              value="/logout"
             />)}
         </SelectableList>
       </Drawer>

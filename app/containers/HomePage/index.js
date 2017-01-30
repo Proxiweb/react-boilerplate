@@ -15,6 +15,7 @@ import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors'
 // import styles from './styles.css';
 import { createStructuredSelector } from 'reselect';
 import Commandes from 'containers/Commande';
+import HomePageAnon from './containers/HomePageAnon';
 
 class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -26,12 +27,7 @@ class HomePage extends Component { // eslint-disable-line react/prefer-stateless
     if (auth && auth.relaiId) {
       return <Commandes params={{ relaiId: auth.relaiId }} />;
     }
-
-    return (
-      <div className="row">
-        <h1>Homepage</h1>
-      </div>
-    );
+    return <HomePageAnon />;
   }
 }
 

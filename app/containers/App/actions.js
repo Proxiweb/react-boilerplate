@@ -15,6 +15,7 @@ import {
  REMOVE_MESSAGE,
  GLOBAL_PENDING_START,
  GLOBAL_PENDING_STOP,
+ SELECTIONNER_RELAIS,
  messagesConst as c,
  messageSaveConst as cS,
 } from './constants';
@@ -44,6 +45,11 @@ export const marquerCommeLu = (id) => ({
   type: findActionType('save_message', cS, 'START'),
   url: `utilisateur_messages/${id}/lu`,
   method: 'put',
+});
+
+export const selectionneRelais = (relaiId) => ({
+  type: SELECTIONNER_RELAIS,
+  payload: { relaiId },
 });
 
 

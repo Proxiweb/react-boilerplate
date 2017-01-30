@@ -12,9 +12,12 @@ import {
   REMOVE_MESSAGE,
   GLOBAL_PENDING_START,
   GLOBAL_PENDING_STOP,
+  SELECTIONNER_RELAIS,
   messagesConst as c,
   messageSaveConst as cS,
 } from './constants';
+
+import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
   messages: [],
@@ -23,6 +26,7 @@ const initialState = {
     loaded: false,
     datas: [],
   },
+  relaiId: null,
 };
 
 const updateMessage = (state, message) => {
@@ -56,6 +60,12 @@ function notificationsReducer(state = initialState, action) {
       return { ...state, pending: false };
     case LOCATION_CHANGE:
       return { ...state, pending: false };
+    case SELECTIONNER_RELAIS:
+      return { ...state, relaiId: action.payload.relaiId };
+    case REHYDRATE: {
+      const incoming = action.payload.global;
+      return { ...state, relaiId: incoming.relaiId };
+    }
     default:
       return state;
   }

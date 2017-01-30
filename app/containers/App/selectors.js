@@ -4,7 +4,9 @@ import { createSelector } from 'reselect';
 
 export const selectPending = () => (state) => state.global.pending;
 export const selectParams = () => (state, props) => props.params;
+export const selectRelaiId = () => (state) => state.global.relaiId;
 const selectMessages = () => (state) => state.global.utilisateur_messages;
+
 
 export const selectMessagesUtilisateurLoaded = () => createSelector(
   selectMessages(),

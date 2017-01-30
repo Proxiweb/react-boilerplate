@@ -36,6 +36,7 @@ import {
   selectPending,
   selectMessagesUtilisateurLoaded,
   selectMessagesUtilisateur,
+  selectRelaiId,
 } from './selectors';
 
 import {
@@ -65,6 +66,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   static propTypes = {
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
+    anonRelaiId: PropTypes.string.isRequired,
     destinataires: PropTypes.array.isRequired,
     messagesLoaded: PropTypes.bool.isRequired,
     messages: PropTypes.array.isRequired,
@@ -151,6 +153,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
       pushState,
       compte,
       messages,
+      anonRelaiId,
     } = this.props;
     const { muiTheme } = this.context;
     const drawerStyle = getDrawerHeaderStyle(this.context);
@@ -208,6 +211,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
           onRequestChange={(open) => this.setState({ drawerOpen: open })}
           logout={this.props.logout}
           messages={messages}
+          anonRelaiId={anonRelaiId}
           header={(
             <MenuItem
               primaryText="Menu"
@@ -235,6 +239,7 @@ const mapStateToProps = createStructuredSelector({
   messagesLoaded: selectMessagesUtilisateurLoaded(),
   messages: selectMessagesUtilisateur(),
   compte: selectBalance(),
+  anonRelaiId: selectRelaiId(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

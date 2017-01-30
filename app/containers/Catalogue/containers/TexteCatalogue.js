@@ -24,6 +24,8 @@ class TexteCatalogue extends Component {
 
     const ceRelais = relais ? relais[params.relaiId] : { nom: 'ProxiWeb' };
 
+    if (params.relaiId && !ceRelais) return <h1>{'Relais non trouvé'}</h1>;
+
     return (
       <div className="row" style={{ paddingLeft: '1em', paddingRight: '1em' }}>
         <div className={`col-md-12 ${styles.texteCatalogue}`}>

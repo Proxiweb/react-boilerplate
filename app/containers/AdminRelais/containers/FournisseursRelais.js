@@ -24,6 +24,7 @@ import {
 import styles from './styles.css';
 
 import OffreDetailsCard from 'components/OffreDetailsCard';
+import OffreDetails from 'components/OffreDetails';
 import FournisseurHebdoSwitch from './FournisseurHebdoSwitch';
 
 const SelectableList = makeSelectable(List);
@@ -153,10 +154,10 @@ class FournisseursRelais extends Component {
             .map((o, idx) =>
               <div className={`row ${styles.offre}`} key={idx}>
                 <div className="col-md-8">
-                  <OffreDetailsCard
+                  <OffreDetails
                     key={idx}
                     offre={o}
-                    showSubtitle={false}
+                    qteCommande={0}
                     typeProduit={typesProduits[produits[produitSelected].typeProduitId]}
                   />
                 </div>
