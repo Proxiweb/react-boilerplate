@@ -1,6 +1,7 @@
 .wrapper {
   border: solid 1px silver;
   padding: 0.5em;
+  margin-bottom: 10px;
 }
 
 .container {

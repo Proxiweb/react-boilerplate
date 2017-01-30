@@ -32,6 +32,7 @@ class OffreDetails extends Component {
     typeProduit: PropTypes.object.isRequired,
     subTitle: PropTypes.string,
     onClick: PropTypes.func,
+    expandable: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -61,7 +62,7 @@ class OffreDetails extends Component {
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <div className={styles.text} onClick={expandable ? this.toggleState : null}>
+          <div className={styles.text} onClick={expandable ? this.toggleState : null} >
             <div className={styles.title}>
               <span>
                 <strong style={{ color: '#1565C0' }}>

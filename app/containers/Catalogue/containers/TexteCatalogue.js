@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import Paper from 'material-ui/Paper';
 import { createStructuredSelector } from 'reselect';
 import { selectRelais } from 'containers/Commande/selectors';
 import { loadRelais } from 'containers/Commande/actions';
@@ -28,9 +29,9 @@ class TexteCatalogue extends Component {
 
     return (
       <div className="row" style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-        <div className={`col-md-12 ${styles.texteCatalogue}`}>
+        <Paper className={`col-md-12 ${styles.texteCatalogue}`}>
           <h1>Catalogue du relais {ceRelais.nom}</h1>
-        </div>
+        </Paper>
       </div>
     );
   }

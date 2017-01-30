@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import uniq from 'lodash/uniq';
 import { List, ListItem } from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
+import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
 import classnames from 'classnames';
 import shader from 'shader';
@@ -65,8 +66,8 @@ class ProduitSelector extends React.Component {
 
     return (
       <div className="row">
-        <div
-          className={classnames('col-sm-4 col-lg-12 col-xs-12 col-md-4', styles.panelproduits)}
+        <Paper
+          className={classnames('col-sm-4 col-lg-12 col-xs-12 col-md-4', styles.panelproduitso)}
         >
           {typeProduits && Object.keys(typeProduits).length > 1 && <SelectField
             value={typeProduitId}
@@ -89,7 +90,7 @@ class ProduitSelector extends React.Component {
             }
           </SelectField>}
           {produits && (
-            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
+            <List className={styles.produits}>
               {produits
                 .filter((p) =>
                   p.enStock &&
@@ -111,7 +112,7 @@ class ProduitSelector extends React.Component {
                 ))}
             </List>
             )}
-        </div>
+        </Paper>
       </div>
     );
   }

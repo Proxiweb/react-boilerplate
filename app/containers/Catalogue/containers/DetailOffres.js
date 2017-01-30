@@ -1,11 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardHeader, CardText } from 'material-ui/Card';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn, TableHeaderColumn } from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import { createStructuredSelector } from 'reselect';
-import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
-import OffreDetailsCard from 'components/OffreDetailsCard';
 
 
 import {
@@ -68,7 +65,7 @@ class DetailOffres extends Component {
     // };
 
     return (
-      <div className={styles.offres}>
+      <Paper className={styles.offres}>
         <div className="row">
           <div className={`col-md-12 ${styles.fournisseurSwitch}`}>
             <FlatButton
@@ -91,19 +88,22 @@ class DetailOffres extends Component {
             </div>
           </div>
         </div>
-        { viewOffre && offres.filter((o) => o.active && o.relaiId === relaiId).map((offre, idx) => {
-          const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
-          const tR = offre.tarifications.length > 1;
-          return (
-            <OffreDetails
-              key={idx}
-              typeProduit={typeProduit}
-              offre={offre}
-              subTitle="Tarif dégressif (cliquez pour plus de détails)"
-              expandable={tR}
-            />);
-        })}
-      </div>
+        <div style={{ padding: '1em' }}>
+          { viewOffre && offres.filter((o) => o.active && o.relaiId === relaiId).map((offre, idx) => {
+            const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
+            const tR = offre.tarifications.length > 1;
+            return (
+              <OffreDetails
+                key={idx}
+                typeProduit={typeProduit}
+                offre={offre}
+                subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                expandable={tR}
+                style={{ marginBottom: '10px' }}
+              />);
+          })}
+        </div>
+      </Paper>
     );
   }
 }
