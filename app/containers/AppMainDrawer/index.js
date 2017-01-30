@@ -142,7 +142,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
             <ListItem
               primaryText="Déconnexion"
               onTouchTap={() => this.props.logout()}
-              value="/logout"
+              value={{ url: null }}
             />)}
         </SelectableList>
       </Drawer>

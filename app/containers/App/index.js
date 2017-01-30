@@ -131,11 +131,13 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
 
   handleChangeList = (event, value) => {
     event.preventDefault();
+
     if (typeof value === 'string') {
       this.props.pushState(value);
-    } else {
+    } else if (value.url) {
       window.location = value.url;
     }
+
     this.closeDrawer();
   }
 
