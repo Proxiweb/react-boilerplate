@@ -4,23 +4,31 @@
  *
  */
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import LoginForm from '../../components/LoginForm';
 import { login, register, motdepasse } from './actions';
-import styles from './styles.css';
+// import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { selectLocationState } from 'containers/App/selectors';
 
 export class Login extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  static propTypes = {
+    locationState: PropTypes.object.isRequired,
+  }
+
   render() {
+    const { locationBeforeTransitions: { query: { action } } } = this.props.locationState;
     return (
-      <div className={`${styles.login}`}>
-        <LoginForm {...this.props} onSuccessRedirect="/votre-compte" />
-      </div>
+      <LoginForm {...this.props} onSuccessRedirect="/votre-compte" action={action || 'login'} />
     );
   }
 }
 
-const mapStateToProps = (state) => ({ user: state.compteUtilisateur });
+const mapStateToProps = createStructuredSelector({
+  // user: selectCompteUtilisateur(),
+  locationState: selectLocationState(),
+});
 
 function mapDispatchToProps(dispatch) {
   return {

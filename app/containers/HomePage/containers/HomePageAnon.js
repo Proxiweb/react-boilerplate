@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import Helmet from 'react-helmet';
 import { push } from 'react-router-redux';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
@@ -54,6 +55,14 @@ class HomePageAnon extends Component {
     this.setState({ selectionRelais: false, justChanged: true });
   }
 
+  buildHelmet = () =>
+    <Helmet
+      title="Association ProxiWeb"
+      meta={[
+        { name: 'description', content: 'Organisation d\'achats groupés pour villages petits et gros' },
+      ]}
+    />
+
   render() {
     const { relais, relaiId, pushState } = this.props;
     if (!relais) return null;
@@ -83,6 +92,7 @@ class HomePageAnon extends Component {
 
     return (
       <div className="row center-md">
+        {this.buildHelmet()}
         <div className="col-md-10">
           <Paper className={styles.homepage}>
             <div className="row start-md" style={{ padding: '1em' }}>
@@ -153,7 +163,7 @@ class HomePageAnon extends Component {
                   <MenuItem
                     primaryText="Inscrivez-vous gratuitement"
                     leftIcon={<PersonAdd />}
-                    onTouchTap={() => pushState('/login')}
+                    onTouchTap={() => pushState('/login?action=register')}
                   />
                   {/* <MenuItem primaryText="Forum de discussion" leftIcon={<CommunicationChatBubble />} /> */}
                   <MenuItem primaryText="Contactez-nous" disabled leftIcon={<CommunicationEmail />} />

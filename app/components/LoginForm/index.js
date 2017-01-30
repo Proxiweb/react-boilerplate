@@ -1,20 +1,29 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './styles.css';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
+import PersonIcon from 'material-ui/svg-icons/social/person';
+import MailIcon from 'material-ui/svg-icons/communication/mail-outline';
 
 export default class LoginForm extends Component {
 
   static propTypes = {
+    action: PropTypes.string,
     login: PropTypes.func.isRequired, // eslint-disable-line
     register: PropTypes.func.isRequired, // eslint-disable-line
     motdepasse: PropTypes.func.isRequired, // eslint-disable-line
     onSuccessRedirect: PropTypes.string,
   }
 
-  state = {
-    view: 'login',
+  static defaultProps = {
+    action: 'login',
+  }
+  constructor(props) {
+    super(props);
+    this.state = { view: props.action };
   }
 
   componentDidMount = () => {
@@ -38,37 +47,58 @@ export default class LoginForm extends Component {
     });
   }
 
-  buildSubmitLabel = () => {
+  buildSubmitButton = () => {
     const { view } = this.state;
-    if (view === 'login') return 'Se connecter';
-    if (view === 'register') return 'S\'inscrire';
-    return 'Envoyer';
+    let label;
+    let icon;
+
+    switch (view) {
+      case 'login':
+        label = 'Se connecter';
+        icon = <PersonIcon />;
+        break;
+      case 'register':
+        label = 'S\'inscrire';
+        icon = <PersonAddIcon />;
+        break;
+      default:
+        label = 'envoyer';
+        icon = <MailIcon />;
+    }
+
+    return <RaisedButton fullWidth primary icon={icon} label={label} type="submit" />;
   }
 
   render() {
     const { view } = this.state;
     return (
       <div className={`row center-md ${styles.login}`}>
-        <div className={`col-md-6 ${styles.paddedHoriz}`}>
+        <Paper className={`col-md-6 ${styles.paddedHoriz}`}>
           <h3 className={styles.formHeader}>
             {view === 'login' && 'Déjà inscrit ?'}
-            {view === 'register' && 'S\'inscrire'}
+            {view === 'register' && 'S\'inscrire à ProxiWeb'}
             {view === 'motdepasse' && 'Obtenir un nouveau mot de passe'}
           </h3>
-          <form className="form form-inline" onSubmit={this.handleFormSubmit}>
-            <div className="col-md-6 col-md-offset-3 text-center">
-              <TextField floatingLabelText={`Email ${view !== 'motdepasse' ? ' ou pseudo' : ''}`} ref={(node) => (this.username = node)} type="email" />
-              {(view !== 'motdepasse' &&
-                <TextField floatingLabelText="Mot de passe" ref={(node) => (this.password = node)} type="password" />
-              )}
-              {view === 'register' &&
-                <TextField floatingLabelText="Mot de passe (confirmation)" ref={(node) => (this.passwordConfirm = node)} type="password" />
-              }
-              <div className="with-margin-top">
-                <RaisedButton primary label={this.buildSubmitLabel()} type="submit" />
-              </div>
-            </div>
-          </form>
+          <div className="row center-md">
+            <form className="form form-inline" onSubmit={this.handleFormSubmit}>
+                <div className="col-md-10 text-center">
+                  <TextField floatingLabelText={`Email ${view !== 'motdepasse' ? ' ou pseudo' : ''}`} ref={(node) => (this.username = node)} type="email" />
+                </div>
+                {(view !== 'motdepasse' &&
+                  <div className="col-md-10 text-center">
+                    <TextField floatingLabelText="Mot de passe" ref={(node) => (this.password = node)} type="password" />
+                  </div>
+                )}
+                {view === 'register' &&
+                  <div className="col-md-10text-center">
+                    <TextField floatingLabelText="Mot de passe (confirmation)" ref={(node) => (this.passwordConfirm = node)} type="password" />
+                  </div>
+                }
+                <div className="with-margin-top">
+                  {this.buildSubmitButton()}
+                </div>
+            </form>
+          </div>
           <div className="row with-margin-top">
             <div className="col-md-6">
               {view === 'login' && <FlatButton label="Créer un compte" onClick={() => this.setState((oldState) => ({ ...oldState, view: 'register' }))} />}
@@ -79,7 +109,7 @@ export default class LoginForm extends Component {
               {view === 'motdepasse' && <FlatButton label="Créer un compte" onClick={() => this.setState((oldState) => ({ ...oldState, view: 'register' }))} />}
             </div>
           </div>
-        </div>
+        </Paper>
       </div>
   ); }
 }
