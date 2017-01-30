@@ -66,7 +66,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   static propTypes = {
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
-    anonRelaiId: PropTypes.string.isRequired,
+    anonRelaiId: PropTypes.string,
     destinataires: PropTypes.array.isRequired,
     messagesLoaded: PropTypes.bool.isRequired,
     messages: PropTypes.array.isRequired,

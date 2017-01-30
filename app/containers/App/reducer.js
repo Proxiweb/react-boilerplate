@@ -64,6 +64,7 @@ function notificationsReducer(state = initialState, action) {
       return { ...state, relaiId: action.payload.relaiId };
     case REHYDRATE: {
       const incoming = action.payload.global;
+      if (!incoming) return state;
       return { ...state, relaiId: incoming.relaiId };
     }
     default:

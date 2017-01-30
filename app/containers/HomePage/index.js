@@ -19,7 +19,7 @@ import HomePageAnon from './containers/HomePageAnon';
 
 class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    auth: PropTypes.object.isRequired,
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
   }
 
   render() {
