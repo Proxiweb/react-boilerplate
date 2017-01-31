@@ -35,6 +35,22 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/support',
+      name: 'support',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/Support'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '/accueil/:relaiId',
       getComponent(location, cb) {
         System.import('containers/AccueilAdherent')

@@ -123,7 +123,7 @@ class HomePageAnon extends Component {
                         {relaiId &&
                           <RaisedButton
                             icon={<ShoppingCartIcon />}
-                            label="Catalogue des produits"
+                            label="Catalogue"
                             primary={!this.state.justChanged}
                             backgroundColor={buttonRelaisOuCatalogueColor}
                             fullWidth

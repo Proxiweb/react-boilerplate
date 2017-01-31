@@ -47,6 +47,15 @@ export const marquerCommeLu = (id) => ({
   method: 'put',
 });
 
+export const saveMessage = (message, redirectSuccess) => ({
+  type: findActionType('save_message', cS, 'START'),
+  url: 'utilisateur_messages',
+  datas: { ...message },
+  method: 'post',
+  msgSuccess: 'Message envoyé !',
+  redirectSuccess,
+});
+
 export const selectionneRelais = (relaiId) => ({
   type: SELECTIONNER_RELAIS,
   payload: { relaiId },

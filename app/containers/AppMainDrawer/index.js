@@ -49,7 +49,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               value={'/'}
             /> // relais/${user.relaiId}/commandes
           )}
-          {anonRelaiId && (
+          {anonRelaiId && !user && (
             <ListItem
               leftIcon={<ListIcon />}
               primaryText="Catalogue"
@@ -88,7 +88,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               )}
             />
           )}
-          {user && user.roles.includes('ADMIN') && (
+          {user && user.roles && user.roles.includes('ADMIN') && (
             <ListItem
               primaryText="Admin Proxiweb"
               primaryTogglesNestedList
@@ -114,7 +114,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               ]}
             />
           )}
-          {user && user.roles.includes('RELAI_ADMIN') && user.relaiId && (
+          {user && user.roles && user.roles.includes('RELAI_ADMIN') && user.relaiId && (
             <ListItem
               primaryText="Relai Admin"
               primaryTogglesNestedList
@@ -136,7 +136,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               ]}
             />
           )}
-          {user && <ListItem leftIcon={<HelpIcon />} primaryText="Aide" value={`/users/${user.id}/aide`} />}
+          {user && <ListItem leftIcon={<HelpIcon />} primaryText="Aide" value={`/support`} />}
           {!user && <ListItem primaryText="Connexion" value="/login" />}
           {user && (
             <ListItem

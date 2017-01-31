@@ -12,9 +12,7 @@ export default class LoginForm extends Component {
 
   static propTypes = {
     action: PropTypes.string,
-    login: PropTypes.func.isRequired, // eslint-disable-line
-    register: PropTypes.func.isRequired, // eslint-disable-line
-    motdepasse: PropTypes.func.isRequired, // eslint-disable-line
+    pending: PropTypes.bool.isRequired,
     onSuccessRedirect: PropTypes.string,
   }
 
@@ -49,20 +47,21 @@ export default class LoginForm extends Component {
 
   buildSubmitButton = () => {
     const { view } = this.state;
+    const { pending } = this.props;
     let label;
     let icon;
 
     switch (view) {
       case 'login':
-        label = 'Se connecter';
+        label = pending ? 'Connexion...' : 'Se connecter';
         icon = <PersonIcon />;
         break;
       case 'register':
-        label = 'S\'inscrire';
+        label = pending ? 'Creaction du compte...' : 'S\'inscrire';
         icon = <PersonAddIcon />;
         break;
       default:
-        label = 'envoyer';
+        label = pending ? 'envoi...' : 'envoyer';
         icon = <MailIcon />;
     }
 

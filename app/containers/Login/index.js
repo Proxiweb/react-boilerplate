@@ -10,23 +10,33 @@ import { createStructuredSelector } from 'reselect';
 import LoginForm from '../../components/LoginForm';
 import { login, register, motdepasse } from './actions';
 // import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
-import { selectLocationState } from 'containers/App/selectors';
+import { selectLocationState, selectPending } from 'containers/App/selectors';
 
 export class Login extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
+    pending: PropTypes.bool.isRequired,
     locationState: PropTypes.object.isRequired,
   }
 
   render() {
-    const { locationBeforeTransitions: { query: { action } } } = this.props.locationState;
+    const {
+      locationBeforeTransitions: { query: { action } },
+      pending,
+    } = this.props.locationState;
+
     return (
-      <LoginForm {...this.props} onSuccessRedirect="/votre-compte" action={action || 'login'} />
+      <LoginForm
+        {...this.props}
+        onSuccessRedirect="/votre-compte"
+        action={action || 'login'}
+        pending={pending}
+      />
     );
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  // user: selectCompteUtilisateur(),
+  pending: selectPending(),
   locationState: selectLocationState(),
 });
 

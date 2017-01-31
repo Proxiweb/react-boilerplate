@@ -25,7 +25,8 @@ class Messages extends Component {
         <div className="row center-md">
           <div className="col-md-8" style={{ marginBottom: '1em' }}>
             <Paper style={{ padding: '15px', fontSize: '1.5em', fontWeight: 'bold' }}>
-              {msg.objet}
+              <div>{msg.objet}</div>
+              <div><small>{msg.identiteExpediteur}</small></div>
             </Paper>
           </div>
           <div className="col-md-8">
