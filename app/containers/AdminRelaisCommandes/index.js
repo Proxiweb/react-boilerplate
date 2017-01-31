@@ -121,6 +121,7 @@ class AdminRelaisCommandes extends Component {
           <SelectableList value={commandeId} onChange={this.handleChangeList}>
             {Object.keys(commandes)
               .sort((key1, key2) =>
+                !commandes[key1].dateCommande ||
                 moment(commandes[key1].dateCommande).unix() < moment(commandes[key2].dateCommande).unix()
               )
               .map((key, idx) =>

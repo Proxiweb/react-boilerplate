@@ -85,7 +85,7 @@ export function* onLoginSuccess() {
       if (!user.nom) {
         yield put(push(`/users/${user.id}/profile?tab=profil`));
       }
-      yield put(push(`/relais/${user.relaiId}/commandes`));
+      yield put(push('/')); // /relais/${user.relaiId}/commandes
     } else {
       yield put(push('/choixrelais'));
     }

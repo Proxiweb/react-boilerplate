@@ -22,6 +22,7 @@ import styles from './styles.css';
 class NouvelleCommande extends Component { // eslint-disable-line
   static propTypes = {
     commande: PropTypes.object,
+    params: PropTypes.object.isRequired,
     relais: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     fournisseursCommande: PropTypes.array,
@@ -142,8 +143,10 @@ class NouvelleCommande extends Component { // eslint-disable-line
   create = () => {
     const { parametres, distributions, cdeFourns } = this.state;
     const { resume, montantMin, montantMinRelais } = parametres;
+    const { commandeId } = this.props.params;
     const dateCommande = this.calculeDateCommande();
     const commande = {
+      id: commandeId !== 'nouvelle' ? commandeId : undefined,
       dateCommande: dateCommande ? dateCommande.toISOString() : null,
       resume,
       montantMin,

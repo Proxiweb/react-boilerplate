@@ -96,7 +96,6 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
       loadM({ a: user.id });
     }
 
-    console.log('text service workers');
     runtime.install({
       onUpdating: () => {
         console.log('SW Event:', 'onUpdating');

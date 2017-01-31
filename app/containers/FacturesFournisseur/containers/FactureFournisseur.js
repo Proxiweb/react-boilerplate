@@ -39,7 +39,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
     contenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     produits: PropTypes.object.isRequired,
-    utilisateurs: PropTypes.array.isRequired,
+    utilisateurs: PropTypes.object,
     fournisseurs: PropTypes.array.isRequired,
     loadU: PropTypes.func.isRequired,
     loadF: PropTypes.func.isRequired,
@@ -74,7 +74,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
     } = this.props;
     const utilisateursIds =
       commandeUtilisateurs
-        .filter((cu) => !utilisateurs.find((u) => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
+        .filter((cu) => !utilisateurs || !utilisateurs.find((u) => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
         .map((cu) => cu.utilisateurId);
 
     loadU(utilisateursIds);
@@ -88,6 +88,9 @@ class FactureFournisseur extends Component { // eslint-disable-line
                         cC.utilisateurId === utilisateurId &&
                         produits[offres[cC.offreId].produitId].fournisseurId === params.fournisseurId
                       );
+
+    if (!contenus.length) return null;
+
     const { commandeId } = params;
     const totaux = calculeTotauxCommande({
       contenus,
@@ -98,7 +101,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
 
     const rows =
       contenus
-        .map((contenu) => {
+        .map((contenu, idx) => {
           const qteTotalOffre =
             commandeContenus
               .filter((cont) =>
@@ -114,7 +117,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
             // contenu.quantite
           );
 
-          return (<tr className={styles.item}>
+          return (<tr className={styles.item} key={idx}>
             <td>{produits[offres[contenu.offreId].produitId].nom.toUpperCase()}</td>
             <td className={styles.center}>{contenu.quantite}</td>
             <td className={styles.center}>{parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}</td>
@@ -124,7 +127,7 @@ class FactureFournisseur extends Component { // eslint-disable-line
       );
 
     rows.push(
-      <tr className={styles.total}>
+      <tr className={styles.total} key={utilisateurId}>
         <td />
         <td />
         <td />
@@ -136,6 +139,8 @@ class FactureFournisseur extends Component { // eslint-disable-line
 
     return rows;
   }
+
+  split = (str) => str.split('-')[0]
 
   render() {
     const {
@@ -160,72 +165,78 @@ class FactureFournisseur extends Component { // eslint-disable-line
     }
 
     const fournisseur = fournisseurs.find((f) => f.id === params.fournisseurId);
-
+    const utils = Object.keys(utilisateurs).map((id) => utilisateurs[id]);
+    let cpt = 0;
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
         {
           commandeUtilisateurs
-            .map((cu, idx) =>
-              <table cellPadding="0" cellSpacing="0">
-                <tr className={styles.top}>
-                  <td colSpan="4">
-                    <table>
-                      <tr>
-                        <td className={styles.title}>
-                          <h3>Facture Proxiweb <small>{cu.commandeId}_{idx}</small></h3>
-                        </td>
+            .map((cu, idx) => {
+              const contenusCommande = this.buildProducts(cu.utilisateurId);
+              if (!contenusCommande) return null;
+              cpt += 1;
+              return (
+                <table cellPadding="0" cellSpacing="0" key={idx}>
+                  <tr className={styles.top}>
+                    <td colSpan="4">
+                      <table>
+                        <tr>
+                          <td className={styles.title}>
+                            <h3>Facture Proxiweb <small>{this.split(cu.commandeId)}-{this.split(fournisseur.id)}_{cpt}</small></h3>
+                          </td>
 
-                        <td className={styles.title}>
-                          <h3>{moment(commande.dateCommande).format('LL')}</h3>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+                          <td className={styles.title}>
+                            <h3>{moment(commande.dateCommande).format('LL')}</h3>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-                <tr className={styles.information}>
-                  <td colSpan="4">
-                    <table>
-                      <tr>
-                        <td>
-                          {
-                            fournisseur &&
-                              <Adresse
-                                label="Fournisseur"
-                                datas={fournisseur}
-                              />
-                          }
-                        </td>
-                        <td>
-                          <Adresse
-                            label="Client"
-                            datas={utilisateurs.find((u) =>
-                              u.id === cu.utilisateurId
-                            )}
-                          />
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
+                  <tr className={styles.information}>
+                    <td colSpan="4">
+                      <table>
+                        <tr>
+                          <td>
+                            {
+                              fournisseur &&
+                                <Adresse
+                                  label="Fournisseur"
+                                  datas={fournisseur}
+                                />
+                            }
+                          </td>
+                          <td>
+                            <Adresse
+                              label="Client"
+                              datas={utils.find((u) =>
+                                u.id === cu.utilisateurId
+                              )}
+                            />
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
 
-                <tr className={styles.heading}>
-                  <td>
-                    Produit
-                  </td>
-                  <td className={styles.center}>
-                    Quantité
-                  </td>
-                  <td className={styles.center}>
-                      Prix unitaire HT
-                  </td>
-                  <td className={styles.totaux}>
-                    Prix TTC
-                  </td>
-                </tr>
-                {this.buildProducts(cu.utilisateurId)}
-              </table>
-            )
+                  <tr className={styles.heading}>
+                    <td>
+                      Produit
+                    </td>
+                    <td className={styles.center}>
+                      Quantité
+                    </td>
+                    <td className={styles.center}>
+                        Prix unitaire HT
+                    </td>
+                    <td className={styles.totaux}>
+                      Prix TTC
+                    </td>
+                  </tr>
+                  {contenusCommande}
+                </table>
+              );
+            })
         }
       </div>
     );

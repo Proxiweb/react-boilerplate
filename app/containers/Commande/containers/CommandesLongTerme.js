@@ -58,7 +58,7 @@ const Offre = ({ imageSrc, nom, tarif, prct, fav, commandeId, pushState, relaiId
 );
 
 Offre.propTypes = {
-  imageSrc: PropTypes.string.isRequired,
+  imageSrc: PropTypes.string,
   nom: PropTypes.string.isRequired,
   commandeId: PropTypes.string.isRequired,
   relaiId: PropTypes.string.isRequired,
@@ -111,11 +111,12 @@ class CommandesLongTerme extends Component {
   render() {
     return (<div>
       <Panel>Commandes de long terme</Panel>
-      {this.props.commandesIds.map((id) => {
+      {this.props.commandesIds.map((id, idx) => {
         const infos = this.getInfos(id);
 
         return (
           <Offre
+            key={idx}
             nom={infos.typesProduits.join(',')}
             commandeId={id}
             tarif={`${infos.prix} € sur ${infos.montantMin} €`}

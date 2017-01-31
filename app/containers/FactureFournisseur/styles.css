@@ -104,3 +104,9 @@ h3 {
     text-align: center;
   }
 }
+
+@media print {
+  .noPrint {
+    display: none;
+  }
+}

@@ -59,7 +59,7 @@ class FacturesFournisseur extends Component {
       <div className="row">
         <div className={classnames('col-md-2', styles.panel)}>
           <SelectableList value={params.commandeId} onChange={this.handleChangeList}>
-            {commandes.map((cde, idx) =>
+            {commandes.slice().filter((cde) => cde.dateCommande).sort((a, b) => moment(a.dateCommande).unix() < moment(b.dateCommande).unix()).map((cde, idx) =>
               <ListItem
                 key={idx}
                 primaryText={moment(cde.dateCommande).format('LL')}
