@@ -37,6 +37,7 @@ import {
   selectMessagesUtilisateurLoaded,
   selectMessagesUtilisateur,
   selectRelaiId,
+  selectLocationState,
 } from './selectors';
 
 import {
@@ -72,6 +73,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     messages: PropTypes.array.isRequired,
     logout: PropTypes.func.isRequired,
     compte: PropTypes.object,
+    locationState: PropTypes.object.isRequired,
     user: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.bool,
@@ -155,13 +157,22 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
       compte,
       messages,
       anonRelaiId,
+      locationState,
     } = this.props;
     const { muiTheme } = this.context;
     const drawerStyle = getDrawerHeaderStyle(this.context);
     let showPorteMonnaie = false;
+
     if (compte) {
       showPorteMonnaie = true;
     }
+
+    const print = locationState.locationBeforeTransitions.query.print;
+
+    if (print) {
+      return <div>{React.Children.toArray(this.props.children)}</div>;
+    }
+
     return (
       <div className={styles.allContent}>
         <Toolbar
@@ -241,6 +252,7 @@ const mapStateToProps = createStructuredSelector({
   messages: selectMessagesUtilisateur(),
   compte: selectBalance(),
   anonRelaiId: selectRelaiId(),
+  locationState: selectLocationState(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

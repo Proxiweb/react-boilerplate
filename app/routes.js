@@ -382,6 +382,31 @@ export default function createRoutes(store) {
         },
       }],
     }, {
+      path: 'fournisseurs/:fournisseurId/commandes',
+      name: 'CommandesFournisseur',
+      getComponent(location, cb) {
+        const importModules = Promise.all([
+          System.import('containers/CommandesFournisseur/index'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      childRoutes: [{
+        path: ':commandeId',
+        name: 'CommandeFournisseur',
+        getComponent(nextState, cb) {
+          System.import('containers/CommandesFournisseur/containers/CommandeFournisseur')
+            .then(loadModule(cb))
+            .catch(errorLoading);
+        },
+      }],
+    }, {
       path: 'fournisseurs/:fournisseurId/catalogue',
       getComponent(location, cb) {
         const importModules = Promise.all([

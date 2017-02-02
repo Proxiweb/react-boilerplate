@@ -14,6 +14,7 @@ const calculeTotauxCommandeFn = ({
   offres,
   commandeId,
 }) => {
+  console.log('cc', contenus);
   const totaux = contenus.reduce((memo, contenu) => {
     const offre = offres[contenu.offreId];
     const commandeCommandeContenus =

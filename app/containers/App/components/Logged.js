@@ -22,6 +22,7 @@ export default class Logged extends Component {
     if (destinataires.length > 0) {
       elements.push(
         <FlatButton
+          key={1}
           onClick={() => pushState('/communications/courante')}
           label={`Communication en cours (${destinataires.length})`}
           style={{ marginTop: 5 }}
@@ -32,6 +33,7 @@ export default class Logged extends Component {
     if (messages && messages.length > 0) {
       elements.push(
         <IconMenu
+          key={2}
           label="Nouveau message"
           iconButtonElement={
             <FlatButton
@@ -45,7 +47,7 @@ export default class Logged extends Component {
         >
           {messages.map((message, idx) =>
             <MenuItem
-              key={idx}
+              key={`${idx}m`}
               primaryText={message.objet}
               onClick={() =>
                 pushState(`/messages/${message.id}`)
