@@ -88,7 +88,7 @@ class CommandesFournisseur extends Component {
           </div>
         }
         <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
-          {!print &&
+          {!print && commandeId &&
             <div className="row around-md">
               <div className="col-md-3">
                 <RaisedButton

@@ -110,7 +110,7 @@ export function* loadAccountOnWalletCreation() {
 export function* onFirstLoginSaved() {
   while(true) { // eslint-disable-line
     const action = yield take('WS/FIRST_PROFILE_SAVED');
-    yield put(push(`/relais/${action.datas.relaiId}/commandes`));
+    yield put(push(`/accueil/${action.datas.relaiId}`));
   }
 }
 

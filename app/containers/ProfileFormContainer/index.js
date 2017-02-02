@@ -54,7 +54,7 @@ class ProfileFormContainer extends React.Component {
         pending={pending}
         pristine={pristine}
       />
-      );
+    );
   }
 }
 

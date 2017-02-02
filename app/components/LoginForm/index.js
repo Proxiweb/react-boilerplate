@@ -80,22 +80,22 @@ export default class LoginForm extends Component {
           </h3>
           <div className="row center-md">
             <form className="form form-inline" onSubmit={this.handleFormSubmit}>
+              <div className="col-md-10 text-center">
+                <TextField floatingLabelText={`Email ${view !== 'motdepasse' ? ' ou pseudo' : ''}`} ref={(node) => (this.username = node)} type="email" />
+              </div>
+              {(view !== 'motdepasse' &&
                 <div className="col-md-10 text-center">
-                  <TextField floatingLabelText={`Email ${view !== 'motdepasse' ? ' ou pseudo' : ''}`} ref={(node) => (this.username = node)} type="email" />
+                  <TextField floatingLabelText="Mot de passe" ref={(node) => (this.password = node)} type="password" />
                 </div>
-                {(view !== 'motdepasse' &&
-                  <div className="col-md-10 text-center">
-                    <TextField floatingLabelText="Mot de passe" ref={(node) => (this.password = node)} type="password" />
-                  </div>
-                )}
-                {view === 'register' &&
-                  <div className="col-md-10text-center">
-                    <TextField floatingLabelText="Mot de passe (confirmation)" ref={(node) => (this.passwordConfirm = node)} type="password" />
-                  </div>
-                }
-                <div className="with-margin-top">
-                  {this.buildSubmitButton()}
+              )}
+              {view === 'register' &&
+                <div className="col-md-10text-center">
+                  <TextField floatingLabelText="Mot de passe (confirmation)" ref={(node) => (this.passwordConfirm = node)} type="password" />
                 </div>
+              }
+              <div className="with-margin-top">
+                {this.buildSubmitButton()}
+              </div>
             </form>
           </div>
           <div className="row with-margin-top">

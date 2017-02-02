@@ -14,7 +14,7 @@ export default class CarteBleue extends Component {
   }
 
   state = {
-    montant: null,
+    montant: 10,
   }
 
   onToken = (token) => {
