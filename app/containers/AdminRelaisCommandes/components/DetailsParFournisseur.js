@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import FlatButton from 'material-ui/FlatButton';
@@ -109,8 +110,8 @@ const mapStateToProps = createStructuredSelector({
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  pushState: (url) => dispatch(push(url)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  pushState: push,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);

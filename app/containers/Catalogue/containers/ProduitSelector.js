@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import uniq from 'lodash/uniq';
 import { List, ListItem } from 'material-ui/List';
@@ -123,8 +124,8 @@ class ProduitSelector extends React.Component {
 //   produits: selectProduitsRelaisByTypeProduit(),
 // });
 
-const mapDispatchToProps = (dispatch) => ({
-  pushState: (url) => dispatch(push(url)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  pushState: push,
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(ProduitSelector);

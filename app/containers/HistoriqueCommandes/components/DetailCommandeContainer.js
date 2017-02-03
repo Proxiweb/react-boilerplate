@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import RefreshIndicator from 'material-ui/RefreshIndicator';
@@ -87,8 +88,8 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadCommandeById: (query) => dispatch(loadCommandes(query)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadCommandeById: loadCommandes,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailCommandeContainer);

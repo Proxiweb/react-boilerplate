@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { loadAccount, trust as trustAction, pay, fedLookup } from './actions';
 import TrustForm from '../../components/TrustForm';
@@ -78,12 +79,12 @@ class StellarMain extends Component { // eslint-disable-line
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  loadAccount: (accountId) => dispatch(loadAccount(accountId)),
-  trust: (currencyCode, maxTrust, issuer, stellarKeys) => dispatch(trustAction(currencyCode, maxTrust, issuer, stellarKeys)),
-  pay: (dest, currency, currencyIssuer, amount, stellarKeys) => dispatch(pay(dest, currency, currencyIssuer, amount, stellarKeys)),
-  lookup: (name) => dispatch(fedLookup(name)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadAccount,
+  trust: trustAction,
+  pay,
+  lookup: fedLookup,
+}, dispatch);
 
 const mapStateToProps = createStructuredSelector({
   account: selectStellarDomain(),

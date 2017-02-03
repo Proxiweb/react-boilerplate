@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Helmet from 'react-helmet';
 import { push } from 'react-router-redux';
@@ -185,10 +186,10 @@ const mapStateToProps = createStructuredSelector({
   relaiId: selectRelaiId(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  pushState: (url) => dispatch(push(url)),
-  load: () => dispatch(loadRelais()),
-  choisirRelais: (id) => dispatch(selectionneRelais(id)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  pushState: push,
+  load: loadRelais,
+  choisirRelais: selectionneRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePageAnon);

@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { isPristine, change } from 'redux-form';
 
 // import { saveAccount } from 'containers/CompteUtilisateur/actions';
@@ -53,10 +54,9 @@ const mapStateToProps = createStructuredSelector({
   values: getValues(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  changeValue: (form, field, val) => dispatch(change(form, field, val)),
-  save: (datas) => dispatch(saveProduit(datas)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  changeValue: change,
+  save: saveProduit,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProduitFormContainer);

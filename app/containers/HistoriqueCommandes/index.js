@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { createStructuredSelector } from 'reselect';
@@ -103,10 +104,10 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadCommandesUtilisateur: (utilisateurId) => dispatch(loadUserCommandes(utilisateurId)),
-  loadCommande: (query) => dispatch(loadCommandes(query)),
-  pushState: (url) => dispatch(push(url)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadCommandesUtilisateur: loadUserCommandes,
+  loadCommande: loadCommandes,
+  pushState: push,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(HistoriqueCommandes);

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
@@ -87,10 +88,10 @@ const mapStateToProps = createStructuredSelector({
   apiKey: selectAuthApiKey(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  sendMessage: (apiKey, message) => dispatch(sendCommunication(apiKey, message)),
-  setMessage: (message) => dispatch(setMessage(message)),
-  removeDest: (id, moyen) => dispatch(removeDestinataire(id, moyen)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  sendMessage: sendCommunication,
+  setMessage,
+  removeDest: removeDestinataire,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommunicationFormContainer);

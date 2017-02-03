@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Paper from 'material-ui/Paper';
 
@@ -46,8 +47,8 @@ const mapStateToProps = createStructuredSelector({
   message: selectMessage(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  marquerCommeLu: (id) => dispatch(marquerCommeLu(id)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  marquerCommeLu,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Messages);

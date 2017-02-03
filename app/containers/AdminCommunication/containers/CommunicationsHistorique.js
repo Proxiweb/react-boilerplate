@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { List, ListItem } from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
@@ -101,9 +102,9 @@ const mapStateToProps = (state) => ({
   communications: state.admin ? state.admin.communication.datas : [],
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: () => dispatch(loadCommunications()),
-  del: (id) => dispatch(deleteCommunication(id)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadCommunications,
+  del: deleteCommunication,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommunicationHistorique);

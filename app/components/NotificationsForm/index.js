@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Paper from 'material-ui/Paper';
 import { Toggle } from 'material-ui';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
@@ -82,9 +83,8 @@ const mapStateToProps = (state) => ({
   pending: state.global.pending,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  saveProfile: (id, datas, msgSuccess, redirect) => dispatch(saveAccount(id, datas, msgSuccess, redirect)),
-  dispatch,
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  saveProfile: saveAccount,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications);

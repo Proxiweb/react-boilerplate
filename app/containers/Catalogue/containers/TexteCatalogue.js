@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Paper from 'material-ui/Paper';
 import { createStructuredSelector } from 'reselect';
 import { selectRelais } from 'containers/Commande/selectors';
@@ -41,8 +42,8 @@ const mapStateToProps = createStructuredSelector({
   relais: selectRelais(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: (query) => dispatch(loadRelais(query)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(TexteCatalogue);

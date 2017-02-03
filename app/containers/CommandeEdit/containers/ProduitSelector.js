@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
@@ -117,8 +118,8 @@ const mapStateToProps = createStructuredSelector({
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  pushState: (url) => dispatch(push(url)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  pushState: push,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProduitSelector);

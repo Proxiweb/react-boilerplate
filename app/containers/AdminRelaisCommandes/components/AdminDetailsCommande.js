@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import {
@@ -135,11 +136,11 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadUtilisateurs: (ids) => dispatch(fetchUtilisateurs(ids)),
-  loadDepots: (relaiId) => dispatch(loadDepotsRelais(relaiId)),
-  pushState: (url) => dispatch(push(url)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadUtilisateurs: fetchUtilisateurs,
+  loadDepots: loadDepotsRelais,
+  pushState: push,
+}, dispatch);
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);

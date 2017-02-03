@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import round from 'lodash/round';
 import includes from 'lodash/includes';
@@ -96,8 +97,8 @@ const mapStateToProps = createStructuredSelector({
   roles: selectRoles(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  deposer: (montant) => dispatch(ajouterDepot(montant)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  deposer: ajouterDepot,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepotRelais);

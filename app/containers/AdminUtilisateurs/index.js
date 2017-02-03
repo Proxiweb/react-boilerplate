@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-
+import { bindActionCreators } from 'redux';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
@@ -280,9 +280,9 @@ const mapStateToProps = (state) => ({
   relais: state.admin.relais.datas,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadUtilisateursDatas: (query) => dispatch(loadUtilisateurs(query)),
-  addDest: ({ id, telPortable, email, identite }) => dispatch(addDestinataire({ id, telPortable, email, identite })),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadUtilisateursDatas: loadUtilisateurs,
+  addDest: addDestinataire,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminUtilisateurs);

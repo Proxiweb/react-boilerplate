@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { List, ListItem } from 'material-ui/List';
 import CheckIcon from 'material-ui/svg-icons/action/done';
@@ -83,9 +84,9 @@ const mapStateToProps = createStructuredSelector({
   utilisateur: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  save: (utilisateurId, datas, msgSuccess, redirect) => dispatch(saveAccount(utilisateurId, datas, msgSuccess, redirect)),
-  load: () => dispatch(loadRelais()),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  save: saveAccount,
+  load: loadRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChoixRelais);

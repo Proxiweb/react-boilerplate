@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { isPristine } from 'redux-form';
 import round from 'lodash/round';
 
@@ -69,9 +70,8 @@ const mapStateToProps = createStructuredSelector({
   valeurs: selectValeurs(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  save: (datas) => dispatch(saveOffre(datas)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  save: saveOffre,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(OffreFormContainer);

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
@@ -198,8 +199,8 @@ const mapStateToProps = createStructuredSelector({
   depots: selectDepots(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: (relaiId) => dispatch(loadDepotsRelais(relaiId)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadDepotsRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaiementsCommande);

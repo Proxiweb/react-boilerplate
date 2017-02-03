@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import includes from 'lodash/includes';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
@@ -168,11 +169,11 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: () => dispatch(loadRelais()),
-  loadUtil: (relaiId) => dispatch(loadUtilisateurs(relaiId)),
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadRelais,
+  loadUtil: loadUtilisateurs,
   // loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
-  pushState: (url) => dispatch(push(url)),
-});
+  pushState: push,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminRelais);

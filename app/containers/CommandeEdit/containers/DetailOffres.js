@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import FlatButton from 'material-ui/FlatButton';
 import includes from 'lodash/includes';
 import shader from 'shader';
@@ -196,11 +197,9 @@ const mapStateToProps = createStructuredSelector({
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  ajouter: (commandeId, offre) =>
-    dispatch(ajouter(commandeId, offre)),
-  saveFavoris: (id, datas, msg, redirect) =>
-    dispatch(saveAccount(id, datas, msg, redirect)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  ajouter,
+  saveFavoris: saveAccount,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailOffres);

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Toggle from 'material-ui/Toggle';
 import includes from 'lodash/includes';
@@ -25,7 +26,7 @@ class FournisseurHebdoSwitch extends Component { // eslint-disable-line
         ? relaisSelected.fournisseursHebdo.filter((id) => id !== fournisseurId)
         : [...relaisSelected.fournisseursHebdo, fournisseurId];
 
-    saveR({ ...relaisSelected, fournisseursHebdo });
+    saveR({ ...relaisSelected, fournisseursHebdo }, null);
   }
 
   fournisseurInclus = () => {
@@ -63,8 +64,8 @@ const mapStateToProps = createStructuredSelector({
   relais: selectRelais(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  saveR: (relais) => dispatch(saveRelais(relais, null)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  saveR: saveRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FournisseurHebdoSwitch);

@@ -14,6 +14,7 @@
 import React, { Component, PropTypes } from 'react';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import runtime from 'offline-plugin/runtime';
 import styles from './styles.css';
@@ -255,10 +256,10 @@ const mapStateToProps = createStructuredSelector({
   locationState: selectLocationState(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  pushState: (url) => dispatch(push(url)),
-  logout: () => dispatch(logout()),
-  loadM: (query) => dispatch(loadMessages(query)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  pushState: push,
+  logout,
+  loadM: loadMessages,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

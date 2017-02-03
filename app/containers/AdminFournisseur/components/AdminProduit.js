@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Toggle from 'material-ui/Toggle';
 
 import { saveProduit } from 'containers/Commande/actions';
@@ -85,8 +86,8 @@ class AdminProduit extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  save: (produit) => dispatch(saveProduit(produit)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  save: saveProduit,
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(AdminProduit);

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import ProduitSelector from './containers/ProduitSelector';
 import DetailOffres from './containers/DetailOffres';
@@ -63,8 +64,8 @@ const mapStateToProps = createStructuredSelector({
   produits: selectProduitsRelaisByTypeProduit(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: (query) => dispatch(loadFournisseurs(query)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadFournisseurs,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);

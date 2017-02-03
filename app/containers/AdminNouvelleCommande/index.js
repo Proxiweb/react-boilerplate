@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -263,10 +264,10 @@ const mapStateToProps = createStructuredSelector({
   livraisonsCommande: selectCommandeLivraisons(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: () => dispatch(loadFournisseurs()),
-  loadR: (query) => dispatch(loadRelais(query)),
-  create: (commande) => dispatch(createCommande(commande)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadFournisseurs,
+  loadR: loadRelais,
+  create: createCommande,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(NouvelleCommande);

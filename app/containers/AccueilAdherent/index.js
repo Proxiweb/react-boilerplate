@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import Helmet from 'react-helmet';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
@@ -83,9 +84,9 @@ const mapStateToProps = createStructuredSelector({
   relais: selectRelais(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: () => dispatch(loadRelais()),
-  pushState: (url) => dispatch(push(url)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadRelais,
+  pushState: push,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccueilAdherent);

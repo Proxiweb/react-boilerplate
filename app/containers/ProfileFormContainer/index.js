@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import capitalize from 'lodash/capitalize';
 import {
@@ -64,9 +65,8 @@ const mapStateToProps = createStructuredSelector({
   pristine: isProfilePristine(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  saveAccount: (datas) => dispatch(saveAccount(datas)),
-  dispatch,
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  saveAccount: saveAccount,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileFormContainer);

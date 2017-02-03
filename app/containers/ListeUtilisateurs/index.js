@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import { createStructuredSelector } from 'reselect';
@@ -110,8 +111,8 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: (query) => dispatch(loadUtilisateurs(query)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadUtilisateurs,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListeUtilisateursRelais);

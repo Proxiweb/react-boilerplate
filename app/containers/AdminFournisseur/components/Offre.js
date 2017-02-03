@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import IconButton from 'material-ui/IconButton';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
@@ -87,8 +88,8 @@ class Offre extends Component { // eslint-disable-line
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  save: (datas) => dispatch(saveOffre(datas)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  save: saveOffre,
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(Offre);

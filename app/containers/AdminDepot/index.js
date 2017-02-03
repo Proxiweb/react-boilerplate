@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import AutoComplete from 'material-ui/AutoComplete';
 import { loadDepots } from './actions';
@@ -123,10 +124,10 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadDepotsDatas: (query) => dispatch(loadDepots(query)),
-  loadUtilisateursDatas: () => dispatch(loadUtilisateurs()),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadDepotsDatas: loadDepots,
+  loadUtilisateursDatas: loadUtilisateurs,
+}, dispatch);
 
 export default authorization(
   connect(mapStateToProps, mapDispatchToProps)(AdminDepot),

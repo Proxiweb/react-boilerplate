@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import capitalize from 'lodash/capitalize';
 import { createStructuredSelector } from 'reselect';
@@ -55,7 +56,7 @@ class Support extends Component { // eslint-disable-line
       a: '3c3fff89-9604-4729-b794-69dd60005dfe',
       identiteExpediteur:
         `${capitalize(this.props.user.prenom)} ${this.props.user.nom.toUpperCase()}`,
-    });
+    }, '/');
 
   render() {
     const { pending } = this.props;
@@ -108,8 +109,8 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  envoyer: (message) => dispatch(saveMessage(message, '/')),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  envoyer: saveMessage,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Support);

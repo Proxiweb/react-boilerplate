@@ -6,6 +6,7 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import round from 'lodash/round';
@@ -115,11 +116,11 @@ const mapStateToProps = createStructuredSelector({
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  progVir: (paiement) => dispatch(programmerVirement(paiement)),
-  loadVir: (utilisateurId) => dispatch(loadVirements(utilisateurId)),
-  annulVir: (id) => dispatch(annulerVirement(id)),
-  depCb: (paiement) => dispatch(deposerCB(paiement)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  progVir: programmerVirement,
+  loadVir: loadVirements,
+  annulVir: annulerVirement,
+  depCb: deposerCB,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(PorteMonnaie);

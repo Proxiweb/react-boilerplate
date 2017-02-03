@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 // import { createStructuredSelector } from 'reselect';
 import Helmet from 'react-helmet';
@@ -61,9 +62,9 @@ class AdminCommandeUtilisateurs extends Component {
 //   utilisateurs: selectUtilisateurs(),
 // });
 
-const mapDispatchToProps = (dispatch) => ({
-  pushState: (url) => dispatch(push(url)),
-  load: (relaiId) => dispatch(loadUtilisateurs(relaiId)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  pushState: push,
+  load: loadUtilisateurs,
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(AdminCommandeUtilisateurs);

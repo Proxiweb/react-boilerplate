@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import {
   isPristine,
@@ -45,9 +46,9 @@ const mapStateToProps = createStructuredSelector({
   pristine: isProfilePristine(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  changeValue: (form, field, val) => dispatch(change(form, field, val)),
-  save: (relais) => dispatch(saveRelais(relais)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  changeValue: change,
+  save: saveRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfosRelais);

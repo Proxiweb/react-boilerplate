@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
 import round from 'lodash/round';
@@ -252,9 +253,9 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadU: (ids) => dispatch(fetchUtilisateurs(ids)),
-  loadF: (query) => dispatch(loadFournisseurs(query)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadU: fetchUtilisateurs,
+  loadF: loadFournisseurs,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureFournisseur);

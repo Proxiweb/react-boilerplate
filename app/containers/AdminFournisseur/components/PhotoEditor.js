@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import AvatarEditor from 'components/AvatarEditor';
 import Slider from 'material-ui/Slider';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -68,8 +69,8 @@ class PhotoEditor extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  change: (produitId, image) => dispatch(changePhoto(produitId, image)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  change: changePhoto,
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(PhotoEditor);

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -203,12 +204,11 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  load: (relaisId) => dispatch(loadFournisseurs(relaisId)),
-  loadF: (id) => dispatch(loadFournisseur(id)),
-  loadT: () => dispatch(loadTypesProduits()),
-  importe: (fournisseurId, produitId, relaiDestinationId) =>
-    dispatch(importeOffres(fournisseurId, produitId, relaiDestinationId)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  load: loadFournisseurs,
+  loadF: loadFournisseur,
+  loadT: loadTypesProduits,
+  importe: importeOffres,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FournisseursRelais);

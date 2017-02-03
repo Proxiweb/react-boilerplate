@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import IconButton from 'material-ui/IconButton';
 import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
@@ -57,8 +58,8 @@ class Utilisateur extends Component { // eslint-disable-line
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  addDest: ({ id, telPortable, email, identite }) => dispatch(addDestinataire({ id, telPortable, email, identite })),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  addDest: addDestinataire,
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(Utilisateur);

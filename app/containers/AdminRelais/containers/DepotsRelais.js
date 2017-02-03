@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import groupBy from 'lodash/groupBy';
@@ -92,8 +93,8 @@ const mapStateToProps = createStructuredSelector({
   depots: selectDepots(),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
-});
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  loadDepots: loadDepotsRelais,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepotsRelais);
