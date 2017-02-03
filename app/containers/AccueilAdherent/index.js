@@ -9,6 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import { selectRelais } from 'containers/AdminRelais/selectors';
 import { loadRelais } from 'containers/AdminRelais/actions';
+import legumes from './legumes.jpg';
 // import styles from './styles.css';
 
 class AccueilAdherent extends Component {
@@ -44,22 +45,26 @@ class AccueilAdherent extends Component {
         <div className="col-md-8">
           {ceRelais &&
             <Paper zDepth={2} style={{ padding: '1em' }}>
-              <h1>Bienvenue sur le relais ProxiWeb<br />{ceRelais.nom}</h1>
               <div className="row center-md">
+                <div className="col-md-2">
+                  <img src={legumes} alt="legumes" style={{ border: 'solid 1px gray' }} />
+                </div>
                 <div className="col-md-8">
+                  <h1>Relais ProxiWeb {ceRelais.nom}</h1>
+                  <p>{ceRelais.adresseComplete}</p>
                   <p
                     style={{ padding: '1em', border: 'solid 1px silver', borderRadius: '5px 5px' }}
                     dangerouslySetInnerHTML={{ __html: ceRelais.presentation }} // eslint-disable-line
                   />
-                </div>
-                <div className="col-md-6">
                   <RaisedButton
                     label="Consulter les commandes en cours"
                     primary
                     onClick={() =>
-                      pushState(`/relais/${ceRelais.id}/commandes`)
+                      pushState('/')
                     }
                   />
+                </div>
+                <div className="col-md-6">
                 </div>
               </div>
             </Paper>}

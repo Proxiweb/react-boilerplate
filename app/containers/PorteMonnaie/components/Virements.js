@@ -16,7 +16,7 @@ export default class Virements extends Component {
   }
 
   state = {
-    montant: null,
+    montant: 10,
   }
 
   render() {
