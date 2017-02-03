@@ -121,7 +121,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     const depot = params.utilisateurId ? this.findDepot(params.utilisateurId) : null;
     return (
       <div className="row">
-        <div className={`col-md-6 col-md-offset-3 ${styles.depot}`}>
+        <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
           {!depot && params.utilisateurId &&
             <RaisedButton
               primary

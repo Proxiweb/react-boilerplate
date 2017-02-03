@@ -60,7 +60,7 @@ class DepotRelais extends Component { // eslint-disable-line
     const manqueStr = manque > 0 ? '' : `( manque ${(manque * -1).toFixed(2)} €)`;
     return (
       <Dialog
-        title={`Déposer des fonds ( ${max} €)`}
+        title={`Déposer des fonds ( max ${max} €)`}
         actions={
           [
             <FlatButton
