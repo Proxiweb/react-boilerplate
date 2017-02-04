@@ -58,7 +58,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
       .then((res) => {
         const bal = res.balances.find((b) => b.asset_code === 'PROXI');
         const totaux = calculeTotauxCommande({
-          contenus: contenus.filter((c) => c.utilisateurId === id),
+          contenus: contenus.filter((c) => c.utilisateurId === id && c.commandeId === commandeId),
           offres,
           commandeContenus,
           commandeId,
@@ -94,7 +94,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
   handleDepotRelais = () => this.setState({ ...this.state, depot: false })
 
   computeDatas = (utilisateurId) => {
-    const { utilisateurs } = this.props;
+    const { utilisateurs, params: { commandeId } } = this.props;
     const { paiements, totaux } = this.state;
 
     const ut = utilisateurs.find((u) => u.id === utilisateurId);
@@ -104,9 +104,12 @@ class ListeAcheteurs extends Component { // eslint-disable-line
 
     let iconColor = 'silver';
     if (paiements[ut.id]) {
-      iconColor = totaux[ut.id] <= round(depot + parseFloat(paiements[ut.id].balance), 2)
+      console.log(`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`);
+      const totalAvecDepot = round(depot + parseFloat(paiements[ut.id].balance), 2);
+      iconColor = totaux[ut.id] <= totalAvecDepot
         ? 'green'
         : 'orange';
+      console.log(totaux[ut.id], totalAvecDepot, iconColor);
     }
 
     return {
