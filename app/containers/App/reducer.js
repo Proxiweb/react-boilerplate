@@ -13,6 +13,7 @@ import {
   GLOBAL_PENDING_START,
   GLOBAL_PENDING_STOP,
   SELECTIONNER_RELAIS,
+  SET_STELLAR_KEYS,
   messagesConst as c,
   messageSaveConst as cS,
 } from './constants';
@@ -27,6 +28,7 @@ const initialState = {
     datas: [],
   },
   relaiId: null,
+  stellarKeys: null,
 };
 
 const updateMessage = (state, message) => {
@@ -62,10 +64,17 @@ function notificationsReducer(state = initialState, action) {
       return { ...state, pending: false };
     case SELECTIONNER_RELAIS:
       return { ...state, relaiId: action.payload.relaiId };
+    case SET_STELLAR_KEYS:
+      return { ...state, stellarKeys: action.payload.stellarKeys };
     case REHYDRATE: {
       const incoming = action.payload.global;
       if (!incoming) return state;
-      return { ...state, relaiId: incoming.relaiId };
+      const stellarKeys = incoming.stellarKeys;
+      return {
+        ...state,
+        relaiId: incoming.relaiId,
+        stellarKeys,
+      };
     }
     default:
       return state;

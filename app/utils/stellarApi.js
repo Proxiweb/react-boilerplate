@@ -60,7 +60,13 @@ const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((reso
     .catch((err) => reject(err));
 });
 
-const pay = (destination, currency, currencyIssuer, amount, stellarKeys) => new Promise((resolve, reject) => {
+const pay = ({
+  destination,
+  currency,
+  currencyIssuer,
+  amount,
+  stellarKeys
+}) => new Promise((resolve, reject) => {
   getServer()
     .accounts()
     .accountId(stellarKeys.accountId)

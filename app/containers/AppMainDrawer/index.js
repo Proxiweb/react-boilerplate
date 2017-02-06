@@ -94,6 +94,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               primaryTogglesNestedList
               leftIcon={<TestIcon />}
               nestedItems={[
+                <ListItem primaryText="Paramétrage" value="/proxiweb/parametrage" />,
                 <ListItem primaryText="Relais" value="/relais" />,
                 <ListItem primaryText="Depots" value="/depots" />,
                 <ListItem

@@ -16,6 +16,7 @@ import {
  GLOBAL_PENDING_START,
  GLOBAL_PENDING_STOP,
  SELECTIONNER_RELAIS,
+ SET_STELLAR_KEYS,
  messagesConst as c,
  messageSaveConst as cS,
 } from './constants';
@@ -59,6 +60,11 @@ export const saveMessage = (message, redirectSuccess) => ({
 export const selectionneRelais = (relaiId) => ({
   type: SELECTIONNER_RELAIS,
   payload: { relaiId },
+});
+
+export const setStellarKeys = (stellarKeys) => ({
+  type: SET_STELLAR_KEYS,
+  payload: { stellarKeys },
 });
 
 

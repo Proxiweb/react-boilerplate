@@ -31,7 +31,7 @@ class CommandeListeTypesProduits extends Component {
               .filter((id) => produits[id].fournisseurId === fId)
         ), [])
         .map((pdtId) => produits[pdtId].typeProduitId)
-    ).map((typeProduitId) => typesProduits[typeProduitId].nom).join(',');
+    ).map((typeProduitId) => typesProduits[typeProduitId].nom).join(', ');
 
     return <div className={styles.typesProduits}>{types}</div>;
   }

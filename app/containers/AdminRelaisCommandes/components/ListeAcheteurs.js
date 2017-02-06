@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import capitalize from 'lodash/capitalize';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -10,12 +11,14 @@ import round from 'lodash/round';
 import api from 'utils/stellarApi';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import DepotRelais from 'containers/DepotRelais';
+import { selectStellarKeys } from 'containers/App/selectors';
 import styles from './styles.css';
 const SelectableList = makeSelectable(List);
 
 class ListeAcheteurs extends Component { // eslint-disable-line
   static propTypes = {
     commandeUtilisateurs: PropTypes.array.isRequired,
+    stellarKeys: PropTypes.object,
     params: PropTypes.object.isRequired,
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
@@ -119,17 +122,26 @@ class ListeAcheteurs extends Component { // eslint-disable-line
   }
 
   render() {
-    const { commandeUtilisateurs, onChange, params, utilisateurs } = this.props;
+    const {
+      commandeUtilisateurs,
+      onChange,
+      params,
+      utilisateurs,
+      stellarKeys,
+    } = this.props;
+
     const { paiements, totaux } = this.state;
     const depot = params.utilisateurId ? this.findDepot(params.utilisateurId) : null;
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
+          {(!stellarKeys.adresse || !stellarKeys.secret)&& <p>Parametrez Proxiweb</p>}
           {!depot && params.utilisateurId &&
             <RaisedButton
               primary
               fullWidth
               label="Deposer des fonds"
+              disabled={!stellarKeys.adresse || !stellarKeys.secret}
               onClick={() => this.setState({ ...this.state, depot: true })}
             />
           }
@@ -137,25 +149,30 @@ class ListeAcheteurs extends Component { // eslint-disable-line
           {depot && `Dépot : ${parseFloat(depot.montant).toFixed(2)} €`}
           {!depot && totaux[params.utilisateurId] && paiements[params.utilisateurId] &&
             <DepotRelais
-              utilisateurId={params.utilisateurId}
+              utilisateur={utilisateurs.find((u) => u.id === params.utilisateurId)}
               balance={paiements[params.utilisateurId]}
               totalCommande={totaux[params.utilisateurId].toFixed(2)}
               relaiId={params.relaiId}
               depot={depot}
               open={this.state.depot}
               onRequestClose={this.handleClose}
+              stellarKeys={stellarKeys}
             />
           }
         </div>
-        <div className="col-md-12">
+        <div className="col-md-12" className={styles.listeAcheteurs}>
           <SelectableList value={params.utilisateurId} onChange={onChange}>
             {
               commandeUtilisateurs
-                .map((cu) => ({ ...cu, utilisateur: utilisateurs.find((u) => u.id === cu.utilisateurId) }))
                 .filter((cu) => cu.commandeId === params.commandeId && cu.utilisateur && cu.utilisateur.nom)
-                .slice().sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
+                .map((cu) => ({
+                  ...cu,
+                  utilisateur: utilisateurs.find((u) => u.id === cu.utilisateurId),
+                  datas: this.computeDatas(cu.utilisateurId),
+                }))
+                .slice()
+                .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
                 .map((cu, idx) => {
-                  const datas = this.computeDatas(cu.utilisateurId);
                   return (
                     <ListItem
                       key={idx}
@@ -164,9 +181,9 @@ class ListeAcheteurs extends Component { // eslint-disable-line
                       leftIcon={
                         cu.dateLivraison
                         ? <DoneIcon color="green" />
-                        : <PastilleIcon color={datas.iconColor} />
+                      : <PastilleIcon color={cu.datas.iconColor} />
                       }
-                      rightIcon={datas.dep && <WalletIcon />}
+                      rightIcon={cu.datas.dep && <WalletIcon />}
                     />
                   );
                 })
@@ -178,4 +195,8 @@ class ListeAcheteurs extends Component { // eslint-disable-line
   }
 }
 
-export default connect()(ListeAcheteurs);
+const mapStateToProps = createStructuredSelector({
+  stellarKeys: selectStellarKeys(),
+})
+
+export default connect(mapStateToProps)(ListeAcheteurs);
