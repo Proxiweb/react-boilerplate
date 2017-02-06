@@ -71,6 +71,14 @@ export const loadFournisseurs = (query) => ({
   msgPending: 'Chargement fournisseurs',
 });
 
+export const supprimerCommandeContenusFournisseur = ({ fournisseurId, commandeId }) => ({
+  type: findActionType('supprimer_commande_contenus_fournisseur', c, 'START'),
+  url: `/commandes/${commandeId}/fournisseurs/${fournisseurId}`,
+  method: 'del',
+  datas: { fournisseurId, commandeId },
+  msgPending: 'Suppression offres',
+});
+
 export const loadTypesProduits = (query) => ({
   type: findActionType('load_types_produits', c, 'START'),
   url: 'type_produits',

@@ -12,6 +12,8 @@ import { schemas } from './schemas';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
+import includes from 'lodash/includes';
+import uniq from 'lodash/uniq';
 import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
@@ -39,6 +41,73 @@ const ajouter = (state, action) => {
     },
   });
 };
+
+const supprimeCommandeContenusFournisseur =
+  (state, fournisseurId, commandeId) => {
+    const {
+      commandeContenus,
+      offres,
+      produits,
+      commandeUtilisateurs,
+    } = state.datas.entities;
+
+    const commandeContenusASupprimerIds =
+      Object.keys(commandeContenus)
+        .filter((id) =>
+          commandeContenus[id].commandeId === commandeId &&
+          produits[
+            offres[
+              commandeContenus[id].offreId
+            ].produitId
+          ].fournisseurId === fournisseurId
+        );
+
+    const commandeUtilisateursModifiee =
+      uniq( // il peut y a voir plusieurs contenus pour une meme commandeUtilisateur
+        commandeContenusASupprimerIds.map((ccId) =>
+          commandeContenus[ccId].commandeUtilisateurId
+        )
+      )
+      .reduce((memo, cuId) => {
+        const commandeUtilisateur = commandeUtilisateurs[cuId];
+        memo[cuId] = {
+          ...commandeUtilisateur,
+          contenus: commandeUtilisateur.contenus.filter((id) =>
+            !includes(commandeContenusASupprimerIds, id)
+          )
+        }
+        return memo;
+      }, {});
+
+    const commandeContenusModifiee =
+      Object.keys(commandeContenus)
+        .filter((id) =>
+          !includes(
+            commandeContenusASupprimerIds,
+            id
+          )
+        )
+        .reduce((memo, id) => {
+          memo[id] = commandeContenus[id];
+          return memo;
+        }, {});
+
+    return update(
+      state,
+      {
+        datas: {
+          entities: {
+            commandeContenus: {
+              $set: { ...commandeContenus, ...commandeContenusModifiee},
+            },
+            commandeUtilisateurs: {
+              $set: { ...commandeUtilisateurs, ...commandeUtilisateursModifiee}
+            }
+          }
+        }
+      }
+    )
+  }
 
 // const majNouvelAchat = (state, commandeContenu) => {
 //   const majCu = update(
@@ -128,6 +197,11 @@ function commandeReducer(state = initialState, action) {
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
     }
 
+    case c.ASYNC_SUPPRIMER_COMMANDE_CONTENUS_FOURNISSEUR_SUCCESS: {
+      console.log('supprimer_commande_contenus_fournisseur', action);
+      const { fournisseurId, commandeId } = action.req.datas;
+      return supprimeCommandeContenusFournisseur(state, fournisseurId, commandeId);
+    }
 
     case c.AJOUTER:
       return ajouter(state, action);

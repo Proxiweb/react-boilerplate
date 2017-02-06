@@ -20,7 +20,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     commandeUtilisateurs: PropTypes.array.isRequired,
     stellarKeys: PropTypes.object,
     params: PropTypes.object.isRequired,
-    contenus: PropTypes.object.isRequired,
+    contenus: PropTypes.array.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     utilisateurs: PropTypes.array.isRequired,
     depots: PropTypes.array.isRequired,
@@ -107,12 +107,10 @@ class ListeAcheteurs extends Component { // eslint-disable-line
 
     let iconColor = 'silver';
     if (paiements[ut.id]) {
-      console.log(`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`);
       const totalAvecDepot = round(depot + parseFloat(paiements[ut.id].balance), 2);
       iconColor = totaux[ut.id] <= totalAvecDepot
         ? 'green'
         : 'orange';
-      console.log(totaux[ut.id], totalAvecDepot, iconColor);
     }
 
     return {
@@ -135,7 +133,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
-          {(!stellarKeys.adresse || !stellarKeys.secret)&& <p>Parametrez Proxiweb</p>}
+          {(!stellarKeys || !stellarKeys.adresse || !stellarKeys.secret)&& <p>Parametrez Proxiweb</p>}
           {!depot && params.utilisateurId &&
             <RaisedButton
               primary

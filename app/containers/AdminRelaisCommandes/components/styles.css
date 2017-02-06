@@ -23,5 +23,5 @@
 .listeAcheteurs {
   max-height: calc(100vh - 155px);
   min-height: calc(100vh - 155px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
