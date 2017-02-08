@@ -58,7 +58,6 @@ class HistoriqueCommandes extends Component {  // eslint-disable-line
     } = this.props;
     if (!commandes) return null;
     const commande = commandeId ? commandes.find((cde) => cde.id === commandeId) : null;
-
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>

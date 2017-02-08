@@ -62,7 +62,12 @@ class AdminRelaisCommandes extends Component {
     if (!this.props.relais) {
       this.props.loadRelais();
     }
-    this.props.loadCommandes({ relaiId });
+    this.props.loadCommandes({
+      relaiId,
+      periode: 'precise',
+      debut: moment().subtract(1, 'months').toISOString(),
+      fin: moment().toISOString(),
+    });
     this.props.loadFournisseurs();
     this.props.loadUtilisateurs({ relaiId });
   }
