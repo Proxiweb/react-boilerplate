@@ -25,3 +25,7 @@
   min-height: calc(100vh - 155px);
   overflow-y: auto;
 }
+
+.livraison {
+  margin-top: 2em;
+}

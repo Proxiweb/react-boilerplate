@@ -28,6 +28,13 @@ export const createCommande = (commande) => ({
   msgPending: 'Création commande',
 });
 
+export const livreCommandeUtilisateur = (id) => ({
+  type: findActionType('livre_commande_utilisateur', c, 'START'),
+  url: `commande_utilisateurs/${id}/livraison`,
+  method: 'post',
+  datas: {},
+});
+
 export const saveProduit = (produit, msgSuccess: 'Produit sauvegardé') => ({
   type: findActionType('save_produit', c, 'START'),
   url: `produits${produit.id ? `/${produit.id}` : ''}`,

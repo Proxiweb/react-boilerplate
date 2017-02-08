@@ -16,6 +16,7 @@ const importeOffresConst = generateConstants('app/Commande', 'importe_offres');
 const userCommandesConst = generateConstants('app/Commande', 'load_user_commandes');
 const utilisateursConst = generateConstants('app/Commande', 'load_utilisateurs');
 const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
+const livreCommandeUtilisateurConst = generateConstants('app/CommandeEdit', 'livre_commande_utilisateur');
 const supprimerCommandeContenusFournisseurConst = generateConstants('app/Commande', 'supprimer_commande_contenus_fournisseur');
 const relaisConst = generateConstants('app/Commande', 'load_relais');
 const typeProduits = generateConstants('app/Commande', 'load_types_produits');
@@ -33,6 +34,7 @@ export default assign(
   userCommandesConst,
   fournisseursConst,
   supprimerCommandeContenusFournisseurConst,
+  livreCommandeUtilisateurConst,
   importeOffresConst,
   crCdeConst,
   relaisConst,

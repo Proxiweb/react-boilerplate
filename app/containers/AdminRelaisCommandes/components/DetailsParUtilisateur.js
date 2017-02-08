@@ -22,6 +22,7 @@ import styles from './styles.css';
 import DetailCommande from './DetailCommande';
 import DetailCommandeTotal from './DetailCommandeTotal';
 import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
+import LivraisonCommande from './LivraisonCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 class DetailsParUtilisateur extends Component { // eslint-disable-line
@@ -60,7 +61,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
     const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
     const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
-      <div className="row">
+      <div className="row center-md">
         <Helmet
           title={`Commande de ${identite}`}
         />
@@ -99,6 +100,9 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             adresseStellarCommande={commandeStellarAdresse}
           />}
         </div>
+        {!commandeUtilisateur.dateLivraison &&
+          <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />
+        }
         {!commandeUtilisateur.datePaiement && moment(commande.dateCommande).isAfter(moment()) &&
           <div className="col-md-12" style={{ marginTop: '1em' }}>
             <div className="row center-md">

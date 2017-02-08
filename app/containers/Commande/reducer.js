@@ -198,9 +198,27 @@ function commandeReducer(state = initialState, action) {
     }
 
     case c.ASYNC_SUPPRIMER_COMMANDE_CONTENUS_FOURNISSEUR_SUCCESS: {
-      console.log('supprimer_commande_contenus_fournisseur', action);
       const { fournisseurId, commandeId } = action.req.datas;
       return supprimeCommandeContenusFournisseur(state, fournisseurId, commandeId);
+    }
+
+    case c.ASYNC_LIVRE_COMMANDE_UTILISATEUR_SUCCESS: {
+      const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
+      console.log(datas);
+      return update(
+        state,
+        {
+          datas: {
+            entities: {
+              commandeUtilisateurs: {
+                [action.datas.id]: {
+                  $set: datas.entities.commandeUtilisateurs[action.datas.id]
+                }
+              }
+            }
+          }
+        }
+      );
     }
 
     case c.AJOUTER:
