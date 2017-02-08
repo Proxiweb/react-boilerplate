@@ -269,10 +269,12 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
               commandeId={params.commandeId}
               contenus={commande.contenus}
               params={params}
+              expandable={nbreProduits > 0}
               toggleState={this.toggleState}
               utilisateurId={utilisateurId}
               modifiee={commande.modifiee}
               nouvelle={!commande.id}
+              livraisonNotSelected={!commande.livraisonId}
               commandeUtilisateur={commandeUtilisateur}
               autreUtilisateur={
                 autreUtilisateur

@@ -42,6 +42,7 @@ class PanierCollapsable extends Component {
     nouvelle: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
     panierExpanded: PropTypes.bool.isRequired,
+    livraisonNotSelected: PropTypes.bool.isRequired,
   }
 
   static contextTypes = {
@@ -96,6 +97,7 @@ class PanierCollapsable extends Component {
       modifiee,
       nouvelle,
       pending,
+      livraisonNotSelected,
     } = this.props;
 
     const { muiTheme } = this.context;
@@ -156,18 +158,21 @@ class PanierCollapsable extends Component {
             </div>
           </div>
           <div className={styles.action}>
-            { !expanded && (modifiee || nouvelle) &&
-              <RaisedButton
-                fullWidth
-                label={label}
-                labelColor={modifiee ? 'black' : 'white'}
-                backgroundColor={
-                  modifiee
-                  ? muiTheme.palette.warningColor
-                  : muiTheme.palette.primary1Color
-                }
-                icon={<ActionDoneIcon />}
-              />
+            { !expanded &&
+              (modifiee || nouvelle) &&
+              nbreProduits > 0 &&
+              !livraisonNotSelected &&
+                <RaisedButton
+                  fullWidth
+                  label={label}
+                  labelColor={modifiee ? 'black' : 'white'}
+                  backgroundColor={
+                    modifiee
+                    ? muiTheme.palette.warningColor
+                    : muiTheme.palette.primary1Color
+                  }
+                  icon={<ActionDoneIcon />}
+                />
             }
           </div>
           {expandable &&
