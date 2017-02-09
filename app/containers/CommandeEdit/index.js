@@ -22,7 +22,7 @@ import {
   selectParams,
   selectCommandeCommandeUtilisateurs,
   selectCommandeContenus,
-  selectCommandeCommandeContenus,
+  // selectCommandeCommandeContenus,
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
@@ -60,7 +60,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     locationState: PropTypes.object.isRequired,
     commande: PropTypes.object,
     commandeUtilisateurs: PropTypes.array,
-    cdeCommandeContenus: PropTypes.array.isRequired,
+    // cdeCommandeContenus: PropTypes.array.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array,
     authUtilisateurId: PropTypes.string.isRequired,
@@ -88,14 +88,10 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       commandeProduits,
       route,
       router,
-      commandeUtilisateurs,
-      cdeCommandeContenus,
-      commandeContenus,
       init,
       pushState,
       locationState,
       loadCdes,
-      loadCommandeUtilisateur,
       balance,
       authUtilisateurId,
       utilisateurs,
@@ -138,14 +134,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       return;
     }
 
-    const commandeUtilisateur = commandeUtilisateurs.find((cu) => cu.utilisateurId === utilisateurId);
-    if (commandeUtilisateur) {
-      const contenus =
-        cdeCommandeContenus
-          .map((id) => commandeContenus[id])
-          .filter((cc) => cc.utilisateurId === utilisateurId);
-      loadCommandeUtilisateur(assign({}, commandeUtilisateur, { contenus }));
-    }
+    this.loadCommandeExistante(utilisateurId);
 
     const { commandeId, relaiId } = params;
 
@@ -174,6 +163,26 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
     const { commande, params, init } = this.props;
     if (!commande.id) {
       init(params.commandeId);
+    }
+  }
+
+  loadCommandeExistante = (utilisateurId) => {
+    const {
+      commandeUtilisateurs,
+      commandeContenus,
+      loadCommandeUtilisateur,
+    } = this.props;
+
+    const commandeUtilisateur = commandeUtilisateurs.find((cu) =>
+      cu.utilisateurId === utilisateurId
+    );
+    if (commandeUtilisateur) {
+
+      const contenus =
+        commandeUtilisateur.contenus
+          .map((id) => commandeContenus[id])
+          .filter((cc) => cc.utilisateurId === utilisateurId);
+      loadCommandeUtilisateur(assign({}, commandeUtilisateur, { contenus }));
     }
   }
 
@@ -324,7 +333,7 @@ const mapStateToProps = createStructuredSelector({
   commandeProduits: selectCommandeProduits(),
   produitsById: selectProduits(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  cdeCommandeContenus: selectCommandeCommandeContenus(),
+  // cdeCommandeContenus: selectCommandeCommandeContenus(),
   commandeContenus: selectCommandeContenus(),
   authUtilisateurId: selectAuthUtilisateurId(),
   utilisateurs: selectUtilisateurs(),
