@@ -1,5 +1,6 @@
-import { put, select } from 'redux-saga/effects';
-import { takeLatest } from 'redux-saga';
+import { put, select, take } from 'redux-saga/effects';
+import { takeLatest} from 'redux-saga';
+import { push } from 'react-router-redux';
 import c from './constants';
 import { selectCommandeEditDomain } from './selectors';
 import { sauvegarder } from './actions';
@@ -16,7 +17,19 @@ export function* setDistibutionSaga() {
   }
 }
 
+export function* redirectOnAnnuler() {
+  while(1) { // eslint-disable-line
+    try {
+      yield take(c.ASYNC_ANNULER_SUCCESS);
+      window.location = '/';
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 // All sagas to be loaded
 export default [
   setDistibutionSaga,
+  redirectOnAnnuler,
 ];

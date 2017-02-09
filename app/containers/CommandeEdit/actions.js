@@ -24,7 +24,7 @@ export const annuler = (id, commandeId) => ({
   url: `commande_utilisateurs/${id}`,
   method: 'del',
   msgPending: 'Annulation commande',
-  commandeId,
+  datas: { commandeId, id },
 });
 
 export function ajouter(commandeId, offre) {

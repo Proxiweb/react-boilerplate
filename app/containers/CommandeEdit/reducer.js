@@ -88,7 +88,7 @@ const commandeEditReducer = (state = initialState, action) => {
       return update(state, { [action.datas.commandeId]: { $set: assign(action.datas, { modifiee: false }) } });
 
     case c.ASYNC_ANNULER_SUCCESS:
-      return update(state, { [action.req.commandeId]: { $set: commandeVide } });
+      return update(state, { [action.req.datas.commandeId]: { $set: commandeVide } });
 
     case c.LOAD_COMMANDE:
       return update(state, { [action.payload.datas.commandeId]: { $set: assign(action.payload.datas, { modifiee: false }) } });

@@ -42,6 +42,58 @@ const ajouter = (state, action) => {
   });
 };
 
+const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
+  const {
+    commandeUtilisateurs,
+    commandeContenus,
+    commandes,
+  } = state.datas.entities;
+
+  const contenusRestants =
+    Object
+      .keys(commandeContenus)
+      .filter((id) =>
+          commandeUtilisateurs[id] &&
+          !includes(commandeUtilisateurs[id].contenus, id)
+      )
+      .reduce((memo, id) => ({ [id]: commandeContenus[id] }), {});
+
+  console.log(commandeUtilisateurs);
+  const commandeUtilisateursRestants =
+    Object
+      .keys(commandeUtilisateurs)
+      .filter((id) => id !== commandeUtilisateurId)
+      .reduce((memo, id) => {
+        console.log(id);
+        return { [id]: commandeUtilisateurs[id] };
+      }, {});
+
+  const commandeCommandeUtilisateursRestants =
+    commandes[cdeId].commandeUtilisateurs
+      .filter((id) =>
+        id !== commandeUtilisateurId
+      );
+
+  return update(
+    state,
+    {
+      datas: {
+        entities: {
+          commandeUtilisateurs: { $set: commandeUtilisateursRestants },
+          commandeContenus: { $set: contenusRestants},
+          commandes: {
+            [cdeId]: {
+              commandeUtilisateurs: {
+                $set: commandeCommandeUtilisateursRestants,
+              }
+            }
+          }
+        }
+      }
+    }
+  );
+}
+
 const supprimeCommandeContenusFournisseur =
   (state, fournisseurId, commandeId) => {
     const {
@@ -153,6 +205,12 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: [datas.result] } }, pending: { $set: false } });
     }
+
+    case cE.ASYNC_ANNULER_SUCCESS: {
+      const { commandeId, id } = action.req.datas;
+      return annuleCommandeUtilisateur(state, id, commandeId);
+    }
+
     case c.ASYNC_CREATE_COMMANDE_SUCCESS:
     case c.ASYNC_LOAD_COMMANDE_SUCCESS: {
       const datas = normalize(action.datas, schemas.COMMANDES);
