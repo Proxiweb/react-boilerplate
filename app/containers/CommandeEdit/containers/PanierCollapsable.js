@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionDoneIcon from 'material-ui/svg-icons/action/done';
 import AlertWarningIcon from 'material-ui/svg-icons/alert/warning';
@@ -9,6 +10,10 @@ import shader from 'shader';
 import IconButton from 'material-ui/IconButton';
 import KeyboardDownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import KeyboardUpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+
+import {
+  sauvegarder,
+} from 'containers/CommandeEdit/actions';
 
 import {
   selectOffres,
@@ -43,6 +48,7 @@ class PanierCollapsable extends Component {
     pending: PropTypes.bool.isRequired,
     panierExpanded: PropTypes.bool.isRequired,
     livraisonNotSelected: PropTypes.bool.isRequired,
+    sauvegarder: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -98,6 +104,7 @@ class PanierCollapsable extends Component {
       nouvelle,
       pending,
       livraisonNotSelected,
+      commande,
     } = this.props;
 
     const { muiTheme } = this.context;
@@ -172,6 +179,9 @@ class PanierCollapsable extends Component {
                     : muiTheme.palette.primary1Color
                   }
                   icon={<ActionDoneIcon />}
+                  onClick={() =>
+                    this.props.sauvegarder({ ...commande, commandeId, utilisateurId })
+                  }
                 />
             }
           </div>
@@ -208,4 +218,8 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-export default connect(mapStateToProps)(PanierCollapsable);
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  sauvegarder: (datas) => dispatch(sauvegarder(datas)),
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanierCollapsable);

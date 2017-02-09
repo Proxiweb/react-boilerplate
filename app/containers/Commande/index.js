@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Paper from 'material-ui/Paper';
-// import Helmet from 'react-helmet';
+import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 import {
   selectAsyncState,
@@ -108,6 +108,13 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     );
   }
 
+  buildTitleAndMeta = () =>
+    <Helmet
+      title="Proxiweb - Commandes en cours"
+      meta={[
+        { name: 'description', content: 'Commandes proxiweb' },
+      ]}
+    />
 
   render() {
     const {
@@ -124,6 +131,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     if (!buttonClicked && commandes && Object.keys(commandes).length > 0 && typesProduits) {
       return (
         <div className="row">
+          {this.buildTitleAndMeta()}
           <Semainier
             titreCol="Cette semaine"
             commandesIds={this.filterByWeek()}
@@ -178,6 +186,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     if (buttonClicked) {
       return (
         <div className="row center-md">
+          {this.buildTitleAndMeta()}
           <div className="col-md-6">
             <div style={{ margin: 'auto', width: '70px' }}>
               <RefreshIndicator
@@ -196,6 +205,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     if (!commandes) {
       return (
         <div className={`${styles.loader} row`}>
+          {this.buildTitleAndMeta()}
           <Paper className="col-md-12">
             <div style={{ margin: 'auto', width: '70px' }}>
               <RefreshIndicator
@@ -214,6 +224,7 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
     return (
       <div>
+        {this.buildTitleAndMeta()}
         <div className="row center-md">
           <div className="col-md-6">
             <Paper className={`${styles.noCommande}`}>

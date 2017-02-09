@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import moment from 'moment';
@@ -223,17 +224,14 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-    ajouter: (commandeId, offre) => dispatch(ajouter(commandeId, offre)),
-    augmenter: (commandeId, offreId) => dispatch(augmenter(commandeId, offreId)),
-    diminuer: (commandeId, offreId) => dispatch(diminuer(commandeId, offreId)),
-    supprimer: (offreId) => dispatch(supprimer(offreId)),
-    sauvegarder: (datas) => dispatch(sauvegarder(datas)),
-    annuler: (id, commandeId) => dispatch(annuler(id, commandeId)),
-    setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
-  };
-}
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  ajouter,
+  augmenter,
+  diminuer,
+  supprimer,
+  sauvegarder,
+  annuler,
+  setDistibution,
+}, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderValidate);
