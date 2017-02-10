@@ -43,6 +43,21 @@ import { selectPending } from 'containers/App/selectors';
 
 import styles from './OrderValidate.css';
 
+const constStyles = {
+  margin20: {
+    marginTop: 20,
+  },
+  margin40: {
+    marginTop: 40,
+  },
+  minWidth: {
+    minWidth: 44,
+  },
+  textAlignCenter: {
+    textAlign: 'center',
+  },
+};
+
 class OrderValidate extends Component {
   static propTypes = {
     produitsById: PropTypes.object.isRequired,
@@ -92,7 +107,7 @@ class OrderValidate extends Component {
       <div className={styles.validation}>
         <RaisedButton
           label={label}
-          style={{ marginTop: 20 }}
+          style={constStyles.margin20}
           labelColor={commande.modifiee ? 'black' : 'white'}
           backgroundColor={commande.modifiee ? palette.warningColor : palette.primary1Color}
           onClick={() => this.props.sauvegarder(assign(commande, { commandeId, utilisateurId }))}
@@ -117,7 +132,7 @@ class OrderValidate extends Component {
           onClick={() => this.setState({ view: 'distribution' })}
           className={styles.distriButton}
           icon={<EditorIcon />}
-          style={{ minWidth: 44 }}
+          style={constStyles.minWidth}
         />
       </div>
     );
@@ -127,7 +142,7 @@ class OrderValidate extends Component {
     <RaisedButton
       label="Choisissez le jour de distribution"
       icon={<DateRangeIcon />}
-      style={{ marginTop: 20 }}
+      style={constStyles.margin20}
       onClick={() => this.setState({ view: 'distribution' })}
     />;
 
@@ -171,11 +186,11 @@ class OrderValidate extends Component {
   showCancel = () => {
     const { commande, pending } = this.props;
     return (
-      <div style={{ textAlign: 'center' }}>
+      <div style={constStyles.textAlignCenter}>
         <RaisedButton
           label={`${!pending ? 'Annuler ma ' : 'Annulation de la '}commande`}
           secondary
-          style={{ marginTop: 20 }}
+          style={constStyles.margin20}
           onClick={() => this.props.annuler(commande.id, commande.commandeId)}
           icon={<TrashIcon />}
         />
@@ -195,7 +210,7 @@ class OrderValidate extends Component {
     return (<div>
       { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande) }
       { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
-      <div style={{ textAlign: 'center' }}>{view !== 'distribution' && commandeProxiweb.dateCommande && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
+      <div style={constStyles.textAlignCenter}>{view !== 'distribution' && commandeProxiweb.dateCommande && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
       {view === 'panier' && (commande.livraisonId || !commandeProxiweb.dateCommande) && (!commande.id || commande.modifiee) && this.showValidate()}
       {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
       {commande.id && balance !== null && view === 'panier' && (

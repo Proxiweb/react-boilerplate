@@ -3,6 +3,8 @@ import round from 'lodash/round';
 // import memoize from 'lodash/memoize';
 import styles from './AffichePrix.css';
 
+const redColor = { color: 'red' };
+
 export function trouveTarification(tarifications, totalGlobal = 0, totalCommande = 0) {
   const total = totalGlobal + totalCommande;
   // console.log(tarifications.slice().sort((a, b) => a.qteMinRelais < b.qteMinRelais));
@@ -61,7 +63,7 @@ export const detailPrix = (offre, qteCommande, format = 'component') => {
   let ancien = null;
   if (tarif.qteMinRelais !== offre.tarifications[0].qteMinRelais) {
     const t = offre.tarifications[0];
-    ancien = <s style={{ color: 'red' }}>{round((t.prix + t.recolteFond) / 100, 2)} €</s>;
+    ancien = <s style={redColor}>{round((t.prix + t.recolteFond) / 100, 2)} €</s>;
   }
 
   const datas = {
@@ -77,7 +79,7 @@ export const detailPrix = (offre, qteCommande, format = 'component') => {
     <span>
       {descriptionPdt}{' : '}<strong>{prix} €</strong>
       {ancienTarif && ' '}
-      {ancienTarif && <s style={{ color: 'red' }}>{ancienTarif}</s>}
+      {ancienTarif && <s style={redColor}>{ancienTarif}</s>}
     </span>
   );
 };

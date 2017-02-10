@@ -26,6 +26,26 @@ import {
 import OffreDetails from 'components/OffreDetails';
 import styles from './styles.css';
 
+const constStyles = {
+  star: {
+    height: '36px',
+    width: '36px',
+  },
+  margin: {
+    margin: 10
+  },
+  starButton: {
+    height: '48px',
+    width: '48px',
+    minWidth: 'none'
+  },
+  imageStyle: {
+    width: '100%',
+    height: 'auto',
+    maxWidth: 200,
+  },
+}
+
 class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array,
@@ -94,7 +114,7 @@ class DetailOffres extends Component {
               <FlatButton
                 tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
                 onClick={() => this.toggleFav(produitId)}
-                style={{ height: '48px', width: '48px', minWidth: 'none' }}
+                style={constStyles.starButton}
                 hoverColor="white"
                 icon={
                   <StarIcon
@@ -104,7 +124,7 @@ class DetailOffres extends Component {
                     hoverColor={
                       estFavoris ? shader('#ffd203', 0.5) : shader('silver', 0.5)
                     }
-                    style={{ height: '36px', width: '36px' }}
+                    style={constStyles.star}
                   />
                 }
               />
@@ -119,10 +139,10 @@ class DetailOffres extends Component {
           </div>
           {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
           <div className="col-md-10">
-            <div className="row" style={{ margin: 10 }}>
+            <div className="row" style={constStyles.margin}>
               <div className="col-md-6">
-                {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
-                {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
+                {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={constStyles.imageStyle} />}
+                {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={constStyles.imageStyle} />}
               </div>
               <div className="col-md-6">
                 {viewOffre &&

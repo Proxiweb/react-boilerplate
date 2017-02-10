@@ -18,6 +18,18 @@ import {
 } from 'containers/Commande/selectors';
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
+const constStyles = {
+  iconBlack: {
+    fill: 'black',
+  },
+  fullWidth: {
+    width: '100%',
+  },
+  borderBlack: {
+    borderColor: 'black'
+  },
+}
+
 class ProduitSelector extends React.Component {
   static propTypes = {
     utilisateurId: PropTypes.string.isRequired,
@@ -83,9 +95,9 @@ class ProduitSelector extends React.Component {
         {typeProduits && typeProduits.length > 1 && <SelectField
           value={typeProduitId}
           onChange={this.handleChange}
-          iconStyle={{ fill: 'black' }}
-          underlineStyle={{ borderColor: 'black' }}
-          style={{ width: '100%' }}
+          iconStyle={constStyles.iconBlack}
+          underlineStyle={constStyles.borderBlack}
+          style={constStyles.fullWidth}
         >
           {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
         </SelectField>}

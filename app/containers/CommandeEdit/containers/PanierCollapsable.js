@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import ActionDoneIcon from 'material-ui/svg-icons/action/done';
-import AlertWarningIcon from 'material-ui/svg-icons/alert/warning';
 import round from 'lodash/round';
 import shader from 'shader';
 import IconButton from 'material-ui/IconButton';
+import ActionDoneIcon from 'material-ui/svg-icons/action/done';
 import KeyboardDownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import KeyboardUpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import LigneFondsWarning from 'containers/CommandeEdit/components/LigneFondsWarning';
+import LigneFondsOk from 'containers/CommandeEdit/components/LigneFondsOk';
 
 import {
   sauvegarder,
@@ -28,6 +29,16 @@ import OrderValidate from './OrderValidate';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import styles from './styles.css';
+
+const constStyles = {
+  paddingTop0: {
+    paddingTop: 0,
+  },
+  iconExpandableButton: {
+    width: '100%',
+    textAlign: 'right',
+  },
+}
 
 class PanierCollapsable extends Component {
   static propTypes = {
@@ -127,15 +138,8 @@ class PanierCollapsable extends Component {
     if (!expanded) {
       msgPaiement =
         round(totaux.prix + totaux.recolteFond, 2) <= balance
-          ? (<small style={{ color: shader(muiTheme.appBar.color, -0.4) }}>
-            {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}<ActionDoneIcon style={{ verticalAlign: 'middle', color: shader(muiTheme.appBar.color, -0.4) }} />
-            {'\u00A0'}Fonds porte-monnaie suffisants
-          </small>)
-          : (<small style={{ color: muiTheme.palette.warningColor }}>
-            {'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}{'\u00A0'}
-            <AlertWarningIcon style={{ verticalAlign: 'middle', color: muiTheme.palette.warningColor }} />
-            {'\u00A0'}Fonds porte-monnaie insuffisants
-          </small>);
+          ? <LigneFondsOk color={muiTheme.appBar.color} />
+          : <LigneFondsWarning color={muiTheme.palette.warningColor} />;
     }
     let label;
     if (modifiee) {
@@ -189,7 +193,7 @@ class PanierCollapsable extends Component {
             <div className={styles.expand}>
               <IconButton
                 onClick={this.toggleState}
-                style={{ width: '100%', textAlign: 'right' }}
+                style={constStyles.iconExpandableButton}
               >
                 {!expanded && <KeyboardDownIcon />}
                 {expanded && <KeyboardUpIcon />}
@@ -198,7 +202,7 @@ class PanierCollapsable extends Component {
           }
         </div>
         {expanded &&
-          <div style={{ paddingTop: 0 }}>
+          <div style={constStyles.paddingTop0}>
             <OrderValidate
               params={params}
               utilisateurId={utilisateurId}

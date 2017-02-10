@@ -49,6 +49,27 @@ import styles from './styles.css';
 
 import api from 'utils/stellarApi';
 
+const computeStyles = (muiTheme) => ({
+  shoppingCart: {
+    height: 100,
+    width: 100,
+    color: muiTheme.appBar.color,
+  },
+  panierVide: {
+    textAlign: 'left',
+    color: muiTheme.appBar.color,
+  }
+})
+
+const constStyles = {
+  alignRight: {
+    textAlign: 'right',
+  },
+  alignCenter: {
+    textAlign: 'center',
+  }
+}
+
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     typeProduits: PropTypes.array.isRequired,
@@ -241,6 +262,7 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
       autreUtilisateur = utilisateurs[utilisateurId];
     }
 
+    const computedStyles = computeStyles(muiTheme);
     return (
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
@@ -285,13 +307,13 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
           <div className="col-lg-5">
             { (!commande || commande.contenus.length === 0)
               ? <div className={`row ${styles.panel}`}>
-                <div className="col-md-5" style={{ textAlign: 'right' }}>
-                  <ShoppingCart style={{ height: 100, width: 100, color: muiTheme.appBar.color }} />
+                <div className="col-md-5" style={constStyles.alignRight}>
+                  <ShoppingCart style={computeStyles.shoppingCart} />
                 </div>
                 <div className="col-md-5">
-                  <h1 style={{ textAlign: 'left', color: muiTheme.appBar.color }}>Panier vide</h1>
+                  <h1 style={computedStyles.panierVide}>Panier vide</h1>
                 </div>
-                {autreUtilisateur && <div className="col-md-12" style={{ textAlign: 'center' }}>
+                {autreUtilisateur && <div className="col-md-12" style={constStyles.alignCenter}>
                   Commande de {autreUtilisateur.prenom} {autreUtilisateur.nom.toUpperCase()}
                 </div>}
               </div>
