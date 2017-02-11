@@ -98,7 +98,6 @@ class DepotRelais extends Component { // eslint-disable-line
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
     const manqueStr = manque > 0 ? '' : `( manque ${(manque * -1).toFixed(2)} €)`;
     const invalid = montant === null || type === null;
-    console.log(this.state);
     return (
       <Dialog
         title={`Déposer des fonds ( max ${max} €)`}

@@ -94,7 +94,6 @@ class AdminRelaisCommandes extends Component {
   }
 
   buildRightIcon = (commandeId, relaiId, commande) => {
-    console.log(commande.finalisation);
     if (commande.finalisation) return null;
     return (
       <IconMenu iconButtonElement={iconButtonElement}>

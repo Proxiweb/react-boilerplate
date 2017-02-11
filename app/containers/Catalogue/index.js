@@ -29,14 +29,6 @@ class Catalogue extends Component { // eslint-disable-line
     load({ relaiId, jointures: true });
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //
-  // }
-
-  componentWillReceiveProps = (nextProps) => {
-    console.log('props', this.props, nextProps);
-  }
-
   render() {
     const { typeProduits, produits, params, pending } = this.props;
     const { produitId } = params;

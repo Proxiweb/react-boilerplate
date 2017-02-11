@@ -39,7 +39,6 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
       showPorteMonnaie,
       anonRelaiId,
     } = this.props;
-    console.log('render MainDrawer');
     return (
       <Drawer open={open} docked={false} onRequestChange={onRequestChange}>
         {header}

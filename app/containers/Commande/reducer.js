@@ -58,13 +58,11 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
       )
       .reduce((memo, id) => ({ [id]: commandeContenus[id] }), {});
 
-  console.log(commandeUtilisateurs);
   const commandeUtilisateursRestants =
     Object
       .keys(commandeUtilisateurs)
       .filter((id) => id !== commandeUtilisateurId)
       .reduce((memo, id) => {
-        console.log(id);
         return { [id]: commandeUtilisateurs[id] };
       }, {});
 
@@ -275,7 +273,6 @@ function commandeReducer(state = initialState, action) {
 
     case c.ASYNC_LIVRE_COMMANDE_UTILISATEUR_SUCCESS: {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
-      console.log(datas);
       return update(
         state,
         {

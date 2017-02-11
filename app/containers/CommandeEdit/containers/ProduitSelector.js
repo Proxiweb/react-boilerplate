@@ -80,7 +80,6 @@ class ProduitSelector extends React.Component {
     const muiTheme = this.context.muiTheme;
 
     if (!produits) return null;
-    console.log('render ProduitSelector');
     const listeProduits =
       typeProduitId !== 'favoris'
         ? produits.filter((p) => p.enStock)

@@ -7,7 +7,6 @@ const redColor = { color: 'red' };
 
 export function trouveTarification(tarifications, totalGlobal = 0, totalCommande = 0) {
   const total = totalGlobal + totalCommande;
-  // console.log(tarifications.slice().sort((a, b) => a.qteMinRelais < b.qteMinRelais));
   return tarifications
           .slice()
           .sort((a, b) => a.qteMinRelais < b.qteMinRelais)

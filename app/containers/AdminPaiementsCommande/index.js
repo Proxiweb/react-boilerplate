@@ -149,11 +149,9 @@ class PaiementsCommande extends Component {
 
                     let iconColor = 'silver';
                     if (paiements[ut.id]) {
-                      console.log(`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`);
                       iconColor = totaux[ut.id] <= totalAvecDepot
                         ? 'green'
                         : 'orange';
-                      console.log(totaux[ut.id], totalAvecDepot, iconColor);
                     }
                     return (
                       <ListItem
