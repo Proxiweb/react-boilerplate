@@ -20,6 +20,14 @@ export const loadCommande = (id, query) => ({
   msgPending: 'Chargement commandes',
 });
 
+export const deleteCommande = (id) => ({
+  type: findActionType('delete_commande', c, 'START'),
+  url: `commandes/${id}`,
+  method: 'del',
+  datas: { id },
+  msgSuccess: 'Commande supprimée',
+});
+
 export const createCommande = (commande) => ({
   type: findActionType('create_commande', c, 'START'),
   url: `commandes${commande.id ? `/${commande.id}` : ''}`,

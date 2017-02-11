@@ -6,7 +6,7 @@ import c from 'containers/Commande/constants';
 export function* redirectOnCommandeCreated() {
   while(1) {
     yield take(c.ASYNC_CREATE_COMMANDE_SUCCESS);
-    yield put(push('/'));
+    window.location = '/';
   }
 }
 

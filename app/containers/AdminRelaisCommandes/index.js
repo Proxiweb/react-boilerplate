@@ -12,6 +12,7 @@ import {
   loadFournisseurs,
   loadUtilisateurs,
   loadRelais,
+  deleteCommande,
 } from 'containers/Commande/actions';
 
 import {
@@ -36,7 +37,7 @@ const SelectableList = makeSelectable(List);
 const iconButtonElement = (
   <IconButton
     touch
-    tooltip="more"
+    tooltip="Plus..."
     tooltipPosition="bottom-left"
   >
     <MoreVertIcon color="gray" />
@@ -81,8 +82,10 @@ class AdminRelaisCommandes extends Component {
     this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/edit`);
   }
 
-  removeCommande = () => {
-
+  removeCommande = (id) => {
+    if (confirm('Supprimer cette commande')) {
+      this.props.deleteCommande(id);
+    }
   }
 
   handleChangeList = (event, value) => {
@@ -90,19 +93,28 @@ class AdminRelaisCommandes extends Component {
     this.props.pushState(`/admin/relais/${relaiId}/commandes/${value}${action === 'edit' ? '/edit' : ''}`);
   }
 
-  buildRightIcon = (commandeId, relaiId) =>
-    <IconMenu iconButtonElement={iconButtonElement}>
-      <MenuItem
-        onClick={
-          () => this.props.pushState(
-            `/admin/relais/${relaiId}/commandes/${commandeId}/edit`
-          )
+  buildRightIcon = (commandeId, relaiId, commande) => {
+    console.log(commande.finalisation);
+    if (commande.finalisation) return null;
+    return (
+      <IconMenu iconButtonElement={iconButtonElement}>
+        <MenuItem
+          onClick={
+            () => this.props.pushState(
+              `/admin/relais/${relaiId}/commandes/${commandeId}/edit`
+            )
+          }
+          >
+          Modifier
+        </MenuItem>
+        { commande.commandeUtilisateurs.length === 0 &&
+          <MenuItem onClick={() => this.removeCommande(commandeId)}>
+            Supprimer
+          </MenuItem>
         }
-      >
-        Modifier
-      </MenuItem>
-      <MenuItem>Supprimer</MenuItem>
-    </IconMenu>
+      </IconMenu>
+    );
+  }
 
   render() {
     const { commandes, params, relais } = this.props;
@@ -142,7 +154,7 @@ class AdminRelaisCommandes extends Component {
                     <CommandeListeTypesProduits commande={commandes[key]} />
                   }
                   value={key}
-                  rightIconButton={this.buildRightIcon(key, relais.id)}
+                  rightIconButton={this.buildRightIcon(key, relais.id, commandes[key])}
                 />
             )}
           </SelectableList>
@@ -177,6 +189,7 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   loadCommandes,
   loadUtilisateurs,
   loadFournisseurs,
+  deleteCommande,
   loadRelais,
   pushState: push,
 }, dispatch);

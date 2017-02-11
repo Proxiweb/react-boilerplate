@@ -9,6 +9,7 @@ import generateConstants from 'utils/asyncSagaConstants';
 const commandesConst = generateConstants('app/Commande', 'load_commandes');
 const commandeConst = generateConstants('app/Commande', 'load_commande');
 const crCdeConst = generateConstants('app/Commande', 'create_commande');
+const deleteConst = generateConstants('app/Commande', 'delete_commande');
 const savePdtConst = generateConstants('app/Commande', 'save_produit');
 const changePhotoConst = generateConstants('app/Commande', 'change_photo_produit');
 const saveOffreConst = generateConstants('app/Commande', 'save_offre');
@@ -36,6 +37,7 @@ export default assign(
   supprimerCommandeContenusFournisseurConst,
   livreCommandeUtilisateurConst,
   importeOffresConst,
+  deleteConst,
   crCdeConst,
   relaisConst,
   utilisateursConst,

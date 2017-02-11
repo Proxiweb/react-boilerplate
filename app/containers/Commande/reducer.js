@@ -216,6 +216,19 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas, schemas.COMMANDES);
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) }, result: { $push: [datas.result] } }, pending: { $set: false } });
     }
+
+    case c.ASYNC_DELETE_COMMANDE_SUCCESS: {
+      const { id } = action.req.datas;
+      const { commandes } = state.datas.entities;
+      const commandesRestantes =
+        Object.keys(commandes)
+              .reduce((memo, key) =>
+                (key !== id ? { ...memo, [key]: commandes[key] } : memo)
+              , {});
+
+      return update(state, { datas: { entities: { commandes: { $set: commandesRestantes} } } });
+    }
+
     case c.ASYNC_LOAD_RELAIS_SUCCESS: {
       const datas = normalize(action.datas.relais, arrayOf(schemas.RELAIS));
       return update(state, { datas: { entities: { $set: merge(state.datas.entities, datas.entities) } }, pending: { $set: false } });
