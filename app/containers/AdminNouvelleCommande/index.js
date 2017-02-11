@@ -5,7 +5,6 @@ import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
 import { loadFournisseurs, createCommande, loadRelais } from 'containers/Commande/actions';
 import {
@@ -40,7 +39,6 @@ class NouvelleCommande extends Component { // eslint-disable-line
     cdeFourns: [],
     parametres: {},
     distributions: [],
-    confirmDestroyOpen: false,
   }
 
   componentDidMount() {
@@ -159,18 +157,6 @@ class NouvelleCommande extends Component { // eslint-disable-line
     this.props.create(commande);
   }
 
-  handleOpen= () => {
-    this.setState({ ...this.state, confirmDestroyOpen: true });
-  }
-
-  handleClose = () => {
-    this.setState({ ...this.state, confirmDestroyOpen: false });
-  }
-
-  handleDestroy = () => {
-    this.handleClose();
-  }
-
   render() {
     const { fournisseurs, commande, commandeUtilisateurs } = this.props;
     const { cdeFourns, parametres, distributions, confirmDestroyOpen } = this.state;
@@ -208,7 +194,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
               </Tab>
             </Tabs>
             <div className="row center-md">
-              <div className="col-md-4">
+              <div className="col-md-6">
                 <RaisedButton
                   primary
                   label={`${commande && commande.id ? 'Modifier' : 'Créer'} cette commande`}
@@ -216,38 +202,6 @@ class NouvelleCommande extends Component { // eslint-disable-line
                   fullWidth
                   disabled={!this.validate()}
                 />
-              </div>
-              <div className="col-md-4">
-                <RaisedButton
-                  secondary
-                  label="Supprimer cette commande"
-                  disabled={!commandeUtilisateurs || commandeUtilisateurs.length > 0}
-                  onClick={() => this.handleOpen()}
-                  fullWidth
-                />
-                <Dialog
-                  title="Supprimer une commande"
-                  actions={
-                    [
-                      <FlatButton
-                        label="Annuler"
-                        primary
-                        onTouchTap={this.handleClose}
-                      />,
-                      <FlatButton
-                        label="Supprimer"
-                        primary
-                        keyboardFocused
-                        onTouchTap={this.handleDestroy}
-                      />,
-                    ]
-                  }
-                  modal
-                  open={confirmDestroyOpen}
-                  onRequestClose={this.handleClose}
-                >
-                  Confirmez-vous la suppression de la commande ?
-                </Dialog>
               </div>
             </div>
           </Paper>
