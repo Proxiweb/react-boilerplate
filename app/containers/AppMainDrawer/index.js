@@ -24,6 +24,11 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
     logout: PropTypes.func.isRequired,
     anonRelaiId: PropTypes.string,
   }
+
+  shouldComponentUpdate = (nextProps) =>
+    this.props.user !== nextProps.user ||
+    this.props.open !== nextProps.open;
+
   render() {
     const {
       open,
@@ -34,7 +39,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
       showPorteMonnaie,
       anonRelaiId,
     } = this.props;
-
+    console.log('render MainDrawer');
     return (
       <Drawer open={open} docked={false} onRequestChange={onRequestChange}>
         {header}

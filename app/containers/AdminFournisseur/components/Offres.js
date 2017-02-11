@@ -10,6 +10,7 @@ import {
 import Offre from './Offre';
 import OffreFormContainer from './OffreFormContainer';
 import OffresTopBar from './OffresTopBar';
+import styles from './styles.css';
 
 class Offres extends Component {
   static propTypes = {

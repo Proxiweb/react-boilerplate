@@ -10,7 +10,14 @@ import Paper from 'material-ui/Paper';
 import { selectRelais } from 'containers/AdminRelais/selectors';
 import { loadRelais } from 'containers/AdminRelais/actions';
 import legumes from './legumes.jpg';
-// import styles from './styles.css';
+import styles from './styles.css';
+
+const constStyles  = {
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  }
+};
 
 class AccueilAdherent extends Component {
   static propTypes = {
@@ -44,16 +51,16 @@ class AccueilAdherent extends Component {
         />
         <div className="col-md-8">
           {ceRelais &&
-            <Paper zDepth={2} style={{ padding: '1em' }}>
+            <Paper zDepth={2} style={styles.paper}>
               <div className="row center-md">
                 <div className="col-md-2">
-                  <img src={legumes} alt="legumes" style={{ border: 'solid 1px gray' }} />
+                  <img src={legumes} alt="legumes" style={styles.img} />
                 </div>
                 <div className="col-md-8">
                   <h1>Relais ProxiWeb {ceRelais.nom}</h1>
                   <p>{ceRelais.adresseComplete}</p>
                   <p
-                    style={{ padding: '1em', border: 'solid 1px silver', borderRadius: '5px 5px' }}
+                    style={styles.presentation}
                     dangerouslySetInnerHTML={{ __html: ceRelais.presentation }} // eslint-disable-line
                   />
                   <RaisedButton
@@ -69,13 +76,13 @@ class AccueilAdherent extends Component {
               </div>
             </Paper>}
           {!ceRelais &&
-            <Paper style={{ minHeight: '250px' }}>
+            <Paper style={styles.refresh}>
               <RefreshIndicator
                 size={70}
                 left={0}
                 top={20}
                 status="loading"
-                style={{ display: 'inline-block', position: 'relative' }}
+                style={constStyles.refresh}
               />
             </Paper>
           }

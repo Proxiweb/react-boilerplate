@@ -73,6 +73,15 @@ class PanierCollapsable extends Component {
 
   state = {
     expanded: false,
+    first: true,
+  }
+
+  componentDidMount = () =>
+    this.setState({ ...this.state, first: false })
+
+  shouldComponentUpdate = (nextProps) => {
+    console.log('should');
+    return true;
   }
 
   buildTitle = (nbreProduits, panierExpanded) => {
@@ -120,7 +129,7 @@ class PanierCollapsable extends Component {
 
     const { muiTheme } = this.context;
     const { expanded } = this.state;
-
+    console.log('render PanierCollapsable');
     const contenusCommande = contenus.map((contenu) =>
       // quand le contenu vient d'être ajouté, contenu est un objet sans id
       // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id]

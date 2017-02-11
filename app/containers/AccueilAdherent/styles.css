@@ -12,3 +12,21 @@
 .nouvelleCommande {
   background-color: transparent;
 }
+
+.paper {
+  padding: '1em';
+}
+
+.img {
+  border: solid 1px gray;
+}
+
+.presentation {
+  padding: 1em;
+  border: solid 1px silver;
+  border-radius: 5px 5px;
+}
+
+.refresh {
+  min-height: 250px;
+}
