@@ -26,6 +26,7 @@ export const createCommande = (commande) => ({
   method: (commande.id ? 'put' : 'post'),
   datas: { ...commande },
   msgPending: 'Création commande',
+  msgSuccess: 'Commande crée'
 });
 
 export const livreCommandeUtilisateur = (id) => ({
