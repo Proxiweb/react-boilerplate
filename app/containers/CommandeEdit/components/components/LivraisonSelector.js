@@ -25,7 +25,7 @@ export const buildHoursRanges = (start, end, range = 60) => {
 const getStyles = (props, context) => ({
   selected: {
     borderLeft: `solid 5px ${context.muiTheme.appBar.color}`,
-    backgroundColor: shader(muiTheme.appBar.color, +0.6),
+    backgroundColor: shader(context.muiTheme.appBar.color, +0.6),
   }
 });
 
