@@ -80,20 +80,28 @@ class AdminRelais extends Component {
     const admin = includes(roles, 'ADMIN');
 
     return (<div className="row">
-      <div className={classnames('col-md-2', styles.panel)}>
-        <SelectableList value={relaiId} onChange={this.handleChangeList}>
-          {relais
-            .filter((r) => admin || r.id === authRelaiId)
-            .map((rel, idx) =>
-              <ListItem
-                key={idx}
-                primaryText={rel.nom.toUpperCase()}
-                value={rel.id}
-              />
-          )}
-        </SelectableList>
-      </div>
-      <div className={classnames('col-md-10', styles.panel)}>
+      { includes(roles, 'ADMIN') &&
+        <div className={classnames('col-md-2', styles.panel)}>
+          <SelectableList value={relaiId} onChange={this.handleChangeList}>
+            {relais
+              .filter((r) => admin || r.id === authRelaiId)
+              .map((rel, idx) =>
+                <ListItem
+                  key={idx}
+                  primaryText={rel.nom.toUpperCase()}
+                  value={rel.id}
+                />
+            )}
+          </SelectableList>
+        </div>
+      }
+      <div
+        className={
+          classnames({
+            'col-md-10': includes(roles, 'ADMIN'),
+            'col-md-12': !includes(roles, 'ADMIN'),
+          }, styles.panel)}
+      >
         <div className="row end-md">
           <div className="col-md-12">
             {relaisSelected &&

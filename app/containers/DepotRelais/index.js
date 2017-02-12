@@ -34,7 +34,7 @@ class DepotRelais extends Component { // eslint-disable-line
 
     this.state = {
       ...this.state,
-      type: props.roles.includes('RELAI_ADMIN') ? 'especes' : null,
+      type: includes(props.roles, 'RELAI_ADMIN') ? 'especes' : null,
       montant: null,
       info: null,
       depotEnCours: false,
