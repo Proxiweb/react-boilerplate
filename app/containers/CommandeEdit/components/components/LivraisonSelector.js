@@ -26,7 +26,7 @@ const getStyles = (props, context) => ({
   selected: {
     borderLeft: `solid 5px ${context.muiTheme.appBar.color}`,
     backgroundColor: shader(context.muiTheme.appBar.color, +0.6),
-  }
+  },
 });
 
 class LivraisonSelector extends Component { // eslint-disable-line
@@ -45,7 +45,6 @@ class LivraisonSelector extends Component { // eslint-disable-line
   render() {
     const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons, relais } = this.props;
 
-    const muiTheme = this.context.muiTheme;
     const range = relais.rangeDistribMinutes;
     const comptutedStyles = getStyles(this.props, this.context);
     return (

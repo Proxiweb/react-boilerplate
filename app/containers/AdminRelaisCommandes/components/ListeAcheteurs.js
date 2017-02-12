@@ -133,13 +133,13 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
-          {(!stellarKeys || !stellarKeys.adresse || !stellarKeys.secret)&& <p>Parametrez Proxiweb</p>}
+          {stellarKeys && (stellarKeys.adresse || stellarKeys.secret) && <p>Parametrez Proxiweb</p>}
           {!depot && params.utilisateurId &&
             <RaisedButton
               primary
               fullWidth
               label="Deposer des fonds"
-              disabled={!stellarKeys.adresse || !stellarKeys.secret}
+              disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
               onClick={() => this.setState({ ...this.state, depot: true })}
             />
           }

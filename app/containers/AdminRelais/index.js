@@ -143,6 +143,7 @@ class AdminRelais extends Component {
           <InfosRelais
             relais={relaisSelected}
             params={params}
+            test="5"
           />}
         {viewSelected === 'adherents' &&
           <div className="row">
