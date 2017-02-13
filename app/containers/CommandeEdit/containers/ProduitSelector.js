@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { push } from 'react-router-redux';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import classnames from 'classnames';
@@ -26,9 +27,9 @@ const constStyles = {
     width: '100%',
   },
   borderBlack: {
-    borderColor: 'black'
+    borderColor: 'black',
   },
-}
+};
 
 class ProduitSelector extends React.Component {
   static propTypes = {
@@ -91,32 +92,34 @@ class ProduitSelector extends React.Component {
       <div
         className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.panelproduits)}
       >
-        {typeProduits && typeProduits.length > 1 && <SelectField
-          value={typeProduitId}
-          onChange={this.handleChange}
-          iconStyle={constStyles.iconBlack}
-          underlineStyle={constStyles.borderBlack}
-          style={constStyles.fullWidth}
-        >
-          {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
-        </SelectField>}
-        {listeProduits && (
-          <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
-            {listeProduits.map((pdt, idx) => (
-              <ListItem
-                key={idx}
-                onClick={() => this.navigateTo(pdt.id)}
-                className={styles.pdtSelected}
-                style={
-                  produitId && pdt.id === produitId ?
-                  { fontSize: '0.9em', borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
-                  { fontSize: '0.9em', borderLeft: 'none' }}
-              >
-                {pdt.nom.toUpperCase()}
-              </ListItem>
-              ))}
-          </List>
-          )}
+        <Paper style={{ padding: '0 5px' }}>
+          {typeProduits && (typeProduits.length > 1 || auth.produitsFavoris.length > 0) && <SelectField
+            value={typeProduitId}
+            onChange={this.handleChange}
+            iconStyle={constStyles.iconBlack}
+            underlineStyle={constStyles.borderBlack}
+            style={constStyles.fullWidth}
+          >
+            {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
+          </SelectField>}
+          {listeProduits && (
+            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
+              {listeProduits.map((pdt, idx) => (
+                <ListItem
+                  key={idx}
+                  onClick={() => this.navigateTo(pdt.id)}
+                  className={styles.pdtSelected}
+                  style={
+                    produitId && pdt.id === produitId ?
+                    { fontSize: '0.9em', borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
+                    { fontSize: '0.9em', borderLeft: 'none' }}
+                >
+                  {pdt.nom.toUpperCase()}
+                </ListItem>
+                ))}
+            </List>
+            )}
+        </Paper>
       </div>
     );
   }

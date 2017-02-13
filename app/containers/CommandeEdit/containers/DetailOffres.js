@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 import includes from 'lodash/includes';
 import shader from 'shader';
 import MediaQuery from 'components/MediaQuery';
@@ -32,19 +33,19 @@ const constStyles = {
     width: '36px',
   },
   margin: {
-    margin: 10
+    margin: 10,
   },
   starButton: {
     height: '48px',
     width: '48px',
-    minWidth: 'none'
+    minWidth: 'none',
   },
   imageStyle: {
     width: '100%',
     height: 'auto',
     maxWidth: 200,
   },
-}
+};
 
 class DetailOffres extends Component {
   static propTypes = {
@@ -107,102 +108,104 @@ class DetailOffres extends Component {
 
     const estFavoris = auth.produitsFavoris.find((item) => item === produitId);
     return (
-      <div className={styles.offres}>
-        <div className="row">
-          <div className={`col-md-2 ${styles.favoris}`}>
-            {viewOffre &&
+      <div className={styles.offreso}>
+        <Paper>
+          <div className="row">
+            <div className={`col-md-2 ${styles.favoris}`}>
+              {viewOffre &&
+                <FlatButton
+                  tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
+                  onClick={() => this.toggleFav(produitId)}
+                  style={constStyles.starButton}
+                  hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
+                  title="Ajouter aux favoris"
+                  icon={
+                    <StarIcon
+                      color={
+                        estFavoris ? '#ffd203' : 'silver'
+                      }
+                      style={constStyles.star}
+                    />
+                  }
+                />
+              }
+            </div>
+            <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
               <FlatButton
-                tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
-                onClick={() => this.toggleFav(produitId)}
-                style={constStyles.starButton}
-                hoverColor="white"
-                icon={
-                  <StarIcon
-                    color={
-                      estFavoris ? '#ffd203' : 'silver'
-                    }
-                    hoverColor={
-                      estFavoris ? shader('#ffd203', 0.5) : shader('silver', 0.5)
-                    }
-                    style={constStyles.star}
-                  />
-                }
+                onClick={() => this.setState((oldState) => ({ viewOffre: !oldState.viewOffre }))}
+                primary
+                hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
+                label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
+                title={viewOffre ? 'Afficher les infos fournisseur' : 'Afficher les produits'}
               />
-            }
-          </div>
-          <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
-            <FlatButton
-              onClick={() => this.setState((oldState) => ({ viewOffre: !oldState.viewOffre }))}
-              primary
-              label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
-            />
-          </div>
-          {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
-          <div className="col-md-10">
-            <div className="row" style={constStyles.margin}>
-              <div className="col-md-6">
-                {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={constStyles.imageStyle} />}
-                {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={constStyles.imageStyle} />}
-              </div>
-              <div className="col-md-6">
-                {viewOffre &&
-                  <p
-                    dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
-                  />
-                }
-                {!viewOffre &&
-                  <p
-                    dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} // eslint-disable-line
-                  />
-                }
+            </div>
+            {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
+            <div className="col-md-10">
+              <div className="row" style={constStyles.margin}>
+                <div className="col-md-6">
+                  {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={constStyles.imageStyle} />}
+                  {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={constStyles.imageStyle} />}
+                </div>
+                <div className="col-md-6">
+                  {viewOffre &&
+                    <p
+                      dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
+                    />
+                  }
+                  {!viewOffre &&
+                    <p
+                      dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} // eslint-disable-line
+                    />
+                  }
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        { viewOffre && offres.map((offre, idx) => {
-          const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
-          const enStock = offre.stock === null || offre.stock > 0;
+          { viewOffre && offres.map((offre, idx) => {
+            const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
+            const enStock = offre.stock === null || offre.stock > 0;
 
-          const offreCommande = contenus.find((cont) => cont.offreId === offre.id);
-          const qteCommande = offreCommande ? offreCommande.quantite : 0;
-          const tR = offre.tarifications.length > 1;
+            const offreCommande = contenus.find((cont) => cont.offreId === offre.id);
+            const qteCommande = offreCommande ? offreCommande.quantite : 0;
+            const tR = offre.tarifications.length > 1;
 
-          return (
-            <div key={idx} className={`row ${styles.offre}`}>
-              <div className="col-md-12">
-                <MediaQuery query="(max-device-width: 1600px)">
-                  <OffreDetails
-                    typeProduit={typeProduit}
-                    offre={offre}
-                    qteCommande={qteCommande}
-                    subTitle="Tarif dégressif (cliquez pour plus de détails)"
-                    onClick={() =>
-                      this.props.ajouter(
-                        commandeId,
-                        { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
-                      )
-                    }
-                    expandable={tR}
-                  />
-                </MediaQuery>
-                <MediaQuery query="(min-device-width: 1600px)">
-                  <OffreDetails
-                    typeProduit={typeProduit}
-                    offre={offre}
-                    qteCommande={qteCommande}
-                    subTitle="Tarif dégressif (+ infos...)"
-                    onClick={() =>
-                      this.props.ajouter(
-                        commandeId,
-                        { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
-                      )
-                    }
-                    expandable={tR}
-                  />
-                </MediaQuery>
-              </div>
-            </div>);
-        })}
+            return (
+              <div key={idx} className={`row ${styles.offre}`}>
+                <div className="col-md-12">
+                  <MediaQuery query="(max-device-width: 1600px)">
+                    <OffreDetails
+                      typeProduit={typeProduit}
+                      offre={offre}
+                      qteCommande={qteCommande}
+                      subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                      onClick={() =>
+                        this.props.ajouter(
+                          commandeId,
+                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                        )
+                      }
+                      expandable={tR}
+                    />
+                  </MediaQuery>
+                  <MediaQuery query="(min-device-width: 1600px)">
+                    <OffreDetails
+                      typeProduit={typeProduit}
+                      offre={offre}
+                      qteCommande={qteCommande}
+                      subTitle="Tarif dégressif (+ infos...)"
+                      onClick={() =>
+                        this.props.ajouter(
+                          commandeId,
+                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
+                        )
+                      }
+                      expandable={tR}
+                    />
+                  </MediaQuery>
+                </div>
+              </div>);
+          })}
+        </Paper>
       </div>
     );
   }

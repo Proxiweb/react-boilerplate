@@ -237,7 +237,10 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 }
 
 const mapStateToProps = createStructuredSelector({
+  // fonctionne sur homepage sans passer par le router params{ relaiId: 'xxxx' }
+  // est passé en props, fonctionne aussi avec le routage /relais/xxx/commandes
   commandes: selectCommandesRelais(),
+
   livraisons: selectLivraisons(),
   commandesUtilisateurs: selectCommandesUtilisateurs(),
   relaiId: selectRelaisId(),

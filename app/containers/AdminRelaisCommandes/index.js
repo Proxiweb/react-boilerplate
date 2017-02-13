@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import moment from 'moment';
 import classnames from 'classnames';
 
@@ -20,11 +21,15 @@ import {
   selectCommandeId,
   selectRelaisSelected,
 } from 'containers/Commande/selectors';
+
 import IconButton from 'material-ui/IconButton';
-import AddIcon from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import HistoryIcon from 'material-ui/svg-icons/action/history';
+import SearchIcon from 'material-ui/svg-icons/action/search';
+import DoneIcon from 'material-ui/svg-icons/action/done';
+
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
@@ -53,9 +58,17 @@ class AdminRelaisCommandes extends Component {
     loadFournisseurs: PropTypes.func.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
     loadRelais: PropTypes.func.isRequired,
+    deleteCommande: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      typeCommandeListees: 0,
+    };
   }
 
   componentDidMount() {
@@ -71,6 +84,10 @@ class AdminRelaisCommandes extends Component {
     });
     this.props.loadFournisseurs();
     this.props.loadUtilisateurs({ relaiId });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('props', nextProps);
   }
 
   newCommande = () => {
@@ -103,7 +120,7 @@ class AdminRelaisCommandes extends Component {
               `/admin/relais/${relaiId}/commandes/${commandeId}/edit`
             )
           }
-          >
+        >
           Modifier
         </MenuItem>
         { commande.commandeUtilisateurs.length === 0 &&
@@ -118,6 +135,7 @@ class AdminRelaisCommandes extends Component {
   render() {
     const { commandes, params, relais } = this.props;
     const { action, commandeId } = params;
+    console.log('render', commandes);
     if (!commandes) return null;
     const commande = commandes ? commandes[commandeId] : null;
 
@@ -135,7 +153,7 @@ class AdminRelaisCommandes extends Component {
               </FloatingActionButton>
             }
           </div>
-          <SelectableList value={commandeId} onChange={this.handleChangeList}>
+          <SelectableList value={commandeId} onChange={this.handleChangeList} className={styles.liste}>
             {Object.keys(commandes)
               .sort((key1, key2) =>
                 !commandes[key1].dateCommande ||
@@ -157,6 +175,23 @@ class AdminRelaisCommandes extends Component {
                 />
             )}
           </SelectableList>
+          <BottomNavigation selectedIndex={this.state.typeCommandeListees}>
+            <BottomNavigationItem
+              label="Actives"
+              icon={<DoneIcon />}
+              onTouchTap={() => this.setState({ typeCommandeListees: 0 })}
+            />
+            <BottomNavigationItem
+              label="Récentes"
+              icon={<HistoryIcon />}
+              onTouchTap={() => this.setState({ typeCommandeListees: 1 })}
+            />
+            <BottomNavigationItem
+              label="Chercher"
+              icon={<SearchIcon />}
+              onTouchTap={() => this.setState({ typeCommandeListees: 2 })}
+            />
+          </BottomNavigation>
         </div>
         <div
           className={

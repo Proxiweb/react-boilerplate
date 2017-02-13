@@ -2,13 +2,8 @@
   border-left: 4px solid black;
 }
 
-.panelproduits,
 .produits {
   background-color: white;
-}
-
-.panelproduits {
-  border: solid 1px gray;
 }
 
 .produitsScr {
@@ -18,11 +13,6 @@
 }
 
 .nonDispo { color: red; }
-
-.offres {
-  background-color: white;
-  border: solid 1px gray;
-}
 
 .offre {
   margin: 10px;
@@ -34,7 +24,7 @@
 }
 
 .fournisseurSwitch {
-  padding: 5px;
+  padding: 5px 20px;
   text-align: right;
 }
 

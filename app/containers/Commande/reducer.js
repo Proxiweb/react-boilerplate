@@ -62,15 +62,11 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
     Object
       .keys(commandeUtilisateurs)
       .filter((id) => id !== commandeUtilisateurId)
-      .reduce((memo, id) => {
-        return { [id]: commandeUtilisateurs[id] };
-      }, {});
+      .reduce((memo, id) => ({ [id]: commandeUtilisateurs[id] }), {});
 
   const commandeCommandeUtilisateursRestants =
     commandes[cdeId].commandeUtilisateurs
-      .filter((id) =>
-        id !== commandeUtilisateurId
-      );
+      .filter((id) => id !== commandeUtilisateurId);
 
   return update(
     state,
@@ -78,19 +74,19 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
       datas: {
         entities: {
           commandeUtilisateurs: { $set: commandeUtilisateursRestants },
-          commandeContenus: { $set: contenusRestants},
+          commandeContenus: { $set: contenusRestants },
           commandes: {
             [cdeId]: {
               commandeUtilisateurs: {
                 $set: commandeCommandeUtilisateursRestants,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     }
   );
-}
+};
 
 const supprimeCommandeContenusFournisseur =
   (state, fournisseurId, commandeId) => {
@@ -118,16 +114,15 @@ const supprimeCommandeContenusFournisseur =
           commandeContenus[ccId].commandeUtilisateurId
         )
       )
-      .reduce((memo, cuId) => {
-        const commandeUtilisateur = commandeUtilisateurs[cuId];
-        memo[cuId] = {
-          ...commandeUtilisateur,
-          contenus: commandeUtilisateur.contenus.filter((id) =>
+      .reduce((memo, cuId) => ({
+        ...memo,
+        [cuId]: {
+          ...commandeUtilisateurs[cuId],
+          contenus: commandeUtilisateurs[cuId].contenus.filter((id) =>
             !includes(commandeContenusASupprimerIds, id)
-          )
-        }
-        return memo;
-      }, {});
+          ),
+        },
+      }), {});
 
     const commandeContenusModifiee =
       Object.keys(commandeContenus)
@@ -137,10 +132,10 @@ const supprimeCommandeContenusFournisseur =
             id
           )
         )
-        .reduce((memo, id) => {
-          memo[id] = commandeContenus[id];
-          return memo;
-        }, {});
+        .reduce((memo, id) => ({
+          ...memo,
+          [id]: commandeContenus[id],
+        }), {});
 
     return update(
       state,
@@ -148,16 +143,16 @@ const supprimeCommandeContenusFournisseur =
         datas: {
           entities: {
             commandeContenus: {
-              $set: { ...commandeContenus, ...commandeContenusModifiee},
+              $set: { ...commandeContenus, ...commandeContenusModifiee },
             },
             commandeUtilisateurs: {
-              $set: { ...commandeUtilisateurs, ...commandeUtilisateursModifiee}
-            }
-          }
-        }
-      }
-    )
-  }
+              $set: { ...commandeUtilisateurs, ...commandeUtilisateursModifiee },
+            },
+          },
+        },
+      },
+    );
+  };
 
 // const majNouvelAchat = (state, commandeContenu) => {
 //   const majCu = update(
@@ -224,7 +219,7 @@ function commandeReducer(state = initialState, action) {
                 (key !== id ? { ...memo, [key]: commandes[key] } : memo)
               , {});
 
-      return update(state, { datas: { entities: { commandes: { $set: commandesRestantes} } } });
+      return update(state, { datas: { entities: { commandes: { $set: commandesRestantes } } } });
     }
 
     case c.ASYNC_LOAD_RELAIS_SUCCESS: {
@@ -280,12 +275,12 @@ function commandeReducer(state = initialState, action) {
             entities: {
               commandeUtilisateurs: {
                 [action.datas.id]: {
-                  $set: datas.entities.commandeUtilisateurs[action.datas.id]
-                }
-              }
-            }
-          }
-        }
+                  $set: datas.entities.commandeUtilisateurs[action.datas.id],
+                },
+              },
+            },
+          },
+        },
       );
     }
 

@@ -25,6 +25,7 @@ import {
   // selectCommandeCommandeContenus,
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
+
 import { loadCommandes } from 'containers/Commande/actions';
 import {
   selectAuthUtilisateurId,
@@ -32,6 +33,7 @@ import {
 } from 'containers/CompteUtilisateur/selectors';
 import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
+import Paper from 'material-ui/Paper';
 
 import { selectCommande } from './selectors';
 
@@ -51,15 +53,15 @@ import api from 'utils/stellarApi';
 
 const computeStyles = (muiTheme) => ({
   shoppingCart: {
-    height: 100,
-    width: 100,
+    height: '100px',
+    width: '100px',
     color: muiTheme.appBar.color,
   },
   panierVide: {
     textAlign: 'left',
     color: muiTheme.appBar.color,
-  }
-})
+  },
+});
 
 const constStyles = {
   alignRight: {
@@ -67,8 +69,8 @@ const constStyles = {
   },
   alignCenter: {
     textAlign: 'center',
-  }
-}
+  },
+};
 
 export class CommandeEdit extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -306,17 +308,19 @@ export class CommandeEdit extends React.Component { // eslint-disable-line react
         <MediaQuery query="(min-device-width: 1600px)">
           <div className="col-lg-5">
             { (!commande || commande.contenus.length === 0)
-              ? <div className={`row ${styles.panel}`}>
-                <div className="col-md-5" style={constStyles.alignRight}>
-                  <ShoppingCart style={computeStyles.shoppingCart} />
+              ? <Paper>
+                <div className={`row ${styles.panel}`}>
+                  <div className="col-md-5" style={constStyles.alignRight}>
+                    <ShoppingCart style={computedStyles.shoppingCart} />
+                  </div>
+                  <div className="col-md-5">
+                    <h1 style={computedStyles.panierVide}>Panier vide</h1>
+                  </div>
+                  {autreUtilisateur && <div className="col-md-12" style={constStyles.alignCenter}>
+                    Commande de {autreUtilisateur.prenom} {autreUtilisateur.nom.toUpperCase()}
+                  </div>}
                 </div>
-                <div className="col-md-5">
-                  <h1 style={computedStyles.panierVide}>Panier vide</h1>
-                </div>
-                {autreUtilisateur && <div className="col-md-12" style={constStyles.alignCenter}>
-                  Commande de {autreUtilisateur.prenom} {autreUtilisateur.nom.toUpperCase()}
-                </div>}
-              </div>
+              </Paper>
               : <OrderValidate
                 params={params}
                 utilisateurId={utilisateurId}

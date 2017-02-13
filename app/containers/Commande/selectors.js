@@ -128,7 +128,8 @@ export const selectCommandesRelais = () => createSelector(
   selectLivraisons(),
   selectRelaisId(),
   (commandes, livraisons, relaiId) => {
-    if (typeof commandes !== 'object' || typeof livraisons !== 'object' || !relaiId) return null;
+    if (typeof commandes !== 'object' || typeof livraisons !== 'object') return null;
+    console.log('livraisons', relaiId, livraisons, commandes);
     const cmdesRelais = {};
     Object.keys(commandes)
       .filter((commandeId) => {
@@ -138,10 +139,12 @@ export const selectCommandesRelais = () => createSelector(
             inRelais = true;
           }
         });
+        console.log(inRelais);
         return inRelais;
       }).forEach((commandeId) => {
         cmdesRelais[commandeId] = commandes[commandeId];
       });
+    console.log(cmdesRelais);
     return cmdesRelais;
   }
 );

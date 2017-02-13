@@ -10,7 +10,11 @@ import styles from './LivraisonSelector.css';
 
 const greyColor = { color: 'rgb(77, 71, 71)' };
 
-export const buildHoursRanges = (start, end, range = 60) => {
+export const buildHoursRanges = (start, end, range) => {
+  if (range === null) {
+    return [[moment(start).format('HH:mm'), moment(end).format('HH:mm')]];
+  }
+
   const duration = moment.duration(moment(end).diff(moment(start)));
   const duree = duration.asMinutes();
   const datas = [];
