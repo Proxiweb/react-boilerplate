@@ -50,7 +50,7 @@ class CommandesFournisseur extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.params.commandeId !== this.props.params.commandeId) {
-      this.props.loadCde(nextProps.params.commandeId);
+      this.props.loadCde({ id: nextProps.params.commandeId });
     }
   }
 
