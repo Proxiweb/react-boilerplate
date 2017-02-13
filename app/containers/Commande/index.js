@@ -98,11 +98,11 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     );
 
   commandesLongTerme = () => {
-    const { commandes, livraisons } = this.props;
+    const { commandes } = this.props; // , livraisons
     return Object.keys(this.props.commandes)
     .filter((key) =>
-      !commandes[key].dateCommande &&
-      livraisons[commandes[key].livraisons[0]].debut === null
+      !commandes[key].dateCommande
+      // || livraisons[commandes[key].livraisons[0]].debut === null
     ).slice().sort(
       (key) => !this.props.commandes[key].noCommande
     );
