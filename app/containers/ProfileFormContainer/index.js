@@ -22,13 +22,13 @@ class ProfileFormContainer extends React.Component {
     relaiId: PropTypes.string.isRequired,
     pristine: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    saveAccount: PropTypes.func.isRequired,
   }
 
   handleSubmit = (values) => {
     const sauvegardeInitiale = this.props.profile.nom !== values.nom;
 
-    const saving = saveAccount(
+    this.props.saveAccount(
       this.props.profile.id,
       { ...values,
         nom: values.nom.toUpperCase(),
@@ -39,11 +39,6 @@ class ProfileFormContainer extends React.Component {
         ? `/relais/${this.props.relaiId}/commandes`
         : null,
     );
-    try {
-      this.props.dispatch(saving);
-    } catch (e) {
-      console.log(e); // eslint-disable-line
-    }
   }
 
   render() {
@@ -66,7 +61,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  saveAccount: saveAccount,
+  saveAccount,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileFormContainer);
