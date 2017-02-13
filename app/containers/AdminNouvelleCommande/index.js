@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 import { loadFournisseurs, createCommande, loadRelais } from 'containers/Commande/actions';
 import {
@@ -76,7 +76,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
   }
 
   addFourn = (value) => {
-    if (this.state.cdeFourns.includes(value)) return;
+    if (includes(this.state.cdeFourns, value)) return;
     this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
   }
 

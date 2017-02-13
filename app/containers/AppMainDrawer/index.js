@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-
+import includes from 'lodash/includes';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 // import Divider from 'material-ui/Divider';
@@ -92,7 +92,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               )}
             />
           )}
-          {user && user.roles && user.roles.includes('ADMIN') && (
+          {user && user.roles && includes(user.roles, 'ADMIN') && (
             <ListItem
               primaryText="Admin Proxiweb"
               primaryTogglesNestedList
@@ -119,7 +119,7 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               ]}
             />
           )}
-          {user && user.roles && user.roles.includes('RELAI_ADMIN') && user.relaiId && (
+          {user && user.roles && includes(user.roles, 'RELAI_ADMIN') && user.relaiId && (
             <ListItem
               primaryText="Relai Admin"
               primaryTogglesNestedList

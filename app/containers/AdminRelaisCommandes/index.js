@@ -86,10 +86,6 @@ class AdminRelaisCommandes extends Component {
     this.props.loadUtilisateurs({ relaiId });
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('props', nextProps);
-  }
-
   newCommande = () => {
     this.props.pushState(`/admin/relais/${this.props.params.relaiId}/commandes/nouvelle`);
   }
@@ -135,7 +131,7 @@ class AdminRelaisCommandes extends Component {
   render() {
     const { commandes, params, relais } = this.props;
     const { action, commandeId } = params;
-    console.log('render', commandes);
+
     if (!commandes) return null;
     const commande = commandes ? commandes[commandeId] : null;
 

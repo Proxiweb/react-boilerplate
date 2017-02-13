@@ -25,8 +25,8 @@ import InfosRelais from './containers/InfosRelais';
 import { push } from 'react-router-redux';
 import { loadRelais } from './actions';
 
-import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import { loadUtilisateurs } from 'containers/Commande/actions';
+import { selectUtilisateurs } from 'containers/Commande/selectors';
 
 import { selectRoles, selectRelaiId } from 'containers/CompteUtilisateur/selectors';
 
@@ -162,7 +162,7 @@ class AdminRelais extends Component {
               />
             </div>
             <div className="col-md-8">
-              { utilisateurId && <Utilisateur utilisateur={utilisateurs.find((u) => u.id === utilisateurId)} />}
+              { utilisateurId && <Utilisateur utilisateur={utilisateurs[utilisateurId]} />}
             </div>
           </div>
           }

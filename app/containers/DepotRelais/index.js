@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
 import api from 'utils/stellarApi';
 import round from 'lodash/round';
-import includes from 'lodash/includes';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -161,14 +161,14 @@ class DepotRelais extends Component { // eslint-disable-line
                   this.setState({ ...this.state, type: values[typeId] });
                 }}
                 value={type}
-                disabled={roles.includes('RELAI_ADMIN')}
+                disabled={includes(roles, 'RELAI_ADMIN')}
               >
                 <MenuItem value={'cb'} primaryText="cb" />
                 <MenuItem value={'cheque'} primaryText="cheque" />
                 <MenuItem value={'especes'} primaryText="especes" />
               </SelectField>
             </div>
-            { !roles.includes('RELAI_ADMIN') &&
+            { !includes(roles, 'RELAI_ADMIN') &&
               <div className="col-md-12">
                 <TextField
                   type="text"

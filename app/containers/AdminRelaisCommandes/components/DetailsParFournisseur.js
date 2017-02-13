@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
+import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
 import FlatButton from 'material-ui/FlatButton';
 import SendIcon from 'material-ui/svg-icons/content/send';
@@ -55,7 +56,7 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
 
     return (
       <div>
-        {(auth.roles.includes('ADMIN') || auth.roles.includes('RELAI_ADMIN')) &&
+        {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
           <div>
             <FlatButton
               label="Virer les fonds"
@@ -67,7 +68,7 @@ class DetailsParFournisseur extends Component { // eslint-disable-line
               icon={<PersonIcon />}
               onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs`)}
             />
-            {auth.roles.includes('ADMIN') && <FlatButton
+            {includes(auth.roles, 'ADMIN') && <FlatButton
               label="Finaliser la commande"
               icon={<DoneIcon />}
               onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/finalisation`)}

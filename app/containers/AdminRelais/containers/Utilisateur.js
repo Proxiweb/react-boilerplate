@@ -17,6 +17,7 @@ class Utilisateur extends Component { // eslint-disable-line
 
   render() {
     const { utilisateur, addDest } = this.props;
+    if (!utilisateur) return null;
     const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
       <Panel padding={0}>
