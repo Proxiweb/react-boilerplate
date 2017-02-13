@@ -43,7 +43,7 @@ class ProduitFormContainer extends React.Component {
         changeDescription={(val) => changeValue('produit', 'description', val)}
         typesProduits={typesProduits}
       />
-      );
+    );
   }
 }
 

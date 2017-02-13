@@ -84,7 +84,7 @@ const renderDistributionJours =
 
 const options = {
   options: [
-    'inline', 'textAlign', 'link', 'remove', 'history',
+    'inline', 'textAlign', 'link', 'history',
   ],
   inline: {
     inDropdown: false,
@@ -175,6 +175,14 @@ class RelaisForm extends Component { // eslint-disable-line react/prefer-statele
               </div>
               <div className="col-md-6">
                 <Field cols="6" floatingLabelText="Adresse email" name="email" component={TextField} />
+              </div>
+              <div className="col-md-6">
+                <Field
+                  cols="6"
+                  floatingLabelText="Durée Période Distrib (minutes)"
+                  name="rangeDistribMinutes"
+                  component={TextField}
+                />
               </div>
             </div>
           </div>
