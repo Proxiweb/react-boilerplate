@@ -6,7 +6,7 @@
 import { findActionType } from 'utils/asyncSagaConstants';
 import c from './constants';
 
-export const loadCommandes = (query) => ({
+export const loadCommandes = query => ({
   type: findActionType('load_commandes', c, 'START'),
   url: 'commandes',
   query,
@@ -20,7 +20,7 @@ export const loadCommande = (id, query) => ({
   msgPending: 'Chargement commandes',
 });
 
-export const deleteCommande = (id) => ({
+export const deleteCommande = id => ({
   type: findActionType('delete_commande', c, 'START'),
   url: `commandes/${id}`,
   method: 'del',
@@ -28,16 +28,16 @@ export const deleteCommande = (id) => ({
   msgSuccess: 'Commande supprimée',
 });
 
-export const createCommande = (commande) => ({
+export const createCommande = commande => ({
   type: findActionType('create_commande', c, 'START'),
   url: `commandes${commande.id ? `/${commande.id}` : ''}`,
-  method: (commande.id ? 'put' : 'post'),
+  method: commande.id ? 'put' : 'post',
   datas: { ...commande },
   msgPending: 'Création commande',
   msgSuccess: 'Commande crée',
 });
 
-export const livreCommandeUtilisateur = (id) => ({
+export const livreCommandeUtilisateur = id => ({
   type: findActionType('livre_commande_utilisateur', c, 'START'),
   url: `commande_utilisateurs/${id}/livraison`,
   method: 'post',
@@ -47,7 +47,7 @@ export const livreCommandeUtilisateur = (id) => ({
 export const saveProduit = (produit, msgSuccess: 'Produit sauvegardé') => ({
   type: findActionType('save_produit', c, 'START'),
   url: `produits${produit.id ? `/${produit.id}` : ''}`,
-  method: (produit.id ? 'put' : 'post'),
+  method: produit.id ? 'put' : 'post',
   datas: { ...produit },
   msgPending: 'Sauvegarde en cours...',
   msgSuccess,
@@ -65,13 +65,17 @@ export const changePhoto = (produitId, imageBase64) => ({
 export const saveOffre = (offre, msgSuccess = 'Offre sauvegardée') => ({
   type: findActionType('save_offre', c, 'START'),
   url: `offre_produits${offre.id ? `/${offre.id}` : ''}`,
-  method: (offre.id ? 'put' : 'post'),
+  method: offre.id ? 'put' : 'post',
   datas: { ...offre },
   msgPending: 'Sauvegarde en cours...',
   msgSuccess,
 });
 
-export const importeOffres = (fournisseurId, produitId, relaiDestinationId) => ({
+export const importeOffres = (
+  fournisseurId,
+  produitId,
+  relaiDestinationId,
+) => ({
   type: findActionType('importe_offres', c, 'START'),
   url: 'offre_produits/importer',
   method: 'post',
@@ -79,15 +83,19 @@ export const importeOffres = (fournisseurId, produitId, relaiDestinationId) => (
   msgPending: 'Sauvegarde en cours...',
   msgSuccess: 'Offre importée',
 });
-
-export const loadFournisseurs = (query) => ({
+/**
+* query : { relaiId, jointures: true }
+**/
+export const loadFournisseurs = query => ({
   type: findActionType('load_fournisseurs', c, 'START'),
   url: 'fournisseurs',
   query,
   msgPending: 'Chargement fournisseurs',
 });
 
-export const supprimerCommandeContenusFournisseur = ({ fournisseurId, commandeId }) => ({
+export const supprimerCommandeContenusFournisseur = (
+  { fournisseurId, commandeId },
+) => ({
   type: findActionType('supprimer_commande_contenus_fournisseur', c, 'START'),
   url: `/commandes/${commandeId}/fournisseurs/${fournisseurId}`,
   method: 'del',
@@ -95,35 +103,41 @@ export const supprimerCommandeContenusFournisseur = ({ fournisseurId, commandeId
   msgPending: 'Suppression offres',
 });
 
-export const loadTypesProduits = (query) => ({
+export const loadTypesProduits = query => ({
   type: findActionType('load_types_produits', c, 'START'),
   url: 'type_produits',
   query,
   msgPending: 'Chargement types produits',
 });
 
-export const loadRelais = (query) => ({
+export const loadRelais = query => ({
   type: findActionType('load_relais', c, 'START'),
   url: 'relais',
   query,
   msgPending: 'Chargement relais',
 });
 
-export const loadUtilisateurs = (query) => ({
+export const loadUtilisateurs = query => ({
   type: findActionType('load_utilisateurs', c, 'START'),
   url: 'utilisateurs',
   query,
   msgPending: 'Chargement utilisateurs',
 });
 
-export const fetchUtilisateurs = (ids) => ({
+export const loadCommandeUtilisateurs = query => ({
+  type: findActionType('load_commande_utilisateurs', c, 'START'),
+  url: 'commande_utilisateurs',
+  query,
+});
+
+export const fetchUtilisateurs = ids => ({
   type: findActionType('load_utilisateurs', c, 'START'),
   method: 'post',
   url: 'utilisateurs/byIds',
   datas: { ids },
 });
 
-export const loadUserCommandes = (userId) => ({
+export const loadUserCommandes = userId => ({
   type: findActionType('load_user_commandes', c, 'START'),
   url: `/utilisateurs/${userId}/commandes`,
   msgPending: 'Chargement commandes',

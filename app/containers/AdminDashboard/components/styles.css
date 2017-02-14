@@ -1,9 +1,6 @@
 .panel {
   padding: 0.3em;
-}
-
-.userList {
-  list-style-type: none;
+  height: 100%;
 }
 
 .title {
@@ -11,10 +8,13 @@
   padding: 2px;
   background-color: #d9ffe3;
   border: solid 1px silver;
+  cursor: move; 
 }
 
 .content {
   padding: 0.5em;
+  height: 86%;
+  overflow-y: auto;
 }
 
 .row {

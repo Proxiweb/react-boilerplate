@@ -2,15 +2,16 @@ import React, { PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
 import styles from './styles.css';
 
-const Panel = ({ title, children }) =>
+const Panel = ({ title, children }) => (
   <Paper className={styles.panel}>
-    <div className={styles.title}>
+    <div className={`dragHandle ${styles.title}`}>
       {title}
     </div>
     <div className={styles.content}>
       {children}
     </div>
-  </Paper>;
+  </Paper>
+);
 
 Panel.propTypes = {
   title: PropTypes.string.isRequired,
