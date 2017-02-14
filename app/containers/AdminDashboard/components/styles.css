@@ -1,0 +1,22 @@
+.panel {
+  padding: 0.3em;
+}
+
+.userList {
+  list-style-type: none;
+}
+
+.title {
+  text-align: center;
+  padding: 2px;
+  background-color: #d9ffe3;
+  border: solid 1px silver;
+}
+
+.content {
+  padding: 0.5em;
+}
+
+.row {
+  padding: 5px;
+}

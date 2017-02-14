@@ -5,6 +5,7 @@ import {
   loadVirConst,
   supprVirConst,
   depotCbConst,
+  refreshConst,
   LOAD_ACCOUNT,
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
@@ -76,4 +77,11 @@ export const deposerCB = (datas) => ({
 export const storeStellarKeys = (stellarKeys) => ({
   type: STORE_STELLAR_KEYS,
   payload: { stellarKeys },
+});
+
+
+export const refresh = (id) => ({
+  type: refreshConst.ASYNC_REFRESH_START,
+  url: `/refresh/${id}`,
+  method: 'post',
 });

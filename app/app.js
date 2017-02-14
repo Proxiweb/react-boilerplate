@@ -56,6 +56,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'flexboxgrid/css/flexboxgrid.css';
 // react-data-grid
 import 'react-virtualized/styles.css';
+// react-grid-layout
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router

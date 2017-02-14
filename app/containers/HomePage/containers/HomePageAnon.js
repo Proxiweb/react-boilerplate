@@ -147,12 +147,15 @@ class HomePageAnon extends Component {
                   <li>Paiement sécurisé en lignePaiement sécurisé en ligne</li>
                   <li>...</li>
                 </ul>
-                <p>{'Ce peut être des achats de produits locaux, mais aussi des achats collectifs massifs sur de nombreuses villes et villages.Ce peut être des achats de produits locaux, mais aussi des achats collectifs massifs sur de nombreuses villes et villages.'}</p>
+                <p>{'Ce peut être des achats de produits locaux, mais aussi des achats collectifs massifs sur de nombreuses villes et villages.'}</p>
                 <p>{'Le montant de l\'adhésion à l\'association a été fixé à seulement 3 €, pour que chacun soit assuré de rentabiliser sa dépense.'}</p>
               </div>
               <div className="col-md-4">
                 <h1>Les relais locaux</h1>
-                <p>Localement, des travailleurs indépendants créent des relais pour distribuer les produits, ils sont rémunérés pour ce service.</p>
+                <p>
+                  Localement, des travailleurs indépendants créent des relais pour distribuer les produits, ils sont rémunérés pour ce service.
+                  <strong>{"L'association ne prend pas de commission"}</strong>.
+                </p>
                 <p>{'Ils définissent le montant qu\'ils veulent percevoir pour effectuer la distribution.'}</p>
                 <p>
                   {'ProxiWeb ne prend pas de commission : l\'association est financée uniquement par les cotisations.'}

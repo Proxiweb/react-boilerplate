@@ -16,6 +16,7 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import moment from 'moment';
 import runtime from 'offline-plugin/runtime';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
@@ -46,6 +47,7 @@ import {
 } from './actions';
 
 import { logout } from 'containers/Login/actions';
+import { refresh } from 'containers/CompteUtilisateur/actions';
 import Logged from './components/Logged';
 import Login from './components/Login';
 import MessageMaj from './components/MessageMaj';
@@ -81,6 +83,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     ]),
     pending: PropTypes.bool.isRequired,
     loadM: PropTypes.func.isRequired,
+    refresh: PropTypes.func.isRequired,
   }
 
   static contextTypes = {
@@ -95,8 +98,12 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   componentDidMount = () => {
     const { loadM, user, messagesLoaded } = this.props;
 
-    if (user && !messagesLoaded) {
-      loadM({ a: user.id });
+    if (user) {
+      if (!messagesLoaded) {
+        loadM({ a: user.id });
+      }
+
+      this.props.refresh(user.id);
     }
 
     runtime.install({
@@ -259,6 +266,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   pushState: push,
   logout,
+  refresh,
   loadM: loadMessages,
 }, dispatch);
 

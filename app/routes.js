@@ -97,6 +97,26 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     }, {
+      path: '/proxiweb/dashboard',
+      name: 'dashboard',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/AdminDashboard/reducer'),
+          System.import('containers/AdminDashboard'),
+          // System.import('containers/AdminDashboard/sagas'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, component]) => { // , sagas
+          injectReducer('dashboard', reducer.default);
+          renderRoute(component);
+          // injectSagas(sagas.default);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '/relais',
       getComponent(location, cb) {
         System.import('containers/AdminRelais')

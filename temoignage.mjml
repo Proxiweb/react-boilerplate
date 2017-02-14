@@ -1,0 +1,66 @@
+<mjml>
+  <mj-body>
+    <mj-container>
+
+      <!-- Company Header -->
+      <mj-section background-color="#e8e8e8">
+        <mj-column>
+          <mj-text
+            align="center"
+            font-style="italic"
+            font-size="20"
+            color="#626262"
+          >
+            "Je pratique le bain dérivatif avec YOKOOL Poche de Gel"
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <!-- Image Header -->
+      <mj-section background-color="white">
+        <mj-column>
+          <mj-text>
+            <p>Chers Pratiquants,</p>
+            <p>Face à vos fortes demandes, VIVAKOOL a décidé de mettre à votre disposition un site de témoignages.</p>
+            <p>Chacun d'entre nous connaît les bienfaits de la <strong>Méthode France GUILLAIN</strong> :</p>
+            <ul>
+              <li>bains dérivatifs et migraine</li>
+              <li>douleurs</li>
+              <li>meilleur sommeil,</li>
+              <li>belle silhouette,</li>
+              <li>bonne mémoire,</li>
+              <li>performance physique</li>
+              <li>belle énergie, etc...</li>
+            </ul>
+          </mj-text>
+          <mj-text align="center">
+            <h2>PARTAGEONS ENSEMBLE NOS EXPERIENCES</h2>
+          </mj-text>
+          <mj-text>
+            Excellente année 2017 !<br />L'équipe VIVAKOOL
+          </mj-text>
+          <mj-button
+            font-family="Helvetica"
+            background-color="#337ab7"
+            color="white"
+          >
+            <a href="http://temoignage.yokool.fr/token/{{token}}" style="text-decoration: none; color: inherit;">Déposer votre témoignage sur le site</a>
+          </mj-button>
+        </mj-column>
+      </mj-section>
+
+      <mj-section background-color="#e8e8e8">
+        <mj-column>
+          <mj-text align="center">
+            <a
+            href="http://mailing.yokool.fr/{{token}}"
+            style="text-decoration: none; color: inherit;"
+            >
+            Se d&eacute;sabonner
+          </a>
+        </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-container>
+  </mj-body>
+</mjml>

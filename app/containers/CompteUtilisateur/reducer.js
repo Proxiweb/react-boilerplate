@@ -22,6 +22,7 @@ import {
   progVirConst,
   loadVirConst,
   supprVirConst,
+  refreshConst as ref,
   saveAccountConst as s,
 } from './constants';
 
@@ -111,6 +112,10 @@ function compteUtilisateurReducer(state = initialState, action) {
     case STORE_STELLAR_KEYS: {
       const stellarKeys = action.payload.stellarKeys;
       return update(state, { auth: { $set: { ...state.auth, stellarKeys } } });
+    }
+
+    case ref.ASYNC_REFRESH_SUCCESS: {
+      return update(state, { token: { $set: action.datas.token } });
     }
     default:
       return state;
