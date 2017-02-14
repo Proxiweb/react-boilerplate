@@ -5,9 +5,11 @@ import { List, ListItem, makeSelectable } from 'material-ui/List';
 // import Divider from 'material-ui/Divider';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import TestIcon from 'material-ui/svg-icons/action/settings';
+import MailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import ListIcon from 'material-ui/svg-icons/action/list';
-import HelpIcon from 'material-ui/svg-icons/action/help';
+import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
+// import HelpIcon from 'material-ui/svg-icons/action/help';
 const SelectableList = makeSelectable(List);
 
 export default class AppMainDrawer extends Component { // eslint-disable-line
@@ -141,11 +143,12 @@ export default class AppMainDrawer extends Component { // eslint-disable-line
               ]}
             />
           )}
-          {user && <ListItem leftIcon={<HelpIcon />} primaryText="Support" value={'/support'} />}
+          {user && <ListItem leftIcon={<MailIcon />} primaryText="Nous contacter" value={'/support'} />}
           {!user && <ListItem primaryText="Connexion" value="/login" />}
           {user && (
             <ListItem
               primaryText="Déconnexion"
+              leftIcon={<ExitIcon />}
               onTouchTap={() => this.props.logout()}
               value={{ url: null }}
             />)}

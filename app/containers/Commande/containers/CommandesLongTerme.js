@@ -36,20 +36,13 @@ const Offre = ({ imageSrc, nom, tarif, prct, fav, commandeId, pushState, relaiId
       />
     </div>
     <CardActions expandable>
-      <div className="row">
-        <div className="col-md-10">
+      <div className="row center-md">
+        <div className="col-md-6">
           <FlatButton
             label="Commander"
             labelPosition="before"
             onClick={() => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)}
             icon={<ShoppingCartIcon color="black" />}
-          />
-        </div>
-        <div className="col-md-2 text-right" style={{ paddingRight: 0 }}>
-          <FlatButton
-            href="https://github.com/callemall/material-ui"
-            style={{ minWidth: 5 }}
-            icon={<GradeIcon style={{ color: fav ? orange800 : 'silver' }} />}
           />
         </div>
       </div>

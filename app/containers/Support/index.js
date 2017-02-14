@@ -77,6 +77,7 @@ class Support extends Component { // eslint-disable-line
                 >
                   <MenuItem value="bug" primaryText="Bug / Signaler un problème" />
                   <MenuItem value="suggestion" primaryText="Suggérer un produit" />
+                  <MenuItem value="fournisseur" primaryText="Devenir fournisseur" />
                   <MenuItem value="autre" primaryText="Autre" />
                 </SelectField>
                 <Editor
