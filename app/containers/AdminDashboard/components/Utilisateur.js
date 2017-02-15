@@ -21,40 +21,50 @@ import styles from './styles.css';
 
 class Utilisateur extends Component {
   static propTypes = {
-    utilisateur: PropTypes.object,
-    commandeUtilisateurs: PropTypes.object.isRequired,
-    commandeContenus: PropTypes.object.isRequired,
-    offres: PropTypes.object.isRequired,
-    produits: PropTypes.object.isRequired,
+    utilisateur: PropTypes.object.isRequired,
+    pending: PropTypes.bool.isRequired,
+    commandeUtilisateurs: PropTypes.object,
+    commandeContenus: PropTypes.object,
+    offres: PropTypes.object,
+    produits: PropTypes.object,
     loadCommandeUtilisateurs: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
   };
 
   state = {
     fournisseursLoaded: {},
+    utilisateursCommandesLoaded: {},
   };
 
   componentWillReceiveProps(nextProps) {
-    const newProps = nextProps.utilisateur &&
-      this.props.utilisateur &&
-      this.props.utilisateur.id !== nextProps.utilisateur.id;
-    if (!this.props.utilisateur || newProps) {
-      this.props.loadCommandeUtilisateurs({
-        utilisateurId: nextProps.utilisateur.id,
-      });
+    if (this.props.utilisateur.id !== nextProps.utilisateur.id) {
+      const fLoaded = {};
+      const cLoaded = {};
+      if (!this.state.utilisateursCommandesLoaded[nextProps.utilisateur.id]) {
+        this.props.loadCommandeUtilisateurs({
+          utilisateurId: nextProps.utilisateur.id,
+        });
+        cLoaded[nextProps.utilisateur.id] = true;
+      }
 
       if (!this.state.fournisseursLoaded[nextProps.utilisateur.relaiId]) {
         this.props.loadFournisseurs({
           relaiId: nextProps.utilisateur.relaiId,
           jointures: true,
         });
-        this.setState({
-          fournisseursLoaded: {
-            ...this.fournisseursLoaded,
-            [nextProps.utilisateur.relaiId]: true,
-          },
-        });
+        fLoaded[nextProps.utilisateur.relaiId] = true;
       }
+
+      this.setState({
+        fournisseursLoaded: {
+          ...this.state.fournisseursLoaded,
+          ...fLoaded,
+        },
+        utilisateursCommandesLoaded: {
+          ...this.state.utilisateursCommandesLoaded,
+          ...cLoaded,
+        },
+      });
     }
   }
 
@@ -65,25 +75,22 @@ class Utilisateur extends Component {
       commandeUtilisateurs,
       commandeContenus,
       utilisateur,
+      pending,
     } = this.props;
-
-    console.log(offres, produits, commandeUtilisateurs, commandeContenus);
 
     return (
       <Panel
         title={
           utilisateur
-            ? `${utilisateur.nom.toUpperCase()}`
+            ? `${utilisateur.nom.toUpperCase()} ${capitalize(
+                utilisateur.prenom,
+              )}`
             : 'Sélectionnez un utilisateur'
         }
       >
-        <p>
-          {utilisateur &&
-            `${utilisateur.nom.toUpperCase()} ${capitalize(
-              utilisateur.prenom,
-            )}`}
-        </p>
-        {commandeUtilisateurs &&
+        {pending && <p>Chargement...</p>}
+        {!pending &&
+          commandeUtilisateurs &&
           Object.keys(commandeUtilisateurs)
             .filter(
               id => commandeUtilisateurs[id].utilisateurId === utilisateur.id,

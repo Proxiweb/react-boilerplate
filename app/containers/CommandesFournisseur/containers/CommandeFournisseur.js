@@ -20,10 +20,6 @@ import {
   fetchUtilisateurs,
 } from 'containers/Commande/actions';
 
-import {
-  selectPending,
-} from 'containers/App/selectors';
-
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import {
   trouveTarification,
@@ -31,8 +27,10 @@ import {
 
 import styles from './styles.css';
 
-class CommandeFournisseur extends Component { // eslint-disable-line
+class CommandeFournisseur extends Component {
+  // eslint-disable-line
   static propTypes = {
+    pending: PropTypes.bool.isRequired,
     offres: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
@@ -44,7 +42,7 @@ class CommandeFournisseur extends Component { // eslint-disable-line
     fournisseurs: PropTypes.array.isRequired,
     loadU: PropTypes.func.isRequired,
     loadF: PropTypes.func.isRequired,
-  }
+  };
 
   componentDidMount() {
     const {
@@ -54,15 +52,17 @@ class CommandeFournisseur extends Component { // eslint-disable-line
     } = this.props;
     const { fournisseurId } = params;
     this.loadAcheteurs();
-    if (!fournisseurs.find((f) => f.id === fournisseurId)) {
+    if (!fournisseurs.find(f => f.id === fournisseurId)) {
       loadF({ fournisseurId });
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { commandeUtilisateurs: thisCu } = this.props;
-    const { commandeUtilisateurs: nextCu } = nextProps;
-    if (nextCu && thisCu[0].id !== nextCu[0].id) {
+    console.log(
+      this.props.commandeUtilisateurs.length,
+      nextProps.commandeUtilisateurs.length,
+    );
+    if (this.props.commande.id !== nextProps.commande.id) {
       this.loadAcheteurs();
     }
   }
@@ -73,10 +73,10 @@ class CommandeFournisseur extends Component { // eslint-disable-line
       utilisateurs,
       loadU,
     } = this.props;
-    const utilisateursIds =
-      commandeUtilisateurs
-        .filter((cu) => !utilisateurs || !utilisateurs.find((u) => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
-        .map((cu) => cu.utilisateurId);
+
+    const utilisateursIds = commandeUtilisateurs
+      .filter(cu => !utilisateurs || !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
+      .map(cu => cu.utilisateurId);
 
     loadU(utilisateursIds);
   }
@@ -85,15 +85,15 @@ class CommandeFournisseur extends Component { // eslint-disable-line
     const { offres, produits } = this.props;
     const offreId = commandeContenus[0].offreId;
 
-    const qteTotal =
-      commandeContenus
-        .reduce((memo, cont) =>
-          memo + cont.quantite + cont.qteRegul
-        , 0);
+    const qteTotal = commandeContenus.reduce(
+      (memo, cont) => memo + cont.quantite + cont.qteRegul,
+      0,
+    );
 
-    const qteTotalOffreQte =
-      commandeContenus
-        .reduce((memo, cont) => memo + cont.quantite, 0);
+    const qteTotalOffreQte = commandeContenus.reduce(
+      (memo, cont) => memo + cont.quantite,
+      0,
+    );
 
     const tarif = trouveTarification(
       offres[offreId].tarifications,
@@ -104,16 +104,23 @@ class CommandeFournisseur extends Component { // eslint-disable-line
       <tr className={styles.item} key={idx}>
         <td>{produits[offres[offreId].produitId].nom.toUpperCase()}</td>
         <td className={styles.center}>{qteTotal}</td>
-        <td className={styles.center}>{parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}</td>
-        <td className={styles.totaux}>{parseFloat(round((tarif.prix / 100) * qteTotal, 2)).toFixed(2)} €</td>
+        <td className={styles.center}>
+          {// eslint-disable-next-line
+          parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}
+        </td>
+        <td className={styles.totaux}>
+          {// eslint-disable-next-line
+          parseFloat(round(tarif.prix / 100 * qteTotal, 2)).toFixed(2)} €
+        </td>
       </tr>
     );
-  }
+  };
 
-  split = (str) => str.split('-')[0]
+  split = str => str.split('-')[0];
 
   render() {
     const {
+      pending,
       commandeUtilisateurs,
       commandeContenus,
       contenus,
@@ -125,11 +132,16 @@ class CommandeFournisseur extends Component { // eslint-disable-line
       params: { fournisseurId, commandeId },
     } = this.props;
 
+    if (pending) {
+      return <p>{'Chargements...'}</p>;
+    }
+
     if (
       !fournisseurs ||
       !commande ||
       !commandeUtilisateurs ||
       !commandeContenus ||
+      !commandeContenus.length > 0 ||
       !contenus ||
       !produits ||
       !utilisateurs
@@ -137,31 +149,31 @@ class CommandeFournisseur extends Component { // eslint-disable-line
       return null;
     }
 
-    const commandeContenusFournisseur =
-      commandeContenus
-        .filter((id) =>
-          produits[
-            offres[contenus[id].offreId].produitId
-          ].fournisseurId === fournisseurId
-        );
-    const commandeContenusColl = commandeContenusFournisseur.map((id) => contenus[id]);
-    const contenusFournGrp =
-      groupBy(
-        commandeContenusColl
-        .filter((cC) =>
-          produits[offres[cC.offreId].produitId].fournisseurId === fournisseurId
-        )
-      , (cc) => cc.offreId);
+    const commandeContenusFournisseur = commandeContenus.filter(
+      id =>
+        produits[offres[contenus[id].offreId].produitId].fournisseurId ===
+          fournisseurId,
+    );
+    const commandeContenusColl = commandeContenusFournisseur.map(
+      id => contenus[id],
+    );
+    const contenusFournGrp = groupBy(
+      commandeContenusColl.filter(
+        cC =>
+          produits[offres[cC.offreId].produitId].fournisseurId ===
+            fournisseurId,
+      ),
+      cc => cc.offreId,
+    );
 
-    const totaux =
-      commandeContenusColl
-        ? calculeTotauxCommande({
+    const totaux = commandeContenusColl
+      ? calculeTotauxCommande({
           contenus: commandeContenusColl,
           commandeContenus: commandeContenusFournisseur,
           offres,
           commandeId,
         })
-        : null;
+      : null;
 
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
@@ -190,21 +202,19 @@ class CommandeFournisseur extends Component { // eslint-disable-line
               Quantité
             </td>
             <td className={styles.center}>
-                Prix unitaire HT
+              Prix unitaire HT
             </td>
             <td className={styles.totaux}>
               Total TTC
             </td>
           </tr>
-          {
-            Object
-              .keys(contenusFournGrp)
-              .map((offreId, idx) =>
-                this.buildProduct(contenusFournGrp[offreId], idx)
-              )
-          }
+          {Object.keys(contenusFournGrp)
+            .map((offreId, idx) =>
+              this.buildProduct(contenusFournGrp[offreId], idx))}
         </table>
-        <div style={{ textAlign: 'right', fontSize: '1.2em', marginTop: '1em' }}>
+        <div
+          style={{ textAlign: 'right', fontSize: '1.2em', marginTop: '1em' }}
+        >
           Total: <strong>{round(totaux.prix, 2)} €</strong>
         </div>
       </div>
@@ -213,7 +223,6 @@ class CommandeFournisseur extends Component { // eslint-disable-line
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
   commande: selectCommande(),
   produits: selectProduits(),
   utilisateurs: selectUtilisateurs(),
@@ -221,9 +230,14 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  loadU: fetchUtilisateurs,
-  loadF: loadFournisseurs,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    loadU: fetchUtilisateurs,
+    loadF: loadFournisseurs,
+  },
+  dispatch,
+);
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommandeFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CommandeFournisseur,
+);

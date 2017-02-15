@@ -1,9 +1,8 @@
 .panel {
+  padding: 0;
   background-color: white;
-  padding: 1rem;
   max-height: calc(100vh - 105px);
   min-height: calc(100vh - 105px);
-  overflow-y: auto;
 }
 
 .noScroll {
@@ -21,5 +20,8 @@
 }
 
 .liste {
-  min-height: calc(100vh - 205px);
+  padding: 0.5rem;
+  height: calc(100vh - 185px);
+  overflow-y: auto;
+  /*max-height: calc(100vh - 205px);*/
 }

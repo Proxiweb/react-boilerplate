@@ -10,12 +10,15 @@ import {
   selectRelais,
 } from 'containers/Commande/selectors';
 
+import { selectPending } from 'containers/App/selectors';
+
 import Panel from './components/Panel';
 import Utilisateurs from './components/Utilisateurs';
 import Utilisateur from './components/Utilisateur';
 
 class Dashboard extends Component {
   static propTypes = {
+    pending: PropTypes.bool.isRequired,
     utilisateurs: PropTypes.object.isRequired,
     relais: PropTypes.object.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
@@ -34,7 +37,7 @@ class Dashboard extends Component {
   handleSelectUtilisateur = utilisateurId => this.setState({ utilisateurId });
 
   render() {
-    const { relais, utilisateurs } = this.props;
+    const { relais, utilisateurs, pending } = this.props;
     const { utilisateurId } = this.state;
     const layout = [
       { i: 'a', x: 0, y: 0, w: 1, h: 2 },
@@ -62,9 +65,12 @@ class Dashboard extends Component {
           />
         </div>
         <div key={'c'}>
-          <Utilisateur
-            utilisateur={utilisateurId ? utilisateurs[utilisateurId] : null}
-          />
+          {utilisateurId
+            ? <Utilisateur
+                utilisateur={utilisateurs[utilisateurId]}
+                pending={pending}
+              />
+            : <Panel title="Sélectionnez un utilisateur" />}
         </div>
       </ReactGridLayout>
     );
@@ -72,6 +78,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
+  pending: selectPending(),
   utilisateurs: selectUtilisateurs(),
   relais: selectRelais(),
 });

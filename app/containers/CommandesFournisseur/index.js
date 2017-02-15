@@ -16,8 +16,10 @@ import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectFournisseurCommandes,
- } from 'containers/Commande/selectors';
+} from 'containers/Commande/selectors';
 import { selectLocationState } from 'containers/App/selectors';
+
+import { selectPending } from 'containers/App/selectors';
 
 import styles from './styles.css';
 
@@ -25,6 +27,7 @@ const SelectableList = makeSelectable(List);
 
 class CommandesFournisseur extends Component {
   static propTypes = {
+    pending: PropTypes.bool.isRequired,
     load: PropTypes.func.isRequired,
     loadCde: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -35,7 +38,7 @@ class CommandesFournisseur extends Component {
     commandeUtilisateurs: PropTypes.array,
     commandeContenus: PropTypes.array,
     contenus: PropTypes.object,
-  }
+  };
 
   componentDidMount() {
     const {
@@ -45,21 +48,22 @@ class CommandesFournisseur extends Component {
     } = this.props;
 
     load(fournisseurId);
-    loadCde(commandeId);
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.params.commandeId !== this.props.params.commandeId) {
-      this.props.loadCde({ id: nextProps.params.commandeId });
+    if (commandeId) {
+      loadCde({ id: commandeId });
     }
   }
 
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.params.commandeId !== this.props.params.commandeId) {
+      this.props.loadCde({ id: nextProps.params.commandeId });
+    }
+  };
+
   handleChangeList = (event, value) => {
-    this.props.loadCde(value);
     this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`
+      `/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`,
     );
-  }
+  };
 
   render() {
     const {
@@ -69,39 +73,51 @@ class CommandesFournisseur extends Component {
       contenus,
       locationState,
       commandeContenus,
+      pending,
     } = this.props;
 
     if (!commandes) return null;
     const print = locationState.locationBeforeTransitions.query.print;
+
+    console.log(this.props);
     return (
       <div className="row">
         {!print &&
           <div className={classnames('col-md-3', styles.panel)}>
             <SelectableList value={commandeId} onChange={this.handleChangeList}>
-              {commandes.slice().filter((cde) => cde.dateCommande).sort((a, b) => moment(a.dateCommande).unix() < moment(b.dateCommande).unix()).map((cde, idx) =>
-                <ListItem
-                  key={idx}
-                  primaryText={moment(cde.dateCommande).format('LL')}
-                  value={cde.id}
-                />
-              )}
+              {commandes
+                .slice()
+                .filter(cde => cde.dateCommande)
+                .sort(
+                  (a, b) =>
+                    moment(a.dateCommande).unix() <
+                      moment(b.dateCommande).unix(),
+                )
+                .map((cde, idx) => (
+                  <ListItem
+                    key={idx}
+                    primaryText={moment(cde.dateCommande).format('LL')}
+                    value={cde.id}
+                  />
+                ))}
             </SelectableList>
-          </div>
-        }
-        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
-          {!print && commandeId &&
+          </div>}
+        <div
+          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
+        >
+          {!print &&
+            commandeId &&
             <div className="row around-md">
               <div className="col-md-3">
                 <RaisedButton
                   primary
                   label="Version imprimable"
                   fullWidth
-                  onClick={
-                    () => window.open(
+                  onClick={() =>
+                    window.open(
                       `/fournisseurs/${fournisseurId}/commandes/${commandeId}?print=true`,
-                      '_blank'
-                    )
-                  }
+                      '_blank',
+                    )}
                 />
               </div>
               <div className="col-md-3">
@@ -109,30 +125,26 @@ class CommandesFournisseur extends Component {
                   primary
                   fullWidth
                   label="Facture"
-                  onClick={
-                    () => window.open(
+                  onClick={() =>
+                    window.open(
                       `/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`,
-                      '_blank'
-                    )
-                  }
+                      '_blank',
+                    )}
                 />
               </div>
-            </div>
-          }
-          {
-            this.props.children &&
+            </div>}
+          {this.props.children &&
             commandeUtilisateurs &&
             contenus &&
             commandeContenus &&
-            React.cloneElement(
-              this.props.children, {
-                commande: commandes.find((cde) => cde.id === commandeId),
-                params: this.props.params,
-                commandeUtilisateurs,
-                contenus,
-                commandeContenus,
-              }
-            )}
+            React.cloneElement(this.props.children, {
+              pending,
+              commande: commandes.find(cde => cde.id === commandeId),
+              params: this.props.params,
+              commandeUtilisateurs,
+              contenus,
+              commandeContenus,
+            })}
         </div>
       </div>
     );
@@ -140,16 +152,22 @@ class CommandesFournisseur extends Component {
 }
 const mapStateToProps = createStructuredSelector({
   commandes: selectFournisseurCommandes(),
+  pending: selectPending(),
   commandeContenus: selectCommandeCommandeContenus(),
   contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   locationState: selectLocationState(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadFournisseur,
-  loadCde: loadCommandes,
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    load: loadFournisseur,
+    loadCde: loadCommandes,
+    pushState: push,
+  },
+  dispatch,
+);
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommandesFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CommandesFournisseur,
+);
