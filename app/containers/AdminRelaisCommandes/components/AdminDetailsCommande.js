@@ -88,7 +88,7 @@ class AdminDetailsCommande extends Component {
                   : null;
     return (
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-4 col-lg-3">
           {!pending &&
             commandeUtilisateurs &&
             commandeContenus &&
@@ -110,7 +110,7 @@ class AdminDetailsCommande extends Component {
             />
           }
         </div>
-        <div className="col-md-8">
+        <div className="col-md-8 col-lg-9">
           {!children && <DetailsParFournisseur params={params} commandeUtilisateurs={commandeUtilisateurs} />}
           {children && utils && (
             <DetailsParUtilisateur

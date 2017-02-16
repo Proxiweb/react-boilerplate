@@ -56,7 +56,7 @@ class DetailsParFournisseur extends Component {
     });
 
     return (
-      <div className="row">
+      <div className={`row ${styles.detailsParFournisseur}`}>
         {(includes(auth.roles, 'ADMIN') ||
           includes(auth.roles, 'RELAI_ADMIN')) &&
           <FournisseurToolbar role={auth.roles} pushState={pushState} />}

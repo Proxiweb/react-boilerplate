@@ -136,11 +136,14 @@ class ListeAcheteurs extends Component {
     const depot = params.utilisateurId
       ? this.findDepot(params.utilisateurId)
       : null;
+
+    const utilisateur = utilisateurs.find(u => u.id === params.utilisateurId);
+
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
           {stellarKeys &&
-            (stellarKeys.adresse || stellarKeys.secret) &&
+            (!stellarKeys.adresse || !stellarKeys.secret) &&
             <p>Parametrez Proxiweb</p>}
           {!depot &&
             params.utilisateurId &&
@@ -158,9 +161,7 @@ class ListeAcheteurs extends Component {
             totaux[params.utilisateurId] &&
             paiements[params.utilisateurId] &&
             <DepotRelais
-              utilisateur={utilisateurs.find(
-                u => u.id === params.utilisateurId,
-              )}
+              utilisateur={utilisateur}
               balance={paiements[params.utilisateurId]}
               totalCommande={totaux[params.utilisateurId].toFixed(2)}
               relaiId={params.relaiId}
@@ -168,9 +169,14 @@ class ListeAcheteurs extends Component {
               open={this.state.depot}
               onRequestClose={this.handleClose}
               stellarKeys={stellarKeys}
+              onDepotDirectSuccess={() =>
+                this.loadAccount(
+                  utilisateur.id,
+                  utilisateur.stellarKeys.adresse,
+                )}
             />}
         </div>
-        <div className="col-md-12" className={styles.listeAcheteurs}>
+        <div className={`col-md-12 ${styles.listeAcheteurs}`}>
           <SelectableList value={params.utilisateurId} onChange={onChange}>
             {commandeUtilisateurs
               .filter(

@@ -61,7 +61,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
     const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
     const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
-      <div className="row center-md">
+      <div className={`row center-md ${styles.detailsParUtilisateur}`}>
         <Helmet
           title={`Commande de ${identite}`}
         />

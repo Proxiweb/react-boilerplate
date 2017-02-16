@@ -149,6 +149,7 @@
       "arrow-parens": 0,
       "prefer-template": 2,
       "class-methods-use-this": 0,
+      "no_return_assign": 0,
       "react/forbid-prop-types": 0,
       "react/jsx-first-prop-new-line": [
         2,

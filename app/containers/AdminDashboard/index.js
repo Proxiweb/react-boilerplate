@@ -45,6 +45,7 @@ class Dashboard extends Component {
       { i: 'c', x: 5, y: 0, w: 1, h: 2 },
     ];
     if (!utilisateurs || !relais) return null;
+
     return (
       <ReactGridLayout
         className="layout"

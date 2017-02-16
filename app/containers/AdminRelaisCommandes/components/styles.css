@@ -28,9 +28,14 @@
 }
 
 .listeCommandes {
-  max-height: calc(100vh - 190px);
-  min-height: calc(100vh - 190px);
+  max-height: calc(100vh - 245px);
+  min-height: calc(100vh - 245px);
   overflow-y: auto;
+}
+
+.detailsParFournisseur,
+.detailsParUtilisateur {
+  padding: 2em;
 }
 
 .listeAcheteurs {

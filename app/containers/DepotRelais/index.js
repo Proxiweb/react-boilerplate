@@ -15,19 +15,21 @@ import { ajouterDepot } from 'containers/AdminDepot/actions';
 import { selectRoles } from 'containers/CompteUtilisateur/selectors';
 import styles from './styles.css';
 
-class DepotRelais extends Component { // eslint-disable-line
+class DepotRelais extends Component {
+  // eslint-disable-line
   static propTypes = {
     utilisateur: PropTypes.object.isRequired,
     balance: PropTypes.object.isRequired,
     stellarKeys: PropTypes.object,
     deposer: PropTypes.func.isRequired,
-    onRequestClose: PropTypes.func.isRequired,
     totalCommande: PropTypes.number.isRequired,
     relaiId: PropTypes.string.isRequired,
     utilisateurId: PropTypes.string,
     roles: PropTypes.array.isRequired,
     open: PropTypes.bool.isRequired,
-  }
+    onRequestClose: PropTypes.func.isRequired,
+    onDepotDirectSuccess: PropTypes.func.isRequired,
+  };
 
   constructor(props) {
     super(props);
@@ -42,7 +44,7 @@ class DepotRelais extends Component { // eslint-disable-line
     };
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     if (this.props.utilisateurId !== nextProps.utilisateurId) {
       this.setState({
         ...this.state,
@@ -50,7 +52,7 @@ class DepotRelais extends Component { // eslint-disable-line
         info: null,
       });
     }
-  }
+  };
 
   handleDeposer = () => {
     const { deposer, utilisateur, relaiId } = this.props;
@@ -65,32 +67,36 @@ class DepotRelais extends Component { // eslint-disable-line
     };
 
     deposer(depot);
-  }
+  };
 
   handleDepotExpress = () => {
     const { stellarKeys, utilisateur, deposer } = this.props;
     const { montant, type, info } = this.state;
     this.setState({ ...this.state, depotEnCours: true });
-    api.pay({
-      destination: utilisateur.stellarKeys.adresse,
-      currency: 'PROXI',
-      currencyIssuer: stellarKeys.adresse,
-      amount: montant,
-      stellarKeys,
-    }).then((transactionHash) => {
-      this.setState({ ...this.state, depotEnCours: false, depotOk: true });
-      deposer({
-        utilisateurId: utilisateur.id,
-        montant,
-        type: 'depot_direct',
-        infosSupplement: {
-          ...info,
-          type,
-          transactionHash,
-        },
+    api
+      .pay({
+        destination: utilisateur.stellarKeys.adresse,
+        currency: 'PROXI',
+        currencyIssuer: stellarKeys.adresse,
+        amount: montant,
+        stellarKeys,
+      })
+      .then(transactionHash => {
+        this.props.onDepotDirectSuccess();
+        this.setState({ ...this.state, depotEnCours: false, depotOk: true });
+        deposer({
+          utilisateurId: utilisateur.id,
+          montant,
+          type: 'depot_direct',
+          infosSupplement: {
+            ...info,
+            type,
+            transactionHash,
+          },
+          transfertEffectue: true,
+        });
       });
-    });
-  }
+  };
 
   render() {
     const {
@@ -103,36 +109,32 @@ class DepotRelais extends Component { // eslint-disable-line
     const { montant, type } = this.state;
     const manque = round(parseFloat(balance.balance) - totalCommande, 2);
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
-    const manqueStr = manque > 0 ? '' : `( manque ${(manque * -1).toFixed(2)} €)`;
+    const manqueStr = manque > 0
+      ? ''
+      : `( manque ${(manque * (-1)).toFixed(2)} €)`;
     const invalid = montant === null || type === null;
 
     return (
       <Dialog
         title={`Déposer des fonds ( max ${max} €)`}
-        actions={
-          [
-            <FlatButton
-              label="Annuler"
-              primary
-              onTouchTap={onRequestClose}
-            />,
-            includes(roles, 'ADMIN') && stellarKeys
+        actions={[
+          <FlatButton label="Annuler" primary onTouchTap={onRequestClose} />,
+          includes(roles, 'ADMIN') && stellarKeys
             ? <RaisedButton
-              label="Depot express"
-              primary
-              type="submit"
-              onClick={this.handleDepotExpress}
-              disabled={invalid}
-            />
+                label="Depot express"
+                primary
+                type="submit"
+                onTouchTap={this.handleDepotExpress}
+                disabled={invalid}
+              />
             : <RaisedButton
-              label="Ajouter au borderau"
-              type="submit"
-              primary
-              onTouchTap={() => this.handleDeposer()}
-              disabled={invalid}
-            />,
-          ]
-        }
+                label="Ajouter au borderau"
+                type="submit"
+                primary
+                onTouchTap={() => this.handleDeposer()}
+                disabled={invalid}
+              />,
+        ]}
         modal={false}
         open={this.props.open}
         onRequestClose={onRequestClose}
@@ -147,8 +149,7 @@ class DepotRelais extends Component { // eslint-disable-line
                 floatingLabelText={`Montant déposé ${manqueStr}`}
                 label="Montant déposé"
                 onChange={(event, m) =>
-                  this.setState({ ...this.state, montant: m })
-                }
+                  this.setState({ ...this.state, montant: m })}
               />
             </div>
             <div className="col-md-6">
@@ -168,7 +169,7 @@ class DepotRelais extends Component { // eslint-disable-line
                 <MenuItem value={'especes'} primaryText="especes" />
               </SelectField>
             </div>
-            { !includes(roles, 'RELAI_ADMIN') &&
+            {!includes(roles, 'RELAI_ADMIN') &&
               <div className="col-md-12">
                 <TextField
                   type="text"
@@ -176,11 +177,9 @@ class DepotRelais extends Component { // eslint-disable-line
                   floatingLabelText="Information supplémentaire"
                   label="Information supplémentaire"
                   onChange={(event, inf) =>
-                    this.setState({ ...this.state, inf })
-                  }
+                    this.setState({ ...this.state, inf })}
                 />
-              </div>
-            }
+              </div>}
           </div>
         </form>
       </Dialog>
@@ -192,8 +191,11 @@ const mapStateToProps = createStructuredSelector({
   roles: selectRoles(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  deposer: ajouterDepot,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    deposer: ajouterDepot,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepotRelais);
