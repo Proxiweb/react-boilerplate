@@ -14,7 +14,9 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
+import {
+  selectUtilisateurStellarAdresse,
+} from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
 import moment from 'moment';
 const format = 'DD/MM/YY à HH:mm';
@@ -25,8 +27,10 @@ import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
 import LivraisonCommande from './LivraisonCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
-class DetailsParUtilisateur extends Component { // eslint-disable-line
+// eslint-disable-next-line
+class DetailsParUtilisateur extends Component {
   static propTypes = {
+    roles: PropTypes.array.isRequired,
     commandeUtilisateur: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
@@ -38,7 +42,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
     commandeStellarAdresse: PropTypes.string.isRequired,
     utilisateurStellarAdresse: PropTypes.string.isRequired,
     pushState: PropTypes.func.isRequired,
-  }
+  };
 
   render() {
     const {
@@ -46,6 +50,7 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
       contenus,
       produits,
       params,
+      roles,
       offres,
       commandeContenus,
       commandeUtilisateur,
@@ -57,14 +62,21 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
 
     const { commandeId, relaiId, utilisateurId } = params;
 
-    const contenusUtilisateur = commandeContenus.map((key) => contenus[key]).filter((c) => c.utilisateurId === utilisateur.id);
-    const totaux = calculeTotauxCommande({ contenus: contenusUtilisateur, offres, commandeContenus, commandeId: params.commandeId });
-    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
+    const contenusUtilisateur = commandeContenus
+      .map(key => contenus[key])
+      .filter(c => c.utilisateurId === utilisateur.id);
+    const totaux = calculeTotauxCommande({
+      contenus: contenusUtilisateur,
+      offres,
+      commandeContenus,
+      commandeId: params.commandeId,
+    });
+    const identite = `${capitalize(
+      utilisateur.prenom,
+    )} ${utilisateur.nom.toUpperCase()}`;
     return (
       <div className={`row center-md ${styles.detailsParUtilisateur}`}>
-        <Helmet
-          title={`Commande de ${identite}`}
-        />
+        <Helmet title={`Commande de ${identite}`} />
         <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
           <div className="row">
             <div className="col-md">
@@ -73,14 +85,18 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
             <div className="col-md">
               <div className="row arround-md">
                 <div className="col-md">
-                  { commandeUtilisateur.datePaiement ?
-                    `Payée le ${moment(commandeUtilisateur.datePaiement).format(format)}` :
-                    'Non payée'}
+                  {commandeUtilisateur.datePaiement
+                    ? `Payée le ${moment(
+                        commandeUtilisateur.datePaiement,
+                      ).format(format)}`
+                    : 'Non payée'}
                 </div>
                 <div className="col-md">
-                  { commandeUtilisateur.dateLivraison ?
-                    `Livrée le ${moment(commandeUtilisateur.datePaiement).format(format)}` :
-                    'Non livrée'}
+                  {commandeUtilisateur.dateLivraison
+                    ? `Livrée le ${moment(
+                        commandeUtilisateur.datePaiement,
+                      ).format(format)}`
+                    : 'Non livrée'}
                 </div>
               </div>
             </div>
@@ -89,21 +105,23 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
         <div className="col-md-12">
           <DetailCommande
             contenus={contenusUtilisateur}
-            commandeContenus={commandeContenus.map((key) => contenus[key])}
+            commandeContenus={commandeContenus.map(key => contenus[key])}
             produits={produits}
             commandeId={params.commandeId}
             offres={offres}
+            roles={roles}
           />
           <DetailCommandeTotal totaux={totaux} />
-          {false && <CommandePaiementsUtilisateur
-            adresseStellarUtilisateur={utilisateurStellarAdresse}
-            adresseStellarCommande={commandeStellarAdresse}
-          />}
+          {false &&
+            <CommandePaiementsUtilisateur
+              adresseStellarUtilisateur={utilisateurStellarAdresse}
+              adresseStellarCommande={commandeStellarAdresse}
+            />}
         </div>
         {!commandeUtilisateur.dateLivraison &&
-          <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />
-        }
-        {!commandeUtilisateur.datePaiement && moment(commande.dateCommande).isAfter(moment()) &&
+          <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />}
+        {!commandeUtilisateur.datePaiement &&
+          moment(commande.dateCommande).isAfter(moment()) &&
           <div className="col-md-12" style={{ marginTop: '1em' }}>
             <div className="row center-md">
               <div className="col-md-4">
@@ -111,9 +129,10 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
                   fullWidth
                   primary
                   label="Modifier"
-                  onClick={
-                    () => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)
-                  }
+                  onClick={() =>
+                    pushState(
+                      `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
+                    )}
                 />
               </div>
               <div className="col-md-4">
@@ -121,14 +140,14 @@ class DetailsParUtilisateur extends Component { // eslint-disable-line
                   fullWidth
                   secondary
                   label="Annuler"
-                  onClick={
-                    () => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)
-                  }
+                  onClick={() =>
+                    pushState(
+                      `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
+                    )}
                 />
               </div>
             </div>
-          </div>
-        }
+          </div>}
       </div>
     );
   }
@@ -144,8 +163,13 @@ const mapStateToProps = createStructuredSelector({
   commandeStellarAdresse: selectCommandeStellarAdresse(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    pushState: push,
+  },
+  dispatch,
+);
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailsParUtilisateur,
+);

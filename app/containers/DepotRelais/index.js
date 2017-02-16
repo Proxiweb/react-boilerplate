@@ -22,7 +22,7 @@ class DepotRelais extends Component {
     balance: PropTypes.object.isRequired,
     stellarKeys: PropTypes.object,
     deposer: PropTypes.func.isRequired,
-    totalCommande: PropTypes.number.isRequired,
+    totalCommande: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
     utilisateurId: PropTypes.string,
     roles: PropTypes.array.isRequired,

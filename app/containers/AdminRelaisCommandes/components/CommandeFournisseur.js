@@ -20,6 +20,7 @@ class CommandeFournisseur extends Component {
     produits: PropTypes.array.isRequired,
     commandeId: PropTypes.string.isRequired,
     supprimeCommandeContenusFournisseur: PropTypes.func.isRequired,
+    key: PropTypes.string.isRequired,
   };
 
   handleSupprCommandeContenusFourn = event => {
@@ -43,6 +44,7 @@ class CommandeFournisseur extends Component {
       commandeContenus,
       commandeId,
       offres,
+      key,
     } = this.props;
     const contenusFournisseur = commandeContenus
       .map(key => contenus[key])
@@ -59,7 +61,7 @@ class CommandeFournisseur extends Component {
       commandeId,
     });
     return (
-      <div className="row">
+      <div className="row" key={key}>
         <div className="col-md-8" style={{ margin: '3em 0 0.5em' }}>
           <h4>{fournisseur.nom.toUpperCase()}</h4>
         </div>

@@ -1,20 +1,45 @@
 import React, { PropTypes, Component } from 'react';
-import { TableRow } from 'material-ui/Table';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 import buildCommandeRow from 'components/DetailCommandeColumns';
 
-export default class CommnandeParProduitFournisseur extends Component { // eslint-disable-line
+import { diminuer } from 'containers/CommandeEdit/actions';
+
+import styles from './styles.css';
+// eslint-disable-next-line
+class CommnandeParProduitFournisseur extends Component {
   static propTypes = {
     contenus: PropTypes.array.isRequired,
+    readOnly: PropTypes.bool.isRequired,
     produit: PropTypes.object.isRequired,
     qteTotalOffre: PropTypes.number.isRequired,
     offre: PropTypes.object.isRequired,
     idx: PropTypes.number.isRequired,
-  }
+    commandeId: PropTypes.string.isRequired,
+    diminuer: PropTypes.func.isRequired,
+  };
+
+  handleDiminuer = () => {
+    const { commandeId, offre: { id }, contenus } = this.props;
+    console.log(contenus[0]);
+    // this.props.diminuer(commandeId, id)
+  };
 
   render() {
-    const { produit, contenus, offre, qteTotalOffre, idx } = this.props;
-    // const quantite = contenus.reduce((memo, c) => memo + c.quantite + c.qteRegul, 0);
+    const {
+      produit,
+      contenus,
+      offre,
+      qteTotalOffre,
+      idx,
+      readOnly,
+      commandeId,
+    } = this.props;
+
     const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
     const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
     const rows = buildCommandeRow({
@@ -26,10 +51,28 @@ export default class CommnandeParProduitFournisseur extends Component { // eslin
       tarif,
       produit,
     });
+
     return (
-      <TableRow>
-        { rows }
+      <TableRow key={idx}>
+        {rows}
+        {!readOnly &&
+          <TableRowColumn className={styles.lessSmallCol}>
+            <button onClick={this.handleDiminuer} title="quantite - 1">
+              - 1
+            </button>
+          </TableRowColumn>}
       </TableRow>
     );
   }
 }
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    diminuer,
+  },
+  dispatch,
+);
+
+export default connect(null, mapDispatchToProps)(
+  CommnandeParProduitFournisseur,
+);

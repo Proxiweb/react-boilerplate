@@ -11,9 +11,7 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import {
-  fetchUtilisateurs,
-} from 'containers/Commande/actions';
+import { fetchUtilisateurs } from 'containers/Commande/actions';
 
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
@@ -41,33 +39,34 @@ class AdminDetailsCommande extends Component {
     utilisateurs: PropTypes.array.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
     loadDepots: PropTypes.func.isRequired,
-  }
+  };
 
   componentDidMount() {
     this.loadUtilisateursCommande();
     this.props.loadDepots(this.props.params.relaiId);
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     if (nextProps.params.commandeId !== this.props.params.commandeId) {
       this.loadUtilisateursCommande();
     }
-  }
+  };
 
   loadUtilisateursCommande = () => {
     const { commandeUtilisateurs, utilisateurs } = this.props;
-    const utilisateursIds =
-      commandeUtilisateurs
-        .filter((cu) => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
-        .map((cu) => cu.utilisateurId);
+    const utilisateursIds = commandeUtilisateurs
+      .filter(cu => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
+      .map(cu => cu.utilisateurId);
 
     this.props.loadUtilisateurs(utilisateursIds);
-  }
+  };
 
   handleChangeList = (event, value) => {
     const { relaiId, commandeId } = this.props.params;
-    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`);
-  }
+    this.props.pushState(
+      `/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`,
+    );
+  };
 
   render() {
     const {
@@ -84,8 +83,8 @@ class AdminDetailsCommande extends Component {
       children,
     } = this.props;
     const utils = utilisateurs
-                  ? Object.keys(utilisateurs).map((id) => utilisateurs[id])
-                  : null;
+      ? Object.keys(utilisateurs).map(id => utilisateurs[id])
+      : null;
     return (
       <div className="row">
         <div className="col-md-4 col-lg-3">
@@ -107,18 +106,25 @@ class AdminDetailsCommande extends Component {
               params={params}
               roles={roles}
               onChange={this.handleChangeList}
-            />
-          }
+            />}
         </div>
         <div className="col-md-8 col-lg-9">
-          {!children && <DetailsParFournisseur params={params} commandeUtilisateurs={commandeUtilisateurs} />}
-          {children && utils && (
+          {!children &&
+            <DetailsParFournisseur
+              params={params}
+              commandeUtilisateurs={commandeUtilisateurs}
+            />}
+          {children &&
+            utils &&
             <DetailsParUtilisateur
               params={params}
               commande={commande}
-              commandeUtilisateur={commandeUtilisateurs.find((cu) => cu.utilisateurId === params.utilisateurId)}
-              utilisateur={utils.find((ut) => ut.id === params.utilisateurId)}
-            />)}
+              commandeUtilisateur={commandeUtilisateurs.find(
+                cu => cu.utilisateurId === params.utilisateurId,
+              )}
+              roles={roles}
+              utilisateur={utils.find(ut => ut.id === params.utilisateurId)}
+            />}
         </div>
       </div>
     );
@@ -136,11 +142,15 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  loadUtilisateurs: fetchUtilisateurs,
-  loadDepots: loadDepotsRelais,
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    loadUtilisateurs: fetchUtilisateurs,
+    loadDepots: loadDepotsRelais,
+    pushState: push,
+  },
+  dispatch,
+);
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  AdminDetailsCommande,
+);
