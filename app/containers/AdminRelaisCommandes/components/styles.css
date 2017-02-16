@@ -7,6 +7,13 @@
   text-align: right;
 }
 
+.totalDistrib {
+  text-align: center;
+  background-color: silver;
+  padding: 15px;
+  margin-bottom: 5px;
+}
+
 .depot {
   min-height: 36px;
   text-align: center;
@@ -20,10 +27,17 @@
   padding-top: 5px;
 }
 
-.listeAcheteurs {
-  max-height: calc(100vh - 155px);
-  min-height: calc(100vh - 155px);
+.listeCommandes {
+  max-height: calc(100vh - 190px);
+  min-height: calc(100vh - 190px);
   overflow-y: auto;
+}
+
+.listeAcheteurs {
+  max-height: calc(100vh - 185px);
+  min-height: calc(100vh - 185px);
+  overflow-y: auto;
+  padding-left: 1.5em;
 }
 
 .livraison {

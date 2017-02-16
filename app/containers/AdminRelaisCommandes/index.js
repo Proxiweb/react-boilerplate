@@ -9,6 +9,7 @@ import {
   BottomNavigation,
   BottomNavigationItem,
 } from 'material-ui/BottomNavigation';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import { selectPending } from 'containers/App/selectors';
 
@@ -196,8 +197,6 @@ class AdminRelaisCommandes extends Component {
         Object.keys(commandes);
     }
 
-    console.log(Object.keys(commandes).length);
-
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>
@@ -212,49 +211,65 @@ class AdminRelaisCommandes extends Component {
                 <ContentAdd />
               </FloatingActionButton>}
           </div>
-          {pending && <p>Chargmenent...</p>}
+          {pending &&
+            <div className={styles.liste}>
+              <RefreshIndicator
+                size={70}
+                left={120}
+                top={200}
+                status="loading"
+                style={{ display: 'inline-block', position: 'relative' }}
+              />
+            </div>}
           {!pending &&
             <div className={styles.liste}>
-              <SelectableList
-                value={commandeId}
-                onChange={this.handleChangeList}
-              >
-                {commandesFiltredIds
-                  .filter(id => {
-                    let inRelais = false;
-                    commandes[id].livraisons.forEach(cmdeLivr => {
-                      if (livraisons[cmdeLivr].relaiId === relaiId) {
-                        inRelais = true;
-                      }
-                    });
-                    return inRelais;
-                  })
-                  .sort(
-                    (key1, key2) =>
-                      !commandes[key1].dateCommande ||
-                        moment(commandes[key1].dateCommande).unix() <
-                          moment(commandes[key2].dateCommande).unix(),
-                  )
-                  .map((key, idx) => (
-                    <ListItem
-                      key={idx}
-                      primaryText={
-                        commandes[key].dateCommande
-                          ? moment(commandes[key].dateCommande).format('LLLL')
-                          : 'date indéfinie'
-                      }
-                      secondaryText={
-                        <CommandeListeTypesProduits commande={commandes[key]} />
-                      }
-                      value={key}
-                      rightIconButton={this.buildRightIcon(
-                        key,
-                        relais.id,
-                        commandes[key],
-                      )}
-                    />
-                  ))}
-              </SelectableList>
+              {commandesFiltredIds.length === 0 &&
+                <p>Aucune commande active</p>}
+              {commandesFiltredIds.length > 0 &&
+                <SelectableList
+                  value={commandeId}
+                  onChange={this.handleChangeList}
+                >
+                  {commandesFiltredIds
+                    .filter(id => {
+                      let inRelais = false;
+                      commandes[id].livraisons.forEach(cmdeLivr => {
+                        if (livraisons[cmdeLivr].relaiId === relaiId) {
+                          inRelais = true;
+                        }
+                      });
+                      return inRelais;
+                    })
+                    .sort(
+                      (key1, key2) =>
+                        !commandes[key1].dateCommande ||
+                          moment(commandes[key1].dateCommande).unix() <
+                            moment(commandes[key2].dateCommande).unix(),
+                    )
+                    .map((key, idx) => (
+                      <ListItem
+                        key={idx}
+                        primaryText={
+                          commandes[key].dateCommande
+                            ? moment(commandes[key].dateCommande).format('LLLL')
+                            : 'date indéfinie'
+                        }
+                        secondaryText={
+                          (
+                            <CommandeListeTypesProduits
+                              commande={commandes[key]}
+                            />
+                          )
+                        }
+                        value={key}
+                        rightIconButton={this.buildRightIcon(
+                          key,
+                          relais.id,
+                          commandes[key],
+                        )}
+                      />
+                    ))}
+                </SelectableList>}
             </div>}
           <BottomNavigation selectedIndex={this.state.typeCommandeListees}>
             <BottomNavigationItem

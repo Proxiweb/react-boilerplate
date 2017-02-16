@@ -15,7 +15,8 @@ import { selectStellarKeys } from 'containers/App/selectors';
 import styles from './styles.css';
 const SelectableList = makeSelectable(List);
 
-class ListeAcheteurs extends Component { // eslint-disable-line
+class ListeAcheteurs extends Component {
+  // eslint-disable-line
   static propTypes = {
     commandeUtilisateurs: PropTypes.array.isRequired,
     stellarKeys: PropTypes.object,
@@ -26,7 +27,7 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     depots: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
     paiements: {},
@@ -34,20 +35,19 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     utilisateurSelected: null,
     error: false,
     depot: false,
-  }
+  };
 
   componentDidMount() {
     const { utilisateurs, commandeUtilisateurs } = this.props;
-    commandeUtilisateurs.forEach((cu) => {
-      const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
+    commandeUtilisateurs.forEach(cu => {
+      const ut = utilisateurs.find(u => u.id === cu.utilisateurId);
       this.loadAccount(cu.utilisateurId, ut.stellarKeys.adresse);
     });
   }
 
   loadAccount(id, accountId) {
-    const contenus = Object
-                      .keys(this.props.contenus)
-                      .map((k) => this.props.contenus[k]);
+    const contenus = Object.keys(this.props.contenus)
+      .map(k => this.props.contenus[k]);
     const {
       params,
       commandeContenus,
@@ -58,10 +58,12 @@ class ListeAcheteurs extends Component { // eslint-disable-line
 
     api
       .loadAccount(accountId)
-      .then((res) => {
-        const bal = res.balances.find((b) => b.asset_code === 'PROXI');
+      .then(res => {
+        const bal = res.balances.find(b => b.asset_code === 'PROXI');
         const totaux = calculeTotauxCommande({
-          contenus: contenus.filter((c) => c.utilisateurId === id && c.commandeId === commandeId),
+          contenus: contenus.filter(
+            c => c.utilisateurId === id && c.commandeId === commandeId,
+          ),
           offres,
           commandeContenus,
           commandeId,
@@ -83,41 +85,43 @@ class ListeAcheteurs extends Component { // eslint-disable-line
       });
   }
 
-  findDepot = (utilisateurId) =>
-    this.props.depots.find((d) =>
-      d.utilisateurId === utilisateurId &&
-      !d.transfertEffectue &&
-      d.type === 'depot_relais'
+  findDepot = utilisateurId =>
+    this.props.depots.find(
+      d =>
+        d.utilisateurId === utilisateurId &&
+          !d.transfertEffectue &&
+          d.type === 'depot_relais',
     );
 
-  handleClose = () => this.setState({ ...this.state, depot: false })
+  handleClose = () => this.setState({ ...this.state, depot: false });
 
-  handleDepotExpress = () => this.setState({ ...this.state, depot: false })
+  handleDepotExpress = () => this.setState({ ...this.state, depot: false });
 
-  handleDepotRelais = () => this.setState({ ...this.state, depot: false })
+  handleDepotRelais = () => this.setState({ ...this.state, depot: false });
 
-  computeDatas = (utilisateurId) => {
+  computeDatas = utilisateurId => {
     const { utilisateurs, params: { commandeId } } = this.props;
     const { paiements, totaux } = this.state;
 
-    const ut = utilisateurs.find((u) => u.id === utilisateurId);
+    const ut = utilisateurs.find(u => u.id === utilisateurId);
     const dep = this.findDepot(utilisateurId);
     // si un dépot a été fait, en tenir compte
     const depot = dep && dep.montant ? parseFloat(dep.montant) : 0;
 
     let iconColor = 'silver';
     if (paiements[ut.id]) {
-      const totalAvecDepot = round(depot + parseFloat(paiements[ut.id].balance), 2);
-      iconColor = totaux[ut.id] <= totalAvecDepot
-        ? 'green'
-        : 'orange';
+      const totalAvecDepot = round(
+        depot + parseFloat(paiements[ut.id].balance),
+        2,
+      );
+      iconColor = totaux[ut.id] <= totalAvecDepot ? 'green' : 'orange';
     }
 
     return {
       dep,
       iconColor,
     };
-  }
+  };
 
   render() {
     const {
@@ -129,25 +133,34 @@ class ListeAcheteurs extends Component { // eslint-disable-line
     } = this.props;
 
     const { paiements, totaux } = this.state;
-    const depot = params.utilisateurId ? this.findDepot(params.utilisateurId) : null;
+    const depot = params.utilisateurId
+      ? this.findDepot(params.utilisateurId)
+      : null;
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
-          {stellarKeys && (stellarKeys.adresse || stellarKeys.secret) && <p>Parametrez Proxiweb</p>}
-          {!depot && params.utilisateurId &&
+          {stellarKeys &&
+            (stellarKeys.adresse || stellarKeys.secret) &&
+            <p>Parametrez Proxiweb</p>}
+          {!depot &&
+            params.utilisateurId &&
             <RaisedButton
               primary
               fullWidth
               label="Deposer des fonds"
-              disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
+              disabled={
+                stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)
+              }
               onClick={() => this.setState({ ...this.state, depot: true })}
-            />
-          }
-          {!params.utilisateurId && <span style={{ color: 'black' }}>Acheteurs</span>}
+            />}
           {depot && `Dépot : ${parseFloat(depot.montant).toFixed(2)} €`}
-          {!depot && totaux[params.utilisateurId] && paiements[params.utilisateurId] &&
+          {!depot &&
+            totaux[params.utilisateurId] &&
+            paiements[params.utilisateurId] &&
             <DepotRelais
-              utilisateur={utilisateurs.find((u) => u.id === params.utilisateurId)}
+              utilisateur={utilisateurs.find(
+                u => u.id === params.utilisateurId,
+              )}
               balance={paiements[params.utilisateurId]}
               totalCommande={totaux[params.utilisateurId].toFixed(2)}
               relaiId={params.relaiId}
@@ -155,37 +168,41 @@ class ListeAcheteurs extends Component { // eslint-disable-line
               open={this.state.depot}
               onRequestClose={this.handleClose}
               stellarKeys={stellarKeys}
-            />
-          }
+            />}
         </div>
         <div className="col-md-12" className={styles.listeAcheteurs}>
           <SelectableList value={params.utilisateurId} onChange={onChange}>
-            {
-              commandeUtilisateurs
-                .filter((cu) => cu.commandeId === params.commandeId && cu.utilisateur && cu.utilisateur.nom)
-                .map((cu) => ({
-                  ...cu,
-                  utilisateur: utilisateurs.find((u) => u.id === cu.utilisateurId),
-                  datas: this.computeDatas(cu.utilisateurId),
-                }))
-                .slice()
-                .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
-                .map((cu, idx) => {
-                  return (
-                    <ListItem
-                      key={idx}
-                      primaryText={`${cu.utilisateur.nom.toUpperCase()} ${capitalize(cu.utilisateur.prenom)}`}
-                      value={cu.utilisateurId}
-                      leftIcon={
-                        cu.dateLivraison
-                        ? <DoneIcon color="green" />
+            {commandeUtilisateurs
+              .filter(
+                cu =>
+                  cu.commandeId === params.commandeId &&
+                    cu.utilisateur &&
+                    cu.utilisateur.nom,
+              )
+              .map(cu => ({
+                ...cu,
+                utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
+                datas: this.computeDatas(cu.utilisateurId),
+              }))
+              .slice()
+              .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom)
+              .map((cu, idx) => (
+                <ListItem
+                  key={idx}
+                  primaryText={
+                    `${cu.utilisateur.nom.toUpperCase()} ${capitalize(
+                      cu.utilisateur.prenom,
+                    )}`
+                  }
+                  value={cu.utilisateurId}
+                  leftIcon={
+                    cu.dateLivraison
+                      ? <DoneIcon color="green" />
                       : <PastilleIcon color={cu.datas.iconColor} />
-                      }
-                      rightIcon={cu.datas.dep && <WalletIcon />}
-                    />
-                  );
-                })
-            }
+                  }
+                  rightIcon={cu.datas.dep && <WalletIcon />}
+                />
+              ))}
           </SelectableList>
         </div>
       </div>
@@ -195,6 +212,6 @@ class ListeAcheteurs extends Component { // eslint-disable-line
 
 const mapStateToProps = createStructuredSelector({
   stellarKeys: selectStellarKeys(),
-})
+});
 
 export default connect(mapStateToProps)(ListeAcheteurs);

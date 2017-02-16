@@ -20,10 +20,7 @@ import {
   selectAuthUtilisateurId,
 } from 'containers/CompteUtilisateur/selectors';
 
-import {
-  selectLocationState,
-  selectPending,
-} from 'containers/App/selectors';
+import { selectLocationState, selectPending } from 'containers/App/selectors';
 
 import styles from './styles.css';
 import Semainier from './components/Semainier';
@@ -32,7 +29,8 @@ import moment from 'moment';
 
 import { loadCommandes, ajouter, loadCommande } from './actions';
 
-export class Commande extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class Commande extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
     livraisons: PropTypes.object,
@@ -46,75 +44,85 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
     loadCommandes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-  }
+  };
 
   state = {
     buttonClicked: false,
-  }
+  };
 
   componentDidMount() {
-    const { commandes, loadCommandes, relaiId, loadCommande, route } = this.props; // eslint-disable-line
+    const {
+      commandes,
+      loadCommandes,
+      relaiId,
+      loadCommande,
+      route,
+    } = this.props; // eslint-disable-line
     loadCommandes({ relaiId, periode: 'courantes' });
     // loadCommande('2cfdf815-3e1e-4223-87e2-c3022e596ee7');
   }
 
-  getCommandeInfos = (id) => {
+  getCommandeInfos = id => {
     const { produits, commandes, typesProduits, fournisseurs } = this.props;
     const commande = commandes[id];
     return commande.fournisseurs
-      .filter((frnId) => fournisseurs.find((frn) => frn.id === frnId))
-      .map((frnId) =>
-          Object.keys(produits)
-            .filter((pdtId) => produits[pdtId].visible)
-            .find(
-              (pdtId) => produits[pdtId].fournisseurId === frnId && produits[pdtId].visible
-            ))
-            .map((pdtId) => produits[pdtId].typeProduitId)
-              .map((typePdtId) => typesProduits[typePdtId].nom);
-  }
+      .filter(frnId => fournisseurs.find(frn => frn.id === frnId))
+      .map(frnId =>
+        Object.keys(produits)
+          .filter(pdtId => produits[pdtId].visible)
+          .find(
+            pdtId =>
+              produits[pdtId].fournisseurId === frnId &&
+                produits[pdtId].visible,
+          ))
+      .map(pdtId => produits[pdtId].typeProduitId)
+      .map(typePdtId => typesProduits[typePdtId].nom);
+  };
 
-  commandeUtilisateurExiste = (commandeId) => {
+  commandeUtilisateurExiste = commandeId => {
     const { commandesUtilisateurs, utilisateurId } = this.props;
     return Object.keys(commandesUtilisateurs)
-            .find((key) =>
-            commandesUtilisateurs[key].utilisateurId === utilisateurId &&
-            commandesUtilisateurs[key].commandeId === commandeId
-          );
-  }
+      .find(
+        key =>
+          commandesUtilisateurs[key].utilisateurId === utilisateurId &&
+            commandesUtilisateurs[key].commandeId === commandeId,
+      );
+  };
 
   isInWeek = (dateCommande, weekOffset = 0) => {
     const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
     const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
     return moment(dateCommande).isAfter(moment()) &&
-           moment(dateCommande).isBetween(debut, fin);
-  }
+      moment(dateCommande).isBetween(debut, fin);
+  };
 
   filterByWeek = (weekOffset = 0) =>
     Object.keys(this.props.commandes)
-    .filter((key) =>
-      !this.props.commandes[key].terminee && this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
-    ).slice().sort(
-      (key) => !this.props.commandes[key].noCommande
-    );
+      .filter(
+        key =>
+          !this.props.commandes[key].terminee &&
+            this.isInWeek(this.props.commandes[key].dateCommande, weekOffset),
+      )
+      .slice()
+      .sort(key => !this.props.commandes[key].noCommande);
 
   commandesLongTerme = () => {
     const { commandes } = this.props; // , livraisons
     return Object.keys(this.props.commandes)
-    .filter((key) =>
-      !commandes[key].dateCommande
-      // || livraisons[commandes[key].livraisons[0]].debut === null
-    ).slice().sort(
-      (key) => !this.props.commandes[key].noCommande
-    );
-  }
+      .filter(
+        key => !commandes[key].dateCommande,
+        // || livraisons[commandes[key].livraisons[0]].debut === null
+      )
+      .slice()
+      .sort(key => !this.props.commandes[key].noCommande);
+  };
 
-  buildTitleAndMeta = () =>
+  buildTitleAndMeta = () => (
     <Helmet
       title="Proxiweb - Commandes en cours"
-      meta={[
-        { name: 'description', content: 'Commandes proxiweb' },
-      ]}
+      meta={[{ name: 'description', content: 'Commandes proxiweb' }]}
     />
+  );
 
   render() {
     const {
@@ -128,7 +136,12 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
 
     const { buttonClicked } = this.state;
 
-    if (!buttonClicked && commandes && Object.keys(commandes).length > 0 && typesProduits) {
+    if (
+      !buttonClicked &&
+      commandes &&
+      Object.keys(commandes).length > 0 &&
+      typesProduits
+    ) {
       return (
         <div className="row">
           {this.buildTitleAndMeta()}
@@ -136,24 +149,26 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             titreCol="Cette semaine"
             commandesIds={this.filterByWeek()}
             commandes={commandes}
-            getCommandeInfos={(key) => this.getCommandeInfos(key)}
+            getCommandeInfos={key => this.getCommandeInfos(key)}
             relaiId={relaiId}
             pushState={pushState}
             pending={pending}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <Semainier
             titreCol="La semaine prochaine"
             commandesIds={this.filterByWeek(1)}
             commandes={commandes}
-            getCommandeInfos={(key) => this.getCommandeInfos(key)}
+            getCommandeInfos={key => this.getCommandeInfos(key)}
             relaiId={relaiId}
             pending={pending}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <Semainier
@@ -162,16 +177,17 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
             commandes={commandes}
             relaiId={relaiId}
             pending={pending}
-            getCommandeInfos={(key) => this.getCommandeInfos(key)}
+            getCommandeInfos={key => this.getCommandeInfos(key)}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={(commandeId) => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
           />
           <div className="col-xs">
             <CommandesLongTerme
               commandesIds={this.commandesLongTerme()}
-              getCommandeInfos={(key) => this.getCommandeInfos(key)}
+              getCommandeInfos={key => this.getCommandeInfos(key)}
               commandes={commandes}
               buttonClicked={() => this.setState({ buttonClicked: true })}
               pushState={pushState}
@@ -216,7 +232,15 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
                 style={{ display: 'inline-block', position: 'relative' }}
               />
             </div>
-            <div style={{ margin: '40px auto', width: '300px', textAlign: 'center' }}>Chargement des commandes...</div>
+            <div
+              style={{
+                margin: '40px auto',
+                width: '300px',
+                textAlign: 'center',
+              }}
+            >
+              Chargement des commandes...
+            </div>
           </Paper>
         </div>
       );
@@ -228,11 +252,14 @@ export class Commande extends React.Component { // eslint-disable-line react/pre
         <div className="row center-md">
           <div className="col-md-6">
             <Paper className={`${styles.noCommande}`}>
-              {commandes && Object.keys(commandes).length === 0 && (<h2>Pas de commande en cours...</h2>)}
+              {commandes &&
+                Object.keys(commandes).length === 0 &&
+                <h2>Pas de commande en cours...</h2>}
             </Paper>
           </div>
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 
@@ -256,9 +283,9 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    loadCommandes: (page) => dispatch(loadCommandes(page)),
-    loadCommande: (id) => dispatch(loadCommande(id)),
-    pushState: (url) => dispatch(push(url)),
+    loadCommandes: page => dispatch(loadCommandes(page)),
+    loadCommande: id => dispatch(loadCommande(id)),
+    pushState: url => dispatch(push(url)),
     ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),
   };
 }

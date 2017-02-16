@@ -20,8 +20,12 @@
 }
 
 .liste {
-  padding: 0.5rem;
-  height: calc(100vh - 185px);
+  padding: 0rem;
+  height: calc(100vh - 165px);
   overflow-y: auto;
   /*max-height: calc(100vh - 205px);*/
+}
+
+.liste p {
+  text-align: center;
 }
