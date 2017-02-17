@@ -59,11 +59,6 @@ class Dashboard extends Component {
       commandeUtilisateurs[commandeUtilisateurId]
       ? commandeUtilisateurs[commandeUtilisateurId]
       : null;
-    console.log(
-      moment(commandeUtilisateur.createdAt).format('LLL'),
-      commandeUtilisateur,
-      commandeUtilisateurId,
-    );
     return (
       <ReactGridLayout
         className="layout"
