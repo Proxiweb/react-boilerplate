@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
+import CustomSelectField from 'components/CustomSelectField';
 import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 
@@ -162,7 +162,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
               <TextField hintText="Nom recherché" onChange={this.handleChange} />
             </div>
             <div className="col-lg">
-              <SelectField
+              <CustomSelectField
                 value={this.state.filtre.cotisation}
                 onChange={this.handleCotisationChange}
               >
@@ -170,18 +170,18 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 <MenuItem value="cotisation_ok" primaryText="Cotisation à jour" />
                 <MenuItem value="cotisation_ko" primaryText="Cotisation pas à jour" />
                 <MenuItem value="cotisation_null" primaryText="Jamais cotisé" />
-              </SelectField>
+              </CustomSelectField>
             </div>
             {relais.length && (
               <div className="col-lg">
-                <SelectField
+                <CustomSelectField
                   value={this.state.filtre.relais}
                   onChange={this.handleRelaiChange}
                 >
                   <MenuItem value="indifferent" primaryText="Indifférent" />
                   <MenuItem value="pas_de_relais" primaryText="Pas de relais" />
                   {relais.map((r) => <MenuItem value={r.id} primaryText={r.nom} />)}
-                </SelectField>
+                </CustomSelectField>
               </div>
             )}
             <div className="col-lg">{datas.length} adhérents</div>

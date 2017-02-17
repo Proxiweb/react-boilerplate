@@ -82,7 +82,7 @@ export default class DetailsCommande extends Component {
                   idx={key}
                   produit={pdt}
                   selectable={selectable}
-                  contenus={contenus.filter(c => c.offre.produitId === pdt.id)}
+                  contenu={contenus.find(c => c.offre.produitId === pdt.id)}
                   qteTotalOffre={commandeContenus
                     .filter(c => c.offre.produitId === pdt.id)
                     .reduce(

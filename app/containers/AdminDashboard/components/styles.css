@@ -8,13 +8,13 @@
   padding: 2px;
   background-color: #d9ffe3;
   border: solid 1px silver;
-  cursor: move; 
+  cursor: move;
 }
 
 .content {
-  padding: 0.5em;
-  height: 86%;
+  height: 93%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .row {

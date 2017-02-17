@@ -7,43 +7,48 @@ import {
 } from 'containers/CommandeEdit/components/components/AffichePrix';
 import buildCommandeRow from 'components/DetailCommandeColumns';
 
-import { diminuer } from 'containers/CommandeEdit/actions';
+import {
+  supprimerCommandeContenu,
+  diminuerCommandeContenu,
+} from 'containers/Commande/actions';
 
 import styles from './styles.css';
 // eslint-disable-next-line
 class CommnandeParProduitFournisseur extends Component {
   static propTypes = {
-    contenus: PropTypes.array.isRequired,
+    contenu: PropTypes.object.isRequired,
     readOnly: PropTypes.bool.isRequired,
     produit: PropTypes.object.isRequired,
     qteTotalOffre: PropTypes.number.isRequired,
     offre: PropTypes.object.isRequired,
     idx: PropTypes.number.isRequired,
-    commandeId: PropTypes.string.isRequired,
-    diminuer: PropTypes.func.isRequired,
+    // diminuer: PropTypes.func.isRequired,
+    supprimer: PropTypes.func.isRequired,
   };
 
   handleDiminuer = () => {
-    const { commandeId, offre: { id }, contenus } = this.props;
-    console.log(contenus[0]);
-    // this.props.diminuer(commandeId, id)
+    const { contenu, supprimer } = this.props;
+    if (contenu.quantite === 1) {
+      supprimer(contenu);
+    } else {
+      alert('Diminution non implémmentée'); // eslint-disable-line
+    }
   };
 
   render() {
     const {
       produit,
-      contenus,
+      contenu,
       offre,
       qteTotalOffre,
       idx,
       readOnly,
-      commandeId,
     } = this.props;
 
     const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
     const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
     const rows = buildCommandeRow({
-      contenu: contenus[0],
+      contenu,
       idx,
       offre,
       tarifEnBaisse,
@@ -68,7 +73,8 @@ class CommnandeParProduitFournisseur extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
-    diminuer,
+    diminuer: diminuerCommandeContenu,
+    supprimer: supprimerCommandeContenu,
   },
   dispatch,
 );

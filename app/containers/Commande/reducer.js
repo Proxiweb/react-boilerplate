@@ -93,14 +93,14 @@ const supprimeCommandeContenusFournisseur = (
     commandeUtilisateurs,
   } = state.datas.entities;
 
-  const commandeContenusASupprimerIds = Object.keys(commandeContenus).filter(
-    id =>
-      commandeContenus[id].commandeId === commandeId &&
-        produits[
-          offres[commandeContenus[id].offreId].produitId
-        ].fournisseurId ===
-          fournisseurId,
-  );
+  const commandeContenusASupprimerIds = Object.keys(commandeContenus)
+    .filter(
+      id =>
+        commandeContenus[id].commandeId === commandeId &&
+          produits[
+            offres[commandeContenus[id].offreId].produitId
+          ].fournisseurId === fournisseurId,
+    );
 
   const commandeUtilisateursModifiee = uniq( // il peut y a voir plusieurs contenus pour une meme commandeUtilisateur
     commandeContenusASupprimerIds.map(
@@ -137,6 +137,32 @@ const supprimeCommandeContenusFournisseur = (
         },
         commandeUtilisateurs: {
           $set: { ...commandeUtilisateurs, ...commandeUtilisateursModifiee },
+        },
+      },
+    },
+  });
+};
+
+const supprimeContenu = (state, contenu) => {
+  const { commandeUtilisateurs, commandeContenus } = state.datas.entities;
+  const contenusRestants = commandeUtilisateurs[
+    contenu.commandeUtilisateurId
+  ].contenus.filter(c => c !== contenu.id); // eslint-disable-line
+  const commandeContenusRestants = Object.keys(commandeContenus).reduce((
+    memo,
+    cont,
+  ) => {
+    const aIns = cont.id !== contenu.id ? { [contenu.id]: contenu } : {};
+    return { ...memo, aIns };
+  }, {});
+  return update(state, {
+    datas: {
+      entities: {
+        commandeUtilisateurs: {
+          [contenu.commandeUtilisateurId]: {
+            contenus: { $set: contenusRestants },
+          },
+          commandeContenus: { $set: commandeContenusRestants },
         },
       },
     },
@@ -234,10 +260,11 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_DELETE_COMMANDE_SUCCESS: {
       const { id } = action.req.datas;
       const { commandes } = state.datas.entities;
-      const commandesRestantes = Object.keys(commandes).reduce(
-        (memo, key) => key !== id ? { ...memo, [key]: commandes[key] } : memo,
-        {},
-      );
+      const commandesRestantes = Object.keys(commandes)
+        .reduce(
+          (memo, key) => key !== id ? { ...memo, [key]: commandes[key] } : memo,
+          {},
+        );
 
       return update(state, {
         datas: { entities: { commandes: { $set: commandesRestantes } } },
@@ -380,6 +407,9 @@ function commandeReducer(state = initialState, action) {
         },
       });
     }
+
+    case c.ASYNC_SUPPRIMER_COMMANDE_CONTENU_SUCCESS:
+      return supprimeContenu(state, action.req.datas);
 
     case c.ASYNC_LOAD_UTILISATEURS_SUCCESS: {
       const datas = normalize(

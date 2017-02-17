@@ -7,7 +7,7 @@ import { push } from 'react-router-redux';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
-import SelectField from 'material-ui/SelectField';
+import CustomSelectField from 'components/CustomSelectField';
 import MenuItem from 'material-ui/MenuItem';
 import classnames from 'classnames';
 import shader from 'shader';
@@ -17,19 +17,9 @@ import {
   selectCommandeProduitsByTypeProduit,
   selectProduits,
 } from 'containers/Commande/selectors';
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
-
-const constStyles = {
-  iconBlack: {
-    fill: 'black',
-  },
-  fullWidth: {
-    width: '100%',
-  },
-  borderBlack: {
-    borderColor: 'black',
-  },
-};
+import {
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 
 class ProduitSelector extends React.Component {
   static propTypes = {
@@ -40,31 +30,39 @@ class ProduitSelector extends React.Component {
     allProduits: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
   };
 
   getTypesProduitsMenuItems = (typeProduits, produitsFavoris) => {
-    const menuItems = typeProduits.map((type, index) =>
+    const menuItems = typeProduits.map((type, index) => (
       <MenuItem key={index} value={type.id} primaryText={type.nom} />
-    );
+    ));
     if (produitsFavoris && produitsFavoris.length) {
       menuItems.push(<Divider />);
-      menuItems.push(<MenuItem key="favoris" value="favoris" primaryText="Produits favoris" />);
+      menuItems.push(
+        <MenuItem
+          key="favoris"
+          value="favoris"
+          primaryText="Produits favoris"
+        />,
+      );
     }
 
     return menuItems;
-  }
+  };
 
   handleChange = (event, index, value) => {
     const { commandeId, relaiId } = this.props.params;
     const { pushState, utilisateurId } = this.props;
-    pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`);
-  }
+    pushState(
+      `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`,
+    );
+  };
 
-  navigateTo = (productId) => {
+  navigateTo = productId => {
     const { commandeId, relaiId } = this.props.params;
     let { typeProduitId } = this.props.params;
     const { utilisateurId, allProduits } = this.props;
@@ -72,8 +70,10 @@ class ProduitSelector extends React.Component {
       typeProduitId = allProduits[productId].typeProduitId;
     }
 
-    this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`);
-  }
+    this.props.pushState(
+      `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`,
+    );
+  };
 
   render() {
     const { typeProduits, produits, params, allProduits, auth } = this.props;
@@ -81,44 +81,58 @@ class ProduitSelector extends React.Component {
     const muiTheme = this.context.muiTheme;
 
     if (!produits) return null;
-    const listeProduits =
-      typeProduitId !== 'favoris'
-        ? produits.filter((p) => p.enStock)
-        : Object.keys(allProduits)
-          .filter((id) => includes(auth.produitsFavoris, id))
-          .map((id) => allProduits[id]);
+    const listeProduits = typeProduitId !== 'favoris'
+      ? produits.filter(p => p.enStock)
+      : Object.keys(allProduits)
+          .filter(id => includes(auth.produitsFavoris, id))
+          .map(id => allProduits[id]);
 
     return (
       <div
-        className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.panelproduits)}
+        className={classnames(
+          'col-sm-4 col-lg-3 col-xs-12 col-md-4',
+          styles.panelproduits,
+        )}
       >
         <Paper style={{ padding: '0 5px' }}>
-          {typeProduits && (typeProduits.length > 1 || auth.produitsFavoris.length > 0) && <SelectField
-            value={typeProduitId}
-            onChange={this.handleChange}
-            iconStyle={constStyles.iconBlack}
-            underlineStyle={constStyles.borderBlack}
-            style={constStyles.fullWidth}
-          >
-            {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
-          </SelectField>}
-          {listeProduits && (
-            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
+          {typeProduits &&
+            (typeProduits.length > 1 || auth.produitsFavoris.length > 0) &&
+            <CustomSelectField
+              value={typeProduitId}
+              onChange={this.handleChange}
+            >
+              {this.getTypesProduitsMenuItems(
+                typeProduits,
+                auth.produitsFavoris,
+              )}
+            </CustomSelectField>}
+          {listeProduits &&
+            <List
+              className={
+                `${styles[
+                  `produits${produits && produits.length > 10 ? 'Scr' : ''}`
+                ]}`
+              }
+            >
               {listeProduits.map((pdt, idx) => (
                 <ListItem
                   key={idx}
                   onClick={() => this.navigateTo(pdt.id)}
                   className={styles.pdtSelected}
                   style={
-                    produitId && pdt.id === produitId ?
-                    { fontSize: '0.9em', borderLeft: `solid 5px ${muiTheme.appBar.color}`, backgroundColor: shader(muiTheme.appBar.color, +0.6) } :
-                    { fontSize: '0.9em', borderLeft: 'none' }}
+                    produitId && pdt.id === produitId
+                      ? {
+                          fontSize: '0.9em',
+                          borderLeft: `solid 5px ${muiTheme.appBar.color}`,
+                          backgroundColor: shader(muiTheme.appBar.color, +0.6),
+                        }
+                      : { fontSize: '0.9em', borderLeft: 'none' }
+                  }
                 >
                   {pdt.nom.toUpperCase()}
                 </ListItem>
-                ))}
-            </List>
-            )}
+              ))}
+            </List>}
         </Paper>
       </div>
     );
@@ -132,8 +146,11 @@ const mapStateToProps = createStructuredSelector({
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    pushState: push,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProduitSelector);

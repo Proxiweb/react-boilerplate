@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
+import CustomSelectField from 'components/CustomSelectField';
 import {
   TextField,
 } from 'redux-form-material-ui';
@@ -31,7 +31,7 @@ const options = {
 
 const renderSelectField = (datas) =>
   ({ input, label, meta: { touched, error }, ...custom }) => // eslint-disable-line
-    <SelectField
+    <CustomSelectField
       floatingLabelText={label}
       errorText={touched && error}
       {...input}
@@ -41,7 +41,7 @@ const renderSelectField = (datas) =>
       {datas.map((data) =>
         <MenuItem key={data.value} value={data.value} primaryText={data.label} />
       )}
-    </SelectField>;
+    </CustomSelectField>;
 
 const renderUnitesConservation = renderSelectField([
   {

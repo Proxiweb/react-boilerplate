@@ -1,5 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+const SelectableList = makeSelectable(List);
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import capitalize from 'lodash/capitalize';
@@ -10,6 +12,7 @@ import {
   loadCommandeUtilisateurs,
   loadFournisseurs,
 } from 'containers/Commande/actions';
+
 import {
   selectCommandesUtilisateurs,
   selectCommandeContenus,
@@ -27,8 +30,10 @@ class Utilisateur extends Component {
     commandeContenus: PropTypes.object,
     offres: PropTypes.object,
     produits: PropTypes.object,
+    commandeUtilisateurId: PropTypes.string,
     loadCommandeUtilisateurs: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
   };
 
   state = {
@@ -70,12 +75,11 @@ class Utilisateur extends Component {
 
   render() {
     const {
-      offres,
-      produits,
       commandeUtilisateurs,
-      commandeContenus,
+      commandeUtilisateurId,
       utilisateur,
       pending,
+      onClick,
     } = this.props;
 
     return (
@@ -91,15 +95,22 @@ class Utilisateur extends Component {
         {pending && <p>Chargement...</p>}
         {!pending &&
           commandeUtilisateurs &&
-          Object.keys(commandeUtilisateurs)
-            .filter(
-              id => commandeUtilisateurs[id].utilisateurId === utilisateur.id,
-            )
-            .map(id => (
-              <li>
-                {moment(commandeUtilisateurs[id].createdAt).format('LLL')}
-              </li>
-            ))}
+          <SelectableList value={commandeUtilisateurId} onChange={onClick}>
+
+            {Object.keys(commandeUtilisateurs)
+              .filter(
+                id => commandeUtilisateurs[id].utilisateurId === utilisateur.id,
+              )
+              .map(id => (
+                <ListItem
+                  value={id}
+                  innerDivStyle={{ padding: '4px 0' }}
+                  nestedListStyle={{ padding: '5px' }}
+                >
+                  {moment(commandeUtilisateurs[id].createdAt).format('LLL')}
+                </ListItem>
+              ))}
+          </SelectableList>}
       </Panel>
     );
   }
@@ -107,9 +118,9 @@ class Utilisateur extends Component {
 
 const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeContenus(),
-  commandeUtilisateurs: selectCommandesUtilisateurs(),
   offres: selectOffres(),
   produits: selectProduits(),
+  commandeUtilisateurs: selectCommandesUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

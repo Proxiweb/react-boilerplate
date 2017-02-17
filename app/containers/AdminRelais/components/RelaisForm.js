@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import {
   TextField,
 } from 'redux-form-material-ui';
-import SelectField from 'material-ui/SelectField';
+import CustomSelectField from 'components/CustomSelectField';
 import MenuItem from 'material-ui/MenuItem';
 import draftToHtml from 'draftjs-to-html';
 import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
@@ -14,7 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 const renderJours =
   ({ input, label, meta: { touched, error }, ...custom }) => // eslint-disable-line
-    <SelectField
+    <CustomSelectField
       floatingLabelText={label}
       errorText={touched && error}
       {...input}
@@ -28,7 +28,7 @@ const renderJours =
       <MenuItem value={4} primaryText="Vendredi" />
       <MenuItem value={5} primaryText="Samedi" />
       <MenuItem value={6} primaryText="Dimanche" />
-    </SelectField>;
+    </CustomSelectField>;
 
 const renderDistributionJours =
   ({ fields, meta: { error } }) => // eslint-disable-line

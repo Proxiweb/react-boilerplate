@@ -1,13 +1,17 @@
 import React, { PropTypes } from 'react';
 import capitalize from 'lodash/capitalize';
 import FlatButton from 'material-ui/FlatButton';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+const SelectableList = makeSelectable(List);
 import moment from 'moment';
 import Panel from './Panel';
 import styles from './styles.css';
 
-const Utilisateurs = ({ relais, utilisateurs, onClick, limit = 20 }) => (
+const Utilisateurs = (
+  { relais, utilisateurs, onClick, limit = 20, utilisateurId },
+) => (
   <Panel title={`Les ${limit} dernières connexions`}>
-    <table>
+    <SelectableList value={utilisateurId} onChange={onClick}>
       {Object.keys(utilisateurs)
         .filter(
           id =>
@@ -22,34 +26,33 @@ const Utilisateurs = ({ relais, utilisateurs, onClick, limit = 20 }) => (
               moment(utilisateurs[u2].lastLogin).unix(),
         )
         .map(id => (
-          <tr>
-            <td className={styles.row}>
-              {relais[utilisateurs[id].relaiId] &&
-                relais[utilisateurs[id].relaiId].nom}
-            </td>
-            <td className={styles.row}>
-              <FlatButton
-                label={`${utilisateurs[id].nom.toUpperCase()}`}
-                title={
+          <ListItem
+            value={id}
+            innerDivStyle={{ padding: '4px 0' }}
+            nestedListStyle={{ padding: '5px' }}
+          >
+            <div className="row">
+              <div className="col-md-2">
+                {relais[utilisateurs[id].relaiId] &&
+                  relais[utilisateurs[id].relaiId].nom}
+              </div>
+              <div className="col-md-10">
+                {
                   `${utilisateurs[id].nom.toUpperCase()} ${capitalize(
                     utilisateurs[id].prenom,
-                  )}`
+                  )} (${moment(utilisateurs[id].lastLogin).fromNow()})`
                 }
-                style={{ textAlign: 'left' }}
-                onClick={() => onClick(id)}
-              />
-            </td>
-            <td className={styles.row}>
-              {moment(utilisateurs[id].lastLogin).fromNow()}
-            </td>
-          </tr>
+              </div>
+            </div>
+          </ListItem>
         ))}
-    </table>
+    </SelectableList>
   </Panel>
 );
 
 Utilisateurs.propTypes = {
   utilisateurs: PropTypes.object.isRequired,
+  utilisateurId: PropTypes.string,
   limit: PropTypes.number.isRequired,
   relais: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,

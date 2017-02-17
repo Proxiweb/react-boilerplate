@@ -28,6 +28,29 @@ export const deleteCommande = id => ({
   msgSuccess: 'Commande supprimée',
 });
 
+/*
+* enlève 1 à quantite
+* appelée uniquement avec quantite > 1
+*/
+export const diminuerCommandeContenu = contenu => ({
+  type: findActionType('diminuer_commande_contenu', c, 'START'),
+  url: `commande_contenus/${contenu.id}`,
+  method: 'put',
+  datas: { ...contenu, quantite: contenu.quantite - 1 },
+});
+
+/*
+* supprime commande_contenu
+* appelé quant quantite === 1
+*/
+export const supprimerCommandeContenu = contenu => ({
+  type: findActionType('supprimer_commande_contenu', c, 'START'),
+  url: `commande_contenus/${contenu.id}`,
+  method: 'del',
+  datas: { ...contenu },
+  msgSuccess: 'Contenu commande supprimé',
+});
+
 export const createCommande = commande => ({
   type: findActionType('create_commande', c, 'START'),
   url: `commandes${commande.id ? `/${commande.id}` : ''}`,

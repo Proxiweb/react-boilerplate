@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import SelectField from 'material-ui/SelectField';
+import CustomSelectField from 'components/CustomSelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
@@ -110,7 +110,7 @@ class FournisseursRelais extends Component {
       <div className="row">
         <div className="col-md-4">
           {fournisseurs && fournisseurs.length > 0 &&
-            <SelectField
+            <CustomSelectField
               fullWidth
               value={fournisseurSelected}
               onChange={this.handleChangeFournisseur}
@@ -120,7 +120,7 @@ class FournisseursRelais extends Component {
               {fournisseurs.map((data, idx) =>
                 <MenuItem key={idx} value={data.id} primaryText={data.nom.toUpperCase()} />
               )}
-            </SelectField>
+            </CustomSelectField>
           }
           { produitsFournisseur.length > 0 &&
             <SelectableList value={produitSelected} onChange={this.handleSelectProduit} className={styles.listePdts}>

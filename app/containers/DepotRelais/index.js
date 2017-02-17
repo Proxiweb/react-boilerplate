@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import api from 'utils/stellarApi';
 import round from 'lodash/round';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
+import CustomSelectField from 'components/CustomSelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -153,7 +153,7 @@ class DepotRelais extends Component {
               />
             </div>
             <div className="col-md-6">
-              <SelectField
+              <CustomSelectField
                 fullWidth
                 floatingLabelText="Type de dépot"
                 label="Type de dépot"
@@ -167,7 +167,7 @@ class DepotRelais extends Component {
                 <MenuItem value={'cb'} primaryText="cb" />
                 <MenuItem value={'cheque'} primaryText="cheque" />
                 <MenuItem value={'especes'} primaryText="especes" />
-              </SelectField>
+              </CustomSelectField>
             </div>
             {!includes(roles, 'RELAI_ADMIN') &&
               <div className="col-md-12">
