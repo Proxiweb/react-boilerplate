@@ -17,24 +17,12 @@ import styles from './styles.css';
 
 class Commande extends Component {
   static propTypes = {
-    utilisateur: PropTypes.object.isRequired,
-    pending: PropTypes.bool.isRequired,
     commandeUtilisateur: PropTypes.object.isRequired,
     produits: PropTypes.object.isRequired,
     commandeContenus: PropTypes.object,
     commandeUtilisateurId: PropTypes.string.isRequired,
     offres: PropTypes.object,
   };
-
-  // contenus: PropTypes.array.isRequired,
-  // offres: PropTypes.object.isRequired,
-  // commandeContenus: PropTypes.object.isRequired,
-  // commandeId: PropTypes.string,
-  // produits: PropTypes.object.isRequired,
-  // diminuer: PropTypes.func,
-  // augmenter: PropTypes.func,
-  // readOnly: PropTypes.bool,
-  // panierExpanded: PropTypes.bool.isRequired,
 
   render() {
     const {
@@ -43,12 +31,7 @@ class Commande extends Component {
       commandeUtilisateur,
       commandeContenus,
       commandeUtilisateurId,
-      utilisateur,
-      pending,
-      onClick,
     } = this.props;
-
-    console.log(commandeUtilisateurId);
 
     return (
       <Panel
@@ -67,11 +50,12 @@ class Commande extends Component {
             .filter(
               key =>
                 commandeContenus[key].commandeUtilisateurId ===
-                  commandeUtilisateurId,
+                commandeUtilisateurId,
             )
             .map(key => commandeContenus[key])}
           offres={offres}
           commandeId={commandeUtilisateur.commandeId}
+          readOnly
         />
       </Panel>
     );

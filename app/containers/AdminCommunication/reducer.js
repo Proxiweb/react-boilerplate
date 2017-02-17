@@ -1,4 +1,8 @@
-import c, { SET_MESSAGE, ADD_DESTINATAIRE, REMOVE_DESTINATAIRE } from './constants';
+import c, {
+  SET_MESSAGE,
+  ADD_DESTINATAIRE,
+  REMOVE_DESTINATAIRE,
+} from './constants';
 import update from 'react-addons-update';
 import findIndex from 'lodash/findIndex';
 import assign from 'lodash/assign';
@@ -24,7 +28,6 @@ const addDest = (state, action) => {
   if (action.telPortable) dest.telPortable = action.telPortable;
   if (action.email) dest.email = action.email;
 
-
   return update(state, { destinataires: { [idx]: { $set: dest } } });
 };
 
@@ -34,13 +37,31 @@ const removeDest = (state, action) => {
   delete dest[action.moyen];
 
   if (!dest.email && !dest.telPortable) {
-    return update(state, { destinataires: { $set: state.destinataires.filter((d) => d.id !== dest.id) } });
+    return update(state, {
+      destinataires: {
+        $set: state.destinataires.filter(d => d.id !== dest.id),
+      },
+    });
   }
 
   return update(state, { destinataires: { [idx]: { $set: dest } } });
 };
 
-const deleteCom = (state) => state;
+const changeDest = (state, destinataire) => {
+  const datas = state.datas.map(com => {
+    if (com.id !== destinataire.communicationId) return com;
+    return {
+      ...com,
+      destinataires: com.destinataires.map(
+        d => d.id === destinataire.id ? destinataire : d,
+      ),
+    };
+  });
+
+  return { ...state, datas };
+};
+
+const deleteCom = state => state;
 
 const adminCommunicationsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -54,6 +75,8 @@ const adminCommunicationsReducer = (state = initialState, action) => {
       return addDest(state, action.payload);
     case REMOVE_DESTINATAIRE:
       return removeDest(state, action.payload);
+    case 'WS/COMMUNICATION_CHANGE':
+      return changeDest(state, action.datas);
     default:
       return state;
   }

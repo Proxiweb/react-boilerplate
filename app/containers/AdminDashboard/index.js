@@ -18,6 +18,7 @@ import Panel from './components/Panel';
 import Utilisateurs from './components/Utilisateurs';
 import Utilisateur from './components/Utilisateur';
 import Commande from './components/Commande';
+import Communications from './components/Communications';
 
 class Dashboard extends Component {
   static propTypes = {
@@ -52,6 +53,7 @@ class Dashboard extends Component {
       { i: 'a', x: 0, y: 0, w: 1, h: 2 },
       { i: 'b', x: 1, y: 0, w: 4, h: 9 },
       { i: 'c', x: 5, y: 0, w: 1, h: 2 },
+      { i: 'd', x: 0, y: 2, w: 2, h: 2 },
     ];
     if (!utilisateurs || !relais) return null;
     const commandeUtilisateur = commandeUtilisateurId &&
@@ -66,7 +68,7 @@ class Dashboard extends Component {
         layout={layout}
         cols={12}
         rowHeight={30}
-        width={1250}
+        width={1600}
         autoSize
         margin={[5, 5]}
       >
@@ -96,6 +98,9 @@ class Dashboard extends Component {
                 commandeUtilisateurId={commandeUtilisateurId}
               />
             : <Panel title="Sélectionnez un utilisateur" />}
+        </div>
+        <div key={'d'}>
+          <Communications />
         </div>
       </ReactGridLayout>
     );

@@ -20,16 +20,11 @@ import {
   selectProduits,
 } from 'containers/Commande/selectors';
 
-import styles from './styles.css';
-
 class Utilisateur extends Component {
   static propTypes = {
     utilisateur: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     commandeUtilisateurs: PropTypes.object,
-    commandeContenus: PropTypes.object,
-    offres: PropTypes.object,
-    produits: PropTypes.object,
     commandeUtilisateurId: PropTypes.string,
     loadCommandeUtilisateurs: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,

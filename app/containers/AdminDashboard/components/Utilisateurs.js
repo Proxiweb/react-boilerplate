@@ -1,11 +1,9 @@
 import React, { PropTypes } from 'react';
 import capitalize from 'lodash/capitalize';
-import FlatButton from 'material-ui/FlatButton';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 const SelectableList = makeSelectable(List);
 import moment from 'moment';
 import Panel from './Panel';
-import styles from './styles.css';
 
 const Utilisateurs = (
   { relais, utilisateurs, onClick, limit = 20, utilisateurId },
@@ -16,14 +14,14 @@ const Utilisateurs = (
         .filter(
           id =>
             utilisateurs[id].nom &&
-              utilisateurs[id].prenom &&
-              moment(utilisateurs[id].lastLogin).isValid(),
+            utilisateurs[id].prenom &&
+            moment(utilisateurs[id].lastLogin).isValid(),
         )
         .slice(0, limit - 1)
         .sort(
           (u1, u2) =>
             moment(utilisateurs[u1].lastLogin).unix() <
-              moment(utilisateurs[u2].lastLogin).unix(),
+            moment(utilisateurs[u2].lastLogin).unix(),
         )
         .map(id => (
           <ListItem
