@@ -28,9 +28,13 @@ import { loadRelais } from './actions';
 import { loadUtilisateurs } from 'containers/Commande/actions';
 import { selectUtilisateurs } from 'containers/Commande/selectors';
 
-import { selectRoles, selectRelaiId } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectRoles,
+  selectRelaiId,
+} from 'containers/CompteUtilisateur/selectors';
 
 const SelectableList = makeSelectable(List);
+import StellarAccount from 'components/StellarAccount';
 
 class AdminRelais extends Component {
   static propTypes = {
@@ -42,12 +46,12 @@ class AdminRelais extends Component {
     load: PropTypes.func.isRequired,
     loadUtil: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
     viewSelected: null,
     utilisateurId: null,
-  }
+  };
 
   componentDidMount() {
     const { relais, load } = this.props;
@@ -62,112 +66,129 @@ class AdminRelais extends Component {
       this.setState({ viewSelected: null });
       if (
         !utilisateurs ||
-        !Object.keys(utilisateurs).filter((k) => utilisateurs[k].relaiId === nextProps.params.relaiId).length
+        !Object.keys(utilisateurs)
+          .filter(
+            k => utilisateurs[k].relaiId === nextProps.params.relaiId,
+          ).length
       ) {
         loadUtil({ relaiId: nextProps.params.relaiId });
       }
     }
   }
 
-  handleChangeList = (event, value) =>
-    this.props.pushState(`/relais/${value}`)
+  handleChangeList = (event, value) => this.props.pushState(`/relais/${value}`);
 
   render() {
-    const { relais, params, pushState, roles, authRelaiId, utilisateurs } = this.props;
+    const {
+      relais,
+      params,
+      pushState,
+      roles,
+      authRelaiId,
+      utilisateurs,
+    } = this.props;
     const { relaiId } = params;
     const { viewSelected, utilisateurId } = this.state;
-    const relaisSelected = relais.find((r) => r.id === relaiId);
+    const relaisSelected = relais.find(r => r.id === relaiId);
     const admin = includes(roles, 'ADMIN');
+    const utilisateur = utilisateurId ? utilisateurs[utilisateurId] : null;
 
-    return (<div className="row">
-      { includes(roles, 'ADMIN') &&
-        <div className={classnames('col-md-2', styles.panel)}>
-          <SelectableList value={relaiId} onChange={this.handleChangeList}>
-            {relais
-              .filter((r) => admin || r.id === authRelaiId)
-              .map((rel, idx) =>
-                <ListItem
-                  key={idx}
-                  primaryText={rel.nom.toUpperCase()}
-                  value={rel.id}
+    return (
+      <div className="row">
+        {includes(roles, 'ADMIN') &&
+          <div className={classnames('col-md-2', styles.panel)}>
+            <SelectableList value={relaiId} onChange={this.handleChangeList}>
+              {relais
+                .filter(r => admin || r.id === authRelaiId)
+                .map((rel, idx) => (
+                  <ListItem
+                    key={idx}
+                    primaryText={rel.nom.toUpperCase()}
+                    value={rel.id}
+                  />
+                ))}
+            </SelectableList>
+          </div>}
+        <div
+          className={classnames(
+            {
+              'col-md-10': includes(roles, 'ADMIN'),
+              'col-md-12': !includes(roles, 'ADMIN'),
+            },
+            styles.panel,
+          )}
+        >
+          <div className="row end-md">
+            <div className="col-md-12">
+              {relaisSelected &&
+                <FlatButton
+                  label="Commandes en cours"
+                  icon={<ShoppingCartIcon />}
+                  onClick={() => pushState(`/relais/${relaiId}/commandes`)}
+                />}
+              {relaisSelected &&
+                [
+                  (
+                    <FlatButton
+                      label="Depots"
+                      icon={<EuroIcon />}
+                      onClick={() => this.setState({ viewSelected: 'depot' })}
+                    />
+                  ),
+                  (
+                    <FlatButton
+                      label="Adhérents"
+                      icon={<PeopleIcon />}
+                      onClick={() =>
+                        this.setState({ viewSelected: 'adherents' })}
+                    />
+                  ),
+                  (
+                    <FlatButton
+                      label="Fournisseurs"
+                      icon={<FournisseursIcon />}
+                      onClick={() =>
+                        this.setState({ viewSelected: 'fournisseurs' })}
+                    />
+                  ),
+                  (
+                    <FlatButton
+                      label="Infos"
+                      icon={<InfoIcon />}
+                      onClick={() => this.setState({ viewSelected: 'infos' })}
+                    />
+                  ),
+                ]}
+            </div>
+          </div>
+          {viewSelected === 'depot' &&
+            utilisateurs &&
+            <DepotsRelais relaiId={relaiId} utilisateurs={utilisateurs} />}
+          {viewSelected === 'fournisseurs' &&
+            <FournisseursRelais relaiId={relaiId} params={params} />}
+          {viewSelected === 'infos' &&
+            <InfosRelais relais={relaisSelected} params={params} test="5" />}
+          {viewSelected === 'adherents' &&
+            <div className="row">
+              <div className="col-md-4">
+                <ListeUtilisateurs
+                  relaiId={relaiId}
+                  onChangeList={(event, value) =>
+                    this.setState({ ...this.state, utilisateurId: value })}
                 />
-            )}
-          </SelectableList>
+              </div>
+              <div className="col-md-8">
+                {utilisateur && <Utilisateur utilisateur={utilisateur} />}
+                {utilisateur &&
+                  utilisateur.stellarKeys &&
+                  <StellarAccount
+                    stellarAdr={utilisateur.stellarKeys.adresse}
+                  />}
+              </div>
+            </div>}
         </div>
-      }
-      <div
-        className={
-          classnames({
-            'col-md-10': includes(roles, 'ADMIN'),
-            'col-md-12': !includes(roles, 'ADMIN'),
-          }, styles.panel)}
-      >
-        <div className="row end-md">
-          <div className="col-md-12">
-            {relaisSelected &&
-              <FlatButton
-                label="Commandes en cours"
-                icon={<ShoppingCartIcon />}
-                onClick={() => pushState(`/relais/${relaiId}/commandes`)}
-              />
-            }
-            {relaisSelected &&
-              [
-                <FlatButton
-                  label="Depots"
-                  icon={<EuroIcon />}
-                  onClick={() => this.setState({ viewSelected: 'depot' })}
-                />,
-                <FlatButton
-                  label="Adhérents"
-                  icon={<PeopleIcon />}
-                  onClick={() => this.setState({ viewSelected: 'adherents' })}
-                />,
-                <FlatButton
-                  label="Fournisseurs"
-                  icon={<FournisseursIcon />}
-                  onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
-                />,
-                <FlatButton
-                  label="Infos"
-                  icon={<InfoIcon />}
-                  onClick={() => this.setState({ viewSelected: 'infos' })}
-                />,
-              ]
-            }
-          </div>
-        </div>
-        {viewSelected === 'depot' && utilisateurs &&
-          <DepotsRelais
-            relaiId={relaiId}
-            utilisateurs={utilisateurs}
-          />}
-        {viewSelected === 'fournisseurs' &&
-          <FournisseursRelais
-            relaiId={relaiId}
-            params={params}
-          />}
-        {viewSelected === 'infos' &&
-          <InfosRelais
-            relais={relaisSelected}
-            params={params}
-            test="5"
-          />}
-        {viewSelected === 'adherents' &&
-          <div className="row">
-            <div className="col-md-4">
-              <ListeUtilisateurs
-                relaiId={relaiId}
-                onChangeList={(event, value) => this.setState({ ...this.state, utilisateurId: value })}
-              />
-            </div>
-            <div className="col-md-8">
-              { utilisateurId && <Utilisateur utilisateur={utilisateurs[utilisateurId]} />}
-            </div>
-          </div>
-          }
       </div>
-    </div>);
+    );
   }
 }
 
@@ -178,11 +199,14 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadRelais,
-  loadUtil: loadUtilisateurs,
-  // loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    load: loadRelais,
+    loadUtil: loadUtilisateurs,
+    // loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
+    pushState: push,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminRelais);

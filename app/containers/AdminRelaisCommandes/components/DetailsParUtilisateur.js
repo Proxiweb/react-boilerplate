@@ -26,6 +26,7 @@ import DetailCommandeTotal from './DetailCommandeTotal';
 import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
 import LivraisonCommande from './LivraisonCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
+import StellarAccount from 'components/StellarAccount';
 
 // eslint-disable-next-line
 class DetailsParUtilisateur extends Component {
@@ -148,6 +149,11 @@ class DetailsParUtilisateur extends Component {
               </div>
             </div>
           </div>}
+        <div className="col-md-12" style={{ marginTop: '1em' }}>
+          {utilisateur.stellarKeys &&
+            <StellarAccount stellarAdr={utilisateur.stellarKeys.adresse} />}
+          {!utilisateur.stellarKeys && <h1>Pas de compte</h1>}
+        </div>
       </div>
     );
   }

@@ -9,26 +9,35 @@ import capitalize from 'lodash/capitalize';
 import { addDestinataire } from 'containers/AdminCommunication/actions';
 import Panel from 'components/Panel';
 
-class Utilisateur extends Component { // eslint-disable-line
+class Utilisateur extends Component {
+  // eslint-disable-line
   static propTypes = {
     utilisateur: PropTypes.object.isRequired,
     addDest: PropTypes.func.isRequired,
-  }
+  };
 
   render() {
     const { utilisateur, addDest } = this.props;
     if (!utilisateur) return null;
-    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
+    const identite = `${capitalize(
+      utilisateur.prenom,
+    )} ${utilisateur.nom.toUpperCase()}`;
     return (
       <Panel padding={0}>
         <div className="row">
           <div className="col-md-9">
-            <div style={{ lineHeight: '48px', textAlign: 'left', padding: '0 1em' }}>
+            <div
+              style={{
+                lineHeight: '48px',
+                textAlign: 'left',
+                padding: '0 1em',
+              }}
+            >
               {identite}
             </div>
           </div>
           <div className="col-md-3">
-            { utilisateur.email &&
+            {utilisateur.email &&
               <IconButton
                 tooltip="Envoyer un email"
                 onClick={() => addDest({
@@ -38,9 +47,8 @@ class Utilisateur extends Component { // eslint-disable-line
                 })}
               >
                 <EmailIcon />
-              </IconButton>
-            }
-            { utilisateur.telPortable &&
+              </IconButton>}
+            {utilisateur.telPortable &&
               <IconButton
                 tooltip="Envoyer un sms"
                 onClick={() => addDest({
@@ -50,8 +58,7 @@ class Utilisateur extends Component { // eslint-disable-line
                 })}
               >
                 <MessageIcon />
-              </IconButton>
-            }
+              </IconButton>}
           </div>
         </div>
       </Panel>
@@ -59,8 +66,11 @@ class Utilisateur extends Component { // eslint-disable-line
   }
 }
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  addDest: addDestinataire,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    addDest: addDestinataire,
+  },
+  dispatch,
+);
 
 export default connect(null, mapDispatchToProps)(Utilisateur);
