@@ -232,6 +232,11 @@ class AdminRelaisCommandes extends Component {
                 >
                   {commandesFiltredIds
                     .filter(id => {
+                      if (!commandes[id].livraisons) {
+                        // eslint-disable-next-line
+                        console.log(`La commande ${id} n'a pas de livraison`);
+                        return false;
+                      }
                       let inRelais = false;
                       commandes[id].livraisons.forEach(cmdeLivr => {
                         if (livraisons[cmdeLivr].relaiId === relaiId) {

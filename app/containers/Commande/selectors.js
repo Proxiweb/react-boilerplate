@@ -127,6 +127,11 @@ export const selectCommandesRelais = () =>
     Object.keys(commandes)
       .filter(commandeId => {
         let inRelais = false;
+        if (!commandes[commandeId].livraisons) {
+          // eslint-disable-next-line
+          console.log(`La commande ${commandeId} n'a pas de livraison`);
+          return false;
+        }
         commandes[commandeId].livraisons.forEach(cmdeLivr => {
           if (livraisons[cmdeLivr].relaiId === relaiId) {
             inRelais = true;
