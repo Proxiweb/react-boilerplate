@@ -23,7 +23,7 @@ import createReducer from './reducers';
 
 // Raven.config('https://1a73e161db764041ae0c12734942e6ab@sentry.io/131956').install();
 
-const errorHandler = (error, getState, lastAction/* , dispatch*/) => {
+const errorHandler = (error, getState, lastAction /* , dispatch*/) => {
   /* eslint-disable */
   console.error(error);
   console.debug('current state', getState());
@@ -34,9 +34,16 @@ const errorHandler = (error, getState, lastAction/* , dispatch*/) => {
 };
 
 const sagaMiddleware = createSagaMiddleware();
-const devtools = window.devToolsExtension || (() => (noop) => noop);
+const devtools = window.devToolsExtension || (() => noop => noop);
 
 const socket = io('', { path: '/ws' });
+
+window.onbeforeunload = () => {
+  if (confirm('close')) {
+    socket.close();
+  }
+};
+
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'SERVER/');
 
 export default function configureStore(initialState = {}, history) {
@@ -67,20 +74,15 @@ export default function configureStore(initialState = {}, history) {
     // autoRehydrate(),
   ];
 
-  const store = createStore(
-    createReducer(),
-    initialState,
-    compose(...enhancers)
-  );
+  const store = createStore(createReducer(), initialState, compose(...enhancers));
 
   // Create hook for async sagas
   store.runSaga = sagaMiddleware.run;
 
-
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
   if (module.hot) {
-    System.import('./reducers').then((reducerModule) => {
+    System.import('./reducers').then(reducerModule => {
       const createReducers = reducerModule.default;
       const nextReducers = createReducers(store.asyncReducers);
 

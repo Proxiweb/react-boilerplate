@@ -60,9 +60,7 @@ class CommandesFournisseur extends Component {
   };
 
   handleChangeList = (event, value) => {
-    this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`,
-    );
+    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`);
   };
 
   render() {
@@ -79,7 +77,6 @@ class CommandesFournisseur extends Component {
     if (!commandes) return null;
     const print = locationState.locationBeforeTransitions.query.print;
 
-    console.log(this.props);
     return (
       <div className="row">
         {!print &&
@@ -88,23 +85,13 @@ class CommandesFournisseur extends Component {
               {commandes
                 .slice()
                 .filter(cde => cde.dateCommande)
-                .sort(
-                  (a, b) =>
-                    moment(a.dateCommande).unix() <
-                      moment(b.dateCommande).unix(),
-                )
+                .sort((a, b) => moment(a.dateCommande).unix() < moment(b.dateCommande).unix())
                 .map((cde, idx) => (
-                  <ListItem
-                    key={idx}
-                    primaryText={moment(cde.dateCommande).format('LL')}
-                    value={cde.id}
-                  />
+                  <ListItem key={idx} primaryText={moment(cde.dateCommande).format('LL')} value={cde.id} />
                 ))}
             </SelectableList>
           </div>}
-        <div
-          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
-        >
+        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
           {!print &&
             commandeId &&
             <div className="row around-md">
@@ -126,10 +113,7 @@ class CommandesFournisseur extends Component {
                   fullWidth
                   label="Facture"
                   onClick={() =>
-                    window.open(
-                      `/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`,
-                      '_blank',
-                    )}
+                    window.open(`/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`, '_blank')}
                 />
               </div>
             </div>}
@@ -168,6 +152,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  CommandesFournisseur,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CommandesFournisseur);

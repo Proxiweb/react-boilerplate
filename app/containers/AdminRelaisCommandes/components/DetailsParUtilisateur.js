@@ -152,7 +152,7 @@ class DetailsParUtilisateur extends Component {
         <div className="col-md-12" style={{ marginTop: '1em' }}>
           {utilisateur.stellarKeys &&
             <StellarAccount stellarAdr={utilisateur.stellarKeys.adresse} />}
-          {!utilisateur.stellarKeys && <h1>Pas de compte</h1>}
+          {!utilisateur.stellarKeys && <h3>Pas de compte</h3>}
         </div>
       </div>
     );

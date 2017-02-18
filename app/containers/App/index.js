@@ -28,6 +28,7 @@ import NavigationMenuIcon from 'material-ui/svg-icons/navigation/menu';
 import FlatButton from 'material-ui/FlatButton';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
+import Headroom from 'react-headroom';
 
 import {
   selectBalance,
@@ -42,9 +43,7 @@ import {
   selectLocationState,
 } from './selectors';
 
-import {
-  loadMessages,
-} from './actions';
+import { loadMessages } from './actions';
 
 import { logout } from 'containers/Login/actions';
 import { refresh } from 'containers/CompteUtilisateur/actions';
@@ -52,7 +51,7 @@ import Logged from './components/Logged';
 import Login from './components/Login';
 import MessageMaj from './components/MessageMaj';
 
-const getDrawerHeaderStyle = (context) => {
+const getDrawerHeaderStyle = context => {
   const {
     appBar,
   } = context.muiTheme;
@@ -66,7 +65,8 @@ const getDrawerHeaderStyle = (context) => {
   };
 };
 
-class App extends Component { // eslint-disable-line react/prefer-stateless-function
+class App extends Component {
+  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: PropTypes.node,
     pushState: PropTypes.func.isRequired,
@@ -77,14 +77,11 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     logout: PropTypes.func.isRequired,
     compte: PropTypes.object,
     locationState: PropTypes.object.isRequired,
-    user: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.bool,
-    ]),
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     pending: PropTypes.bool.isRequired,
     loadM: PropTypes.func.isRequired,
     refresh: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -93,7 +90,7 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   state = {
     drawerOpen: false,
     maj: false,
-  }
+  };
 
   componentDidMount = () => {
     const { loadM, user, messagesLoaded } = this.props;
@@ -119,24 +116,19 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
         console.log('SW Event:', 'onUpdated');
         // Force reload happens here
         this.setState({ maj: true });
-        setTimeout(
-          window.location.reload(true),
-          5000
-        );
+        setTimeout(window.location.reload(true), 5000);
       },
 
       onUpdateFailed: () => {
         console.log('SW Event:', 'onUpdateFailed');
       },
     });
-  }
+  };
 
   toggleDrawer = () =>
-    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen })
+    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
 
-
-  closeDrawer = () =>
-    this.setState({ ...this.state, drawerOpen: false })
+  closeDrawer = () => this.setState({ ...this.state, drawerOpen: false });
 
   handleChangeList = (event, value) => {
     event.preventDefault();
@@ -148,9 +140,9 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
     }
 
     this.closeDrawer();
-  }
+  };
 
-  handleChangeRequestNavDrawer = (open) => {
+  handleChangeRequestNavDrawer = open => {
     this.setState({
       drawerOpen: open,
     });
@@ -183,62 +175,79 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
 
     return (
       <div className={styles.allContent}>
-        <Toolbar
-          className={`${styles.noPrint} ${styles.toolbar}`}
-          style={{
-            backgroundColor: muiTheme.appBar.color,
-            height: '50px',
-          }}
-        >
-          <ToolbarGroup firstChild>
-            <IconButton touch onClick={this.toggleDrawer} style={{ paddingRight: 0 }}>
-              <NavigationMenuIcon />
-            </IconButton>
-            <FlatButton
-              label="Relais ProxiWeb"
-              style={{ color: 'black', marginLeft: 0, marginTop: 5 }}
-              onClick={() => pushState('/')}
-            />
-            {pending && (
-              <div style={{ position: 'relative' }}>
-                <CircularProgress
-                  size={20}
-                  color="white"
-                  status="loading"
-                  style={{ display: 'inline-block', position: 'absolute', zIndex: 1200, top: 19, left: -35 }}
-                />
-              </div>
-            )}
-          </ToolbarGroup>
-          {
-            user
-            ?
-              <Logged
-                messages={messages.filter((m) => m.dateConsultation === null)}
-                destinataires={destinataires}
-                pushState={pushState}
+        <Headroom>
+          <Toolbar
+            className={`${styles.noPrint} ${styles.toolbar}`}
+            style={{
+              backgroundColor: muiTheme.appBar.color,
+              height: '50px',
+            }}
+          >
+            <ToolbarGroup firstChild>
+              <IconButton
+                touch
+                onClick={this.toggleDrawer}
+                style={{ paddingRight: 0 }}
+              >
+                <NavigationMenuIcon />
+              </IconButton>
+              <FlatButton
+                label="Relais ProxiWeb"
+                style={{ color: 'black', marginLeft: 0, marginTop: 5 }}
+                onClick={() => pushState('/')}
               />
-            :
-              <Login onClick={this.handleChangeList} />
-          }
-        </Toolbar>
+              {pending &&
+                <div style={{ position: 'relative' }}>
+                  <CircularProgress
+                    size={20}
+                    color="white"
+                    status="loading"
+                    style={{
+                      display: 'inline-block',
+                      position: 'absolute',
+                      zIndex: 1200,
+                      top: 19,
+                      left: -35,
+                    }}
+                  />
+                </div>}
+            </ToolbarGroup>
+            {user
+              ? <Logged
+                  messages={messages.filter(m => m.dateConsultation === null)}
+                  destinataires={destinataires}
+                  pushState={pushState}
+                />
+              : <Login onClick={this.handleChangeList} />}
+          </Toolbar>
+        </Headroom>
         <AppMainDrawer
           open={this.state.drawerOpen}
           onSelect={this.navigateTo}
           onChangeList={this.handleChangeList}
           user={user}
           showPorteMonnaie={showPorteMonnaie}
-          onRequestChange={(open) => this.setState({ drawerOpen: open })}
+          onRequestChange={open => this.setState({ drawerOpen: open })}
           logout={this.props.logout}
           messages={messages}
           anonRelaiId={anonRelaiId}
-          header={(
-            <MenuItem
-              primaryText="Menu"
-              rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
-              onTouchTap={this.closeDrawer}
-              style={drawerStyle}
-            />)}
+          header={
+            (
+              <MenuItem
+                primaryText="Menu"
+                rightIcon={
+                  (
+                    <Close
+                      color={drawerStyle.textColor}
+                      style={{ height: 40, width: 30 }}
+                    />
+                  )
+                }
+                onTouchTap={this.closeDrawer}
+                style={drawerStyle}
+              />
+            )
+          }
         />
         <div className={`container-fluid ${styles.mainContent}`}>
           {!this.state.maj && React.Children.toArray(this.props.children)}
@@ -250,7 +259,8 @@ class App extends Component { // eslint-disable-line react/prefer-stateless-func
   }
 }
 
-const selectDestinaires = () => (state) => (state.admin ? state.admin.communication.destinataires : []);
+const selectDestinaires = () =>
+  state => state.admin ? state.admin.communication.destinataires : [];
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
@@ -263,11 +273,14 @@ const mapStateToProps = createStructuredSelector({
   locationState: selectLocationState(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  pushState: push,
-  logout,
-  refresh,
-  loadM: loadMessages,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    pushState: push,
+    logout,
+    refresh,
+    loadM: loadMessages,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -17,7 +17,8 @@ import { selectLocationState } from 'containers/App/selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
 import NotificationsForm from 'components/NotificationsForm';
 
-export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class CompteUtilisateur extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
     locationState: PropTypes.object.isRequired,
@@ -25,20 +26,21 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
     relais: PropTypes.string,
     params: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-  }
+  };
 
-  handleChange = (value) => {
+  handleChange = value => {
     const { pushState, params } = this.props;
     pushState(`/users/${params.userId}/profile?tab=${value}`);
-  }
+  };
 
   render() {
     const { query } = this.props.locationState.locationBeforeTransitions;
     const { relais, relaiId } = this.props;
+
     return (
       <div className="row center-lg">
         <div className="col-lg-6">
@@ -53,15 +55,15 @@ export class CompteUtilisateur extends React.Component { // eslint-disable-line 
             <Tab label="Notifications" value="notifications">
               <NotificationsForm />
             </Tab>
-            {relais[relaiId] &&
+            {relais &&
+              relais[relaiId] &&
               <Tab label="Relais" value="relais">
                 <Paper zDepth={2} style={{ padding: '1rem', minHeight: '444px' }}>
                   <p style={{ textAlign: 'center' }}>
                     Vous êtes inscrit sur le relais <strong>{relais[relaiId].nom}</strong>
                   </p>
                 </Paper>
-              </Tab>
-            }
+              </Tab>}
           </Tabs>
         </div>
       </div>
@@ -80,8 +82,8 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    pushState: (url) => dispatch(push(url)),
-    logout: () => dispatch(logout()),  // eslint-disable-line
+    pushState: url => dispatch(push(url)),
+    logout: () => dispatch(logout()), // eslint-disable-line
   };
 }
 
