@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import CustomSelectField from 'components/CustomSelectField';
-import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
 import Toggle from 'material-ui/Toggle';
@@ -27,12 +25,12 @@ import styles from './styles.css';
 import OffreDetailsCard from 'components/OffreDetailsCard';
 import OffreDetails from 'components/OffreDetails';
 import FournisseurHebdoSwitch from './FournisseurHebdoSwitch';
+import ListeFournisseursRelais from './ListeFournisseursRelais';
 
 const SelectableList = makeSelectable(List);
 
 class FournisseursRelais extends Component {
   static propTypes = {
-    relaiId: PropTypes.string.isRequired,
     load: PropTypes.func.isRequired,
     loadF: PropTypes.func.isRequired,
     loadT: PropTypes.func.isRequired,
@@ -42,20 +40,20 @@ class FournisseursRelais extends Component {
     params: PropTypes.object.isRequired,
     typesProduits: PropTypes.object,
     offres: PropTypes.object,
-  }
+  };
 
   state = {
     fournisseurSelected: null,
     produitSelected: null,
-  }
+  };
 
   componentDidMount = () => {
     const { relaiId, load, loadT } = this.props;
     load({ relaiId });
     loadT();
-  }
+  };
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     if (nextProps.relaiId !== this.props.relaiId) {
       this.setState({
         fournisseurSelected: null,
@@ -63,18 +61,17 @@ class FournisseursRelais extends Component {
       });
       this.props.load(nextProps.relaiId);
     }
-  }
+  };
 
   handleChangeFournisseur = (event, index, value) => {
     this.setState({ fournisseurSelected: value, produitSelected: null });
     this.props.loadF(value);
-  }
+  };
 
-  handleSelectProduit = (event, value) =>
-    this.setState({
-      ...this.state,
-      produitSelected: value,
-    })
+  handleSelectProduit = (event, value) => this.setState({
+    ...this.state,
+    produitSelected: value,
+  });
 
   handleImporterOffres = () => {
     const { produitSelected, fournisseurSelected } = this.state;
@@ -84,82 +81,108 @@ class FournisseursRelais extends Component {
       produitSelected,
       relaiDestinationId,
     );
-  }
+  };
 
   render() {
-    const { fournisseurs, produits, offres: offresById, params, typesProduits } = this.props;
+    const {
+      fournisseurs,
+      produits,
+      offres: offresById,
+      params,
+      typesProduits,
+    } = this.props;
     const { fournisseurSelected, produitSelected } = this.state;
     const fournisseur = fournisseurSelected
-                         ? fournisseurs.find((f) => f.id === fournisseurSelected)
-                         : null;
+      ? fournisseurs.find(f => f.id === fournisseurSelected)
+      : null;
 
     const produitsFournisseur = fournisseurSelected && produits
-                                ? Object.keys(produits)
-                                    .map((k) => produits[k])
-                                    .filter((p) => p.fournisseurId === fournisseurSelected)
-                                : [];
+      ? Object.keys(produits)
+          .map(k => produits[k])
+          .filter(p => p.fournisseurId === fournisseurSelected)
+      : [];
 
-    const offres = offresById ? Object.keys(offresById).map((id) => offresById[id]) : [];
+    const offres = offresById
+      ? Object.keys(offresById).map(id => offresById[id])
+      : [];
     const offresProduit = produitSelected
-                          ? offres.filter((o) =>
-                              o.produitId === produitSelected &&
-                              o.relaiId === params.relaiId
-                            )
-                          : [];
+      ? offres.filter(
+          o => o.produitId === produitSelected && o.relaiId === params.relaiId,
+        )
+      : [];
     return (
       <div className="row">
         <div className="col-md-4">
-          {fournisseurs && fournisseurs.length > 0 &&
-            <CustomSelectField
-              fullWidth
-              value={fournisseurSelected}
+          {fournisseurs &&
+            <ListeFournisseursRelais
               onChange={this.handleChangeFournisseur}
-              floatingLabelText="Fournisseur"
-              hintText="Sélectionnez un fournisseur"
+              relaiId={params.relaiId}
+            />}
+
+          {produitsFournisseur.length > 0 &&
+            <SelectableList
+              value={produitSelected}
+              onChange={this.handleSelectProduit}
+              className={styles.listePdts}
             >
-              {fournisseurs.map((data, idx) =>
-                <MenuItem key={idx} value={data.id} primaryText={data.nom.toUpperCase()} />
-              )}
-            </CustomSelectField>
-          }
-          { produitsFournisseur.length > 0 &&
-            <SelectableList value={produitSelected} onChange={this.handleSelectProduit} className={styles.listePdts}>
-              {produitsFournisseur
-                .map((pdt, idx) =>
-                  <ListItem
-                    key={idx}
-                    primaryText={pdt.nom.toUpperCase()}
-                    value={pdt.id}
-                    leftIcon={
+              {produitsFournisseur.map((pdt, idx) => (
+                <ListItem
+                  key={idx}
+                  primaryText={pdt.nom.toUpperCase()}
+                  value={pdt.id}
+                  leftIcon={
+                    (
                       <PastilleIcon
                         color={
-                          offres.find((o) =>
+                          offres.find(
+                            o =>
                               o.produitId === pdt.id &&
                               o.active &&
-                              o.relaiId === params.relaiId
-                            )
-                          ? 'green'
-                          : 'silver'
+                              o.relaiId === params.relaiId,
+                          )
+                            ? 'green'
+                            : 'silver'
                         }
                       />
-                    }
-                  />
-              )}
-            </SelectableList>
-          }
+                    )
+                  }
+                />
+              ))}
+            </SelectableList>}
         </div>
         <div className="col-md-8" style={{ marginTop: '2em' }}>
-          {offresProduit.length > 0 && typesProduits &&
-            offresProduit
-            .slice().sort((o1, o2) => o1.active > o2.active)
-            .map((o, idx) =>
+          {offresProduit.length > 0 &&
+            typesProduits &&
+            offresProduit.slice().sort((o1, o2) => o1.active > o2.active).map((
+              o,
+              idx,
+            ) => (
               <div className={`row ${styles.offre}`} key={idx}>
+                <div className="col-md-4">
+                  <img
+                    src={
+                      `https://proxiweb.fr/${produits[produitSelected].photo}`
+                    }
+                    alt={produits[produitSelected].nom}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxWidth: 200,
+                      border: 'solid 1px gray',
+                    }}
+                  />
+                </div>
+                <div className="col-md-8">
+                  {produits[produitSelected].description}
+                </div>
                 <div className="col-md-8">
                   <OffreDetails
                     key={idx}
                     offre={o}
                     qteCommande={0}
-                    typeProduit={typesProduits[produits[produitSelected].typeProduitId]}
+                    typeProduit={
+                      typesProduits[produits[produitSelected].typeProduitId]
+                    }
                   />
                 </div>
                 <div className="col-md-1">
@@ -170,9 +193,9 @@ class FournisseursRelais extends Component {
                   />
                 </div>
               </div>
-            )
-          }
-          {produitSelected && offresProduit.length === 0 &&
+            ))}
+          {produitSelected &&
+            offresProduit.length === 0 &&
             <div className="row center-md">
               <div className="col-md-6">
                 <RaisedButton
@@ -182,15 +205,14 @@ class FournisseursRelais extends Component {
                   onClick={this.handleImporterOffres}
                 />
               </div>
-            </div>
-          }
-          {!produitSelected && fournisseurSelected &&
+            </div>}
+          {!produitSelected &&
+            fournisseurSelected &&
             <FournisseurHebdoSwitch
               fournisseurId={fournisseurSelected}
               params={params}
               fournisseur={fournisseur.nom.toUpperCase()}
-            />
-          }
+            />}
         </div>
       </div>
     );
@@ -204,11 +226,14 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadFournisseurs,
-  loadF: loadFournisseur,
-  loadT: loadTypesProduits,
-  importe: importeOffres,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    load: loadFournisseurs,
+    loadF: loadFournisseur,
+    loadT: loadTypesProduits,
+    importe: importeOffres,
+  },
+  dispatch,
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(FournisseursRelais);

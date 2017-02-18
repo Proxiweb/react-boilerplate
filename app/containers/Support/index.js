@@ -6,7 +6,6 @@ import { createStructuredSelector } from 'reselect';
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-import MailIcon from 'material-ui/svg-icons/communication/mail-outline';
 
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
@@ -55,11 +54,9 @@ class Support extends Component {
       ...this.state,
       de: this.props.user.id,
       a: '3c3fff89-9604-4729-b794-69dd60005dfe',
-      identiteExpediteur: (
-        `${capitalize(
-          this.props.user.prenom,
-        )} ${this.props.user.nom.toUpperCase()}`
-      ),
+      identiteExpediteur: `${capitalize(
+        this.props.user.prenom,
+      )} ${this.props.user.nom.toUpperCase()}`,
     },
     '/',
   );

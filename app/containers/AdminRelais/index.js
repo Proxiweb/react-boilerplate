@@ -118,47 +118,45 @@ class AdminRelais extends Component {
             styles.panel,
           )}
         >
-          <div className="row end-md">
-            <div className="col-md-12">
+          <div className={`row end-md ${styles.container}`}>
+            <div className={`col-md-12 ${styles.toolbar}`}>
               {relaisSelected &&
                 <FlatButton
                   label="Commandes en cours"
                   icon={<ShoppingCartIcon />}
                   onClick={() => pushState(`/relais/${relaiId}/commandes`)}
                 />}
-              {relaisSelected &&
-                [
-                  (
-                    <FlatButton
-                      label="Depots"
-                      icon={<EuroIcon />}
-                      onClick={() => this.setState({ viewSelected: 'depot' })}
-                    />
-                  ),
-                  (
-                    <FlatButton
-                      label="Adhérents"
-                      icon={<PeopleIcon />}
-                      onClick={() =>
-                        this.setState({ viewSelected: 'adherents' })}
-                    />
-                  ),
-                  (
-                    <FlatButton
-                      label="Fournisseurs"
-                      icon={<FournisseursIcon />}
-                      onClick={() =>
-                        this.setState({ viewSelected: 'fournisseurs' })}
-                    />
-                  ),
-                  (
-                    <FlatButton
-                      label="Infos"
-                      icon={<InfoIcon />}
-                      onClick={() => this.setState({ viewSelected: 'infos' })}
-                    />
-                  ),
-                ]}
+              {relaisSelected && [
+                (
+                  <FlatButton
+                    label="Depots"
+                    icon={<EuroIcon />}
+                    onClick={() => this.setState({ viewSelected: 'depot' })}
+                  />
+                ),
+                (
+                  <FlatButton
+                    label="Adhérents"
+                    icon={<PeopleIcon />}
+                    onClick={() => this.setState({ viewSelected: 'adherents' })}
+                  />
+                ),
+                (
+                  <FlatButton
+                    label="Fournisseurs"
+                    icon={<FournisseursIcon />}
+                    onClick={() =>
+                      this.setState({ viewSelected: 'fournisseurs' })}
+                  />
+                ),
+                (
+                  <FlatButton
+                    label="Infos"
+                    icon={<InfoIcon />}
+                    onClick={() => this.setState({ viewSelected: 'infos' })}
+                  />
+                ),
+              ]}
             </div>
           </div>
           {viewSelected === 'depot' &&
@@ -169,7 +167,7 @@ class AdminRelais extends Component {
           {viewSelected === 'infos' &&
             <InfosRelais relais={relaisSelected} params={params} test="5" />}
           {viewSelected === 'adherents' &&
-            <div className="row">
+            <div className={`row ${styles.adherents}`}>
               <div className="col-md-4">
                 <ListeUtilisateurs
                   relaiId={relaiId}

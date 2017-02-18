@@ -4,9 +4,10 @@ import SendIcon from 'material-ui/svg-icons/content/send';
 import PersonIcon from 'material-ui/svg-icons/social/person';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 import includes from 'lodash/includes';
+import styles from './styles.css';
 
 const FournisseurToolbar = ({ pushState, roles, relaiId, commandeId }) => (
-  <div className="col-md-12">
+  <div className={`col-md-12 ${styles.toolbar}`}>
     <FlatButton
       label="Passer une commande"
       icon={<PersonIcon />}

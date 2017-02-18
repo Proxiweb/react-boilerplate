@@ -71,7 +71,7 @@ class Communications extends Component {
   render() {
     const { communications } = this.props;
     const { communicationId } = this.state;
-    console.log(communicationId);
+
     return (
       <Panel title="Dernières communications">
         {communications.length > 0 &&
