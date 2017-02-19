@@ -8,12 +8,6 @@ import createSagaMiddleware from 'redux-saga';
 import reduxCatch from 'redux-catch';
 import createSocketIoMiddleware from 'redux-socket.io';
 // import Raven from 'raven-js';
-// import { autoRehydrate } from 'redux-persist';
-
-// import * as storage from 'redux-storage';
-// import createEngine from 'redux-storage-engine-localstorage';
-// import debounce from 'redux-storage-decorator-debounce';
-// import filter from 'redux-storage-decorator-filter';
 
 import io from 'socket.io-client/socket.io';
 
@@ -30,7 +24,6 @@ const errorHandler = (error, getState, lastAction /* , dispatch*/) => {
   console.debug('last action was', lastAction);
   // Raven.captureException(error);
   /* eslint-enable */
-  // optionally dispatch an action due to the error using the dispatch parameter
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -38,41 +31,17 @@ const devtools = window.devToolsExtension || (() => noop => noop);
 
 const socket = io('', { path: '/ws' });
 
-window.onbeforeunload = () => {
-  if (confirm('close')) {
-    socket.close();
-  }
-};
-
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'SERVER/');
 
 export default function configureStore(initialState = {}, history) {
-  // Create the store with two middlewares
-  // 1. sagaMiddleware: Makes redux-sagas work
-  // 2. routerMiddleware: Syncs the location/URL path to the state
-  // const sessionStorageEngine = createSessionStorageEngine('redux');
-  // const engine = debounce(
-  //   filter(
-  //     createEngine('proxiweb'),
-  //     ['compteUtilisateur', 'commande']
-  //   ),
-  //   1500
-  // );
-  // const storageMiddleware = storage.createMiddleware(engine);
-
   const middlewares = [
     sagaMiddleware,
-    // storageMiddleware,
     routerMiddleware(history),
     socketIoMiddleware,
     reduxCatch(errorHandler),
   ];
 
-  const enhancers = [
-    applyMiddleware(...middlewares),
-    devtools(),
-    // autoRehydrate(),
-  ];
+  const enhancers = [applyMiddleware(...middlewares), devtools()];
 
   const store = createStore(createReducer(), initialState, compose(...enhancers));
 

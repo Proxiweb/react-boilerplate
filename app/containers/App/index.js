@@ -28,12 +28,8 @@ import NavigationMenuIcon from 'material-ui/svg-icons/navigation/menu';
 import FlatButton from 'material-ui/FlatButton';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
-import Headroom from 'react-headroom';
 
-import {
-  selectBalance,
-  selectCompteUtilisateur,
-} from 'containers/CompteUtilisateur/selectors';
+import { selectBalance, selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import {
   selectPending,
@@ -81,6 +77,7 @@ class App extends Component {
     pending: PropTypes.bool.isRequired,
     loadM: PropTypes.func.isRequired,
     refresh: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -90,6 +87,7 @@ class App extends Component {
   state = {
     drawerOpen: false,
     maj: false,
+    logged: false,
   };
 
   componentDidMount = () => {
@@ -99,7 +97,6 @@ class App extends Component {
       if (!messagesLoaded) {
         loadM({ a: user.id });
       }
-
       this.props.refresh(user.id);
     }
 
@@ -125,8 +122,7 @@ class App extends Component {
     });
   };
 
-  toggleDrawer = () =>
-    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
+  toggleDrawer = () => this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
 
   closeDrawer = () => this.setState({ ...this.state, drawerOpen: false });
 
@@ -175,52 +171,46 @@ class App extends Component {
 
     return (
       <div className={styles.allContent}>
-        <Headroom>
-          <Toolbar
-            className={`${styles.noPrint} ${styles.toolbar}`}
-            style={{
-              backgroundColor: muiTheme.appBar.color,
-              height: '50px',
-            }}
-          >
-            <ToolbarGroup firstChild>
-              <IconButton
-                touch
-                onClick={this.toggleDrawer}
-                style={{ paddingRight: 0 }}
-              >
-                <NavigationMenuIcon />
-              </IconButton>
-              <FlatButton
-                label="Relais ProxiWeb"
-                style={{ color: 'black', marginLeft: 0, marginTop: 5 }}
-                onClick={() => pushState('/')}
-              />
-              {pending &&
-                <div style={{ position: 'relative' }}>
-                  <CircularProgress
-                    size={20}
-                    color="white"
-                    status="loading"
-                    style={{
-                      display: 'inline-block',
-                      position: 'absolute',
-                      zIndex: 1200,
-                      top: 19,
-                      left: -35,
-                    }}
-                  />
-                </div>}
-            </ToolbarGroup>
-            {user
-              ? <Logged
-                  messages={messages.filter(m => m.dateConsultation === null)}
-                  destinataires={destinataires}
-                  pushState={pushState}
+        <Toolbar
+          className={`${styles.noPrint} ${styles.toolbar}`}
+          style={{
+            backgroundColor: muiTheme.appBar.color,
+            height: '50px',
+          }}
+        >
+          <ToolbarGroup firstChild>
+            <IconButton touch onClick={this.toggleDrawer} style={{ paddingRight: 0 }}>
+              <NavigationMenuIcon />
+            </IconButton>
+            <FlatButton
+              label="Relais ProxiWeb"
+              style={{ color: 'black', marginLeft: 0, marginTop: 5 }}
+              onClick={() => pushState('/')}
+            />
+            {pending &&
+              <div style={{ position: 'relative' }}>
+                <CircularProgress
+                  size={20}
+                  color="white"
+                  status="loading"
+                  style={{
+                    display: 'inline-block',
+                    position: 'absolute',
+                    zIndex: 1200,
+                    top: 19,
+                    left: -35,
+                  }}
                 />
-              : <Login onClick={this.handleChangeList} />}
-          </Toolbar>
-        </Headroom>
+              </div>}
+          </ToolbarGroup>
+          {user
+            ? <Logged
+                messages={messages.filter(m => m.dateConsultation === null)}
+                destinataires={destinataires}
+                pushState={pushState}
+              />
+            : <Login onClick={this.handleChangeList} />}
+        </Toolbar>
         <AppMainDrawer
           open={this.state.drawerOpen}
           onSelect={this.navigateTo}
@@ -235,14 +225,7 @@ class App extends Component {
             (
               <MenuItem
                 primaryText="Menu"
-                rightIcon={
-                  (
-                    <Close
-                      color={drawerStyle.textColor}
-                      style={{ height: 40, width: 30 }}
-                    />
-                  )
-                }
+                rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
                 onTouchTap={this.closeDrawer}
                 style={drawerStyle}
               />
@@ -259,8 +242,7 @@ class App extends Component {
   }
 }
 
-const selectDestinaires = () =>
-  state => state.admin ? state.admin.communication.destinataires : [];
+const selectDestinaires = () => state => state.admin ? state.admin.communication.destinataires : [];
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
