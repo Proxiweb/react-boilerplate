@@ -5,6 +5,8 @@ import round from 'lodash/round';
 import { Card, CardActions, CardHeader } from 'material-ui/Card';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 import GradeIcon from 'material-ui/svg-icons/action/grade';
+import uniq from 'lodash/uniq';
+import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
 import { orange800, green500, cyan500 } from 'material-ui/styles/colors';
@@ -14,38 +16,47 @@ import Panel from 'components/Panel';
 
 import {
   selectCommandeContenus,
-  selectOffres,
-  // selectCommandesUtilisateur,
+  selectOffres, // selectCommandesUtilisateur,
 } from 'containers/Commande/selectors';
 
-const Offre = ({ imageSrc, nom, tarif, prct, fav, commandeId, pushState, relaiId, utilisateurId }) => (
+import CommandePanel from 'containers/Commande/components/CommandePanel';
+
+const Offre = (
+  {
+    imageSrc,
+    nom,
+    tarif,
+    prct,
+    commandeId,
+    pushState,
+    relaiId,
+    utilisateurId,
+    buttonClicked,
+    commandeUtilisateurExiste,
+  },
+) => (
   <Card style={{ marginBottom: 20 }}>
-    <CardHeader
-      title={nom}
-      subtitle={tarif}
-      avatar={imageSrc}
-      actAsExpander
-      showExpandableButton
-    />
-    <div style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 10 }}>
-      <LinearProgress
-        mode="determinate"
-        value={prct}
-        color={prct < 100 ? cyan500 : green500}
-        style={{ height: 6, backgroundColor: '#EDE7E7' }}
-      />
-    </div>
+    <CardHeader title={nom} subtitle={tarif} avatar={imageSrc} actAsExpander showExpandableButton />
+    {prct &&
+      <div style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 10 }}>
+        <LinearProgress
+          mode="determinate"
+          value={prct}
+          color={prct < 100 ? cyan500 : green500}
+          style={{ height: 6, backgroundColor: '#EDE7E7' }}
+        />
+      </div>}
     <CardActions expandable>
-      <div className="row center-md">
-        <div className="col-md-6">
-          <FlatButton
-            label="Commander"
-            labelPosition="before"
-            onClick={() => pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)}
-            icon={<ShoppingCartIcon color="black" />}
-          />
-        </div>
-      </div>
+      <RaisedButton
+        label={commandeUtilisateurExiste(commandeId) ? 'Modifier ma commande' : 'Commander'}
+        icon={<ShoppingCartIcon />}
+        fullWidth
+        primary
+        onClick={() => {
+          buttonClicked();
+          pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`);
+        }}
+      />
     </CardActions>
   </Card>
 );
@@ -57,9 +68,10 @@ Offre.propTypes = {
   relaiId: PropTypes.string.isRequired,
   utilisateurId: PropTypes.string.isRequired,
   prct: PropTypes.number.isRequired,
-  fav: PropTypes.bool.isRequired,
   tarif: PropTypes.string.isRequired,
   pushState: PropTypes.func.isRequired,
+  buttonClicked: PropTypes.func.isRequired,
+  commandeUtilisateurExiste: PropTypes.func.isRequired,
 };
 
 class CommandesLongTerme extends Component {
@@ -67,30 +79,34 @@ class CommandesLongTerme extends Component {
     commandesIds: PropTypes.array.isRequired,
     commandes: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
+    commandeUtilisateurExiste: PropTypes.func.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
     relaiId: PropTypes.string.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     getCommandeInfos: PropTypes.func.isRequired,
-  }
+    buttonClicked: PropTypes.func.isRequired,
+    pending: PropTypes.func.isRequired,
+  };
 
-  getInfos = (commandeId) => {
+  getInfos = commandeId => {
     const { commandeContenus, commandes, offres, getCommandeInfos } = this.props;
-    const contenus = commandes[commandeId]
-                            .commandeUtilisateurs
-                            .reduce((memo, cuId) => memo.concat(
-                              Object
-                                .keys(commandeContenus)
-                                .filter((id) => commandeContenus[id].commandeUtilisateurId === cuId)
-                                .map((id) => commandeContenus[id])
-                            ), []);
+    const contenus = commandes[commandeId].commandeUtilisateurs.reduce(
+      (memo, cuId) =>
+        memo.concat(
+          Object.keys(commandeContenus)
+            .filter(id => commandeContenus[id].commandeUtilisateurId === cuId)
+            .map(id => commandeContenus[id]),
+        ),
+      [],
+    );
     let prct = 0;
     let prix = 0;
-    const montantMin = commandes[commandeId].montantMin;
+    const { montantMin } = commandes[commandeId];
     if (contenus.length > 0) {
       const totaux = calculeTotauxCommande({ contenus, offres, commandeContenus, commandeId });
       prix = round(totaux.prix, 2);
-      prct = parseInt((prix * 100) / montantMin, 10);
+      prct = parseInt(prix * 100 / montantMin, 10);
     }
 
     return {
@@ -99,29 +115,60 @@ class CommandesLongTerme extends Component {
       prix,
       typesProduits: getCommandeInfos(commandeId),
     };
-  }
+  };
 
   render() {
-    return (<div>
-      <Panel>Commandes de long terme</Panel>
-      {this.props.commandesIds.map((id, idx) => {
-        const infos = this.getInfos(id);
+    const {
+      commandeUtilisateurExiste,
+      commandes,
+      buttonClicked,
+      pushState,
+      pending,
+      relaiId,
+      utilisateurId,
+    } = this.props;
+    return (
+      <div>
+        <Panel>Commandes de long terme</Panel>
+        {this.props.commandesIds.map((id, idx) => {
+          const infos = this.getInfos(id);
 
-        return (
-          <Offre
-            key={idx}
-            nom={infos.typesProduits.join(',')}
-            commandeId={id}
-            tarif={`${infos.prix} € sur ${infos.montantMin} €`}
-            prct={infos.prct}
-            fav
-            pushState={this.props.pushState}
-            relaiId={this.props.relaiId}
-            utilisateurId={this.props.utilisateurId}
-          />
-        );
-      })}
-    </div>);
+          if (commandes[id].dateCommande) {
+            return (
+              <CommandePanel
+                nom={infos ? uniq(infos.typesProduits).join(', ') : null}
+                dateCommande={commandes[id].dateCommande}
+                label={commandeUtilisateurExiste(id) ? 'Modifier ma commande' : 'Commander'}
+                prct={100}
+                fav={false}
+                key={idx}
+                commandeId={`${id}`}
+                disabled={pending}
+                clickHandler={() => {
+                  buttonClicked();
+                  pushState(`/relais/${relaiId}/commandes/${id}?utilisateurId=${utilisateurId}`);
+                }}
+              />
+            );
+          }
+          return (
+            <Offre
+              key={idx}
+              nom={infos.typesProduits.join(',')}
+              commandeId={id}
+              tarif={`${infos.prix} € sur ${infos.montantMin} €`}
+              prct={infos.prct}
+              fav
+              pushState={this.props.pushState}
+              relaiId={this.props.relaiId}
+              utilisateurId={this.props.utilisateurId}
+              commandeUtilisateurExiste={commandeUtilisateurExiste}
+              buttonClicked={buttonClicked}
+            />
+          );
+        })}
+      </div>
+    );
   }
 }
 
