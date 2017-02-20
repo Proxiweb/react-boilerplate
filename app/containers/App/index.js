@@ -29,7 +29,10 @@ import FlatButton from 'material-ui/FlatButton';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
 
-import { selectBalance, selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectBalance,
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 
 import {
   selectPending,
@@ -77,7 +80,6 @@ class App extends Component {
     pending: PropTypes.bool.isRequired,
     loadM: PropTypes.func.isRequired,
     refresh: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -122,7 +124,8 @@ class App extends Component {
     });
   };
 
-  toggleDrawer = () => this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
+  toggleDrawer = () =>
+    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
 
   closeDrawer = () => this.setState({ ...this.state, drawerOpen: false });
 
@@ -179,7 +182,11 @@ class App extends Component {
           }}
         >
           <ToolbarGroup firstChild>
-            <IconButton touch onClick={this.toggleDrawer} style={{ paddingRight: 0 }}>
+            <IconButton
+              touch
+              onClick={this.toggleDrawer}
+              style={{ paddingRight: 0 }}
+            >
               <NavigationMenuIcon />
             </IconButton>
             <FlatButton
@@ -225,7 +232,14 @@ class App extends Component {
             (
               <MenuItem
                 primaryText="Menu"
-                rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
+                rightIcon={
+                  (
+                    <Close
+                      color={drawerStyle.textColor}
+                      style={{ height: 40, width: 30 }}
+                    />
+                  )
+                }
                 onTouchTap={this.closeDrawer}
                 style={drawerStyle}
               />
@@ -242,7 +256,8 @@ class App extends Component {
   }
 }
 
-const selectDestinaires = () => state => state.admin ? state.admin.communication.destinataires : [];
+const selectDestinaires = () =>
+  state => state.admin ? state.admin.communication.destinataires : [];
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),

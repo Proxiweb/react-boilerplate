@@ -17,9 +17,8 @@ import {
   selectCommandeContenus,
   selectFournisseurCommandes,
 } from 'containers/Commande/selectors';
-import { selectLocationState } from 'containers/App/selectors';
 
-import { selectPending } from 'containers/App/selectors';
+import { selectLocationState, selectPending } from 'containers/App/selectors';
 
 import styles from './styles.css';
 

@@ -154,38 +154,38 @@ class CommandeFournisseur extends Component {
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
         <table cellPadding="0" cellSpacing="0">
-          <tr className={styles.top}>
-            <td colSpan="4">
-              <table>
-                <tr>
-                  <td className={styles.title}>
-                    <h3>Commande Proxiweb <small>{commandeId}</small></h3>
-                  </td>
-
-                  <td className={styles.title}>
-                    <h3>{moment(commande.dateCommande).format('LL')}</h3>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <tr className={styles.heading}>
-            <td>
-              Produit
-            </td>
-            <td className={styles.center}>
-              Quantité
-            </td>
-            <td className={styles.center}>
-              Prix unitaire HT
-            </td>
-            <td className={styles.totaux}>
-              Total TTC
-            </td>
-          </tr>
-          {Object.keys(contenusFournGrp)
-            .map((offreId, idx) => this.buildProduct(contenusFournGrp[offreId], idx))}
+          <tbody>
+            <tr className={styles.top}>
+              <td colSpan="4">
+                <table>
+                  <tr>
+                    <td className={styles.title}>
+                      <h3>Commande Proxiweb <small>{commandeId}</small></h3>
+                    </td>
+                    <td className={styles.title}>
+                      <h3>{moment(commande.dateCommande).format('LL')}</h3>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr className={styles.heading}>
+              <td>
+                Produit
+              </td>
+              <td className={styles.center}>
+                Quantité
+              </td>
+              <td className={styles.center}>
+                Prix unitaire HT
+              </td>
+              <td className={styles.totaux}>
+                Total TTC
+              </td>
+            </tr>
+            {Object.keys(contenusFournGrp)
+              .map((offreId, idx) => this.buildProduct(contenusFournGrp[offreId], idx))}
+          </tbody>
         </table>
         <div style={{ textAlign: 'right', fontSize: '1.2em', marginTop: '1em' }}>
           Total: <strong>{round(totaux.prix, 2)} €</strong>

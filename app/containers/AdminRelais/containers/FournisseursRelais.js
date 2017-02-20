@@ -22,7 +22,6 @@ import {
 
 import styles from './styles.css';
 
-import OffreDetailsCard from 'components/OffreDetailsCard';
 import OffreDetails from 'components/OffreDetails';
 import FournisseurHebdoSwitch from './FournisseurHebdoSwitch';
 import ListeFournisseursRelais from './ListeFournisseursRelais';

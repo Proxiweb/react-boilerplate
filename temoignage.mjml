@@ -37,15 +37,18 @@
             <h2>PARTAGEONS ENSEMBLE NOS EXPERIENCES</h2>
           </mj-text>
           <mj-text>
-            Excellente année 2017 !<br />L'équipe VIVAKOOL
+            Excellente année 2017 !<br />L'équipe de VIVAKOOL<br />
+            <a href="https://www.yokool.fr">YOKOOL.FR</a> - Tél. 02 37 62 32 55
           </mj-text>
           <mj-button
             font-family="Helvetica"
             background-color="#337ab7"
             color="white"
+            padding="15px 25px 0 25px"
           >
             <a href="http://temoignage.yokool.fr/token/{{token}}" style="text-decoration: none; color: inherit;">Déposer votre témoignage sur le site</a>
           </mj-button>
+          <mj-text align="center" padding="0px 25px">Anonymat garanti</mj-text>
         </mj-column>
       </mj-section>
 
