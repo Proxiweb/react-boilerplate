@@ -3,45 +3,47 @@ import CommandePanel from './CommandePanel';
 import uniq from 'lodash/uniq';
 import Panel from 'components/Panel';
 
-const Semainier = ({
-  commandesIds,
-  commandes,
-  relaiId,
-  titreCol,
-  getCommandeInfos,
-  pushState,
-  commandeUtilisateurExiste,
-  utilisateurId,
-  pending,
-  buttonClicked,
-}) =>
+const Semainier = (
+  {
+    commandesIds,
+    commandes,
+    relaiId,
+    titreCol,
+    getCommandeInfos,
+    pushState,
+    commandeUtilisateurExiste,
+    utilisateurId,
+    pending,
+    buttonClicked,
+  },
+) => (
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
     <div>
-      {commandesIds && commandesIds.map((key, idx) => {
-        const infos = getCommandeInfos(key);
-        return (
-          <CommandePanel
-            nom={infos ? uniq(infos).join(', ') : null}
-            dateCommande={commandes[key].dateCommande}
-            label={commandeUtilisateurExiste(key) ? 'Modifier ma commande' : 'Commander'}
-            prct={100}
-            fav={false}
-            key={idx}
-            commandeId={`${key}`}
-            disabled={pending}
-            clickHandler={() => {
-              buttonClicked();
-              pushState(
-                `/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`
-              );
-            }}
-          />
-        );
-      }
-        )}
+      {commandesIds &&
+        commandesIds.map((key, idx) => {
+          const infos = getCommandeInfos(key);
+          console.log('inf', infos);
+          return (
+            <CommandePanel
+              nom={infos ? uniq(infos).join(', ') : null}
+              dateCommande={commandes[key].dateCommande}
+              label={commandeUtilisateurExiste(key) ? 'Modifier ma commande' : 'Commander'}
+              prct={100}
+              fav={false}
+              key={idx}
+              commandeId={`${key}`}
+              disabled={pending}
+              clickHandler={() => {
+                buttonClicked();
+                pushState(`/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`);
+              }}
+            />
+          );
+        })}
     </div>
-  </div>;
+  </div>
+);
 
 Semainier.propTypes = {
   getCommandeInfos: PropTypes.func.isRequired,

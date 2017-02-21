@@ -50,14 +50,9 @@ export class Commande extends React.Component {
 
   componentDidMount() {
     const {
-      commandes,
-      loadCommandes,
       relaiId,
-      loadCommande,
-      route,
     } = this.props; // eslint-disable-line
-    loadCommandes({ relaiId, periode: 'courantes' });
-    // loadCommande('2cfdf815-3e1e-4223-87e2-c3022e596ee7');
+    this.props.loadCommandes({ relaiId, periode: 'courantes' });
   }
 
   getCommandeInfos = id => {

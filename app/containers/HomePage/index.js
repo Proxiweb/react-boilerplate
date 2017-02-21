@@ -20,7 +20,7 @@ import { selectRelais } from 'containers/Commande/selectors';
 import { createStructuredSelector } from 'reselect';
 import Commandes from 'containers/Commande';
 import HomePageAnon from './containers/HomePageAnon';
-
+import Cache from 'containers/Commande/containers/Cache';
 // eslint-disable-next-line react/prefer-stateless-function
 class HomePage extends Component {
   static propTypes = {
@@ -35,7 +35,7 @@ class HomePage extends Component {
     if (auth && auth.relaiId) {
       if (!auth.relaiId) this.props.push('/choixRelais');
       if (!relais) this.props.loadRelais({ id: auth.relaiId });
-      return <Commandes params={{ relaiId: auth.relaiId }} />;
+      return <Cache relaiId={auth.relaiId}><Commandes params={{ relaiId: auth.relaiId }} /></Cache>;
     }
     return <HomePageAnon />;
   }
