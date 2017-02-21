@@ -72,6 +72,24 @@ class FacturesFournisseur extends Component {
 
     const print = locationState.locationBeforeTransitions.query.print;
 
+    if (print) {
+      return (
+        <div>
+          {this.props.children &&
+            commandeUtilisateurs &&
+            contenus &&
+            commandeContenus &&
+            React.cloneElement(this.props.children, {
+              commande: commandes.find(cde => cde.id === params.commandeId),
+              params,
+              commandeUtilisateurs,
+              contenus,
+              commandeContenus,
+            })}
+        </div>
+      );
+    }
+
     return (
       <div className="row">
         {!print &&

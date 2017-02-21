@@ -138,7 +138,6 @@ class FactureFournisseur extends Component {
       fournisseurs,
       params,
     } = this.props;
-
     const fournisseur = fournisseurs.find(f => f.id === params.fournisseurId);
     const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
 

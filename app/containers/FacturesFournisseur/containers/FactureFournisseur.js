@@ -14,17 +14,12 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import {
-  loadFournisseurs,
-  fetchUtilisateurs,
-} from 'containers/Commande/actions';
+import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
 
 import { selectPending } from 'containers/App/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import {
-  trouveTarification,
-} from 'containers/CommandeEdit/components/components/AffichePrix';
+import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 
 import Adresse from './Adresse';
 import styles from './styles.css';
@@ -73,16 +68,13 @@ class FactureFournisseur extends Component {
       loadU,
     } = this.props;
     const utilisateursIds = commandeUtilisateurs
-      .filter(
-        cu =>
-          !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId),
-      ) // ne pas charger ceux déjà chargés
+      .filter(cu => !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
       .map(cu => cu.utilisateurId);
 
     loadU(utilisateursIds);
   }
 
-  buildProducts = utilisateurId => {
+  buildProducts = (utilisateurId, autoEntrepreneur) => {
     const {
       commandeContenus: cc,
       contenus: c,
@@ -94,8 +86,7 @@ class FactureFournisseur extends Component {
     const contenus = commandeContenus.filter(
       cC =>
         cC.utilisateurId === utilisateurId &&
-          produits[offres[cC.offreId].produitId].fournisseurId ===
-            params.fournisseurId,
+        produits[offres[cC.offreId].produitId].fournisseurId === params.fournisseurId,
     );
 
     if (!contenus.length) return null;
@@ -125,9 +116,10 @@ class FactureFournisseur extends Component {
             {produits[offres[contenu.offreId].produitId].nom.toUpperCase()}
           </td>
           <td className={styles.center}>{contenu.quantite}</td>
-          <td className={styles.center}>
-            {parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}
-          </td>
+          {!autoEntrepreneur &&
+            <td className={styles.center}>
+              {parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}
+            </td>}
           <td className={styles.totaux}>
             {parseFloat(round(tarif.prix / 100, 2)).toFixed(2)} €
           </td>
@@ -139,7 +131,7 @@ class FactureFournisseur extends Component {
       <tr className={styles.total} key={utilisateurId}>
         <td />
         <td />
-        <td />
+        {!autoEntrepreneur && <td />}
         <td className={styles.right}>
           Total: {parseFloat(totaux.prix).toFixed(2)} €
         </td>
@@ -163,12 +155,7 @@ class FactureFournisseur extends Component {
     } = this.props;
 
     if (
-      !fournisseurs ||
-      !commande ||
-      !commandeUtilisateurs ||
-      !commandeContenus ||
-      !contenus ||
-      !utilisateurs
+      !fournisseurs || !commande || !commandeUtilisateurs || !commandeContenus || !contenus || !utilisateurs
     ) {
       return null;
     }
@@ -179,7 +166,7 @@ class FactureFournisseur extends Component {
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
         {commandeUtilisateurs.map((cu, idx) => {
-          const contenusCommande = this.buildProducts(cu.utilisateurId);
+          const contenusCommande = this.buildProducts(cu.utilisateurId, fournisseur.autoEntrepreneur);
           if (!contenusCommande) return null;
           cpt += 1;
           return (
@@ -188,8 +175,8 @@ class FactureFournisseur extends Component {
                 <td colSpan="4">
                   <table>
                     <tr>
-                      <td className={styles.title}>
-                        <h3>
+                      <td style={{ fontSize: '20px', lineHeight: '20px', color: '#333' }}>
+                        <h3 className="factureTitle">
                           Facture Proxiweb{' '}
                           <small>
                             {this.split(cu.commandeId)}
@@ -201,8 +188,10 @@ class FactureFournisseur extends Component {
                         </h3>
                       </td>
 
-                      <td className={styles.title}>
-                        <h3>{moment(commande.dateCommande).format('LL')}</h3>
+                      <td style={{ fontSize: '20px', lineHeight: '20px', color: '#333' }}>
+                        <h3 className="factureTitle">
+                          {moment(commande.dateCommande).format('LL')}
+                        </h3>
                       </td>
                     </tr>
                   </table>
@@ -214,14 +203,10 @@ class FactureFournisseur extends Component {
                   <table>
                     <tr>
                       <td>
-                        {fournisseur &&
-                          <Adresse label="Fournisseur" datas={fournisseur} />}
+                        {fournisseur && <Adresse label="Fournisseur" datas={fournisseur} />}
                       </td>
                       <td>
-                        <Adresse
-                          label="Client"
-                          datas={utils.find(u => u.id === cu.utilisateurId)}
-                        />
+                        <Adresse label="Client" datas={utils.find(u => u.id === cu.utilisateurId)} />
                       </td>
                     </tr>
                   </table>
@@ -238,11 +223,16 @@ class FactureFournisseur extends Component {
                 <td className={styles.center}>
                   Prix unitaire HT
                 </td>
-                <td className={styles.totaux}>
-                  Prix TTC
-                </td>
+                {!fournisseur.autoEntrepreneur &&
+                  <td className={styles.totaux}>
+                    Prix TTC
+                  </td>}
               </tr>
               {contenusCommande}
+              {fournisseur.autoEntrepreneur &&
+                <tr>
+                  <td colSpan="4">{'T.V.A. non applicable. Article 293B du code général des impôts.'}</td>
+                </tr>}
             </table>
           );
         })}
