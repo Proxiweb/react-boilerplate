@@ -58,22 +58,15 @@ class DetailsParFournisseur extends Component {
       <div className={`row ${styles.detailsParFournisseur}`}>
         {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
           <FournisseurToolbar role={auth.roles} pushState={pushState} />}
-        <div className={`col-md-6 col-md-offset-3 ${styles.totalDistrib}`}>
+        <div className={`col-md-6 ${styles.totalDistrib}`}>
+          Total Commande:{' '}
+          <strong>{parseFloat(totaux.prix).toFixed(2)} €</strong>
+        </div>
+        <div className={`col-md-6 ${styles.totalDistrib}`}>
           Total Distributeur:{' '}
           <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
         </div>
         <div className={`col-md-12 ${styles.listeCommandes}`}>
-          {false &&
-            <CommandeDistributeur
-              key={'1x'}
-              fournisseur={fournisseurs[0]}
-              produits={produits}
-              commandeContenus={commandeContenus}
-              contenus={contenus}
-              offres={offres}
-              commandeId={commandeId}
-              noFiltre
-            />}
           {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
             const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
             return (
@@ -90,6 +83,16 @@ class DetailsParFournisseur extends Component {
               </div>
             );
           })}
+          <CommandeDistributeur
+            key={'1x'}
+            fournisseur={fournisseurs[0]}
+            produits={produits}
+            commandeContenus={commandeContenus}
+            contenus={contenus}
+            offres={offres}
+            commandeId={commandeId}
+            noFiltre
+          />
         </div>
       </div>
     );
