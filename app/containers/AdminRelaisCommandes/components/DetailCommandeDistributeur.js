@@ -1,10 +1,10 @@
 import React, { PropTypes, Component } from 'react';
-import DetailCommandeProduit from './DetailCommandeProduit';
+import DetailCommandeDistributeurProduit from './DetailCommandeDistributeurProduit';
 import includes from 'lodash/includes';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 
 // eslint-disable-next-line
-export default class DetailsCommande extends Component {
+export default class DetailCommandeDistributeur extends Component {
   static propTypes = {
     roles: PropTypes.array.isRequired,
     commandeId: PropTypes.string.isRequired,
@@ -49,7 +49,7 @@ export default class DetailsCommande extends Component {
               Désignation
             </TableHeaderColumn>
             <TableHeaderColumn style={{ color: 'black' }}>
-              Prix
+              Part distrib.
             </TableHeaderColumn>
             <TableHeaderColumn style={{ color: 'black' }}>
               Quantité
@@ -57,10 +57,6 @@ export default class DetailsCommande extends Component {
             <TableHeaderColumn style={{ color: 'black' }}>
               Total
             </TableHeaderColumn>
-            {isAdmin &&
-              <TableHeaderColumn style={{ color: 'black' }}>
-                Modif
-              </TableHeaderColumn>}
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={selectable}>
@@ -68,7 +64,7 @@ export default class DetailsCommande extends Component {
             produits
               .filter(pdt => contenus.find(c => c.offre.produitId === pdt.id))
               .map((pdt, key) => (
-                <DetailCommandeProduit
+                <DetailCommandeDistributeurProduit
                   idx={key}
                   produit={pdt}
                   selectable={selectable}

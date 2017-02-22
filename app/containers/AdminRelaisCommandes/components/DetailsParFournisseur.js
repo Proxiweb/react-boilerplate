@@ -14,11 +14,10 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import {
-  selectCompteUtilisateur,
-} from 'containers/CompteUtilisateur/selectors';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import CommandeFournisseur from './CommandeFournisseur';
+import CommandeDistributeur from './CommandeDistributeur';
 import FournisseurToolbar from './FournisseurToolbar';
 import styles from './styles.css';
 
@@ -57,32 +56,39 @@ class DetailsParFournisseur extends Component {
 
     return (
       <div className={`row ${styles.detailsParFournisseur}`}>
-        {(includes(auth.roles, 'ADMIN') ||
-          includes(auth.roles, 'RELAI_ADMIN')) &&
+        {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
           <FournisseurToolbar role={auth.roles} pushState={pushState} />}
         <div className={`col-md-6 col-md-offset-3 ${styles.totalDistrib}`}>
           Total Distributeur:{' '}
           <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
         </div>
         <div className={`col-md-12 ${styles.listeCommandes}`}>
-          {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
-            const pdts = produits.filter(
-              pdt => pdt.fournisseurId === fournisseur.id,
-            );
-            return (
-              <div className="col-md-12">
-                <CommandeFournisseur
-                  key={idx}
-                  fournisseur={fournisseur}
-                  produits={pdts}
-                  commandeContenus={commandeContenus}
-                  contenus={contenus}
-                  offres={offres}
-                  commandeId={commandeId}
-                />
-              </div>
-            );
-          })}
+          <CommandeDistributeur
+            key={'1x'}
+            fournisseur={fournisseurs[0]}
+            produits={produits}
+            commandeContenus={commandeContenus}
+            contenus={contenus}
+            offres={offres}
+            commandeId={commandeId}
+            noFiltre
+          />
+          {false && fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
+              const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
+              return (
+                <div className="col-md-12">
+                  <CommandeFournisseur
+                    key={idx}
+                    fournisseur={fournisseur}
+                    produits={pdts}
+                    commandeContenus={commandeContenus}
+                    contenus={contenus}
+                    offres={offres}
+                    commandeId={commandeId}
+                  />
+                </div>
+              );
+            })}
         </div>
       </div>
     );
@@ -105,6 +111,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DetailsParFournisseur,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);
