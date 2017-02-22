@@ -5,7 +5,9 @@ import { Link } from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
 import DetailCommande from './DetailCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import { supprimerCommandeContenusFournisseur } from 'containers/Commande/actions';
+import {
+  supprimerCommandeContenusFournisseur,
+} from 'containers/Commande/actions';
 import DetailCommandeTotal from './DetailCommandeTotal';
 
 class CommandeFournisseur extends Component {
@@ -47,22 +49,31 @@ class CommandeFournisseur extends Component {
     const contenusFournisseur = commandeContenus
       .map(key => contenus[key])
       .filter(c =>
-        produits.find(pdt => pdt.id === c.offre.produitId && pdt.fournisseurId === fournisseur.id));
-
+        produits.find(
+          pdt =>
+            pdt.id === c.offre.produitId &&
+              pdt.fournisseurId === fournisseur.id,
+        ));
     const totaux = calculeTotauxCommande({
       contenus: contenusFournisseur,
       offres,
       commandeContenus,
       commandeId,
     });
-
     return (
       <div className="row" key={key}>
         <div className="col-md-8" style={{ margin: '3em 0 0.5em' }}>
           <h4>{fournisseur.nom.toUpperCase()}</h4>
         </div>
-        <div className="col-md-4" style={{ textAlign: 'right', margin: '3em 0 0.5em' }}>
-          <RaisedButton secondary label="Retirer" onClick={this.handleSupprCommandeContenusFourn} />
+        <div
+          className="col-md-4"
+          style={{ textAlign: 'right', margin: '3em 0 0.5em' }}
+        >
+          <RaisedButton
+            secondary
+            label="Retirer"
+            onClick={this.handleSupprCommandeContenusFourn}
+          />
         </div>
         <div className="col-md-12">
           <DetailCommande
