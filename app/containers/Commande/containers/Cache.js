@@ -42,7 +42,7 @@ class CatalogueCache extends Component {
   render() {
     const { catalogueChecked } = this.state;
     if (!catalogueChecked) return null;
-    return <div>{React.cloneElement(this.props.children)}</div>;
+    return <div>{this.props.children}</div>;
   }
 }
 

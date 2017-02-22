@@ -31,6 +31,7 @@ export function* updateCatalogue() {
         ? { Authorization: `Bearer ${state.compteUtilisateur.token}` }
         : {};
       const action = yield take(c.UPDATE_CATALOGUE_START);
+      console.log('took');
       const query = { relaiId: action.payload.relaiId, jointures: true };
       const [query1, query2] = yield [
         call(get, '/api/offre_produits', { headers, query }),

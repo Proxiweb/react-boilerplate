@@ -31,12 +31,10 @@ export class Commande extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
-    livraisons: PropTypes.object,
     commandesUtilisateurs: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
     produits: PropTypes.object,
-    route: PropTypes.object,
     fournisseurs: PropTypes.array,
     typesProduits: PropTypes.object,
     loadCommandes: PropTypes.func.isRequired,
