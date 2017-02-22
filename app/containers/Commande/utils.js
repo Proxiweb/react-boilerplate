@@ -1,6 +1,7 @@
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 import round from 'lodash/round';
 import memoize from 'lodash/memoize';
+import groupBy from 'lodash/groupBy';
 /* calcule les totaux de la commande
 * @contenus commande contenus de(s) l'utilisateur(s)
 * @commandeContenus tous les commandeContenus de la commande
@@ -15,7 +16,15 @@ const calculeTotauxCommandeFn = (
     commandeId,
   },
 ) => {
-  const totaux = contenus.reduce(
+  const grouped = groupBy(contenus, 'offreId');
+  const contenusAgg = Object.keys(grouped)
+    .map(offreId =>
+      grouped[offreId].reduce(
+        (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
+        { offreId, quantite: 0, qteRegul: 0 },
+      ));
+
+  const totaux = contenusAgg.reduce(
     (memo, contenu) => {
       const offre = offres[contenu.offreId];
       const commandeCommandeContenus = Object.keys(commandeContenus)

@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import groupBy from 'lodash/groupBy';
 import DetailCommandeProduit from './DetailCommandeProduit';
 import includes from 'lodash/includes';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
@@ -34,6 +35,14 @@ export default class DetailsCommande extends Component {
       roles,
     } = this.props;
 
+    const grouped = groupBy(contenus, 'offreId');
+    const contenusAgg = Object.keys(grouped)
+      .map(offreId =>
+        grouped[offreId].reduce(
+          (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
+          { offreId, quantite: 0, qteRegul: 0 },
+        ));
+
     const { muiTheme } = this.context;
     const isAdmin = includes(roles, 'ADMIN');
     return (
@@ -65,26 +74,31 @@ export default class DetailsCommande extends Component {
         </TableHeader>
         <TableBody displayRowCheckbox={selectable}>
           {commandeContenus &&
-            produits
-              .filter(pdt => contenus.find(c => c.offre.produitId === pdt.id))
-              .map((pdt, key) => (
-                <DetailCommandeProduit
-                  idx={key}
-                  produit={pdt}
-                  selectable={selectable}
-                  contenu={contenus
-                    .filter(c => c.offre.produitId === pdt.id)
-                    .reduce((m, c) => ({ ...c, quantite: c.qteRegul + c.quantite + m.quantite }), {
-                      quantite: 0,
-                    })}
-                  qteTotalOffre={commandeContenus
-                    .filter(c => c.offre.produitId === pdt.id)
-                    .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)}
-                  offre={contenus.find(c => c.offre.produitId === pdt.id).offre}
-                  commandeId={commandeId}
-                  readOnly={!isAdmin}
-                />
-              ))}
+            contenusAgg
+              // .filter(pdt => contenus.find(c => c.offre.produitId === pdt.id))
+              .map((contenu, key) => {
+                const contenuComplet = contenus.find(c => c.offreId === contenu.offreId);
+                const produit = produits.find(pdt => pdt.id === contenuComplet.offre.produitId);
+                if (!produit) return null;
+                return (
+                  <DetailCommandeProduit
+                    idx={key}
+                    produit={produit}
+                    selectable={selectable}
+                    contenu={contenus
+                      .filter(c => c.offreId === contenu.offreId)
+                      .reduce((m, c) => ({ ...c, quantite: c.qteRegul + c.quantite + m.quantite }), {
+                        quantite: 0,
+                      })}
+                    qteTotalOffre={commandeContenus
+                      .filter(c => c.offreId === contenu.offreId)
+                      .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)}
+                    offre={contenuComplet.offre}
+                    commandeId={commandeId}
+                    readOnly={!isAdmin}
+                  />
+                );
+              })}
         </TableBody>
       </Table>
     );

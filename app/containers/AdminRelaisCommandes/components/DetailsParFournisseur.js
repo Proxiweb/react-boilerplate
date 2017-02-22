@@ -21,8 +21,8 @@ import CommandeDistributeur from './CommandeDistributeur';
 import FournisseurToolbar from './FournisseurToolbar';
 import styles from './styles.css';
 
+// eslint-disable-next-line
 class DetailsParFournisseur extends Component {
-  // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
@@ -46,9 +46,9 @@ class DetailsParFournisseur extends Component {
       pushState,
     } = this.props;
 
-    const { commandeId, relaiId } = params;
+    const { commandeId } = params;
     const totaux = calculeTotauxCommande({
-      contenus: Object.keys(contenus).map(key => contenus[key]),
+      contenus: Object.keys(contenus).map(key => contenus[key]).filter(c => c.commandeId === commandeId),
       offres,
       commandeContenus,
       commandeId,
@@ -63,32 +63,33 @@ class DetailsParFournisseur extends Component {
           <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
         </div>
         <div className={`col-md-12 ${styles.listeCommandes}`}>
-          <CommandeDistributeur
-            key={'1x'}
-            fournisseur={fournisseurs[0]}
-            produits={produits}
-            commandeContenus={commandeContenus}
-            contenus={contenus}
-            offres={offres}
-            commandeId={commandeId}
-            noFiltre
-          />
-          {false && fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
-              const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
-              return (
-                <div className="col-md-12">
-                  <CommandeFournisseur
-                    key={idx}
-                    fournisseur={fournisseur}
-                    produits={pdts}
-                    commandeContenus={commandeContenus}
-                    contenus={contenus}
-                    offres={offres}
-                    commandeId={commandeId}
-                  />
-                </div>
-              );
-            })}
+          {false &&
+            <CommandeDistributeur
+              key={'1x'}
+              fournisseur={fournisseurs[0]}
+              produits={produits}
+              commandeContenus={commandeContenus}
+              contenus={contenus}
+              offres={offres}
+              commandeId={commandeId}
+              noFiltre
+            />}
+          {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
+            const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
+            return (
+              <div className="col-md-12">
+                <CommandeFournisseur
+                  key={idx}
+                  fournisseur={fournisseur}
+                  produits={pdts}
+                  commandeContenus={commandeContenus}
+                  contenus={contenus}
+                  offres={offres}
+                  commandeId={commandeId}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     );

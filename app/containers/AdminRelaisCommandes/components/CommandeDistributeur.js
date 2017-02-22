@@ -33,6 +33,7 @@ class CommandeFournisseur extends Component {
       commandeContenus,
       commandeId,
     });
+    console.log(totaux);
 
     return (
       <div className="row" key={key}>
