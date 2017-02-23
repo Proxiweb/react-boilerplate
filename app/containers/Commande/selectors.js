@@ -164,7 +164,7 @@ export const selectCommandeProduits = () =>
     if (!commande || !produits || !fournisseursIds) return null;
     return Object.keys(produits)
       .filter(key => commande.fournisseurs.indexOf(produits[key].fournisseurId) !== -1)
-      .filter(key => fournisseursIds[produits[key].fournisseurId].visible)
+      // .filter(key => fournisseursIds[produits[key].fournisseurId].visible)
       .map(key => produits[key]);
     // .filter(pdt => pdt.enStock);
   });

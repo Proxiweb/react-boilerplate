@@ -121,6 +121,7 @@ class AdminDetailsCommande extends Component {
               commande={commande}
               commandeUtilisateur={commandeUtilisateurs.find(cu => cu.utilisateurId === params.utilisateurId)}
               roles={roles}
+              depots={depots}
               utilisateur={utils.find(ut => ut.id === params.utilisateurId)}
             />}
         </div>

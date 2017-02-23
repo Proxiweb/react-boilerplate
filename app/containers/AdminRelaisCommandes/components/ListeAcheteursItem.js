@@ -11,6 +11,7 @@ import api from 'utils/stellarApi';
 class ListeAcheteursItem extends Component {
   static propTypes = {
     utilisateur: PropTypes.object.isRequired,
+    value: PropTypes.string.isRequired,
     commandeUtilisateur: PropTypes.object.isRequired,
     depots: PropTypes.array.isRequired,
     key: PropTypes.number.isRequired,
@@ -70,7 +71,7 @@ class ListeAcheteursItem extends Component {
       <ListItem
         key={key}
         primaryText={`${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}`}
-        value={utilisateur.id}
+        value={this.props.value}
         onClick={() => onClick(utilisateur.id, dep, totalCommande, this.state.paiements)}
         leftIcon={
           commandeUtilisateur.dateLivraison ? <DoneIcon color="green" /> : <PastilleIcon color={iconColor} />

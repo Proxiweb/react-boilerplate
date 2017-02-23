@@ -11,30 +11,28 @@ class LivraisonCommande extends Component {
   static propTypes = {
     commandeUtilisateur: PropTypes.object.isRequired,
     livre: PropTypes.func.isRequired,
-  }
+  };
 
-  handleSave = (event) => {
+  handleSave = event => {
     const { commandeUtilisateur, livre } = this.props;
     event.preventDefault();
     livre(commandeUtilisateur.id);
-  }
+  };
 
   render() {
     return (
-      <div className={`col-md-6 ${styles.livraison}`}>
-        <RaisedButton
-          fullWidth
-          primary
-          label="Livraison OK"
-          onClick={this.handleSave}
-        />
+      <div className={`col-md-8 ${styles.livraison}`}>
+        <RaisedButton fullWidth primary label="Livraison OK" onClick={this.handleSave} />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  livre: livreCommandeUtilisateur,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    livre: livreCommandeUtilisateur,
+  },
+  dispatch,
+);
 
 export default connect(null, mapDispatchToProps)(LivraisonCommande);

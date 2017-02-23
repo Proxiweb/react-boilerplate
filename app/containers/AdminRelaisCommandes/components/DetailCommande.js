@@ -8,6 +8,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'mate
 export default class DetailsCommande extends Component {
   static propTypes = {
     roles: PropTypes.array.isRequired,
+    offres: PropTypes.object.isRequired,
     commandeId: PropTypes.string.isRequired,
     contenus: PropTypes.array.isRequired,
     commandeContenus: PropTypes.array.isRequired,

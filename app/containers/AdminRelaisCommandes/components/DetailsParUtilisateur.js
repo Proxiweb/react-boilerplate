@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import Helmet from 'react-helmet';
+import round from 'lodash/round';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
   selectCommandeCommandeContenus,
@@ -14,9 +15,7 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import {
-  selectUtilisateurStellarAdresse,
-} from 'containers/AdminUtilisateurs/selectors';
+import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
 import moment from 'moment';
 const format = 'DD/MM/YY à HH:mm';
@@ -42,7 +41,19 @@ class DetailsParUtilisateur extends Component {
     produits: PropTypes.array.isRequired,
     commandeStellarAdresse: PropTypes.string.isRequired,
     utilisateurStellarAdresse: PropTypes.string.isRequired,
+    depots: PropTypes.array.isRequired,
     pushState: PropTypes.func.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      account: null,
+    };
+  }
+
+  handleAccountLoaded = account => {
+    this.setState({ account });
   };
 
   render() {
@@ -59,6 +70,7 @@ class DetailsParUtilisateur extends Component {
       utilisateurStellarAdresse,
       commandeStellarAdresse,
       pushState,
+      depots,
     } = this.props;
 
     const { commandeId, relaiId, utilisateurId } = params;
@@ -66,15 +78,24 @@ class DetailsParUtilisateur extends Component {
     const contenusUtilisateur = commandeContenus
       .map(key => contenus[key])
       .filter(c => c.utilisateurId === utilisateur.id);
+
+    const depot = depots.find(
+      d => d.utilisateurId === id && !d.transfertEffectue && d.type === 'depot_relais',
+    );
+
     const totaux = calculeTotauxCommande({
       contenus: contenusUtilisateur,
       offres,
       commandeContenus,
       commandeId: params.commandeId,
     });
-    const identite = `${capitalize(
-      utilisateur.prenom,
-    )} ${utilisateur.nom.toUpperCase()}`;
+    const credit = parseFloat(this.state.account ? this.state.account.balance : 0) +
+      (depot ? depot.montant : 0);
+    const totalCommande = round(totaux.prix + totaux.recolteFond, 2);
+
+    const paiementOk = this.state.account ? credit >= totalCommande : false;
+
+    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
       <div className={`row center-md ${styles.detailsParUtilisateur}`}>
         <Helmet title={`Commande de ${identite}`} />
@@ -87,16 +108,12 @@ class DetailsParUtilisateur extends Component {
               <div className="row arround-md">
                 <div className="col-md">
                   {commandeUtilisateur.datePaiement
-                    ? `Payée le ${moment(
-                        commandeUtilisateur.datePaiement,
-                      ).format(format)}`
+                    ? `Payée le ${moment(commandeUtilisateur.datePaiement).format(format)}`
                     : 'Non payée'}
                 </div>
                 <div className="col-md">
                   {commandeUtilisateur.dateLivraison
-                    ? `Livrée le ${moment(
-                        commandeUtilisateur.datePaiement,
-                      ).format(format)}`
+                    ? `Livrée le ${moment(commandeUtilisateur.dateLivraison).format(format)}`
                     : 'Non livrée'}
                 </div>
               </div>
@@ -120,6 +137,7 @@ class DetailsParUtilisateur extends Component {
             />}
         </div>
         {!commandeUtilisateur.dateLivraison &&
+          paiementOk &&
           <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />}
         {!commandeUtilisateur.datePaiement &&
           moment(commande.dateCommande).isAfter(moment()) &&
@@ -131,9 +149,7 @@ class DetailsParUtilisateur extends Component {
                   primary
                   label="Modifier"
                   onClick={() =>
-                    pushState(
-                      `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
-                    )}
+                    pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)}
                 />
               </div>
               <div className="col-md-4">
@@ -142,17 +158,24 @@ class DetailsParUtilisateur extends Component {
                   secondary
                   label="Annuler"
                   onClick={() =>
-                    pushState(
-                      `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
-                    )}
+                    pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)}
                 />
               </div>
             </div>
           </div>}
-        <div className="col-md-12" style={{ marginTop: '1em' }}>
+        <div className="col-md-6" style={{ marginTop: '1em' }}>
           {utilisateur.stellarKeys &&
-            <StellarAccount stellarAdr={utilisateur.stellarKeys.adresse} />}
+            <StellarAccount
+              stellarAdr={utilisateur.stellarKeys.adresse}
+              onAccountLoaded={this.handleAccountLoaded}
+            />}
           {!utilisateur.stellarKeys && <h3>Pas de compte</h3>}
+        </div>
+        <div className="col-md-6" style={{ marginTop: '1em' }}>
+          <h3>
+            {this.state.account && !paiementOk && <p>Manque {round(totalCommande - credit, 2)} €</p>}
+            {this.state.account && paiementOk && <p>Restera {round(credit - totalCommande, 2)} €</p>}
+          </h3>
         </div>
       </div>
     );
@@ -176,6 +199,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DetailsParUtilisateur,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);

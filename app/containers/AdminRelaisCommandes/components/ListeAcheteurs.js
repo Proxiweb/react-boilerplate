@@ -82,13 +82,14 @@ class ListeAcheteurs extends Component {
             <RaisedButton
               primary
               fullWidth
-              label="Deposer des fonds"
+              label="Depot"
               disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
               onClick={() => this.setState({ ...this.state, depot: true })}
             />}
           {utilisateurDepot && `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
           {!utilisateurDepot &&
             utilisateurId &&
+            utilisateurBalance &&
             <DepotRelais
               utilisateur={utilisateur}
               balance={utilisateurBalance}
@@ -109,6 +110,7 @@ class ListeAcheteurs extends Component {
                 utilisateur={cu.utilisateur}
                 depots={depots}
                 commandeUtilisateur={cu}
+                value={cu.utilisateurId}
                 onClick={this.handleClick}
                 totaux={calculeTotauxCommande({
                   contenus: contenus.filter(
