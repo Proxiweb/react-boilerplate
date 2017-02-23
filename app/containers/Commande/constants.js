@@ -10,41 +10,18 @@ const commandesConst = generateConstants('app/Commande', 'load_commandes');
 const commandeConst = generateConstants('app/Commande', 'load_commande');
 const crCdeConst = generateConstants('app/Commande', 'create_commande');
 const deleteConst = generateConstants('app/Commande', 'delete_commande');
-const diminueCommandeContenuConst = generateConstants(
-  'app/Commande',
-  'diminuer_commande_contenu',
-);
-const deleteCommandeContenuConst = generateConstants(
-  'app/Commande',
-  'supprimer_commande_contenu',
-);
+const diminueCommandeContenuConst = generateConstants('app/Commande', 'diminuer_commande_contenu');
+const deleteCommandeContenuConst = generateConstants('app/Commande', 'supprimer_commande_contenu');
 const savePdtConst = generateConstants('app/Commande', 'save_produit');
-const changePhotoConst = generateConstants(
-  'app/Commande',
-  'change_photo_produit',
-);
+const changePhotoConst = generateConstants('app/Commande', 'change_photo_produit');
 const saveOffreConst = generateConstants('app/Commande', 'save_offre');
 const importeOffresConst = generateConstants('app/Commande', 'importe_offres');
-const userCommandesConst = generateConstants(
-  'app/Commande',
-  'load_user_commandes',
-);
-const utilisateursConst = generateConstants(
-  'app/Commande',
-  'load_utilisateurs',
-);
-const cdeUtilisateursConst = generateConstants(
-  'app/Commande',
-  'load_commande_utilisateurs',
-);
-const fournisseursConst = generateConstants(
-  'app/Commande',
-  'load_fournisseurs',
-);
-const livreCommandeUtilisateurConst = generateConstants(
-  'app/CommandeEdit',
-  'livre_commande_utilisateur',
-);
+const userCommandesConst = generateConstants('app/Commande', 'load_user_commandes');
+const utilisateursConst = generateConstants('app/Commande', 'load_utilisateurs');
+const cdeUtilisateursConst = generateConstants('app/Commande', 'load_commande_utilisateurs');
+const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
+const offresConst = generateConstants('app/Commande', 'load_offres');
+const livreCommandeUtilisateurConst = generateConstants('app/CommandeEdit', 'livre_commande_utilisateur');
 const supprimerCommandeContenusFournisseurConst = generateConstants(
   'app/Commande',
   'supprimer_commande_contenus_fournisseur',
@@ -55,6 +32,8 @@ const AJOUTER = 'app/Commande/AJOUTER';
 const NOUVEL_ACHAT = 'NOUVEL_ACHAT';
 const SUPPRESSION_ACHAT = 'SUPPRESSION_ACHAT';
 const MODIF_ACHAT = 'MODIF_ACHAT';
+const UPDATE_CATALOGUE_START = 'app/Commande/UPDATE_CATALOGUE_START';
+const UPDATE_CATALOGUE_SUCCESS = 'app/Commande/UPDATE_CATALOGUE_SUCCESS';
 
 export default assign(
   commandesConst,
@@ -64,6 +43,7 @@ export default assign(
   saveOffreConst,
   userCommandesConst,
   fournisseursConst,
+  offresConst,
   supprimerCommandeContenusFournisseurConst,
   livreCommandeUtilisateurConst,
   importeOffresConst,
@@ -80,5 +60,7 @@ export default assign(
     NOUVEL_ACHAT,
     SUPPRESSION_ACHAT,
     MODIF_ACHAT,
+    UPDATE_CATALOGUE_START,
+    UPDATE_CATALOGUE_SUCCESS,
   },
 );

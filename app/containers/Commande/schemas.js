@@ -12,12 +12,16 @@ const produits = new Schema('produits');
 const typesProduits = new Schema('typesProduits');
 
 commandeUtilisateurs.define({
-  // utilisateur,
+  utilisateur: utilisateurs,
   contenus: arrayOf(commandeContenus),
 });
 
 livraisons.define({
   relai: relais,
+});
+
+commandeContenus.define({
+  offre: offres,
 });
 
 // offres.define({
@@ -28,6 +32,10 @@ produits.define({
   offres: arrayOf(offres),
   typeProduit: typesProduits,
 });
+
+// typesProduits.define({
+//   unite: unites,
+// });
 
 fournisseurs.define({
   produits: arrayOf(produits),

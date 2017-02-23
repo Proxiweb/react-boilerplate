@@ -31,12 +31,10 @@ export class Commande extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     commandes: PropTypes.object,
-    livraisons: PropTypes.object,
     commandesUtilisateurs: PropTypes.object,
     utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
     produits: PropTypes.object,
-    route: PropTypes.object,
     fournisseurs: PropTypes.array,
     typesProduits: PropTypes.object,
     loadCommandes: PropTypes.func.isRequired,
@@ -50,14 +48,9 @@ export class Commande extends React.Component {
 
   componentDidMount() {
     const {
-      commandes,
-      loadCommandes,
       relaiId,
-      loadCommande,
-      route,
     } = this.props; // eslint-disable-line
-    loadCommandes({ relaiId, periode: 'courantes' });
-    // loadCommande('2cfdf815-3e1e-4223-87e2-c3022e596ee7');
+    this.props.loadCommandes({ relaiId, periode: 'courantes' });
   }
 
   getCommandeInfos = id => {

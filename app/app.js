@@ -36,13 +36,21 @@ openSansObserver.load().then(() => {
   document.body.classList.remove(styles.fontLoaded);
 });
 
-
 // Import Language Provider
 import LanguageProvider from './containers/LanguageProvider';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import shader from 'shader';
-import { limeA700, orange800, grey900, blue800, red800, grey300, grey600, grey200 } from 'material-ui/styles/colors';
+import {
+  limeA700,
+  orange800,
+  grey900,
+  blue800,
+  red800,
+  grey300,
+  grey600,
+  grey200,
+} from 'material-ui/styles/colors';
 
 // Import global saga
 import globalSagas from './containers/App/sagas';
@@ -70,7 +78,7 @@ const store = configureStore(initialState, browserHistory);
 moment.locale('fr');
 
 persistStore(store, {
-  whitelist: ['compteUtilisateur', 'global'], // 'commande'
+  whitelist: ['compteUtilisateur', 'global', 'commandes'], // 'commande'
   debounce: 1500,
   keyPrefix: 'pw',
 });
@@ -123,8 +131,7 @@ const muiTheme = getMuiTheme({
   },
 });
 
-
-const render = (messages) => {
+const render = messages => {
   injectTapEventPlugin();
   ReactDOM.render(
     <Provider store={store}>
@@ -133,11 +140,9 @@ const render = (messages) => {
           <Router
             history={history}
             routes={rootRoute}
-            render={
-              // Scroll to top when going to a new page, imitating default browser
-              // behaviour
-              applyRouterMiddleware(useScroll())
-            }
+            render={// Scroll to top when going to a new page, imitating default browser
+            // behaviour
+            applyRouterMiddleware(useScroll())}
           />
         </MuiThemeProvider>
       </LanguageProvider>
@@ -145,7 +150,6 @@ const render = (messages) => {
     document.getElementById('app'),
   );
 };
-
 
 // Hot reloadable translation json files
 if (module.hot) {
@@ -158,10 +162,8 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  Promise.all([
-    System.import('intl'),
-    System.import('intl/locale-data/jsonp/en.js'),
-  ]).then(() => render(translationMessages));
+  Promise.all([System.import('intl'), System.import('intl/locale-data/jsonp/en.js')])
+    .then(() => render(translationMessages));
 } else {
   render(translationMessages);
 }

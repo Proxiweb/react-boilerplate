@@ -94,11 +94,7 @@ export const saveOffre = (offre, msgSuccess = 'Offre sauvegardée') => ({
   msgSuccess,
 });
 
-export const importeOffres = (
-  fournisseurId,
-  produitId,
-  relaiDestinationId,
-) => ({
+export const importeOffres = (fournisseurId, produitId, relaiDestinationId) => ({
   type: findActionType('importe_offres', c, 'START'),
   url: 'offre_produits/importer',
   method: 'post',
@@ -115,10 +111,26 @@ export const loadFournisseurs = query => ({
   query,
   msgPending: 'Chargement fournisseurs',
 });
+/**
+* query : { relaiId, jointures: true }
+**/
+export const loadOffres = query => ({
+  type: findActionType('load_offres', c, 'START'),
+  url: 'offre_produits',
+  query,
+});
 
-export const supprimerCommandeContenusFournisseur = (
-  { fournisseurId, commandeId },
-) => ({
+export const updateCatalogue = relaiId => ({
+  type: c.UPDATE_CATALOGUE_START,
+  payload: { relaiId },
+});
+
+export const catalogueUpdated = (offres, fournisseurs) => ({
+  type: c.UPDATE_CATALOGUE_SUCCESS,
+  payload: { offres, fournisseurs },
+});
+
+export const supprimerCommandeContenusFournisseur = ({ fournisseurId, commandeId }) => ({
   type: findActionType('supprimer_commande_contenus_fournisseur', c, 'START'),
   url: `/commandes/${commandeId}/fournisseurs/${fournisseurId}`,
   method: 'del',

@@ -13,6 +13,7 @@ import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
 import includes from 'lodash/includes';
+import moment from 'moment';
 import uniq from 'lodash/uniq';
 import { REHYDRATE } from 'redux-persist/constants';
 
@@ -23,6 +24,7 @@ const initialState = {
     result: [],
   },
   error: null,
+  lastFetched: null,
 };
 
 const ajouter = (state, action) => {
@@ -49,20 +51,16 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
   } = state.datas.entities;
 
   const contenusRestants = Object.keys(commandeContenus)
-    .filter(
-      id =>
-        commandeUtilisateurs[id] &&
-          !includes(commandeUtilisateurs[id].contenus, id),
-    )
+    .filter(id => commandeUtilisateurs[id] && !includes(commandeUtilisateurs[id].contenus, id))
     .reduce((memo, id) => ({ [id]: commandeContenus[id] }), {});
 
   const commandeUtilisateursRestants = Object.keys(commandeUtilisateurs)
     .filter(id => id !== commandeUtilisateurId)
     .reduce((memo, id) => ({ [id]: commandeUtilisateurs[id] }), {});
 
-  const commandeCommandeUtilisateursRestants = commandes[
-    cdeId
-  ].commandeUtilisateurs.filter(id => id !== commandeUtilisateurId);
+  const commandeCommandeUtilisateursRestants = commandes[cdeId].commandeUtilisateurs.filter(
+    id => id !== commandeUtilisateurId,
+  );
 
   return update(state, {
     datas: {
@@ -81,11 +79,7 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
   });
 };
 
-const supprimeCommandeContenusFournisseur = (
-  state,
-  fournisseurId,
-  commandeId,
-) => {
+const supprimeCommandeContenusFournisseur = (state, fournisseurId, commandeId) => {
   const {
     commandeContenus,
     offres,
@@ -97,15 +91,11 @@ const supprimeCommandeContenusFournisseur = (
     .filter(
       id =>
         commandeContenus[id].commandeId === commandeId &&
-          produits[
-            offres[commandeContenus[id].offreId].produitId
-          ].fournisseurId === fournisseurId,
+        produits[offres[commandeContenus[id].offreId].produitId].fournisseurId === fournisseurId,
     );
 
   const commandeUtilisateursModifiee = uniq( // il peut y a voir plusieurs contenus pour une meme commandeUtilisateur
-    commandeContenusASupprimerIds.map(
-      ccId => commandeContenus[ccId].commandeUtilisateurId,
-    ),
+    commandeContenusASupprimerIds.map(ccId => commandeContenus[ccId].commandeUtilisateurId),
   ).reduce(
     (memo, cuId) => ({
       ...memo,
@@ -145,13 +135,10 @@ const supprimeCommandeContenusFournisseur = (
 
 const supprimeContenu = (state, contenu) => {
   const { commandeUtilisateurs, commandeContenus } = state.datas.entities;
-  const contenusRestants = commandeUtilisateurs[
-    contenu.commandeUtilisateurId
-  ].contenus.filter(c => c !== contenu.id); // eslint-disable-line
-  const commandeContenusRestants = Object.keys(commandeContenus).reduce((
-    memo,
-    cont,
-  ) => {
+  const contenusRestants = commandeUtilisateurs[contenu.commandeUtilisateurId].contenus.filter(
+    c => c !== contenu.id,
+  ); // eslint-disable-line
+  const commandeContenusRestants = Object.keys(commandeContenus).reduce((memo, cont) => {
     const aIns = cont.id !== contenu.id ? { [contenu.id]: contenu } : {};
     return { ...memo, aIns };
   }, {});
@@ -191,27 +178,46 @@ const supprimeContenu = (state, contenu) => {
 
 function commandeReducer(state = initialState, action) {
   switch (action.type) {
-    case c.ASYNC_LOAD_COMMANDES_START:
-      return update(state, { pending: { $set: true } });
+    case c.UPDATE_CATALOGUE_START:
+      return update(state, { lastFetched: { $set: null } });
+    case c.UPDATE_CATALOGUE_SUCCESS: {
+      const offresDatas = normalize(action.payload.offres, arrayOf(schemas.OFFRES));
+      const fournisseursDatas = normalize(action.payload.fournisseurs, arrayOf(schemas.FOURNISSEURS));
+      return update(state, {
+        datas: {
+          entities: { $set: merge(state.datas.entities, offresDatas.entities, fournisseursDatas.entities) },
+        },
+        pending: { $set: false },
+        lastFetched: { $set: moment().toISOString() },
+      });
+    }
     case c.ASYNC_LOAD_FOURNISSEURS_SUCCESS: {
-      const datas = normalize(
-        action.datas.fournisseurs,
-        arrayOf(schemas.FOURNISSEURS),
-      );
+      const datas = normalize(action.datas.fournisseurs, arrayOf(schemas.FOURNISSEURS));
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
           result: { $push: datas.result },
         },
         pending: { $set: false },
+        fetched: { fournisseurs: { $set: moment().toISOString() } },
+      });
+    }
+    case c.ASYNC_LOAD_OFFRES_START:
+      return update(state, { fetched: { offres: { $set: null } } });
+    case c.ASYNC_LOAD_OFFRES_SUCCESS: {
+      const datas = normalize(action.datas.offre_produits, arrayOf(schemas.OFFRES));
+      return update(state, {
+        datas: {
+          entities: { $set: merge(state.datas.entities, datas.entities) },
+          result: { $push: datas.result },
+        },
+        pending: { $set: false },
+        fetched: { offres: { $set: moment().toISOString() } },
       });
     }
     case c.ASYNC_LOAD_USER_COMMANDES_SUCCESS:
     case c.ASYNC_LOAD_COMMANDES_SUCCESS: {
-      const datas = normalize(
-        action.datas.commandes,
-        arrayOf(schemas.COMMANDES),
-      );
+      const datas = normalize(action.datas.commandes, arrayOf(schemas.COMMANDES));
       const defaults = {
         commandes: {},
         commandeContenus: {},
@@ -261,10 +267,7 @@ function commandeReducer(state = initialState, action) {
       const { id } = action.req.datas;
       const { commandes } = state.datas.entities;
       const commandesRestantes = Object.keys(commandes)
-        .reduce(
-          (memo, key) => key !== id ? { ...memo, [key]: commandes[key] } : memo,
-          {},
-        );
+        .reduce((memo, key) => key !== id ? { ...memo, [key]: commandes[key] } : memo, {});
 
       return update(state, {
         datas: { entities: { commandes: { $set: commandesRestantes } } },
@@ -326,10 +329,7 @@ function commandeReducer(state = initialState, action) {
     }
 
     case c.ASYNC_LOAD_TYPES_PRODUITS_SUCCESS: {
-      const datas = normalize(
-        action.datas.type_produits,
-        arrayOf(schemas.TYPES_PRODUITS),
-      );
+      const datas = normalize(action.datas.type_produits, arrayOf(schemas.TYPES_PRODUITS));
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
@@ -351,11 +351,7 @@ function commandeReducer(state = initialState, action) {
 
     case c.ASYNC_SUPPRIMER_COMMANDE_CONTENUS_FOURNISSEUR_SUCCESS: {
       const { fournisseurId, commandeId } = action.req.datas;
-      return supprimeCommandeContenusFournisseur(
-        state,
-        fournisseurId,
-        commandeId,
-      );
+      return supprimeCommandeContenusFournisseur(state, fournisseurId, commandeId);
     }
 
     case c.ASYNC_LIVRE_COMMANDE_UTILISATEUR_SUCCESS: {
@@ -385,10 +381,7 @@ function commandeReducer(state = initialState, action) {
       });
     }
     case c.SUPPRESSION_ACHAT: {
-      const nCommandeContenus = omit(
-        state.datas.entities.commandeContenus,
-        action.datas.id,
-      );
+      const nCommandeContenus = omit(state.datas.entities.commandeContenus, action.datas.id);
       return update(state, {
         datas: { entities: { commandeContenus: { $set: nCommandeContenus } } },
       });
@@ -412,10 +405,7 @@ function commandeReducer(state = initialState, action) {
       return supprimeContenu(state, action.req.datas);
 
     case c.ASYNC_LOAD_UTILISATEURS_SUCCESS: {
-      const datas = normalize(
-        action.datas.utilisateurs,
-        arrayOf(schemas.UTILISATEURS),
-      );
+      const datas = normalize(action.datas.utilisateurs, arrayOf(schemas.UTILISATEURS));
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
@@ -425,10 +415,7 @@ function commandeReducer(state = initialState, action) {
     }
 
     case c.ASYNC_LOAD_COMMANDE_UTILISATEURS_SUCCESS: {
-      const datas = normalize(
-        action.datas.commande_utilisateurs,
-        arrayOf(schemas.COMMANDE_UTILISATEURS),
-      );
+      const datas = normalize(action.datas.commande_utilisateurs, arrayOf(schemas.COMMANDE_UTILISATEURS));
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
@@ -461,7 +448,8 @@ function commandeReducer(state = initialState, action) {
       });
     case REHYDRATE: {
       const incoming = action.payload.commande;
-      return { ...state, ...incoming };
+      if (!incoming) return state;
+      return { ...state, lastFetched: incoming.lastFetched };
     }
     default:
       return state;
