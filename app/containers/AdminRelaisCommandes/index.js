@@ -5,10 +5,7 @@ import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 
-import {
-  BottomNavigation,
-  BottomNavigationItem,
-} from 'material-ui/BottomNavigation';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import { selectPending } from 'containers/App/selectors';
@@ -42,8 +39,7 @@ import DoneIcon from 'material-ui/svg-icons/action/done';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import CommandeListeTypesProduits
-  from './components/CommandeListeTypesProduits';
+import CommandeListeTypesProduits from './components/CommandeListeTypesProduits';
 
 import styles from './styles.css';
 
@@ -72,11 +68,7 @@ class AdminRelaisCommandes extends Component {
     children: PropTypes.node,
   };
 
-  static filtres = [
-    () => true,
-    (commandeId, commandes) => commandes[commandeId].finalisation,
-    () => true,
-  ];
+  static filtres = [() => true, (commandeId, commandes) => commandes[commandeId].finalisation, () => true];
 
   constructor(props) {
     super(props);
@@ -105,16 +97,12 @@ class AdminRelaisCommandes extends Component {
   }
 
   newCommande = () => {
-    this.props.pushState(
-      `/admin/relais/${this.props.params.relaiId}/commandes/nouvelle`,
-    );
+    this.props.pushState(`/admin/relais/${this.props.params.relaiId}/commandes/nouvelle`);
   };
 
   editCommande = () => {
     const { relaiId, commandeId } = this.props.params;
-    this.props.pushState(
-      `/admin/relais/${relaiId}/commandes/${commandeId}/edit`,
-    );
+    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/edit`);
   };
 
   removeCommande = id => {
@@ -125,11 +113,7 @@ class AdminRelaisCommandes extends Component {
 
   handleChangeList = (event, value) => {
     const { relaiId, action } = this.props.params;
-    this.props.pushState(
-      `/admin/relais/${relaiId}/commandes/${value}${action === 'edit'
-        ? '/edit'
-        : ''}`,
-    );
+    this.props.pushState(`/admin/relais/${relaiId}/commandes/${value}${action === 'edit' ? '/edit' : ''}`);
   };
 
   handleChangeFiltre = typeCommandeListees => {
@@ -149,10 +133,7 @@ class AdminRelaisCommandes extends Component {
     return (
       <IconMenu iconButtonElement={iconButtonElement}>
         <MenuItem
-          onClick={() =>
-            this.props.pushState(
-              `/admin/relais/${relaiId}/commandes/${commandeId}/edit`,
-            )}
+          onClick={() => this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/edit`)}
         >
           Modifier
         </MenuItem>
@@ -176,19 +157,11 @@ class AdminRelaisCommandes extends Component {
     switch (this.state.typeCommandeListees) {
       case 0:
         commandesFiltredIds = Object.keys(commandes)
-          .filter(
-            id =>
-              commandes[id].dateCommande === null ||
-                moment().isBefore(commandes[id].dateCommande),
-          );
+          .filter(id => commandes[id].dateCommande === null || moment().isBefore(commandes[id].dateCommande));
         break;
       case 1:
         commandesFiltredIds = Object.keys(commandes)
-          .filter(
-            id =>
-              commandes[id].dateCommande !== null &&
-                moment().isAfter(commandes[id].dateCommande),
-          );
+          .filter(id => commandes[id].dateCommande !== null && moment().isAfter(commandes[id].dateCommande));
         break;
       case 2:
         commandesFiltredIds = Object.keys(commandes);
@@ -203,11 +176,7 @@ class AdminRelaisCommandes extends Component {
           <div style={{ textAlign: 'center' }}>
             {!commandeId &&
               !action &&
-              <FloatingActionButton
-                primary
-                className={styles.addButton}
-                onClick={this.newCommande}
-              >
+              <FloatingActionButton primary className={styles.addButton} onClick={this.newCommande}>
                 <ContentAdd />
               </FloatingActionButton>}
           </div>
@@ -223,13 +192,9 @@ class AdminRelaisCommandes extends Component {
             </div>}
           {!pending &&
             <div className={styles.liste}>
-              {commandesFiltredIds.length === 0 &&
-                <p>Aucune commande active</p>}
+              {commandesFiltredIds.length === 0 && <p>Aucune commande active</p>}
               {commandesFiltredIds.length > 0 &&
-                <SelectableList
-                  value={commandeId}
-                  onChange={this.handleChangeList}
-                >
+                <SelectableList value={commandeId} onChange={this.handleChangeList}>
                   {commandesFiltredIds
                     .filter(id => {
                       if (!commandes[id].livraisons) {
@@ -248,8 +213,8 @@ class AdminRelaisCommandes extends Component {
                     .sort(
                       (key1, key2) =>
                         !commandes[key1].dateCommande ||
-                          moment(commandes[key1].dateCommande).unix() <
-                            moment(commandes[key2].dateCommande).unix(),
+                        moment(commandes[key1].dateCommande).unix() <
+                          moment(commandes[key2].dateCommande).unix(),
                     )
                     .map((key, idx) => (
                       <ListItem
@@ -259,19 +224,9 @@ class AdminRelaisCommandes extends Component {
                             ? moment(commandes[key].dateCommande).format('LLLL')
                             : 'date indéfinie'
                         }
-                        secondaryText={
-                          (
-                            <CommandeListeTypesProduits
-                              commande={commandes[key]}
-                            />
-                          )
-                        }
+                        secondaryText={<CommandeListeTypesProduits commande={commandes[key]} />}
                         value={key}
-                        rightIconButton={this.buildRightIcon(
-                          key,
-                          relais.id,
-                          commandes[key],
-                        )}
+                        rightIconButton={this.buildRightIcon(key, relais.id, commandes[key])}
                       />
                     ))}
                 </SelectableList>}
@@ -295,12 +250,9 @@ class AdminRelaisCommandes extends Component {
           </BottomNavigation>
         </div>
         <div
-          className={classnames(
-            'col-md-9',
-            styles.panel,
-            { [styles.nouvelleCommande]: !commandeId },
-            { [styles.noScroll]: !commandeId },
-          )}
+          className={classnames('col-md-9', styles.panel, { [styles.nouvelleCommande]: !commandeId }, {
+            [styles.noScroll]: !commandeId,
+          })}
         >
           {this.props.children &&
             React.cloneElement(this.props.children, {
@@ -335,6 +287,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  AdminRelaisCommandes,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminRelaisCommandes);
