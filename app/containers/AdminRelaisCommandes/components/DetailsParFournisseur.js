@@ -14,16 +14,15 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import {
-  selectCompteUtilisateur,
-} from 'containers/CompteUtilisateur/selectors';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import CommandeFournisseur from './CommandeFournisseur';
+import CommandeDistributeur from './CommandeDistributeur';
 import FournisseurToolbar from './FournisseurToolbar';
 import styles from './styles.css';
 
+// eslint-disable-next-line
 class DetailsParFournisseur extends Component {
-  // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
@@ -46,10 +45,10 @@ class DetailsParFournisseur extends Component {
       auth,
       pushState,
     } = this.props;
+    const { commandeId } = params;
 
-    const { commandeId, relaiId } = params;
     const totaux = calculeTotauxCommande({
-      contenus: Object.keys(contenus).map(key => contenus[key]),
+      contenus: Object.keys(contenus).map(key => contenus[key]).filter(c => c.commandeId === commandeId),
       offres,
       commandeContenus,
       commandeId,
@@ -57,18 +56,19 @@ class DetailsParFournisseur extends Component {
 
     return (
       <div className={`row ${styles.detailsParFournisseur}`}>
-        {(includes(auth.roles, 'ADMIN') ||
-          includes(auth.roles, 'RELAI_ADMIN')) &&
+        {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
           <FournisseurToolbar role={auth.roles} pushState={pushState} />}
-        <div className={`col-md-6 col-md-offset-3 ${styles.totalDistrib}`}>
+        <div className={`col-md-6 ${styles.totalDistrib}`}>
+          Total Commande:{' '}
+          <strong>{parseFloat(totaux.prix).toFixed(2)} €</strong>
+        </div>
+        <div className={`col-md-6 ${styles.totalDistrib}`}>
           Total Distributeur:{' '}
           <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
         </div>
         <div className={`col-md-12 ${styles.listeCommandes}`}>
           {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
-            const pdts = produits.filter(
-              pdt => pdt.fournisseurId === fournisseur.id,
-            );
+            const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
             return (
               <div className="col-md-12">
                 <CommandeFournisseur
@@ -83,6 +83,16 @@ class DetailsParFournisseur extends Component {
               </div>
             );
           })}
+          <CommandeDistributeur
+            key={'1x'}
+            fournisseur={fournisseurs[0]}
+            produits={produits}
+            commandeContenus={commandeContenus}
+            contenus={contenus}
+            offres={offres}
+            commandeId={commandeId}
+            noFiltre
+          />
         </div>
       </div>
     );
@@ -90,8 +100,6 @@ class DetailsParFournisseur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  contenus: selectCommandeContenus(),
-  commandeContenus: selectCommandeCommandeContenus(),
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
   offres: selectOffres(),
@@ -105,6 +113,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DetailsParFournisseur,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);

@@ -1,11 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import groupBy from 'lodash/groupBy';
-import DetailCommandeProduit from './DetailCommandeProduit';
+import DetailCommandeDistributeurProduit from './DetailCommandeDistributeurProduit';
 import includes from 'lodash/includes';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 
 // eslint-disable-next-line
-export default class DetailsCommande extends Component {
+export default class DetailCommandeDistributeur extends Component {
   static propTypes = {
     roles: PropTypes.array.isRequired,
     commandeId: PropTypes.string.isRequired,
@@ -32,10 +32,8 @@ export default class DetailsCommande extends Component {
       commandeContenus,
       selectable,
       commandeId,
-      offres,
       roles,
     } = this.props;
-
     const grouped = groupBy(contenus, 'offreId');
     const contenusAgg = Object.keys(grouped)
       .map(offreId =>
@@ -46,7 +44,6 @@ export default class DetailsCommande extends Component {
 
     const { muiTheme } = this.context;
     const isAdmin = includes(roles, 'ADMIN');
-
     return (
       <Table selectable={selectable} multiSelectable={selectable} onCellHover={this.handleRowSelection}>
         <TableHeader
@@ -60,7 +57,7 @@ export default class DetailsCommande extends Component {
               Désignation
             </TableHeaderColumn>
             <TableHeaderColumn style={{ color: 'black' }}>
-              Prix
+              Part distrib.
             </TableHeaderColumn>
             <TableHeaderColumn style={{ color: 'black' }}>
               Quantité
@@ -68,10 +65,6 @@ export default class DetailsCommande extends Component {
             <TableHeaderColumn style={{ color: 'black' }}>
               Total
             </TableHeaderColumn>
-            {isAdmin &&
-              <TableHeaderColumn style={{ color: 'black' }}>
-                Modif
-              </TableHeaderColumn>}
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={selectable}>
@@ -80,10 +73,10 @@ export default class DetailsCommande extends Component {
               // .filter(pdt => contenus.find(c => c.offre.produitId === pdt.id))
               .map((contenu, key) => {
                 const contenuComplet = contenus.find(c => c.offreId === contenu.offreId);
-                const produit = produits.find(pdt => pdt.id === offres[contenuComplet.offreId].produitId);
+                const produit = produits.find(pdt => pdt.id === contenuComplet.offre.produitId);
                 if (!produit) return null;
                 return (
-                  <DetailCommandeProduit
+                  <DetailCommandeDistributeurProduit
                     idx={key}
                     produit={produit}
                     selectable={selectable}
@@ -95,7 +88,7 @@ export default class DetailsCommande extends Component {
                     qteTotalOffre={commandeContenus
                       .filter(c => c.offreId === contenu.offreId)
                       .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)}
-                    offre={offres[contenuComplet.offreId]}
+                    offre={contenuComplet.offre}
                     commandeId={commandeId}
                     readOnly={!isAdmin}
                   />

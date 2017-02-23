@@ -61,11 +61,9 @@ class AdminDetailsCommande extends Component {
     this.props.loadUtilisateurs(utilisateursIds);
   };
 
-  handleChangeList = (event, value) => {
+  handleChangeList = value => {
     const { relaiId, commandeId } = this.props.params;
-    this.props.pushState(
-      `/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`,
-    );
+    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`);
   };
 
   render() {
@@ -82,9 +80,7 @@ class AdminDetailsCommande extends Component {
       roles,
       children,
     } = this.props;
-    const utils = utilisateurs
-      ? Object.keys(utilisateurs).map(id => utilisateurs[id])
-      : null;
+    const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
     return (
       <div className="row">
         <div className="col-md-4 col-lg-3">
@@ -110,18 +106,20 @@ class AdminDetailsCommande extends Component {
         </div>
         <div className="col-md-8 col-lg-9">
           {!children &&
+            commandeUtilisateurs &&
+            contenus &&
             <DetailsParFournisseur
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
+              contenus={contenus}
+              commandeContenus={commandeContenus}
             />}
           {children &&
             utils &&
             <DetailsParUtilisateur
               params={params}
               commande={commande}
-              commandeUtilisateur={commandeUtilisateurs.find(
-                cu => cu.utilisateurId === params.utilisateurId,
-              )}
+              commandeUtilisateur={commandeUtilisateurs.find(cu => cu.utilisateurId === params.utilisateurId)}
               roles={roles}
               utilisateur={utils.find(ut => ut.id === params.utilisateurId)}
             />}
@@ -151,6 +149,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   dispatch,
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  AdminDetailsCommande,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);
