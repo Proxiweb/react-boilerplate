@@ -140,7 +140,7 @@ class ListeAcheteurs extends Component {
       }))
       .slice()
       .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom);
-    console.log(acheteurs);
+
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>

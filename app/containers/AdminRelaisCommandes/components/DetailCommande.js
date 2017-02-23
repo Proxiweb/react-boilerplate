@@ -45,6 +45,7 @@ export default class DetailsCommande extends Component {
 
     const { muiTheme } = this.context;
     const isAdmin = includes(roles, 'ADMIN');
+    console.log(this.props);
     return (
       <Table selectable={selectable} multiSelectable={selectable} onCellHover={this.handleRowSelection}>
         <TableHeader

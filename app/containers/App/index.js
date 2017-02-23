@@ -46,7 +46,6 @@ import { refresh } from 'containers/CompteUtilisateur/actions';
 import Logged from './components/Logged';
 import Login from './components/Login';
 import MessageMaj from './components/MessageMaj';
-import Cache from 'containers/Commande/containers/Cache';
 
 const getDrawerHeaderStyle = context => {
   const {
@@ -234,10 +233,7 @@ class App extends Component {
           }
         />
         <div className={`container-fluid ${styles.mainContent}`}>
-          {!this.state.maj && !user && React.Children.toArray(this.props.children)}
-          {!this.state.maj &&
-            user &&
-            <Cache relaiId={user.relaiId}>{React.Children.toArray(this.props.children)}</Cache>}
+          {!this.state.maj && React.Children.toArray(this.props.children)}
           {this.state.maj && <MessageMaj />}
         </div>
         <Notifications />

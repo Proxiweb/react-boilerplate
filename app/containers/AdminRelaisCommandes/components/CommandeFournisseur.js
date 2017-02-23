@@ -44,6 +44,7 @@ class CommandeFournisseur extends Component {
       offres,
       key,
     } = this.props;
+
     const contenusFournisseur = commandeContenus
       .map(key => contenus[key])
       .filter(c =>

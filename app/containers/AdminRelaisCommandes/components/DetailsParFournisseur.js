@@ -100,7 +100,7 @@ class DetailsParFournisseur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  contenus: selectCommandeContenus(),
+  // contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),

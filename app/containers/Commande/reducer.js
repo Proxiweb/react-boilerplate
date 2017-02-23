@@ -24,7 +24,6 @@ const initialState = {
     result: [],
   },
   error: null,
-  lastFetched: null,
 };
 
 const ajouter = (state, action) => {
@@ -178,19 +177,6 @@ const supprimeContenu = (state, contenu) => {
 
 function commandeReducer(state = initialState, action) {
   switch (action.type) {
-    case c.UPDATE_CATALOGUE_START:
-      return update(state, { lastFetched: { $set: null } });
-    case c.UPDATE_CATALOGUE_SUCCESS: {
-      const offresDatas = normalize(action.payload.offres, arrayOf(schemas.OFFRES));
-      const fournisseursDatas = normalize(action.payload.fournisseurs, arrayOf(schemas.FOURNISSEURS));
-      return update(state, {
-        datas: {
-          entities: { $set: merge(state.datas.entities, offresDatas.entities, fournisseursDatas.entities) },
-        },
-        pending: { $set: false },
-        lastFetched: { $set: moment().toISOString() },
-      });
-    }
     case c.ASYNC_LOAD_FOURNISSEURS_SUCCESS: {
       const datas = normalize(action.datas.fournisseurs, arrayOf(schemas.FOURNISSEURS));
       return update(state, {
@@ -199,11 +185,8 @@ function commandeReducer(state = initialState, action) {
           result: { $push: datas.result },
         },
         pending: { $set: false },
-        fetched: { fournisseurs: { $set: moment().toISOString() } },
       });
     }
-    case c.ASYNC_LOAD_OFFRES_START:
-      return update(state, { fetched: { offres: { $set: null } } });
     case c.ASYNC_LOAD_OFFRES_SUCCESS: {
       const datas = normalize(action.datas.offre_produits, arrayOf(schemas.OFFRES));
       return update(state, {
@@ -212,7 +195,6 @@ function commandeReducer(state = initialState, action) {
           result: { $push: datas.result },
         },
         pending: { $set: false },
-        fetched: { offres: { $set: moment().toISOString() } },
       });
     }
     case c.ASYNC_LOAD_USER_COMMANDES_SUCCESS:
@@ -446,11 +428,6 @@ function commandeReducer(state = initialState, action) {
           },
         },
       });
-    case REHYDRATE: {
-      const incoming = action.payload.commande;
-      if (!incoming) return state;
-      return { ...state, lastFetched: incoming.lastFetched };
-    }
     default:
       return state;
   }

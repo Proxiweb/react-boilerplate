@@ -78,7 +78,7 @@ const store = configureStore(initialState, browserHistory);
 moment.locale('fr');
 
 persistStore(store, {
-  whitelist: ['compteUtilisateur', 'global', 'commandes'], // 'commande'
+  whitelist: ['compteUtilisateur', 'global'], // 'commande'
   debounce: 1500,
   keyPrefix: 'pw',
 });

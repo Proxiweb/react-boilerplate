@@ -22,28 +22,5 @@ export function* redirectOnProduitCreated() {
   }
 }
 
-export function* updateCatalogue() {
-  while (1) {
-    // eslint-disable-line
-    try {
-      const state = yield select();
-      const headers = state.compteUtilisateur.token
-        ? { Authorization: `Bearer ${state.compteUtilisateur.token}` }
-        : {};
-      const action = yield take(c.UPDATE_CATALOGUE_START);
-      console.log('took');
-      const query = { relaiId: action.payload.relaiId, jointures: true };
-      const [query1, query2] = yield [
-        call(get, '/api/offre_produits', { headers, query }),
-        call(get, '/api/fournisseurs', { headers, query }),
-      ];
-      console.log(query1.datas.offre_produits);
-      yield put(catalogueUpdated(query1.datas.offre_produits, query2.datas.fournisseurs));
-    } catch (e) {
-      console.log(e);
-    }
-  }
-}
-
 // All sagas to be loaded
-export default [redirectOnCommandeCreated, redirectOnProduitCreated, updateCatalogue];
+export default [redirectOnCommandeCreated, redirectOnProduitCreated];
