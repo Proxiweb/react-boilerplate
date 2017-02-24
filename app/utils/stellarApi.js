@@ -35,19 +35,13 @@ const loadPayments = (accountId, limit = 10) =>
       .then(payments => resolve(payments.records))
       .catch(err => reject(err)));
 
-const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((
-  resolve,
-  reject,
-) => {
+const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
   getServer()
     .accounts()
     .accountId(stellarKeys.accountId)
     .call()
     .then(account => {
-      const userAccount = new StellarSdk.Account(
-        stellarKeys.accountId,
-        account.sequence,
-      );
+      const userAccount = new StellarSdk.Account(stellarKeys.accountId, account.sequence);
       const transaction = new StellarSdk.TransactionBuilder(userAccount)
         .addOperation(
           StellarSdk.Operation.changeTrust({
@@ -80,15 +74,17 @@ const pay = (
     .accountId(stellarKeys.adresse)
     .call()
     .then(account => {
-      const userAccount = new StellarSdk.Account(
-        stellarKeys.adresse,
-        account.sequence,
-      );
+      const userAccount = new StellarSdk.Account(stellarKeys.adresse, account.sequence);
+
+      const asset = currency === 'PROXI'
+        ? new StellarSdk.Asset(currency, currencyIssuer)
+        : new StellarSdk.Asset.native(); // eslint-disable-line
+
       const transaction = new StellarSdk.TransactionBuilder(userAccount)
         .addOperation(
           StellarSdk.Operation.payment({
             destination,
-            asset: new StellarSdk.Asset(currency, currencyIssuer),
+            asset,
             amount: amount.toString(),
           }),
         )
@@ -104,29 +100,23 @@ const pay = (
 
 const fedLookup = name => new Promise((resolve, reject) => {
   const hostname = name.split('*')[1];
-  return request.get(`https://${hostname}/.well-known/stellar.toml`).end((
-    err,
-    resp,
-  ) => {
+  return request.get(`https://${hostname}/.well-known/stellar.toml`).end((err, resp) => {
     if (err) {
       reject(err);
     }
     const configJSON = toml.parse(resp.text);
     const fedServer = configJSON.FEDERATION_SERVER;
-    return request
-      .get(`${fedServer}?q=${name}&type=name`)
-      .type('text/plain')
-      .end((error, response) => {
-        if (error) {
-          reject(error);
-        }
+    return request.get(`${fedServer}?q=${name}&type=name`).type('text/plain').end((error, response) => {
+      if (error) {
+        reject(error);
+      }
 
-        if (!response.body.account_id) {
-          reject();
-        }
+      if (!response.body.account_id) {
+        reject();
+      }
 
-        resolve(response.body.account_id);
-      });
+      resolve(response.body.account_id);
+    });
   });
 });
 

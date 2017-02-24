@@ -22,6 +22,7 @@ import DetailsParFournisseur from './DetailsParFournisseur';
 import ListeAcheteurs from './ListeAcheteurs';
 import { selectPending } from 'containers/App/selectors';
 import DetailsParUtilisateur from './DetailsParUtilisateur';
+import ValidationCommande from './ValidationCommande';
 
 class AdminDetailsCommande extends Component {
   static propTypes = {
@@ -39,6 +40,10 @@ class AdminDetailsCommande extends Component {
     utilisateurs: PropTypes.array.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
     loadDepots: PropTypes.func.isRequired,
+  };
+
+  state = {
+    view: 'fournisseurs', // ou validation
   };
 
   componentDidMount() {
@@ -81,6 +86,7 @@ class AdminDetailsCommande extends Component {
       children,
     } = this.props;
     const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
+    const { view } = this.state;
     return (
       <div className="row">
         <div className="col-md-4 col-lg-3">
@@ -108,10 +114,23 @@ class AdminDetailsCommande extends Component {
           {!children &&
             commandeUtilisateurs &&
             contenus &&
+            view === 'fournisseurs' &&
             <DetailsParFournisseur
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
               contenus={contenus}
+              commandeContenus={commandeContenus}
+              handleValidate={() => this.setState({ view: 'validation' })}
+            />}
+          {!children &&
+            commandeUtilisateurs &&
+            contenus &&
+            view === 'validation' &&
+            <ValidationCommande
+              params={params}
+              commandeUtilisateurs={commandeUtilisateurs}
+              contenus={contenus}
+              utilisateurs={utils}
               commandeContenus={commandeContenus}
             />}
           {children &&

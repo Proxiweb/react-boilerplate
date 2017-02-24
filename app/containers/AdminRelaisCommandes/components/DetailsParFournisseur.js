@@ -7,8 +7,6 @@ import { createStructuredSelector } from 'reselect';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 import {
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
   selectFournisseursCommande,
   selectCommandeProduits,
   selectOffres,
@@ -26,12 +24,14 @@ class DetailsParFournisseur extends Component {
   static propTypes = {
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
+    commandeUtilisateurs: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
     auth: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
+    handleValidate: PropTypes.func.isRequired,
   };
 
   render() {
@@ -40,12 +40,13 @@ class DetailsParFournisseur extends Component {
       contenus,
       produits,
       fournisseurs,
+      commandeUtilisateurs,
       offres,
       params,
       auth,
       pushState,
     } = this.props;
-    const { commandeId } = params;
+    const { commandeId, relaiId } = params;
 
     const totaux = calculeTotauxCommande({
       contenus: Object.keys(contenus).map(key => contenus[key]).filter(c => c.commandeId === commandeId),
@@ -54,10 +55,19 @@ class DetailsParFournisseur extends Component {
       commandeId,
     });
 
+    const nbreCommandeLivrees = commandeUtilisateurs.filter(cu => cu.dateLivraison).length;
+    const distribuee = nbreCommandeLivrees === commandeUtilisateurs.length;
+
     return (
       <div className={`row ${styles.detailsParFournisseur}`}>
         {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
-          <FournisseurToolbar role={auth.roles} pushState={pushState} />}
+          <FournisseurToolbar
+            relaiId={relaiId}
+            role={auth.roles}
+            pushState={pushState}
+            distribuee={distribuee}
+            validate={this.props.handleValidate}
+          />}
         <div className={`col-md-6 ${styles.totalDistrib}`}>
           Total Commande:{' '}
           <strong>{parseFloat(totaux.prix).toFixed(2)} €</strong>
