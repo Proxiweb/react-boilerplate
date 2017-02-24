@@ -22,6 +22,7 @@ const cdeUtilisateursConst = generateConstants('app/Commande', 'load_commande_ut
 const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
 const offresConst = generateConstants('app/Commande', 'load_offres');
 const livreCommandeUtilisateurConst = generateConstants('app/CommandeEdit', 'livre_commande_utilisateur');
+const payeCommandeUtilisateurConst = generateConstants('app/CommandeEdit', 'paye_commande_utilisateur');
 const supprimerCommandeContenusFournisseurConst = generateConstants(
   'app/Commande',
   'supprimer_commande_contenus_fournisseur',
@@ -46,6 +47,7 @@ export default assign(
   offresConst,
   supprimerCommandeContenusFournisseurConst,
   livreCommandeUtilisateurConst,
+  payeCommandeUtilisateurConst,
   importeOffresConst,
   deleteConst,
   diminueCommandeContenuConst,

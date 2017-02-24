@@ -336,6 +336,7 @@ function commandeReducer(state = initialState, action) {
       return supprimeCommandeContenusFournisseur(state, fournisseurId, commandeId);
     }
 
+    case c.ASYNC_PAYE_COMMANDE_UTILISATEUR_SUCCESS:
     case c.ASYNC_LIVRE_COMMANDE_UTILISATEUR_SUCCESS: {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       return update(state, {

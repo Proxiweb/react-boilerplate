@@ -1,10 +1,11 @@
 import React, { PropTypes, Component } from 'react';
-import LinearProgress from 'material-ui/LinearProgress';
-import capitalize from 'lodash/capitalize';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import capitalize from 'lodash/capitalize';
+import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
-import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
+import { selectStellarKeys } from 'containers/App/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import api from 'utils/stellarApi';
 
@@ -13,6 +14,8 @@ import {
   selectCommandeProduits,
   selectOffres,
 } from 'containers/Commande/selectors';
+
+import { payerCommandeUtilisateur } from 'containers/Commande/actions';
 
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
@@ -26,75 +29,82 @@ class ValidationCommande extends Component {
     commandeUtilisateurs: PropTypes.object.isRequired,
     offres: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
-    fournisseurs: PropTypes.array.isRequired,
-    produits: PropTypes.array.isRequired,
     utilisateurs: PropTypes.array.isRequired,
-    auth: PropTypes.object.isRequired,
-    handleValidate: PropTypes.func.isRequired,
+    stellarKeys: PropTypes.object.isRequired,
+    payerCommandeUtilisateur: PropTypes.func.isRequired,
   };
 
   state = {
     index: 0,
+    paiementEnCours: null,
   };
 
-  componentDidMount = () => {
-    this.timer = setTimeout(() => this.progress(), 3000);
-  };
-
-  progress() {
+  pay = () => {
     const {
       commandeUtilisateurs,
+      commandeContenus,
       utilisateurs,
+      contenus,
+      stellarKeys: { adresse },
+      offres,
+      params: { commandeId },
     } = this.props;
-    const utilisateur = utilisateurs.find(u => u.id === commandeUtilisateurs[this.state.index].utilisateurId);
-    // api
-    //   .pay({
-    //     destination: utilisateur.stellarKeys.adresse,
-    //     currency: 'PROXI',
-    //     currencyIssuer: stellarKeys.adresse,
-    //     amount: montant,
-    //     stellarKeys,
-    //   })
-    //   .then(transactionHash => {
-    //     this.props.onDepotDirectSuccess();
-    //     this.setState({ ...this.state, depotEnCours: false, depotOk: true });
-    //     deposer({
-    //       utilisateurId: utilisateur.id,
-    //       montant,
-    //       type: 'depot_direct',
-    //       infosSupplement: {
-    //         ...info,
-    //         type,
-    //         transactionHash,
-    //       },
-    //       transfertEffectue: true,
-    //     });
-    //   });
-    if (this.state.index < 3) {
-      this.setState({ index: this.state.index + 1 });
-      this.timer = setTimeout(() => this.progress(), 3000);
-    }
-  }
+
+    const utilisateurCourant = commandeUtilisateurs[this.state.index].utilisateurId;
+    const contenusUtilisateur = Object.keys(contenus)
+      .filter(
+        id => contenus[id].utilisateurId === utilisateurCourant && contenus[id].commandeId === commandeId,
+      )
+      .map(id => contenus[id]);
+
+    const utilisateur = utilisateurs.find(u => u.id === utilisateurCourant);
+
+    const { prix, recolteFond } = calculeTotauxCommande({
+      contenus: contenusUtilisateur,
+      offres,
+      commandeContenus,
+      commandeId,
+    });
+
+    this.setState({ ...this.state, paiementEnCours: (prix + recolteFond).toFixed(2) });
+
+    api
+      .pay({
+        destination: utilisateur.stellarKeys.adresse,
+        currency: 'PROXI',
+        currencyIssuer: adresse,
+        amount: (prix + recolteFond).toString(),
+        stellarKeys: utilisateur.stellarKeys,
+      })
+      .then(transactionHash => {
+        const index = this.state.index + 1;
+        this.setState({ ...this.state, index, paiementEnCours: null });
+        if (index < Object.keys(commandeUtilisateurs).length) {
+          this.pay();
+        }
+        this.props.payerCommandeUtilisateur({
+          ...commandeUtilisateurs[this.state.index],
+          montant: parseFloat(prix),
+          recolteFond: parseFloat(recolteFond),
+          transactionHash,
+        });
+      });
+  };
 
   render() {
     const {
-      commandeContenus,
-      contenus,
-      produits,
       commandeUtilisateurs,
-      offres,
-      params,
       utilisateurs,
-      auth,
     } = this.props;
 
-    const { index } = this.state;
-    console.log(this.state);
+    const { index, paiementEnCours } = this.state;
     // const validees = commandeUtilisateurs.filter(cu => cu.datePaiement).length;
     let message;
     if (commandeUtilisateurs[index]) {
       const utilisateur = utilisateurs.find(u => u.id === commandeUtilisateurs[index].utilisateurId);
-      message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}`;
+      message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(
+        utilisateur.prenom,
+      )}${paiementEnCours !== null ? ` - ${paiementEnCours} € ...` : ''}`;
     } else {
       message = 'Terminé !';
     }
@@ -106,14 +116,14 @@ class ValidationCommande extends Component {
             <div className={`col-md-12 ${styles.mT}`}>
               <LinearProgress
                 mode="determinate"
-                value={this.state.index + 1}
+                value={this.state.index}
                 min={0}
                 max={commandeUtilisateurs.length}
               />
             </div>
             <div className={`col-md-12 ${styles.mT}`}>
-              {index < commandeUtilisateurs.length - 1 &&
-                <RaisedButton label="Effectuer les paiements" primary />}
+              {index < commandeUtilisateurs.length &&
+                <RaisedButton label="Effectuer les paiements" primary onClick={this.pay} />}
             </div>
           </div>
         </div>
@@ -127,6 +137,9 @@ const mapStateToProps = createStructuredSelector({
   produits: selectCommandeProduits(),
   offres: selectOffres(),
   auth: selectCompteUtilisateur(),
+  stellarKeys: selectStellarKeys(),
 });
 
-export default connect(mapStateToProps)(ValidationCommande);
+const mapDispatchToProps = dispatch => bindActionCreators({ payerCommandeUtilisateur }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ValidationCommande);

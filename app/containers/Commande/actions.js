@@ -67,6 +67,13 @@ export const livreCommandeUtilisateur = id => ({
   datas: {},
 });
 
+export const payerCommandeUtilisateur = datas => ({
+  type: findActionType('paye_commande_utilisateur', c, 'START'),
+  url: `commande_utilisateurs/${datas.id}/paiement`,
+  method: 'post',
+  datas: { ...datas },
+});
+
 export const saveProduit = (produit, msgSuccess: 'Produit sauvegardé') => ({
   type: findActionType('save_produit', c, 'START'),
   url: `produits${produit.id ? `/${produit.id}` : ''}`,
