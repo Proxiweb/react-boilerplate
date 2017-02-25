@@ -49,7 +49,12 @@ export default class DetailsCommande extends Component {
     const isAdmin = includes(roles, 'ADMIN');
 
     return (
-      <Table selectable={selectable} multiSelectable={selectable} onCellHover={this.handleRowSelection}>
+      <Table
+        selectable={selectable}
+        multiSelectable={selectable}
+        onCellHover={this.handleRowSelection}
+        height={contenusAgg.length > 4 ? 300 : null}
+      >
         <TableHeader
           displaySelectAll={selectable}
           style={{
