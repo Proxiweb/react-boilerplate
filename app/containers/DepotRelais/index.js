@@ -82,7 +82,6 @@ class DepotRelais extends Component {
         stellarKeys,
       })
       .then(transactionHash => {
-        this.props.onDepotDirectSuccess();
         this.setState({ ...this.state, depotEnCours: false, depotOk: true });
         deposer({
           utilisateurId: utilisateur.id,
@@ -95,6 +94,7 @@ class DepotRelais extends Component {
           },
           transfertEffectue: true,
         });
+        // this.props.onDepotDirectSuccess();
       });
   };
 
@@ -109,9 +109,7 @@ class DepotRelais extends Component {
     const { montant, type } = this.state;
     const manque = round(parseFloat(balance.balance) - totalCommande, 2);
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
-    const manqueStr = manque > 0
-      ? ''
-      : `( manque ${(manque * (-1)).toFixed(2)} €)`;
+    const manqueStr = manque > 0 ? '' : `( manque ${(manque * (-1)).toFixed(2)} €)`;
     const invalid = montant === null || type === null;
 
     return (
@@ -148,8 +146,7 @@ class DepotRelais extends Component {
                 step="0.01"
                 floatingLabelText={`Montant déposé ${manqueStr}`}
                 label="Montant déposé"
-                onChange={(event, m) =>
-                  this.setState({ ...this.state, montant: m })}
+                onChange={(event, m) => this.setState({ ...this.state, montant: m })}
               />
             </div>
             <div className="col-md-6">
@@ -176,8 +173,7 @@ class DepotRelais extends Component {
                   fullWidth
                   floatingLabelText="Information supplémentaire"
                   label="Information supplémentaire"
-                  onChange={(event, inf) =>
-                    this.setState({ ...this.state, inf })}
+                  onChange={(event, inf) => this.setState({ ...this.state, inf })}
                 />
               </div>}
           </div>

@@ -76,15 +76,11 @@ const pay = (
     .then(account => {
       const userAccount = new StellarSdk.Account(stellarKeys.adresse, account.sequence);
 
-      const asset = currency === 'PROXI'
-        ? new StellarSdk.Asset(currency, currencyIssuer)
-        : new StellarSdk.Asset.native(); // eslint-disable-line
-
       const transaction = new StellarSdk.TransactionBuilder(userAccount)
         .addOperation(
           StellarSdk.Operation.payment({
             destination,
-            asset,
+            asset: new StellarSdk.Asset(currency, currencyIssuer),
             amount: amount.toString(),
           }),
         )

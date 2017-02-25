@@ -99,7 +99,6 @@ class ListeAcheteurs extends Component {
               open={this.state.depot}
               onRequestClose={this.handleClose}
               stellarKeys={stellarKeys}
-              onDepotDirectSuccess={() => this.loadAccount(utilisateur.id, utilisateur.stellarKeys.adresse)}
             />}
         </div>
         <div className={`col-md-12 ${styles.listeAcheteurs}`}>
