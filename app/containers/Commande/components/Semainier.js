@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import CommandePanel from './CommandePanel';
-import uniq from 'lodash/uniq';
 import Panel from 'components/Panel';
 
 const Semainier = (
@@ -15,7 +14,7 @@ const Semainier = (
     utilisateurId,
     pending,
     buttonClicked,
-  },
+  }
 ) => (
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
@@ -23,10 +22,9 @@ const Semainier = (
       {commandesIds &&
         commandesIds.map((key, idx) => {
           const infos = getCommandeInfos(key);
-          console.log('inf', infos);
           return (
             <CommandePanel
-              nom={infos ? uniq(infos).join(', ') : null}
+              nom={infos ? infos.join(', ') : null}
               dateCommande={commandes[key].dateCommande}
               label={commandeUtilisateurExiste(key) ? 'Modifier ma commande' : 'Commander'}
               prct={100}

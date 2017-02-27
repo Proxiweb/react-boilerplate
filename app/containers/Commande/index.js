@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import flatten from 'lodash/flatten';
+import uniq from 'lodash/uniq';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Paper from 'material-ui/Paper';
 import Helmet from 'react-helmet';
@@ -56,14 +58,18 @@ export class Commande extends React.Component {
   getCommandeInfos = id => {
     const { produits, commandes, typesProduits, fournisseurs } = this.props;
     const commande = commandes[id];
-    return commande.fournisseurs
-      .filter(frnId => fournisseurs.find(frn => frn.id === frnId))
-      .map(frnId =>
-        Object.keys(produits)
-          .filter(pdtId => produits[pdtId].visible)
-          .find(pdtId => produits[pdtId].fournisseurId === frnId && produits[pdtId].visible))
-      .map(pdtId => produits[pdtId].typeProduitId)
-      .map(typePdtId => typesProduits[typePdtId].nom);
+    return uniq(
+      flatten(
+        commande.fournisseurs.filter(frnId => fournisseurs.find(frn => frn.id === frnId)).map(
+          frnId =>
+            Object.keys(produits)
+              .filter(pdtId => produits[pdtId].visible && produits[pdtId].fournisseurId === frnId)
+              .map(pdtId => produits[pdtId].typeProduitId)
+              .map(typePdtId => typesProduits[typePdtId].nom)
+          // .find(pdtId => produits[pdtId].fournisseurId === frnId)
+        )
+      )
+    );
   };
 
   commandeUtilisateurExiste = commandeId => {
@@ -72,7 +78,7 @@ export class Commande extends React.Component {
       .find(
         key =>
           commandesUtilisateurs[key].utilisateurId === utilisateurId &&
-          commandesUtilisateurs[key].commandeId === commandeId,
+          commandesUtilisateurs[key].commandeId === commandeId
       );
   };
 
@@ -87,7 +93,7 @@ export class Commande extends React.Component {
       .filter(
         key =>
           !this.props.commandes[key].terminee &&
-          this.isInWeek(this.props.commandes[key].dateCommande, weekOffset),
+          this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
       )
       .slice()
       .sort(key => !this.props.commandes[key].noCommande);
@@ -98,7 +104,7 @@ export class Commande extends React.Component {
       .filter(
         key =>
           !commandes[key].dateCommande ||
-          moment(commandes[key].dateCommande).isAfter(moment().add(3, 'weeks')),
+          moment(commandes[key].dateCommande).isAfter(moment().add(3, 'weeks'))
       )
       .slice()
       .sort(key => !this.props.commandes[key].noCommande);

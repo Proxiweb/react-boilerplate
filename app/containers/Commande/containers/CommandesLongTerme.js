@@ -4,12 +4,9 @@ import { createStructuredSelector } from 'reselect';
 import round from 'lodash/round';
 import { Card, CardActions, CardHeader } from 'material-ui/Card';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
-import GradeIcon from 'material-ui/svg-icons/action/grade';
-import uniq from 'lodash/uniq';
 import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
-import { orange800, green500, cyan500 } from 'material-ui/styles/colors';
+import { green500, cyan500 } from 'material-ui/styles/colors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import Panel from 'components/Panel';
@@ -33,7 +30,7 @@ const Offre = (
     utilisateurId,
     buttonClicked,
     commandeUtilisateurExiste,
-  },
+  }
 ) => (
   <Card style={{ marginBottom: 20 }}>
     <CardHeader title={nom} subtitle={tarif} avatar={imageSrc} actAsExpander showExpandableButton />
@@ -96,9 +93,9 @@ class CommandesLongTerme extends Component {
         memo.concat(
           Object.keys(commandeContenus)
             .filter(id => commandeContenus[id].commandeUtilisateurId === cuId)
-            .map(id => commandeContenus[id]),
+            .map(id => commandeContenus[id])
         ),
-      [],
+      []
     );
     let prct = 0;
     let prix = 0;
@@ -136,7 +133,7 @@ class CommandesLongTerme extends Component {
           if (commandes[id].dateCommande) {
             return (
               <CommandePanel
-                nom={infos ? uniq(infos.typesProduits).join(', ') : null}
+                nom={infos ? infos.typesProduits.join(', ') : null}
                 dateCommande={commandes[id].dateCommande}
                 label={commandeUtilisateurExiste(id) ? 'Modifier ma commande' : 'Commander'}
                 prct={100}
