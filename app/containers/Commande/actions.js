@@ -179,6 +179,13 @@ export const fetchUtilisateurs = ids => ({
   datas: { ids },
 });
 
+export const saveUtilisateur = utilisateur => ({
+  type: findActionType('save_utilisateur', c, 'START'),
+  url: `utilisateurs${utilisateur.id ? `/${utilisateur.id}` : ''}`,
+  method: utilisateur.id ? 'put' : 'post',
+  datas: { ...utilisateur },
+});
+
 export const loadUserCommandes = userId => ({
   type: findActionType('load_user_commandes', c, 'START'),
   url: `/utilisateurs/${userId}/commandes`,

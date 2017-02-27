@@ -22,3 +22,11 @@
 .container {
   padding: 1em 0;
 }
+
+.comToggle {
+  padding-top: 0.5em;
+}
+
+.btn {
+  margin: 1em;
+}

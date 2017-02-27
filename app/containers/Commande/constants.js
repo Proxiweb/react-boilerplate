@@ -18,6 +18,7 @@ const saveOffreConst = generateConstants('app/Commande', 'save_offre');
 const importeOffresConst = generateConstants('app/Commande', 'importe_offres');
 const userCommandesConst = generateConstants('app/Commande', 'load_user_commandes');
 const utilisateursConst = generateConstants('app/Commande', 'load_utilisateurs');
+const saveUtilisateurConst = generateConstants('app/Commande', 'save_utilisateur');
 const cdeUtilisateursConst = generateConstants('app/Commande', 'load_commande_utilisateurs');
 const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
 const offresConst = generateConstants('app/Commande', 'load_offres');
@@ -57,6 +58,7 @@ export default assign(
   utilisateursConst,
   cdeUtilisateursConst,
   typeProduits,
+  saveUtilisateurConst,
   {
     AJOUTER,
     NOUVEL_ACHAT,

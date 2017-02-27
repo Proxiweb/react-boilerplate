@@ -407,6 +407,23 @@ function commandeReducer(state = initialState, action) {
       });
     }
 
+    case c.ASYNC_SAVE_UTILISATEUR_SUCCESS: {
+      const datas = normalize(action.datas, schemas.UTILISATEURS);
+
+      return update(state, {
+        datas: {
+          entities: {
+            utilisateurs: {
+              [action.datas.id]: {
+                $set: datas.entities.utilisateurs[action.datas.id],
+              },
+            },
+            pending: { $set: false },
+          },
+        },
+      });
+    }
+
     case 'ws/NOUVELLE_COMMANDE_UTILISATEUR': {
       const nCu = action.datas;
       nCu.contenus = [];
