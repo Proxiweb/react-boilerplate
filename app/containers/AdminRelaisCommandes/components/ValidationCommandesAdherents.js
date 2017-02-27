@@ -24,7 +24,7 @@ import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors'
 import styles from './styles.css';
 
 // eslint-disable-next-line
-class ValidationCommande extends Component {
+class ValidationCommandesAdherents extends Component {
   static propTypes = {
     contenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
@@ -116,9 +116,12 @@ class ValidationCommande extends Component {
           console.log(e);
           this.setState({ ...this.state, index, paiementEnCours: 'Non effectué !' });
           const index = this.state.index + 1;
-          setTimeout(() => {
-            this.setState({ ...this.state, index, paiementEnCours: null });
-          }, 3000);
+          setTimeout(
+            () => {
+              this.setState({ ...this.state, index, paiementEnCours: null });
+            },
+            3000,
+          );
         });
     }
   };
@@ -134,7 +137,9 @@ class ValidationCommande extends Component {
     let message;
     if (commandeUtilisateurs[index]) {
       const utilisateur = utilisateurs.find(u => u.id === commandeUtilisateurs[index].utilisateurId);
-      message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}${paiementEnCours !== null ? ` - ${paiementEnCours} € ...` : ''}`;
+      message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(
+        utilisateur.prenom,
+      )}${paiementEnCours !== null ? ` - ${paiementEnCours} € ...` : ''}`;
     } else {
       message = 'Terminé !';
     }
@@ -173,4 +178,4 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => bindActionCreators({ payerCommandeUtilisateur }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ValidationCommande);
+export default connect(mapStateToProps, mapDispatchToProps)(ValidationCommandesAdherents);

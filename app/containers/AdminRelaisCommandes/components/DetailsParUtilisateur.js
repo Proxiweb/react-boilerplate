@@ -80,7 +80,7 @@ class DetailsParUtilisateur extends Component {
       .filter(c => c.utilisateurId === utilisateur.id);
 
     const depot = depots.find(
-      d => d.utilisateurId === id && !d.transfertEffectue && d.type === 'depot_relais',
+      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais',
     );
 
     const totaux = calculeTotauxCommande({

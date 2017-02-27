@@ -22,7 +22,8 @@ import DetailsParFournisseur from './DetailsParFournisseur';
 import ListeAcheteurs from './ListeAcheteurs';
 import { selectPending } from 'containers/App/selectors';
 import DetailsParUtilisateur from './DetailsParUtilisateur';
-import ValidationCommande from './ValidationCommande';
+import ValidationCommandesAdherents from './ValidationCommandesAdherents';
+import FinalisationCommande from './FinalisationCommande';
 
 class AdminDetailsCommande extends Component {
   static propTypes = {
@@ -124,15 +125,30 @@ class AdminDetailsCommande extends Component {
             />}
           {!children &&
             commandeUtilisateurs &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length < commandeUtilisateurs.length &&
             contenus &&
+            !commande.validation &&
             view === 'validation' &&
-            <ValidationCommande
+            <ValidationCommandesAdherents
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
               contenus={contenus}
               utilisateurs={utils}
               commandeContenus={commandeContenus}
             />}
+          {!children &&
+            commandeUtilisateurs &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length < commandeUtilisateurs.length &&
+            contenus &&
+            !commande.validation &&
+            <h1>Validée</h1>}
+          {!children &&
+            commandeUtilisateurs &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length === commandeUtilisateurs.length &&
+            contenus &&
+            view === 'validation' &&
+            !commande.finalisation &&
+            <FinalisationCommande params={params} contenus={contenus} commandeContenus={commandeContenus} />}
           {children &&
             utils &&
             <DetailsParUtilisateur

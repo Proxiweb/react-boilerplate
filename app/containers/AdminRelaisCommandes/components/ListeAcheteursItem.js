@@ -4,6 +4,7 @@ import { ListItem } from 'material-ui/List';
 import round from 'lodash/round';
 import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
 import DoneIcon from 'material-ui/svg-icons/action/done';
+import DoneAllIcon from 'material-ui/svg-icons/action/done-all';
 import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import capitalize from 'lodash/capitalize';
 import api from 'utils/stellarApi';
@@ -74,7 +75,9 @@ class ListeAcheteursItem extends Component {
         value={this.props.value}
         onClick={() => onClick(utilisateur.id, dep, totalCommande, this.state.paiements)}
         leftIcon={
-          commandeUtilisateur.dateLivraison ? <DoneIcon color="green" /> : <PastilleIcon color={iconColor} />
+          commandeUtilisateur.dateLivraison
+            ? commandeUtilisateur.datePaiement ? <DoneAllIcon color="green" /> : <DoneIcon color="green" />
+            : <PastilleIcon color={iconColor} />
         }
         rightIcon={dep && <WalletIcon />}
       />
