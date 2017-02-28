@@ -14,11 +14,11 @@ export const buildHoursRanges = (start, end, range) => {
   if (range === null) {
     return [[moment(start).format('HH:mm'), moment(end).format('HH:mm')]];
   }
-
   const duration = moment.duration(moment(end).diff(moment(start)));
   const duree = duration.asMinutes();
   const datas = [];
-  for (let cpt = 0; cpt < duree; cpt += range) { // eslint-disable-line
+  for (let cpt = 0; cpt < duree; cpt += range) {
+    // eslint-disable-line
     const debut = moment(start).add(cpt, 'minutes');
     const fin = moment(start).add(cpt + range, 'minutes');
     datas[cpt] = [debut.format('HH:mm'), fin.format('HH:mm')];
@@ -33,14 +33,15 @@ const getStyles = (props, context) => ({
   },
 });
 
-class LivraisonSelector extends Component { // eslint-disable-line
+class LivraisonSelector extends Component {
+  // eslint-disable-line
   static propTypes = {
     livraisons: PropTypes.array.isRequired,
     relais: PropTypes.object.isRequired,
     plageHoraire: PropTypes.number,
     livraisonId: PropTypes.string,
     selectionnePlageHoraire: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -62,20 +63,17 @@ class LivraisonSelector extends Component { // eslint-disable-line
                 <ListItem
                   onClick={() => selectionnePlageHoraire(idx, livr.id)}
                   key={idx}
-                  style={
-                    idx === plageHoraire &&
-                    livraisonId === livr.id
-                      ? comptutedStyles.selected
-                      : {}
-                  }
+                  style={idx === plageHoraire && livraisonId === livr.id ? comptutedStyles.selected : {}}
                 >
                   <span style={greyColor}>De </span><strong>{data[0]}</strong>
                   <span style={greyColor}> à </span><strong>{data[1]}</strong>
-                </ListItem>))}
-            </List>)
-          )}
+                </ListItem>
+              ))}
+            </List>
+          ))}
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 

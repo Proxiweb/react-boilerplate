@@ -25,9 +25,7 @@ import {
   setDistibution,
 } from 'containers/CommandeEdit/actions';
 
-import {
-  selectCommande,
-} from 'containers/CommandeEdit/selectors';
+import { selectCommande } from 'containers/CommandeEdit/selectors';
 
 import {
   selectCommande as selectCommandeProxiweb,
@@ -78,7 +76,7 @@ class OrderValidate extends Component {
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -86,12 +84,12 @@ class OrderValidate extends Component {
 
   state = {
     view: 'panier',
-  }
+  };
 
   selectionnePlageHoraire = (plageHoraire, livraisonId) => {
     this.props.setDistibution(this.props.params.commandeId, plageHoraire, livraisonId);
     this.setState({ view: 'panier' });
-  }
+  };
 
   showValidate = () => {
     const { commande, params, utilisateurId, pending } = this.props;
@@ -114,11 +112,11 @@ class OrderValidate extends Component {
         />
       </div>
     );
-  }
+  };
 
   showDistribSelected = () => {
-    const { commande, livraisons } = this.props;
-    const livraison = livraisons.find((liv) => liv.id === commande.livraisonId);
+    const { commande, livraisons, params } = this.props;
+    const livraison = livraisons.find(liv => liv.id === commande.livraisonId);
     if (!livraison) return <p>Livraison manquante</p>;
     return (
       <div className={styles.distributionSelected}>
@@ -126,6 +124,7 @@ class OrderValidate extends Component {
           livraison={livraison}
           noPlageHoraire={commande.plageHoraire}
           className={styles.distriItem}
+          params={params}
         />
         <FlatButton
           label="modifier"
@@ -136,17 +135,18 @@ class OrderValidate extends Component {
         />
       </div>
     );
-  }
+  };
 
-  showDistribButton = () =>
+  showDistribButton = () => (
     <RaisedButton
       label="Choisissez le jour de distribution"
       icon={<DateRangeIcon />}
       style={constStyles.margin20}
       onClick={() => this.setState({ view: 'distribution' })}
-    />;
+    />
+  );
 
-  showDetailsCommande = (contenus) => {
+  showDetailsCommande = contenus => {
     const {
       offres,
       commande,
@@ -170,18 +170,20 @@ class OrderValidate extends Component {
         panierExpanded={panierExpanded}
       />
     );
-  }
+  };
 
   showLivraisonSelector = () => {
     const { commande, livraisons, params } = this.props;
-    return (<LivraisonSelector
-      livraisons={livraisons}
-      plageHoraire={commande.plageHoraire}
-      livraisonId={commande.livraisonId}
-      selectionnePlageHoraire={this.selectionnePlageHoraire}
-      params={params}
-    />);
-  }
+    return (
+      <LivraisonSelector
+        livraisons={livraisons}
+        plageHoraire={commande.plageHoraire}
+        livraisonId={commande.livraisonId}
+        selectionnePlageHoraire={this.selectionnePlageHoraire}
+        params={params}
+      />
+    );
+  };
 
   showCancel = () => {
     const { commande, pending } = this.props;
@@ -196,35 +198,50 @@ class OrderValidate extends Component {
         />
       </div>
     );
-  }
+  };
 
   render() {
     const { commande, commandeContenus, params, offres, balance, commandeProxiweb, pending } = this.props;
     const { view } = this.state;
-    const contenusCommande = commande.contenus.map((contenu) =>
-      // quand le contenu vient d'être ajouté, contenu est un objet sans id
-      // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id]
-      (typeof contenu === 'object' ? contenu : commandeContenus[contenu])
+    const contenusCommande = commande.contenus.map(
+      contenu => // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id] // quand le contenu vient d'être ajouté, contenu est un objet sans id
+      typeof contenu === 'object' ? contenu : commandeContenus[contenu]
     );
 
-    return (<div>
-      { view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande) }
-      { view === 'panier' && commande.livraisonId && this.showDistribSelected() }
-      <div style={constStyles.textAlignCenter}>{view !== 'distribution' && commandeProxiweb.dateCommande && !commande.livraisonId && commande.contenus.length > 0 && this.showDistribButton()}</div>
-      {view === 'panier' && (commande.livraisonId || !commandeProxiweb.dateCommande) && (!commande.id || commande.modifiee) && this.showValidate()}
-      {view === 'panier' && !commande.dateLivraison && commande.id && !commande.modifiee && this.showCancel()}
-      {commande.id && balance !== null && view === 'panier' && (
-        <Paiement
-          contenus={contenusCommande}
-          commandeContenus={commandeContenus}
-          commandeId={params.commandeId}
-          balance={balance}
-          offres={offres}
-          pending={pending}
-          dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')}
-        />
-      )}
-    </div>);
+    return (
+      <div>
+        {view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande)}
+        {view === 'panier' && commande.livraisonId && this.showDistribSelected()}
+        <div style={constStyles.textAlignCenter}>
+          {view !== 'distribution' &&
+            commandeProxiweb.dateCommande &&
+            !commande.livraisonId &&
+            commande.contenus.length > 0 &&
+            this.showDistribButton()}
+        </div>
+        {view === 'panier' &&
+          (commande.livraisonId || !commandeProxiweb.dateCommande) &&
+          (!commande.id || commande.modifiee) &&
+          this.showValidate()}
+        {view === 'panier' &&
+          !commande.dateLivraison &&
+          commande.id &&
+          !commande.modifiee &&
+          this.showCancel()}
+        {commande.id &&
+          balance !== null &&
+          view === 'panier' &&
+          <Paiement
+            contenus={contenusCommande}
+            commandeContenus={commandeContenus}
+            commandeId={params.commandeId}
+            balance={balance}
+            offres={offres}
+            pending={pending}
+            dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')}
+          />}
+      </div>
+    );
   }
 }
 
@@ -239,14 +256,17 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  ajouter,
-  augmenter,
-  diminuer,
-  supprimer,
-  sauvegarder,
-  annuler,
-  setDistibution,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    ajouter,
+    augmenter,
+    diminuer,
+    supprimer,
+    sauvegarder,
+    annuler,
+    setDistibution,
+  },
+  dispatch
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderValidate);
