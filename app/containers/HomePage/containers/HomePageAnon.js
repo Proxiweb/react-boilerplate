@@ -33,36 +33,35 @@ class HomePageAnon extends Component {
     load: PropTypes.func.isRequired,
     choisirRelais: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-  }
+  };
 
   state = {
     selectionRelais: false,
     justChanged: false,
-  }
+  };
 
   componentDidMount = () => {
     const { relais, load } = this.props;
     if (!relais || !Object.keys(relais).length < 1) {
       load();
     }
-  }
+  };
 
-  handleChoisirRelais = (relaiId) => {
+  handleChoisirRelais = relaiId => {
     this.props.choisirRelais(relaiId);
     this.setState({ selectionRelais: false, justChanged: true });
-  }
+  };
 
-  buildHelmet = () =>
+  buildHelmet = () => (
     <Helmet
       title="Association ProxiWeb"
-      meta={[
-        { name: 'description', content: 'Organisation d\'achats groupés pour villages petits et gros' },
-      ]}
+      meta={[{ name: 'description', content: "Organisation d'achats groupés pour villages petits et gros" }]}
     />
+  );
 
   render() {
     const { relais, relaiId, pushState } = this.props;
@@ -77,13 +76,14 @@ class HomePageAnon extends Component {
           <div className="col-md-10">
             <Paper className={styles.homepage}>
               <List>
-                {Object.keys(relais).map((key, idx) =>
-                  <ListItem
-                    key={idx}
-                    primaryText={relais[key].nom.toUpperCase()}
-                    onClick={() => this.handleChoisirRelais(relais[key].id)}
-                  />
-                )}
+                {Object.keys(relais)
+                  .map((key, idx) => (
+                    <ListItem
+                      key={idx}
+                      primaryText={relais[key].nom.toUpperCase()}
+                      onClick={() => this.handleChoisirRelais(relais[key].id)}
+                    />
+                  ))}
               </List>
             </Paper>
           </div>
@@ -104,11 +104,17 @@ class HomePageAnon extends Component {
                   </div>
                   <div className={`col-md-6 ${styles.texteEncart}`}>
                     <h1>Relais ProxiWeb</h1>
-                    <h3>{'Un groupement d\'achat et des relais locaux'}</h3>
+                    <h3>{"Un groupement d'achat et des relais locaux"}</h3>
                     <h3>{'pour villages'} <small>petits</small> et <span>Gros</span></h3>
                     <div className={`row ${styles.boutonsEncart}`}>
                       <div className="col-md-6">
-                        <RaisedButton label="Présentation rapide" primary fullWidth />
+                        <RaisedButton
+                          label="Présentation rapide"
+                          primary
+                          fullWidth
+                          href="http://presentation.proxiweb.fr:3315"
+                          target="_blank"
+                        />
                         <p>Chrome & Firefox seulement</p>
                       </div>
                       <div className="col-md-6">
@@ -119,8 +125,7 @@ class HomePageAnon extends Component {
                             primary
                             fullWidth
                             onClick={() => this.setState({ selectionRelais: true, justChanged: false })}
-                          />
-                        }
+                          />}
                         {relaiId &&
                           <RaisedButton
                             icon={<ShoppingCartIcon />}
@@ -129,8 +134,7 @@ class HomePageAnon extends Component {
                             backgroundColor={buttonRelaisOuCatalogueColor}
                             fullWidth
                             href={`/catalogue/${relaiId}`}
-                          />
-                        }
+                          />}
                       </div>
                     </div>
                   </div>
@@ -139,16 +143,30 @@ class HomePageAnon extends Component {
             </div>
             <div className="row" style={{ textAlign: 'left' }}>
               <div className="col-md-4">
-                <h1>{'L\'association'}</h1>
-                <p>{'L\'association ProxWeb crée un site internet permettant d\'organiser des achats groupés'}</p>
+                <h1>{"L'association"}</h1>
+                <p>
+                  {"L'association ProxWeb crée un site internet permettant d'organiser des achats groupés"}
+                </p>
                 <ul>
                   <li>Catalogue des produits</li>
-                  <li>{'Espace fournisseur (réception commandes, facturation...)Espace fournisseur (réception commandes, facturation...)'}</li>
+                  <li>
+                    {
+                      'Espace fournisseur (réception commandes, facturation...)Espace fournisseur (réception commandes, facturation...)'
+                    }
+                  </li>
                   <li>Paiement sécurisé en lignePaiement sécurisé en ligne</li>
                   <li>...</li>
                 </ul>
-                <p>{'Ce peut être des achats de produits locaux, mais aussi des achats collectifs massifs sur de nombreuses villes et villages.'}</p>
-                <p>{'Le montant de l\'adhésion à l\'association a été fixé à seulement 3 €, pour que chacun soit assuré de rentabiliser sa dépense.'}</p>
+                <p>
+                  {
+                    'Ce peut être des achats de produits locaux, mais aussi des achats collectifs massifs sur de nombreuses villes et villages.'
+                  }
+                </p>
+                <p>
+                  {
+                    "Le montant de l'adhésion à l'association a été fixé à seulement 3 €, pour que chacun soit assuré de rentabiliser sa dépense."
+                  }
+                </p>
               </div>
               <div className="col-md-4">
                 <h1>Les relais locaux</h1>
@@ -156,10 +174,14 @@ class HomePageAnon extends Component {
                   Localement, des travailleurs indépendants créent des relais pour distribuer les produits, ils sont rémunérés pour ce service.
                   <strong>{"L'association ne prend pas de commission"}</strong>.
                 </p>
-                <p>{'Ils définissent le montant qu\'ils veulent percevoir pour effectuer la distribution.'}</p>
+                <p>{"Ils définissent le montant qu'ils veulent percevoir pour effectuer la distribution."}</p>
                 <p>
-                  {'ProxiWeb ne prend pas de commission : l\'association est financée uniquement par les cotisations.'}
-                  <strong>{'Le réseau bénéficie entièrement à ceux qui, chaque jour, le font fonctionner.'}</strong>
+                  {
+                    "ProxiWeb ne prend pas de commission : l'association est financée uniquement par les cotisations."
+                  }
+                  <strong>
+                    {'Le réseau bénéficie entièrement à ceux qui, chaque jour, le font fonctionner.'}
+                  </strong>
                 </p>
               </div>
               <div className="col-md-3" style={{ padding: '1em' }}>
@@ -169,11 +191,16 @@ class HomePageAnon extends Component {
                     leftIcon={<PersonAdd />}
                     onTouchTap={() => pushState('/login?action=register')}
                   />
-                  {/* <MenuItem primaryText="Forum de discussion" leftIcon={<CommunicationChatBubble />} /> */}
+                  {/* <MenuItem primaryText="Forum de discussion" leftIcon={<CommunicationChatBubble />} /> */
+                  }
                   <MenuItem primaryText="Contactez-nous" disabled leftIcon={<CommunicationEmail />} />
                   <MenuItem primaryText="Questions fréquentes" disabled leftIcon={<HelpIcon />} />
                   <Divider />
-                  <MenuItem primaryText="Documentation" disabled leftIcon={<DescriptionIcon />} />
+                  <MenuItem
+                    primaryText="Documentation"
+                    href="/presentation_proxiweb.pdf"
+                    leftIcon={<DescriptionIcon />}
+                  />
                 </Menu>
               </div>
             </div>
@@ -189,10 +216,13 @@ const mapStateToProps = createStructuredSelector({
   relaiId: selectRelaiId(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  pushState: push,
-  load: loadRelais,
-  choisirRelais: selectionneRelais,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    pushState: push,
+    load: loadRelais,
+    choisirRelais: selectionneRelais,
+  },
+  dispatch
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePageAnon);
