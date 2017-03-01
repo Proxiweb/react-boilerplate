@@ -19,7 +19,8 @@ import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribut
 import moment from 'moment';
 import styles from './styles.css';
 
-class NouvelleCommande extends Component { // eslint-disable-line
+class NouvelleCommande extends Component {
+  // eslint-disable-line
   static propTypes = {
     commande: PropTypes.object,
     params: PropTypes.object.isRequired,
@@ -29,17 +30,17 @@ class NouvelleCommande extends Component { // eslint-disable-line
     commandeUtilisateurs: PropTypes.array.isRequired,
     livraisonsCommande: PropTypes.array,
     create: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-  }
+  };
 
   state = {
     cdeFourns: [],
     parametres: {},
     distributions: [],
-  }
+  };
 
   componentDidMount() {
     const {
@@ -65,24 +66,27 @@ class NouvelleCommande extends Component { // eslint-disable-line
       },
       distributions: livraisonsCommande,
     });
-  }
+  };
 
-  addDistrib = (value) => {
+  addDistrib = value => {
     this.setState({ ...this.state, distributions: [...this.state.distributions, value] });
-  }
+  };
 
-  delDistrib = (index) => {
-    this.setState({ ...this.state, distributions: this.state.distributions.filter((dist, idx) => idx !== index) });
-  }
+  delDistrib = index => {
+    this.setState({
+      ...this.state,
+      distributions: this.state.distributions.filter((dist, idx) => idx !== index),
+    });
+  };
 
-  addFourn = (value) => {
+  addFourn = value => {
     if (includes(this.state.cdeFourns, value)) return;
     this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
-  }
+  };
 
-  delFourn = (value) => this.setState({
+  delFourn = value => this.setState({
     ...this.state,
-    cdeFourns: this.state.cdeFourns.filter((cde) => cde.id !== value.id),
+    cdeFourns: this.state.cdeFourns.filter(cde => cde.id !== value.id),
   });
 
   changeParam = (key, value) => {
@@ -95,32 +99,30 @@ class NouvelleCommande extends Component { // eslint-disable-line
       parametres.heureLimite &&
       parametres.dateLimite
     ) {
-      const dateCommande = this.calculeDateCommande();
-      const livraisons =
-        relais.distributionJours
-          .map((livr) => {
-            const dateDebut = moment(dateCommande)
-              .weekday(livr.jour)
-              .hours(livr.heureDebut.split(':')[0])
-              .minutes(livr.heureDebut.split(':')[1]);
-            const dateFin = moment(dateCommande)
-              .weekday(livr.jour)
-              .hours(livr.heureFin.split(':')[0])
-              .minutes(livr.heureFin.split(':')[1]);
+      const dateCommande = this.calculeDateCommande(parametres.dateLimite, parametres.heureLimite);
+      const livraisons = relais.distributionJours.map(livr => {
+        const dateDebut = moment(dateCommande)
+          .weekday(livr.jour)
+          .hours(livr.heureDebut.split(':')[0])
+          .minutes(livr.heureDebut.split(':')[1]);
+        const dateFin = moment(dateCommande)
+          .weekday(livr.jour)
+          .hours(livr.heureFin.split(':')[0])
+          .minutes(livr.heureFin.split(':')[1]);
 
-            return {
-              debut: dateDebut.toISOString(),
-              fin: dateFin.toISOString(),
-            };
-          });
-      distributions = livraisons.filter((livr) => moment(livr.debut).isAfter(dateCommande));
+        return {
+          debut: dateDebut.toISOString(),
+          fin: dateFin.toISOString(),
+        };
+      });
+      distributions = livraisons.filter(livr => moment(livr.debut).isAfter(dateCommande));
     }
     this.setState({
       ...this.state,
       distributions,
       parametres,
     });
-  }
+  };
 
   validate = () => {
     const { cdeFourns, parametres } = this.state;
@@ -129,33 +131,32 @@ class NouvelleCommande extends Component { // eslint-disable-line
     //   ( parametres.dateLimite instanceof Date &&
     //     parametres.heureLimite instanceof Date
     //   );
-  }
+  };
 
-  calculeDateCommande = () => {
-    const { dateLimite, heureLimite } = this.state.parametres;
+  calculeDateCommande = (dateLimite, heureLimite) => {
     if (!dateLimite || !heureLimite) return null;
     const hLim = parseInt(moment(heureLimite).format('HH'), 10);
     const mLim = parseInt(moment(heureLimite).format('mm'), 10);
     return moment(dateLimite).hours(hLim).minutes(mLim);
-  }
+  };
 
   create = () => {
     const { parametres, distributions, cdeFourns } = this.state;
-    const { resume, montantMin, montantMinRelais } = parametres;
+    const { resume, montantMin, montantMinRelais, dateLimite, heureLimite } = parametres;
     const { commandeId } = this.props.params;
-    const dateCommande = this.calculeDateCommande();
+    const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
       id: commandeId !== 'nouvelle' ? commandeId : undefined,
       dateCommande: dateCommande ? dateCommande.toISOString() : null,
       resume,
       montantMin,
       montantMinRelai: montantMinRelais,
-      fournisseurs: cdeFourns.map((f) => f.id),
+      fournisseurs: cdeFourns.map(f => f.id),
       livraisons: dateCommande ? distributions : [{ debut: null, fin: null }],
     };
 
     this.props.create(commande);
-  }
+  };
 
   render() {
     const { fournisseurs, commande, commandeUtilisateurs } = this.props;
@@ -179,10 +180,7 @@ class NouvelleCommande extends Component { // eslint-disable-line
                 />
               </Tab>
               <Tab label="Paramètres">
-                <NouvelleCommandeParametres
-                  parametres={parametres}
-                  changeParam={this.changeParam}
-                />
+                <NouvelleCommandeParametres parametres={parametres} changeParam={this.changeParam} />
               </Tab>
               <Tab label="Distribution">
                 <NouvelleCommandeDistribution
@@ -218,10 +216,13 @@ const mapStateToProps = createStructuredSelector({
   livraisonsCommande: selectCommandeLivraisons(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadFournisseurs,
-  loadR: loadRelais,
-  create: createCommande,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    load: loadFournisseurs,
+    loadR: loadRelais,
+    create: createCommande,
+  },
+  dispatch
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(NouvelleCommande);
