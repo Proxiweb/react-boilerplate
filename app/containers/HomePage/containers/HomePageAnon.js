@@ -198,7 +198,7 @@ class HomePageAnon extends Component {
                   <Divider />
                   <MenuItem
                     primaryText="Documentation"
-                    href="/presentation_proxiweb.pdf"
+                    href="/assets/presentation_proxiweb.pdf"
                     leftIcon={<DescriptionIcon />}
                   />
                 </Menu>
