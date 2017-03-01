@@ -89,7 +89,7 @@ class AdminRelaisCommandes extends Component {
       relaiId,
       periode: 'precise',
       debut: moment().subtract(1, 'months').toISOString(),
-      fin: moment().toISOString(),
+      fin: moment().add(1, 'months').toISOString(),
     });
 
     this.props.loadFournisseurs();
@@ -219,7 +219,7 @@ class AdminRelaisCommandes extends Component {
                       (key1, key2) =>
                         !commandes[key1].dateCommande ||
                         moment(commandes[key1].dateCommande).unix() <
-                          moment(commandes[key2].dateCommande).unix(),
+                          moment(commandes[key2].dateCommande).unix()
                     )
                     .map((key, idx) => (
                       <ListItem
@@ -289,7 +289,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     loadRelais,
     pushState: push,
   },
-  dispatch,
+  dispatch
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminRelaisCommandes);

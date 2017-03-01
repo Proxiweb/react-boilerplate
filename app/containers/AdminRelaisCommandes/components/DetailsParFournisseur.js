@@ -65,6 +65,7 @@ class DetailsParFournisseur extends Component {
             relaiId={relaiId}
             role={auth.roles}
             pushState={pushState}
+            commandeId={commandeId}
             distribuee={distribuee}
             validate={this.props.handleValidate}
           />}
@@ -120,7 +121,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   {
     pushState: push,
   },
-  dispatch,
+  dispatch
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);
