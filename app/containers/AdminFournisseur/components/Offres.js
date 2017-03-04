@@ -42,7 +42,7 @@ class Offres extends Component {
     const { offres, typesProduits, produit } = this.props;
     const { type, editMode, itemEditIndex, nouvelle } = this.state;
 
-    if (!offres || !typesProduits) return null;
+    if (!typesProduits) return null;
 
     const typeProduit = typesProduits[produit.typeProduitId];
     return (
@@ -52,18 +52,19 @@ class Offres extends Component {
             <OffresTopBar onNewOffer={this.createOffre} type={type} />
             <div className="row">
               <div className="col-md-12">
-                {offres
-                  .filter(off => off.relaiId === null)
-                  .slice()
-                  .sort((o1, o2) => o1.active > o2.active)
-                  .map((off, idx) => (
-                    <Offre
-                      index={idx}
-                      offre={off}
-                      typeProduit={typeProduit}
-                      handleToggeState={() => this.toggleState(idx)}
-                    />
-                  ))}
+                {offres &&
+                  offres
+                    .filter(off => off.relaiId === null)
+                    .slice()
+                    .sort((o1, o2) => o1.active > o2.active)
+                    .map((off, idx) => (
+                      <Offre
+                        index={idx}
+                        offre={off}
+                        typeProduit={typeProduit}
+                        handleToggeState={() => this.toggleState(idx)}
+                      />
+                    ))}
               </div>
             </div>
           </div>}

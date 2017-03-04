@@ -23,7 +23,7 @@ class CatalogueFournisseur extends Component {
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
     produits: PropTypes.array,
-  }
+  };
 
   componentDidMount() {
     this.props.load(this.props.params.fournisseurId);
@@ -31,14 +31,10 @@ class CatalogueFournisseur extends Component {
   }
 
   handleChangeList = (event, produitId) =>
-    this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`
-    );
+    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`);
 
   handleNewProduct = () =>
-    this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`
-    );
+    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`);
 
   render() {
     const { produits, params } = this.props;
@@ -60,19 +56,24 @@ class CatalogueFournisseur extends Component {
           </div>
           <SelectableList value={params.produitId} onChange={this.handleChangeList}>
             {produits
-              .slice().sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
-              .map((pdt, idx) =>
+              .slice()
+              .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
+              .map((pdt, idx) => (
                 <ListItem
                   key={idx}
                   primaryText={pdt.nom.toUpperCase()}
                   value={pdt.id}
                   style={{ color: pdt.enStock ? 'black' : 'gray' }}
                 />
-            )}
+              ))}
           </SelectableList>
         </div>
         <div className={classnames('col-md-9', styles.panel)}>
-          {this.props.children && React.cloneElement(this.props.children, { produit: produits.find((pdt) => pdt.id === params.produitId), params })}
+          {this.props.children &&
+            React.cloneElement(this.props.children, {
+              produit: produits.find(pdt => pdt.id === params.produitId),
+              params,
+            })}
         </div>
       </div>
     );
@@ -82,10 +83,13 @@ const mapStateToProps = createStructuredSelector({
   produits: selectFournisseurProduits(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadFournisseur,
-  loadTypes: loadTypesProduits,
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    load: loadFournisseur,
+    loadTypes: loadTypesProduits,
+    pushState: push,
+  },
+  dispatch
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CatalogueFournisseur);
