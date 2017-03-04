@@ -18,10 +18,13 @@ import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/compone
 import styles from './styles.css';
 
 const generateTarifMin = (tarifications, idx) => {
-  if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
+  if (idx === 0)
+    return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
   const tarif = tarifications[idx];
   return tarifications[idx + 1]
-    ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
+    ? <span>
+        <strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong>
+      </span>
     : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
 };
 
@@ -33,19 +36,18 @@ class OffreDetails extends Component {
     subTitle: PropTypes.string,
     onClick: PropTypes.func,
     expandable: PropTypes.bool.isRequired,
-  }
+  };
 
   static defaultProps = {
     qteCommande: 0,
     expandable: false,
-  }
+  };
 
   state = {
     expanded: false,
-  }
+  };
 
-  toggleState = () =>
-    this.setState({ expanded: !this.state.expanded })
+  toggleState = () => this.setState({ expanded: !this.state.expanded });
 
   render() {
     const {
@@ -59,10 +61,11 @@ class OffreDetails extends Component {
     const { expanded } = this.state;
     const dPrix = detailPrix(offre, qteCommande, 'json');
     const pAuKg = prixAuKg(offre, typeProduit, 'json');
+    console.log(pAuKg);
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <div className={styles.text} onClick={expandable ? this.toggleState : null} >
+          <div className={styles.text} onClick={expandable ? this.toggleState : null}>
             <div className={styles.title}>
               <span>
                 <strong style={{ color: '#1565C0' }}>
@@ -72,70 +75,49 @@ class OffreDetails extends Component {
                 {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
               </span>
             </div>
-            {subTitle && expandable && <div className={styles.subTitle}>{ subTitle }</div>}
+            {subTitle && expandable && <div className={styles.subTitle}>{subTitle}</div>}
           </div>
           <div className={styles.action}>
-            {onClick && <RaisedButton
-              primary
-              onClick={onClick}
-              icon={<AddShoppingCart />}
-            />}
+            {onClick && <RaisedButton primary onClick={onClick} icon={<AddShoppingCart />} />}
           </div>
           {expandable &&
             <div className={styles.expand}>
-              <IconButton
-                onClick={this.toggleState}
-                style={{ width: '100%', textAlign: 'right' }}
-              >
+              <IconButton onClick={this.toggleState} style={{ width: '100%', textAlign: 'right' }}>
                 {!expanded && <KeyboardDownIcon />}
                 {expanded && <KeyboardUpIcon />}
               </IconButton>
-            </div>
-          }
+            </div>}
         </div>
         {expanded &&
           <div style={{ padding: '1em' }}>
-            <Table
-              selectable={false}
-              multiSelectable={false}
-            >
-              <TableHeader
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-                style={{ color: 'black' }}
-              >
+            <Table selectable={false} multiSelectable={false}>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false} style={{ color: 'black' }}>
                 <TableRow>
-                  <TableHeaderColumn
-                    style={{ textAlign: 'left', color: 'black' }}
-                  >
-                    Quantité achetée <sup>*</sup></TableHeaderColumn>
-                  <TableHeaderColumn
-                    style={{ textAlign: 'right', color: 'black' }}
-                  >
+                  <TableHeaderColumn style={{ textAlign: 'left', color: 'black' }}>
+                    Quantité achetée <sup>*</sup>
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={{ textAlign: 'right', color: 'black' }}>
                     Tarif
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false}>
-                {offre.tarifications.map((t, index, tarifications) =>
+                {offre.tarifications.map((t, index, tarifications) => (
                   <TableRow>
                     <TableRowColumn>
                       {generateTarifMin(tarifications, index)}
                     </TableRowColumn>
-                    <TableRowColumn
-                      style={{ textAlign: 'right' }}
-                    >
+                    <TableRowColumn style={{ textAlign: 'right' }}>
                       {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
                     </TableRowColumn>
                   </TableRow>
-                )}
+                ))}
               </TableBody>
             </Table>
             <p style={{ textAlign: 'center' }}>
               <sup>*</sup> Quantité globale achetée par tous les participants de la commande
             </p>
-          </div>
-        }
+          </div>}
       </div>
     );
   }

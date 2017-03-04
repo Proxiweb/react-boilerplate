@@ -8,23 +8,21 @@ const redColor = { color: 'red' };
 export function trouveTarification(tarifications, totalGlobal = 0, totalCommande = 0) {
   const total = totalGlobal + totalCommande;
   return tarifications
-          .slice()
-          .sort((a, b) => a.qteMinRelais < b.qteMinRelais)
-          .find((tar) =>
-            total >= tar.qteMinRelais
-          );
+    .slice()
+    .sort((a, b) => a.qteMinRelais < b.qteMinRelais)
+    .find(tar => total >= tar.qteMinRelais);
 }
 
 // export trouveTarification;
- // = memoize(trouveTarificationFn);
+// = memoize(trouveTarificationFn);
 
 const convertisseurs = {
-  mg: (poids) => {
+  mg: poids => {
     const unite = poids / 1000000 < 1 ? 'g' : ' Kg';
     const poidsFormat = unite === 'g' ? poids / 1000 : poids / 1000000;
     return `${round(poidsFormat, 2)}${unite}`;
   },
-  ml: (poids) => {
+  ml: poids => {
     let unite;
     let poidsFormat;
     if (poids < 100) {
@@ -41,7 +39,7 @@ const convertisseurs = {
   },
 };
 
-export const formatterPoids = (offre) => {
+export const formatterPoids = offre => {
   if (!offre.poids) return '';
   const qteUnit = offre.produit && offre.produit.typeProduit ? offre.produit.typeProduit.quantiteUnite : 'mg';
   const convertisseur = convertisseurs[qteUnit];
@@ -52,7 +50,7 @@ export const formatterPoids = (offre) => {
 export const detailPrix = (offre, qteCommande, format = 'component') => {
   const tarif = trouveTarification(offre.tarifications, offre.quantiteTotal, qteCommande);
   if (!tarif) {
-    console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre);  // eslint-disable-line
+    console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre); // eslint-disable-line
     return {
       descriptionPdt: `${formatterPoids(offre)}${offre.description ? ` ${offre.description} ` : ' '}`,
       prix: 0,
@@ -86,9 +84,9 @@ export const detailPrix = (offre, qteCommande, format = 'component') => {
 export const prixAuKg = (offre, typeProduit, format = 'component') => {
   if (!offre.poids) return '';
   if (typeProduit.quantiteUnite === 'ml') return '';
-
+  const { prix, recolteFond } = offre.tarifications[0];
   const datas = {
-    prixAuKg: round(((offre.prix + offre.recolteFond) * 10000) / offre.poids, 2),
+    prixAuKg: round((prix + recolteFond) * 10000 / offre.poids, 2),
   };
 
   if (format === 'json') {
@@ -102,7 +100,7 @@ export const prixAuKg = (offre, typeProduit, format = 'component') => {
   );
 };
 
-const OffreDetail = (props) => {
+const OffreDetail = props => {
   const { offre, deuxLignes, typeProduit, qteCommande } = props;
 
   if (!deuxLignes) {
