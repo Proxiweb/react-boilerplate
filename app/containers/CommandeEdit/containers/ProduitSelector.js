@@ -13,13 +13,12 @@ import classnames from 'classnames';
 import shader from 'shader';
 import styles from './styles.css';
 import {
-  selectCommandeTypesProduits,
+  selectCommandeTypesProduitsVisibles,
   selectCommandeProduitsByTypeProduit,
   selectProduits,
+  selectFournisseursIds,
 } from 'containers/Commande/selectors';
-import {
-  selectCompteUtilisateur,
-} from 'containers/CompteUtilisateur/selectors';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 class ProduitSelector extends React.Component {
   static propTypes = {
@@ -29,6 +28,7 @@ class ProduitSelector extends React.Component {
     produits: PropTypes.array,
     allProduits: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    fournisseursIds: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
   };
 
@@ -42,13 +42,7 @@ class ProduitSelector extends React.Component {
     ));
     if (produitsFavoris && produitsFavoris.length) {
       menuItems.push(<Divider />);
-      menuItems.push(
-        <MenuItem
-          key="favoris"
-          value="favoris"
-          primaryText="Produits favoris"
-        />,
-      );
+      menuItems.push(<MenuItem key="favoris" value="favoris" primaryText="Produits favoris" />);
     }
 
     return menuItems;
@@ -58,7 +52,7 @@ class ProduitSelector extends React.Component {
     const { commandeId, relaiId } = this.props.params;
     const { pushState, utilisateurId } = this.props;
     pushState(
-      `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`,
+      `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${value}?utilisateurId=${utilisateurId}`
     );
   };
 
@@ -71,49 +65,30 @@ class ProduitSelector extends React.Component {
     }
 
     this.props.pushState(
-      `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`,
+      `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${typeProduitId}/produits/${productId}?utilisateurId=${utilisateurId}`
     );
   };
 
   render() {
-    const { typeProduits, produits, params, allProduits, auth } = this.props;
+    const { typeProduits, produits, params, allProduits, auth, fournisseursIds } = this.props;
     const { typeProduitId, produitId } = params;
     const muiTheme = this.context.muiTheme;
 
     if (!produits) return null;
     const listeProduits = typeProduitId !== 'favoris'
-      ? produits.filter(p => p.enStock)
-      : Object.keys(allProduits)
-          .filter(id => includes(auth.produitsFavoris, id))
-          .map(id => allProduits[id]);
+      ? produits.filter(p => p.enStock && fournisseursIds[p.fournisseurId].visible)
+      : Object.keys(allProduits).filter(id => includes(auth.produitsFavoris, id)).map(id => allProduits[id]);
 
     return (
-      <div
-        className={classnames(
-          'col-sm-4 col-lg-3 col-xs-12 col-md-4',
-          styles.panelproduits,
-        )}
-      >
+      <div className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.panelproduits)}>
         <Paper style={{ padding: '0 5px' }}>
           {typeProduits &&
             (typeProduits.length > 1 || auth.produitsFavoris.length > 0) &&
-            <CustomSelectField
-              value={typeProduitId}
-              onChange={this.handleChange}
-            >
-              {this.getTypesProduitsMenuItems(
-                typeProduits,
-                auth.produitsFavoris,
-              )}
+            <CustomSelectField value={typeProduitId} onChange={this.handleChange} fullWidth>
+              {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
             </CustomSelectField>}
           {listeProduits &&
-            <List
-              className={
-                `${styles[
-                  `produits${produits && produits.length > 10 ? 'Scr' : ''}`
-                ]}`
-              }
-            >
+            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
               {listeProduits.map((pdt, idx) => (
                 <ListItem
                   key={idx}
@@ -140,8 +115,9 @@ class ProduitSelector extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  typeProduits: selectCommandeTypesProduits(),
+  typeProduits: selectCommandeTypesProduitsVisibles(),
   produits: selectCommandeProduitsByTypeProduit(),
+  fournisseursIds: selectFournisseursIds(),
   allProduits: selectProduits(),
   auth: selectCompteUtilisateur(),
 });
@@ -150,7 +126,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
   {
     pushState: push,
   },
-  dispatch,
+  dispatch
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProduitSelector);
