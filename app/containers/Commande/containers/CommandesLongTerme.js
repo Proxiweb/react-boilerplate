@@ -88,6 +88,18 @@ class CommandesLongTerme extends Component {
 
   getInfos = commandeId => {
     const { commandeContenus, commandes, offres, getCommandeInfos } = this.props;
+    const { montantMin, qteMin } = commandes[commandeId];
+
+    if (qteMin) {
+      const nbreAcheteurs = commandes[commandeId].commandeUtilisateurs.length;
+      const prct = parseInt(nbreAcheteurs * 100 / qteMin, 10);
+      return {
+        prct,
+        infoTarif: `${nbreAcheteurs} acheteurs sur ${qteMin}`,
+        typesProduits: getCommandeInfos(commandeId),
+      };
+    }
+
     const contenus = commandes[commandeId].commandeUtilisateurs.reduce(
       (memo, cuId) =>
         memo.concat(
@@ -99,8 +111,7 @@ class CommandesLongTerme extends Component {
     );
     let prct = 0;
     let prix = 0;
-    const { montantMin } = commandes[commandeId];
-    if (contenus.length > 0) {
+    if (contenus.length > 0 && montantMin) {
       const totaux = calculeTotauxCommande({ contenus, offres, commandeContenus, commandeId });
       prix = round(totaux.prix, 2);
       prct = parseInt(prix * 100 / montantMin, 10);
@@ -108,7 +119,7 @@ class CommandesLongTerme extends Component {
 
     return {
       prct,
-      montantMin,
+      infoTarif: `${prix} € sur ${montantMin} €`,
       prix,
       typesProduits: getCommandeInfos(commandeId),
     };
@@ -153,7 +164,7 @@ class CommandesLongTerme extends Component {
               key={idx}
               nom={infos.typesProduits.join(',')}
               commandeId={id}
-              tarif={`${infos.prix} € sur ${infos.montantMin} €`}
+              tarif={infos.infoTarif}
               prct={infos.prct}
               fav
               pushState={this.props.pushState}

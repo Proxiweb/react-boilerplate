@@ -3,11 +3,12 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 
-export default class NouvelleCommandeParametres extends Component {  // eslint-disable-line
+export default class NouvelleCommandeParametres extends Component {
+  // eslint-disable-line
   static propTypes = {
     changeParam: PropTypes.func.isRequired,
     parametres: PropTypes.object.isRequired,
-  }
+  };
   render() {
     const { changeParam, parametres } = this.props;
     return (
@@ -51,22 +52,40 @@ export default class NouvelleCommandeParametres extends Component {  // eslint-d
             </div>
           </div>
           <div className="row center-md">
-            <div className="col-md">
+            <div className="col-md-6">
               <TextField
                 name="montantMin"
                 fullWidth
-                floatingLabelText="montant minimum"
+                floatingLabelText="montant min. global"
                 onChange={(event, value) => changeParam('montantMin', value)}
                 value={parametres.montantMin}
               />
             </div>
-            <div className="col-md">
+            <div className="col-md-6">
               <TextField
-                name="montantMinRelais"
+                name="montantMinRelai"
                 fullWidth
                 floatingLabelText="montant min / relais"
-                onChange={(event, value) => changeParam('montantMinRelais', value)}
-                value={parametres.montantMinRelais}
+                onChange={(event, value) => changeParam('montantMinRelai', value)}
+                value={parametres.montantMinRelai}
+              />
+            </div>
+            <div className="col-md-6">
+              <TextField
+                name="qteMin"
+                fullWidth
+                floatingLabelText="quantité min. globale"
+                onChange={(event, value) => changeParam('qteMin', value)}
+                value={parametres.montantMin}
+              />
+            </div>
+            <div className="col-md-6">
+              <TextField
+                name="qteMinRelais"
+                fullWidth
+                floatingLabelText="quantité min. / relais"
+                onChange={(event, value) => changeParam('qteMinRelai', value)}
+                value={parametres.montantMinRelai}
               />
             </div>
           </div>

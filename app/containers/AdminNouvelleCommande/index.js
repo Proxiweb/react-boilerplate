@@ -55,14 +55,17 @@ class NouvelleCommande extends Component {
   }
 
   initCmde = (fournisseursCommande, commande, livraisonsCommande) => {
+    const { montantMin, montantMinRelai, qteMin, qteMinRelai } = commande;
     this.setState({
       ...this.state,
       cdeFourns: fournisseursCommande,
       parametres: {
         dateLimite: new Date(commande.dateCommande),
         heureLimite: new Date(commande.dateCommande),
-        montantMin: commande.montantMin,
-        montantMinRelai: commande.montantMinRelais,
+        montantMin,
+        montantMinRelai,
+        qteMin,
+        qteMinRelai,
       },
       distributions: livraisonsCommande,
     });
@@ -142,7 +145,7 @@ class NouvelleCommande extends Component {
 
   create = () => {
     const { parametres, distributions, cdeFourns } = this.state;
-    const { resume, montantMin, montantMinRelais, dateLimite, heureLimite } = parametres;
+    const { resume, montantMin, montantMinRelai, dateLimite, heureLimite, qteMin, qteMinRelai } = parametres;
     const { commandeId } = this.props.params;
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
@@ -150,7 +153,9 @@ class NouvelleCommande extends Component {
       dateCommande: dateCommande ? dateCommande.toISOString() : null,
       resume,
       montantMin,
-      montantMinRelai: montantMinRelais,
+      montantMinRelai,
+      qteMin,
+      qteMinRelai,
       fournisseurs: cdeFourns.map(f => f.id),
       livraisons: dateCommande ? distributions : [{ debut: null, fin: null }],
     };

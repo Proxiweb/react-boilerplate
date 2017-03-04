@@ -4,12 +4,11 @@ import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import { createStructuredSelector } from 'reselect';
 
-
 import {
-    selectOffresDuProduit,
-    selectTypesProduitsRelais,
-    selectFournisseursRelais,
-    selectProduitsRelaisByTypeProduit,
+  selectOffresDuProduit,
+  selectTypesProduitsRelais,
+  selectFournisseursRelais,
+  selectProduitsRelaisByTypeProduit,
 } from 'containers/Commande/selectors';
 
 import OffreDetails from 'components/OffreDetails';
@@ -22,7 +21,7 @@ class DetailOffres extends Component {
     typeProduits: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -47,29 +46,20 @@ class DetailOffres extends Component {
 
     if (!offres || !typeProduits) return null;
     const { produitId, relaiId } = params;
-    const produit = produits.find((pdt) => pdt.id === produitId);
+    const produit = produits.find(pdt => pdt.id === produitId);
 
     if (!produit) {
       return <h1>{'Produit non trouvé'}</h1>;
     }
 
-    const fournisseur = fournisseurs.find((f) => f.id === produit.fournisseurId);
-    const muiTheme = this.context.muiTheme;
-
-    // const generateTarifMin = (tarifications, idx) => {
-    //   if (idx === 0) return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
-    //   const tarif = tarifications[idx];
-    //   return tarifications[idx + 1]
-    //     ? <span><strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong></span>
-    //     : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
-    // };
-
+    const fournisseur = fournisseurs.find(f => f.id === produit.fournisseurId);
+    console.log(fournisseur);
     return (
       <Paper className={styles.offres}>
         <div className="row">
           <div className={`col-md-12 ${styles.fournisseurSwitch}`}>
             <FlatButton
-              onClick={() => this.setState((oldState) => ({ viewOffre: !oldState.viewOffre }))}
+              onClick={() => this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
               primary
               label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
             />
@@ -78,30 +68,42 @@ class DetailOffres extends Component {
           <div className="col-md-12">
             <div className="row" style={{ margin: 5 }}>
               <div className="col-md-6">
-                {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
-                {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={{ width: '100%', height: 'auto', maxWidth: 200 }} />}
+                {viewOffre &&
+                  <img
+                    src={`https://proxiweb.fr/${produit.photo}`}
+                    alt={produit.nom}
+                    style={{ width: '100%', height: 'auto', maxWidth: 200 }}
+                  />}
+                {!viewOffre &&
+                  <img
+                    src={`https://proxiweb.fr/${fournisseur.illustration}`}
+                    alt={fournisseur.nom}
+                    style={{ width: '100%', height: 'auto', maxWidth: 200 }}
+                  />}
               </div>
               <div className="col-md-6">
-                {viewOffre && <p dangerouslySetInnerHTML={{ __html: produit.description }} />}
+                {viewOffre &&
+                  <p className={styles.right} dangerouslySetInnerHTML={{ __html: produit.description }} />}
                 {!viewOffre && <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} />}
               </div>
             </div>
           </div>
         </div>
         <div style={{ padding: '1em' }}>
-          { viewOffre && offres.filter((o) => o.active && o.relaiId === relaiId).map((offre, idx) => {
-            const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
-            const tR = offre.tarifications.length > 1;
-            return (
-              <OffreDetails
-                key={idx}
-                typeProduit={typeProduit}
-                offre={offre}
-                subTitle="Tarif dégressif (cliquez pour plus de détails)"
-                expandable={tR}
-                style={{ marginBottom: '10px' }}
-              />);
-          })}
+          {viewOffre && offres.filter(o => o.active && o.relaiId === relaiId).map((offre, idx) => {
+              const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
+              const tR = offre.tarifications.length > 1;
+              return (
+                <OffreDetails
+                  key={idx}
+                  typeProduit={typeProduit}
+                  offre={offre}
+                  subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                  expandable={tR}
+                  style={{ marginBottom: '10px' }}
+                />
+              );
+            })}
         </div>
       </Paper>
     );
