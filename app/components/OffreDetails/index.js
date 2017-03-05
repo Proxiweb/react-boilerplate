@@ -59,7 +59,7 @@ class OffreDetails extends Component {
       expandable,
     } = this.props;
     const { expanded } = this.state;
-    const dPrix = detailPrix(offre, qteCommande, 'json');
+    const dPrix = detailPrix(offre, typeProduit, qteCommande, 'json');
     const pAuKg = prixAuKg(offre, typeProduit, 'json');
 
     return (
@@ -72,7 +72,10 @@ class OffreDetails extends Component {
                   {parseFloat(dPrix.prix).toFixed(2)} €
                   - <small>{dPrix.descriptionPdt}</small>
                 </strong>
-                {offre.poids && <small style={{ color: 'gray' }}>{`${'   '}${pAuKg.prixAuKg} € / Kg`}</small>}
+                {offre.poids &&
+                  <small style={{ color: 'gray' }}>
+                    {`${'   '}${pAuKg.prixAuKg} € / ${pAuKg.unite === 'mg' ? 'Kg' : 'L'}`}
+                  </small>}
               </span>
             </div>
             {subTitle && expandable && <div className={styles.subTitle}>{subTitle}</div>}

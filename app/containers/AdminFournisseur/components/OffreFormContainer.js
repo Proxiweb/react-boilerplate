@@ -9,24 +9,25 @@ import { saveOffre } from 'containers/Commande/actions';
 import { selectPending } from 'containers/App/selectors';
 import OffreForm from './OffreForm';
 
-const isProfilePristine = () => (state) => isPristine('offre')(state);
-const selectValeurs = () => (state) => state.form;
+const isProfilePristine = () => state => isPristine('offre')(state);
+const selectValeurs = () => state => state.form;
 
 // import submit from './submit';
 
 class OffreFormContainer extends React.Component {
   static propTypes = {
+    quantiteUnite: PropTypes.string.isRequired,
     offre: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
     valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     handleToggeState: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
-  }
+  };
 
-  handleSubmit = (values) => {
+  handleSubmit = values => {
     const { save, offre } = this.props;
-    const tarifications = values.tarifications.map((t) => ({
+    const tarifications = values.tarifications.map(t => ({
       ...t,
       prix: parseInt(t.prix * 100, 10),
       recolteFond: parseInt(t.recolteFond * 100, 10),
@@ -36,7 +37,7 @@ class OffreFormContainer extends React.Component {
       tarifications,
       poids: values.poids ? parseInt(values.poids, 10) : null,
     });
-  }
+  };
 
   render() {
     const {
@@ -45,8 +46,9 @@ class OffreFormContainer extends React.Component {
       pristine,
       handleToggeState,
       valeurs,
+      quantiteUnite,
     } = this.props;
-    const tarifications = offre.tarifications.map((t) => ({
+    const tarifications = offre.tarifications.map(t => ({
       ...t,
       prix: round(t.prix / 100, 2),
       recolteFond: round(t.recolteFond / 100, 2),
@@ -56,11 +58,12 @@ class OffreFormContainer extends React.Component {
         initialValues={{ ...offre, tarifications }}
         onSubmit={this.handleSubmit}
         pending={pending}
+        quantiteUnite={quantiteUnite}
         pristine={pristine}
         valeurs={valeurs}
         handleToggeState={handleToggeState}
       />
-      );
+    );
   }
 }
 
@@ -70,8 +73,11 @@ const mapStateToProps = createStructuredSelector({
   valeurs: selectValeurs(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  save: saveOffre,
-}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators(
+  {
+    save: saveOffre,
+  },
+  dispatch
+);
 
 export default connect(mapStateToProps, mapDispatchToProps)(OffreFormContainer);

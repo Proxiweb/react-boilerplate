@@ -2,9 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import CustomSelectField from 'components/CustomSelectField';
-import {
-  TextField,
-} from 'redux-form-material-ui';
+import { TextField } from 'redux-form-material-ui';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
@@ -14,9 +12,7 @@ import styles from './styles.css';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const options = {
-  options: [
-    'inline', 'list', 'textAlign', 'link', 'remove', 'history',
-  ],
+  options: ['inline', 'list', 'textAlign', 'link', 'remove', 'history'],
   inline: {
     inDropdown: false,
     className: undefined,
@@ -29,19 +25,19 @@ const options = {
   },
 };
 
-const renderSelectField = (datas) =>
-  ({ input, label, meta: { touched, error }, ...custom }) => // eslint-disable-line
-    <CustomSelectField
-      floatingLabelText={label}
-      errorText={touched && error}
-      {...input}
-      onChange={(event, index, value) => input.onChange(value)}
-      {...custom}
-    >
-      {datas.map((data) =>
-        <MenuItem key={data.value} value={data.value} primaryText={data.label} />
-      )}
-    </CustomSelectField>;
+const renderSelectField = datas => (
+  { input, label, meta: { touched, error }, ...custom } // eslint-disable-line
+) => (
+  <CustomSelectField
+    floatingLabelText={label}
+    errorText={touched && error}
+    {...input}
+    onChange={(event, index, value) => input.onChange(value)}
+    {...custom}
+  >
+    {datas.map(data => <MenuItem key={data.value} value={data.value} primaryText={data.label} />)}
+  </CustomSelectField>
+);
 
 const renderUnitesConservation = renderSelectField([
   {
@@ -69,27 +65,26 @@ const renderTva = renderSelectField([
   },
   {
     value: 20,
-    label: '5.5',
+    label: '20',
   },
 ]);
 
-const renderTypesProduits = (typesProduits) => renderSelectField(
-  Object.keys(typesProduits).map((value) => ({
+const renderTypesProduits = typesProduits => renderSelectField(
+  Object.keys(typesProduits).map(value => ({
     value: typesProduits[value].id,
     label: typesProduits[value].nom,
   }))
 );
 
-const renderClassementComplementaire = (categoriesSecondaires) =>
-  renderSelectField(
-    categoriesSecondaires
-      .map((value) => ({
-        value,
-        label: value,
-      }))
-  );
+const renderClassementComplementaire = categoriesSecondaires => renderSelectField(
+  categoriesSecondaires.map(value => ({
+    value,
+    label: value,
+  }))
+);
 
-class ProduitForm extends Component { // eslint-disable-line react/prefer-stateless-function
+class ProduitForm extends Component {
+  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     changeDescription: PropTypes.func.isRequired,
@@ -97,7 +92,7 @@ class ProduitForm extends Component { // eslint-disable-line react/prefer-statel
     valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -110,13 +105,13 @@ class ProduitForm extends Component { // eslint-disable-line react/prefer-statel
 
   state = {
     rawHtml: null,
-  }
+  };
 
-  onEditorChange = (editorContent) => {
+  onEditorChange = editorContent => {
     const html = draftToHtml(editorContent);
     this.props.changeDescription(html);
     this.setState({ ...this.state, html });
-  }
+  };
 
   getInitialHTML(html) {
     const contentBlocks = convertFromHTML(html);
@@ -137,8 +132,7 @@ class ProduitForm extends Component { // eslint-disable-line react/prefer-statel
       valeurs,
     } = this.props;
 
-    const categoriesSecondaires =
-      valeurs.produit && valeurs.produit.values.typeProduitId
+    const categoriesSecondaires = valeurs.produit && valeurs.produit.values.typeProduitId
       ? typesProduits[valeurs.produit.values.typeProduitId].categoriesSecondaires
       : [];
 
@@ -194,23 +188,22 @@ class ProduitForm extends Component { // eslint-disable-line react/prefer-statel
               fullWidth
             />
           </div>
-          {
-            categoriesSecondaires.length > 0 &&
-              <div className="col-md-6">
-                <Field
-                  floatingLabelText="Classement complémentaire"
-                  name="typeProduitSecondaire"
-                  component={renderClassementComplementaire(categoriesSecondaires)}
-                  fullWidth
-                />
-              </div>
-          }
+          {categoriesSecondaires.length > 0 &&
+            <div className="col-md-6">
+              <Field
+                floatingLabelText="Classement complémentaire"
+                name="typeProduitSecondaire"
+                component={renderClassementComplementaire(categoriesSecondaires)}
+                fullWidth
+              />
+            </div>}
         </div>
-        {!pristine && <div className="row center-md">
-          <div className={`col-md-8 ${styles.formFooter}`} style={{ minHeight: 52 }}>
-            <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
-          </div>
-        </div>}
+        {!pristine &&
+          <div className="row center-md">
+            <div className={`col-md-8 ${styles.formFooter}`} style={{ minHeight: 52 }}>
+              <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+            </div>
+          </div>}
       </form>
     );
   }

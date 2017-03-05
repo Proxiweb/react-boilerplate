@@ -49,6 +49,7 @@ class Offres extends Component {
     if (!typesProduits) return null;
 
     const typeProduit = typesProduits[produit.typeProduitId];
+
     return (
       <div className="row center-md">
         {pending &&
@@ -94,9 +95,10 @@ class Offres extends Component {
           !pending &&
           <div style={{ padding: '2em' }} className="col-md-12">
             <OffreFormContainer
-              offre={offres[itemEditIndex]}
+              offre={offres.filter(o => !o.relaiId)[itemEditIndex]}
               tva={produit.tva}
               handleToggeState={this.toggleState}
+              quantiteUnite={typeProduit.quantiteUnite}
             />
           </div>}
         {editMode &&

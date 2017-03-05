@@ -94,6 +94,7 @@ const renderTarifications = (
 class offreForm extends Component {
   // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
+    quantiteUnite: PropTypes.string.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     handleToggeState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
@@ -108,6 +109,7 @@ class offreForm extends Component {
       pristine,
       handleToggeState,
       valeurs,
+      quantiteUnite,
     } = this.props;
 
     // tarifications modifiées pour
@@ -128,7 +130,12 @@ class offreForm extends Component {
                 <Field floatingLabelText="Description" fullWidth name="description" component={TextField} />
               </div>
               <div className="col-xs-6">
-                <Field floatingLabelText="poids (mg)" name="poids" fullWidth component={TextField} />
+                <Field
+                  floatingLabelText={`${quantiteUnite === 'mg' ? 'poids' : 'volume'} (${quantiteUnite})`}
+                  name="poids"
+                  fullWidth
+                  component={TextField}
+                />
               </div>
             </div>
             <Field

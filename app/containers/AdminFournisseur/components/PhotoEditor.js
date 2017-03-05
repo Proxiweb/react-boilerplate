@@ -21,12 +21,9 @@ class PhotoEditor extends Component {
 
   changePhoto = () => this.props.change(this.props.produit.id, this.editor.getImage().toDataURL());
 
-  handleLoadFailure = () => console.log('fail', arguments);
-
-  handleLoadSuccess = () => console.log(arguments);
-
   render() {
     const { produit } = this.props;
+    const imgUrl = produit.photo ? produit.photo : 'img/deposez.png';
     return (
       <div className="row">
         <div className="col-md-12">
@@ -34,7 +31,7 @@ class PhotoEditor extends Component {
             <div className="col-md-12">
               <AvatarEditor
                 ref={node => this.editor = node}
-                image="https://proxiweb.fr/assets/img/deposez.png"
+                image={`https://proxiweb.fr/assets/${imgUrl}`}
                 width={150}
                 height={150}
                 border={50}
