@@ -84,8 +84,9 @@ export const prixAuKg = (offre, typeProduit, format = 'component') => {
   if (!offre.poids) return '';
   const { prix, recolteFond } = offre.tarifications[0];
   const diviseur = typeProduit.quantiteUnite === 'mg' ? 1 : 10;
+  const poids = typeProduit.quantiteUnite === 'ml' ? offre.poids : offre.poids / 100;
   const datas = {
-    prixAuKg: round((prix + recolteFond) * 100 / offre.poids / diviseur, 2),
+    prixAuKg: round((prix + recolteFond) * 100 / poids / diviseur, 2),
     unite: typeProduit.quantiteUnite,
   };
 

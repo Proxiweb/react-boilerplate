@@ -79,7 +79,7 @@ export default class AppMainDrawer extends Component {
                 ],
                 showPorteMonnaie
                   ? [<ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />]
-                  : [],
+                  : []
               )}
             />}
           {user &&
@@ -141,6 +141,7 @@ export default class AppMainDrawer extends Component {
                     value={{ url: `/fournisseurs/${user.fournisseurId}/commandes` }}
                   />
                 ),
+                <ListItem primaryText="Infos" value={`/fournisseurs/${user.fournisseurId}/infos`} />,
               ]}
             />}
           {user && <ListItem leftIcon={<MailIcon />} primaryText="Nous contacter" value={'/support'} />}

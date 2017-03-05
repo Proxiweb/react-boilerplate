@@ -405,6 +405,20 @@ export default function createRoutes(store) {
       ],
     },
     {
+      path: 'fournisseurs/:fournisseurId/infos',
+      getComponent(location, cb) {
+        const importModules = Promise.all([System.import('containers/AdminFournisseurInfos/index')]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    },
+    {
       path: 'distributeurs/:relaiId/factures',
       getComponent(location, cb) {
         const importModules = Promise.all([System.import('containers/FacturesDistributeur/index')]);
