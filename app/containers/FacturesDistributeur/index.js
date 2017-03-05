@@ -65,7 +65,6 @@ class FacturesDistributeur extends Component {
       locationState,
     } = this.props;
 
-    console.log(this.props);
     if (!commandes) return null;
 
     const print = locationState.locationBeforeTransitions.query.print;
@@ -136,7 +135,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     loadCde: loadCommandes,
     pushState: push,
   },
-  dispatch,
+  dispatch
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FacturesDistributeur);

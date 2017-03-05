@@ -9,6 +9,7 @@ import ProduitFormContainer from './ProduitFormContainer';
 import PhotoEditor from './PhotoEditor';
 import Produit from './Produit';
 import Offres from './Offres';
+import classnames from 'classnames';
 import styles from './styles.css';
 
 class AdminProduit extends Component {
@@ -50,10 +51,10 @@ class AdminProduit extends Component {
       };
       return (
         <div className="row">
-          <div className="col-md-4">
+          <div className={classnames('col-md-4', styles.pdtInfo)}>
             {produit && <PhotoEditor produit={pdt} />}
           </div>
-          <div className="col-md-8">
+          <div className={classnames('col-md-8', styles.pdtInfo)}>
             <ProduitFormContainer produit={pdt} />
           </div>
         </div>
@@ -62,7 +63,7 @@ class AdminProduit extends Component {
 
     return (
       <div className="row">
-        <div className="col-md-3">
+        <div className={classnames('col-md-3', styles.pdtInfo)}>
           <Produit produit={produit} setEditView={this.changeView} />
           <Toggle
             toggled={produit.enStock}
@@ -71,7 +72,7 @@ class AdminProduit extends Component {
             onToggle={this.toggleStock}
           />
         </div>
-        <div className="col-md-9">
+        <div className={classnames('col-md-9', styles.offreInfo)}>
           {editView === null && <Offres produit={produit} params={params} />}
           {editView === 'offre' && <Offres produit={produit} params={params} />}
         </div>

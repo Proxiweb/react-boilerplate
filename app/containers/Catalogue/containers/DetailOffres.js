@@ -53,7 +53,6 @@ class DetailOffres extends Component {
     }
 
     const fournisseur = fournisseurs.find(f => f.id === produit.fournisseurId);
-    console.log(fournisseur);
     return (
       <Paper className={styles.offres}>
         <div className="row">

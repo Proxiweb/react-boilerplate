@@ -7293,13 +7293,6 @@ react-addons-update@^15.3.0:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.3.2.tgz#b6385c4db1e5df371825e0615b04360ed94430fe"
 
-react-avatar-editor:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-avatar-editor/-/react-avatar-editor-6.0.0.tgz#8da9f78759ef7d81fc88153f708e6926d44f267b"
-  dependencies:
-    react "^15.3.2"
-    react-dom "^15.3.2"
-
 react-bootstrap@^0.30.2:
   version "0.30.5"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-0.30.5.tgz#22d9bdab13b9eec04918206602709e1c8a0d76e2"
@@ -7318,7 +7311,7 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
-react-dom@15.3.2, react-dom@^15.3.2:
+react-dom@15.3.2:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.3.2.tgz#c46b0aa5380d7b838e7a59c4a7beff2ed315531f"
 
@@ -7484,7 +7477,7 @@ react-virtualized:
     classnames "^2.2.3"
     dom-helpers "^2.4.0"
 
-react@15.3.2, "react@^0.14.8 || ^15.0.1", react@^15.3.2:
+react@15.3.2, "react@^0.14.8 || ^15.0.1":
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.3.2.tgz#a7bccd2fee8af126b0317e222c28d1d54528d09e"
   dependencies:

@@ -6,6 +6,21 @@
   overflow-y: scroll;
 }
 
+.loader {
+  width: 100;
+  margin: 0 auto;
+  position: relative;
+}
+
+.pdtInfo,
+.offreInfo {
+  padding-top: 2rem;
+}
+
+.offreInfo {
+  padding-right: 2rem;
+}
+
 .panelTitre {
   text-align: left;
   line-height: 36px;
@@ -17,6 +32,8 @@
 
 .photo {
   text-align: center;
+  min-height: 200px;
+  min-width: 200px;
 }
 
 .editorClass {
@@ -50,3 +67,17 @@
 .toggleStock {
   margin-top: 1em;
 }
+
+.aucuneOffre {
+  text-align: center;
+  font-size: 2em;
+  margin: 1em;
+  padding: 1em;
+  background-color: silver;
+}
+
+.listeOffres {
+  padding-top: 1em;
+}
+
+.textLeft { text-align: left;}

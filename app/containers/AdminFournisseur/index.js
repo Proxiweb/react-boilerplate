@@ -4,12 +4,14 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import IconButton from 'material-ui/IconButton';
+import Paper from 'material-ui/Paper';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
 import { selectFournisseurProduits } from 'containers/Commande/selectors';
+import { selectPending } from 'containers/App/selectors';
 import { loadTypesProduits } from 'containers/Commande/actions';
 import styles from './styles.css';
 
@@ -23,6 +25,7 @@ class CatalogueFournisseur extends Component {
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
     produits: PropTypes.array,
+    pending: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
@@ -37,50 +40,58 @@ class CatalogueFournisseur extends Component {
     this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`);
 
   render() {
-    const { produits, params } = this.props;
+    const { produits, params, pending } = this.props;
     if (!produits) return null;
-
     return (
-      <div className="row">
-        <div className={classnames('col-md-3', styles.panel)}>
-          <div className="row end-md">
-            <div className="col-md-1" style={{ marginRight: '1em' }}>
-              <IconButton
-                style={{ padding: 0, width: '27px', height: '27px' }}
-                tooltip="Nouveau produit"
-                onClick={this.handleNewProduct}
+      <Paper>
+        <div className="row">
+          <div className={classnames('col-md-3', styles.panel, styles.listePdt)}>
+            {
+              (
+                <FloatingActionButton
+                  mini="true"
+                  className={styles.addPdt}
+                  tooltip="Nouveau produit"
+                  onClick={this.handleNewProduct}
+                >
+                  <AddIcon />
+                </FloatingActionButton>
+              )
+            }
+            {produits.length > 0 &&
+              <SelectableList
+                value={params.produitId}
+                onChange={this.handleChangeList}
+                className={styles.listePdt}
               >
-                <AddIcon />
-              </IconButton>
-            </div>
+                {produits
+                  .slice()
+                  .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
+                  .map((pdt, idx) => (
+                    <ListItem
+                      key={idx}
+                      primaryText={pdt.nom.toUpperCase()}
+                      value={pdt.id}
+                      style={{ color: pdt.enStock ? 'black' : 'gray' }}
+                    />
+                  ))}
+              </SelectableList>}
           </div>
-          <SelectableList value={params.produitId} onChange={this.handleChangeList}>
-            {produits
-              .slice()
-              .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
-              .map((pdt, idx) => (
-                <ListItem
-                  key={idx}
-                  primaryText={pdt.nom.toUpperCase()}
-                  value={pdt.id}
-                  style={{ color: pdt.enStock ? 'black' : 'gray' }}
-                />
-              ))}
-          </SelectableList>
+          <div className={classnames('col-md-9', styles.panel)}>
+            {this.props.children &&
+              React.cloneElement(this.props.children, {
+                produit: produits.find(pdt => pdt.id === params.produitId),
+                params,
+              })}
+          </div>
         </div>
-        <div className={classnames('col-md-9', styles.panel)}>
-          {this.props.children &&
-            React.cloneElement(this.props.children, {
-              produit: produits.find(pdt => pdt.id === params.produitId),
-              params,
-            })}
-        </div>
-      </div>
+      </Paper>
     );
   }
 }
 const mapStateToProps = createStructuredSelector({
   produits: selectFournisseurProduits(),
+  pending: selectPending(),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

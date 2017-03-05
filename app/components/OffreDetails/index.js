@@ -61,7 +61,7 @@ class OffreDetails extends Component {
     const { expanded } = this.state;
     const dPrix = detailPrix(offre, qteCommande, 'json');
     const pAuKg = prixAuKg(offre, typeProduit, 'json');
-    console.log(pAuKg);
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
