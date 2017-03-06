@@ -150,6 +150,26 @@ class FournisseursRelais extends Component {
             </SelectableList>}
         </div>
         <div className="col-md-8" style={{ marginTop: '2em' }}>
+          {produits && produits[produitSelected] && <div className="row">
+            <div className="col-md-4">
+              <img
+                src={
+                  `https://proxiweb.fr/${produits[produitSelected].photo}`
+                }
+                alt={produits[produitSelected].nom}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: 200,
+                  border: 'solid 1px gray',
+                }} />
+            </div>
+            <div className="col-md-8">
+              <p
+                dangerouslySetInnerHTML={{ __html: produits[produitSelected].description }} // eslint-disable-line
+              />
+            </div>
+          </div>}
           {offresProduit.length > 0 &&
             typesProduits &&
             offresProduit.slice().sort((o1, o2) => o1.active > o2.active).map((
@@ -157,23 +177,6 @@ class FournisseursRelais extends Component {
               idx,
             ) => (
               <div className={`row ${styles.offre}`} key={idx}>
-                <div className="col-md-4">
-                  <img
-                    src={
-                      `https://proxiweb.fr/${produits[produitSelected].photo}`
-                    }
-                    alt={produits[produitSelected].nom}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      maxWidth: 200,
-                      border: 'solid 1px gray',
-                    }}
-                  />
-                </div>
-                <div className="col-md-8">
-                  {produits[produitSelected].description}
-                </div>
                 <div className="col-md-8">
                   <OffreDetails
                     key={idx}
@@ -194,7 +197,7 @@ class FournisseursRelais extends Component {
               </div>
             ))}
           {produitSelected &&
-            offresProduit.length === 0 &&
+            (offresProduit.length === 0 || offresProduit.filter(o => o.active).length === 0) &&
             <div className="row center-md">
               <div className="col-md-6">
                 <RaisedButton
