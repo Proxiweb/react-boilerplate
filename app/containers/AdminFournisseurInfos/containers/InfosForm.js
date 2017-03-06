@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm, Field } from 'redux-form';
-import Paper from 'material-ui/Paper';
-import { TextField } from 'redux-form-material-ui';
+import { TextField, Toggle } from 'redux-form-material-ui';
+import RaisedButton from 'material-ui/RaisedButton';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
@@ -27,18 +27,18 @@ import styles from './styles.css';
 class InfosForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    changeDescription: PropTypes.func.isRequired,
-    valeurs: PropTypes.object.isRequired,
+    changePresentation: PropTypes.func.isRequired,
+    // valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const { description } = this.props.initialValues; // eslint-disable-line
+    const { presentation } = this.props.initialValues; // eslint-disable-line
 
     this.state = {
-      rawHtml: this.getInitialHTML(description || '<p>description</p>'),
+      rawHtml: this.getInitialHTML(presentation || '<p>description</p>'),
     };
   }
 
@@ -48,7 +48,7 @@ class InfosForm extends Component {
 
   onEditorChange = editorContent => {
     const html = draftToHtml(editorContent);
-    this.props.changeDescription(html);
+    this.props.changePresentation(html);
     this.setState({ ...this.state, html });
   };
 
@@ -59,9 +59,16 @@ class InfosForm extends Component {
   }
 
   render() {
+    const { pristine, pending, handleSubmit } = this.props;
     return (
-      <form className={classnames(styles.infoForm)}>
-        <div className="row">
+      <form className={classnames(styles.infoForm)} onSubmit={handleSubmit}>
+        <div className="row center-md">
+          <div className="col-md-6">
+            <Field label="Livre tous les relais" name="livraisonGlobale" component={Toggle} fullWidth />
+          </div>
+          <div className="col-md-6">
+            <Field label="Auto-Entrepreneur" name="autoEntrepreneur" component={Toggle} fullWidth />
+          </div>
           <div className="col-md-6">
             <Field floatingLabelText="Nom" name="nom" component={TextField} fullWidth />
           </div>
@@ -105,6 +112,10 @@ class InfosForm extends Component {
               initialContentState={this.state.rawHtml}
             />
           </div>
+          {!pristine &&
+            <div className={`col-md-4 ${styles.formFooter}`}>
+              <RaisedButton fullWidth type="submit" label="Valider" primary disabled={pending} />
+            </div>}
         </div>
       </form>
     );

@@ -22,13 +22,13 @@ class fournisseurFormContainer extends React.Component {
     values: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
     changeValue: PropTypes.func.isRequired,
-    save: PropTypes.func.isRequired,
+    saveFournisseur: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
   };
 
   handleSubmit = values => {
-    const { fournisseurs, save, params: { fournisseurId } } = this.props;
-    save({ ...fournisseurs[fournisseurId], ...values });
+    const { fournisseurs, params: { fournisseurId } } = this.props;
+    this.props.saveFournisseur({ ...fournisseurs[fournisseurId], ...values });
   };
 
   render() {
@@ -41,7 +41,7 @@ class fournisseurFormContainer extends React.Component {
         onSubmit={this.handleSubmit}
         pending={pending}
         pristine={pristine}
-        changeDescription={val => changeValue('fournisseur', 'description', val)}
+        changePresentation={val => changeValue('info_fournisseur', 'presentation', val)}
       />
     );
   }
@@ -57,7 +57,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
     changeValue: change,
-    save: saveFournisseur,
+    saveFournisseur,
   },
   dispatch
 );

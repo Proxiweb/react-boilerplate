@@ -118,6 +118,17 @@ export const loadFournisseurs = query => ({
   query,
   msgPending: 'Chargement fournisseurs',
 });
+
+export const saveFournisseur = (fournisseur, msgSuccess: 'Fournisseur sauvegardé') => ({
+  type: findActionType('save_fournisseur', c, 'START'),
+  url: `fournisseurs${fournisseur.id ? `/${fournisseur.id}` : ''}`,
+  method: fournisseur.id ? 'put' : 'post',
+  datas: { ...fournisseur },
+  msgPending: 'Sauvegarde en cours...',
+  msgSuccess,
+  redirectSuccess: '/',
+});
+
 /**
 * query : { relaiId, jointures: true }
 **/

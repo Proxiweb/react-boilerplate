@@ -21,12 +21,13 @@ const utilisateursConst = generateConstants('app/Commande', 'load_utilisateurs')
 const saveUtilisateurConst = generateConstants('app/Commande', 'save_utilisateur');
 const cdeUtilisateursConst = generateConstants('app/Commande', 'load_commande_utilisateurs');
 const fournisseursConst = generateConstants('app/Commande', 'load_fournisseurs');
+const saveFournisseursConst = generateConstants('app/Commande', 'save_fournisseur');
 const offresConst = generateConstants('app/Commande', 'load_offres');
 const livreCommandeUtilisateurConst = generateConstants('app/CommandeEdit', 'livre_commande_utilisateur');
 const payeCommandeUtilisateurConst = generateConstants('app/CommandeEdit', 'paye_commande_utilisateur');
 const supprimerCommandeContenusFournisseurConst = generateConstants(
   'app/Commande',
-  'supprimer_commande_contenus_fournisseur',
+  'supprimer_commande_contenus_fournisseur'
 );
 const relaisConst = generateConstants('app/Commande', 'load_relais');
 const typeProduits = generateConstants('app/Commande', 'load_types_produits');
@@ -45,6 +46,7 @@ export default assign(
   saveOffreConst,
   userCommandesConst,
   fournisseursConst,
+  saveFournisseursConst,
   offresConst,
   supprimerCommandeContenusFournisseurConst,
   livreCommandeUtilisateurConst,
@@ -66,5 +68,5 @@ export default assign(
     MODIF_ACHAT,
     UPDATE_CATALOGUE_START,
     UPDATE_CATALOGUE_SUCCESS,
-  },
+  }
 );
