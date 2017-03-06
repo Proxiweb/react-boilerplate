@@ -4,21 +4,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { isPristine, change } from 'redux-form';
 
-// import { saveAccount } from 'containers/CompteUtilisateur/actions';
 import { selectPending } from 'containers/App/selectors';
-import { selectFournisseursIds } from 'containers/Commande/selectors';
 import { saveFournisseur } from 'containers/Commande/actions';
 import InfosForm from './InfosForm';
 
-const isProfilePristine = () => state => isPristine('fournisseur')(state);
-const getValues = () => state => state.form;
-
-// import submit from './submit';
+const isFormPristine = () => state => isPristine('info_fournisseur')(state);
 
 class fournisseurFormContainer extends React.Component {
   static propTypes = {
-    fournisseurs: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
+    fournisseur: PropTypes.object.isRequired,
     values: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
     changeValue: PropTypes.func.isRequired,
@@ -27,16 +21,15 @@ class fournisseurFormContainer extends React.Component {
   };
 
   handleSubmit = values => {
-    const { fournisseurs, params: { fournisseurId } } = this.props;
-    this.props.saveFournisseur({ ...fournisseurs[fournisseurId], ...values });
+    this.props.saveFournisseur({ ...this.props.fournisseur, ...values });
   };
 
   render() {
-    const { pending, fournisseurs, pristine, changeValue, values, params: { fournisseurId } } = this.props;
+    const { pending, fournisseur, pristine, changeValue, values } = this.props;
 
     return (
       <InfosForm
-        initialValues={fournisseurs[fournisseurId]}
+        initialValues={fournisseur}
         valeurs={values}
         onSubmit={this.handleSubmit}
         pending={pending}
@@ -49,9 +42,7 @@ class fournisseurFormContainer extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
-  pristine: isProfilePristine(),
-  fournisseurs: selectFournisseursIds(),
-  values: getValues(),
+  pristine: isFormPristine(),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

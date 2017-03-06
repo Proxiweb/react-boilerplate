@@ -110,7 +110,7 @@ export const importeOffres = (fournisseurId, produitId, relaiDestinationId) => (
   msgSuccess: 'Offre importée',
 });
 /**
-* query : { relaiId, jointures: true }
+* query : { relaiId || id, jointures: true }
 **/
 export const loadFournisseurs = query => ({
   type: findActionType('load_fournisseurs', c, 'START'),
