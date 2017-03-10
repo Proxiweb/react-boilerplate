@@ -40,7 +40,7 @@ class CommnandeParProduitFournisseur extends Component {
     const { contenu, offre } = this.props;
     const poidsG = parseInt(offre.poids * (contenu.qteRegul + contenu.quantite) / 1000, 10);
     const nouveauPoids = parseInt(prompt('Poids réel (g) ?', poidsG), 10); // eslint-disable-line
-    if (nouveauPoids !== poidsG) {
+    if (nouveauPoids && nouveauPoids !== poidsG) {
       const qteTotal = round(nouveauPoids * contenu.quantite / poidsG, 5);
       this.props.modifierCommandeContenu({
         ...contenu,
