@@ -13,9 +13,7 @@ import merge from 'lodash/merge';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
 import includes from 'lodash/includes';
-import moment from 'moment';
 import uniq from 'lodash/uniq';
-import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
   pending: false,
@@ -135,7 +133,7 @@ const supprimeCommandeContenusFournisseur = (state, fournisseurId, commandeId) =
 const supprimeContenu = (state, contenu) => {
   const { commandeUtilisateurs, commandeContenus } = state.datas.entities;
   const contenusRestants = commandeUtilisateurs[contenu.commandeUtilisateurId].contenus.filter(
-    c => c !== contenu.id,
+    cont => cont !== contenu.id,
   ); // eslint-disable-line
   const commandeContenusRestants = Object.keys(commandeContenus).reduce((memo, cont) => {
     const aIns = cont.id !== contenu.id ? { [contenu.id]: contenu } : {};
@@ -328,6 +326,21 @@ function commandeReducer(state = initialState, action) {
           entities: { $set: merge(state.datas.entities, datas.entities) },
         },
         pending: { $set: false },
+      });
+    }
+
+    case c.ASYNC_MODIFIER_COMMANDE_CONTENU_SUCCESS: {
+      const datas = normalize(action.datas, schemas.COMMANDE_CONTENUS);
+      return update(state, {
+        datas: {
+          entities: {
+            commandeContenus: {
+              [action.datas.id]: {
+                $set: datas.entities.commandeContenus[action.datas.id],
+              },
+            },
+          },
+        },
       });
     }
 

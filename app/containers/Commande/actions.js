@@ -40,6 +40,16 @@ export const diminuerCommandeContenu = contenu => ({
 });
 
 /*
+* modifie
+*/
+export const modifierCommandeContenu = contenu => ({
+  type: findActionType('modifier_commande_contenu', c, 'START'),
+  url: `commande_contenus/${contenu.id}`,
+  method: 'put',
+  datas: { ...contenu },
+});
+
+/*
 * supprime commande_contenu
 * appelé quant quantite === 1
 */

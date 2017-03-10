@@ -11,6 +11,7 @@ const commandeConst = generateConstants('app/Commande', 'load_commande');
 const crCdeConst = generateConstants('app/Commande', 'create_commande');
 const deleteConst = generateConstants('app/Commande', 'delete_commande');
 const diminueCommandeContenuConst = generateConstants('app/Commande', 'diminuer_commande_contenu');
+const modifierCommandeContenu = generateConstants('app/Commande', 'modifier_commande_contenu');
 const deleteCommandeContenuConst = generateConstants('app/Commande', 'supprimer_commande_contenu');
 const savePdtConst = generateConstants('app/Commande', 'save_produit');
 const changePhotoConst = generateConstants('app/Commande', 'change_photo_produit');
@@ -54,6 +55,7 @@ export default assign(
   importeOffresConst,
   deleteConst,
   diminueCommandeContenuConst,
+  modifierCommandeContenu,
   deleteCommandeContenuConst,
   crCdeConst,
   relaisConst,

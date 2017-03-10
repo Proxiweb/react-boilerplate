@@ -16,7 +16,19 @@ const buildNomProduit = (produit, offre) => {
   return np;
 };
 
-const buildCommandeRow = ({ contenu, tarifEnBaisse, produit, offre, colorTrendingDown, tarif, idx }) => [
+const buildCommandeRow = (
+  {
+    contenu,
+    tarifEnBaisse,
+    produit,
+    offre,
+    colorTrendingDown,
+    tarif,
+    idx,
+    handleChangeQte,
+    handleResetQuantite,
+  },
+) => [
   (
     <TableRowColumn className={styles.bigCol} key={`${idx}1`}>
       <span>
@@ -43,10 +55,16 @@ const buildCommandeRow = ({ contenu, tarifEnBaisse, produit, offre, colorTrendin
         </span>}
     </TableRowColumn>
   ),
-  <TableRowColumn className={styles.smallCol} key={`${idx}3`}>{contenu.quantite}</TableRowColumn>,
+  (
+    <TableRowColumn className={styles.smallCol} key={`${idx}3`}>
+      {!handleChangeQte ? contenu.quantite : <button onClick={handleChangeQte}>{contenu.quantite}</button>}
+      {handleResetQuantite &&
+        <button title="Revenir à la quantité initiale" onClick={handleResetQuantite}>x</button>}
+    </TableRowColumn>
+  ),
   (
     <TableRowColumn className={styles.smallCol} key={`${idx}4`}>
-      {round((tarif.prix + tarif.recolteFond) * contenu.quantite / 100, 2).toFixed(2)}
+      {round((tarif.prix + tarif.recolteFond) * (contenu.quantite + contenu.qteRegul) / 100, 2).toFixed(2)}
       {tarifEnBaisse &&
         <span style={{ color: 'red' }}>
           {' '}
