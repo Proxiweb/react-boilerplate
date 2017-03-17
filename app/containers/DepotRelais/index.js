@@ -10,6 +10,7 @@ import CustomSelectField from 'components/CustomSelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import { ajouterDepot } from 'containers/AdminDepot/actions';
 import { selectRoles } from 'containers/CompteUtilisateur/selectors';
@@ -72,30 +73,33 @@ class DepotRelais extends Component {
   handleDepotExpress = () => {
     const { stellarKeys, utilisateur, deposer } = this.props;
     const { montant, type, info } = this.state;
-    this.setState({ ...this.state, depotEnCours: true });
-    api
-      .pay({
-        destination: utilisateur.stellarKeys.adresse,
-        currency: 'PROXI',
-        currencyIssuer: stellarKeys.adresse,
-        amount: montant,
-        stellarKeys,
-      })
-      .then(transactionHash => {
-        this.setState({ ...this.state, depotEnCours: false, depotOk: true });
-        deposer({
-          utilisateurId: utilisateur.id,
-          montant,
-          type: 'depot_direct',
-          infosSupplement: {
-            ...info,
-            type,
-            transactionHash,
-          },
-          transfertEffectue: true,
+    if (!this.state.depotEnCours) {
+      this.setState({ ...this.state, depotEnCours: true });
+      api
+        .pay({
+          destination: utilisateur.stellarKeys.adresse,
+          currency: 'PROXI',
+          currencyIssuer: stellarKeys.adresse,
+          amount: montant,
+          stellarKeys,
+        })
+        .then(transactionHash => {
+          this.setState({ ...this.state, depotEnCours: false, depotOk: true });
+          deposer({
+            utilisateurId: utilisateur.id,
+            montant,
+            type: 'depot_direct',
+            infosSupplement: {
+              ...info,
+              type,
+              transactionHash: transactionHash.hash,
+              relaiId: utilisateur.relaiId,
+            },
+            transfertEffectue: true,
+          });
+          this.props.onRequestClose();
         });
-        // this.props.onDepotDirectSuccess();
-      });
+    }
   };
 
   render() {
@@ -106,11 +110,11 @@ class DepotRelais extends Component {
       onRequestClose,
       stellarKeys,
     } = this.props;
-    const { montant, type } = this.state;
+    const { montant, type, depotEnCours } = this.state;
     const manque = round(parseFloat(balance.balance) - totalCommande, 2);
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
     const manqueStr = manque > 0 ? '' : `( manque ${(manque * (-1)).toFixed(2)} €)`;
-    const invalid = montant === null || type === null;
+    const invalid = montant === null || type === null || depotEnCours;
 
     return (
       <Dialog
@@ -137,47 +141,50 @@ class DepotRelais extends Component {
         open={this.props.open}
         onRequestClose={onRequestClose}
       >
-        <form>
-          <div className={`row center-md ${styles.form}`}>
-            <div className="col-md-6">
-              <TextField
-                type="number"
-                fullWidth
-                step="0.01"
-                floatingLabelText={`Montant déposé ${manqueStr}`}
-                label="Montant déposé"
-                onChange={(event, m) => this.setState({ ...this.state, montant: m })}
-              />
-            </div>
-            <div className="col-md-6">
-              <CustomSelectField
-                fullWidth
-                floatingLabelText="Type de dépot"
-                label="Type de dépot"
-                onChange={(event, typeId) => {
-                  const values = ['cb', 'cheque', 'especes'];
-                  this.setState({ ...this.state, type: values[typeId] });
-                }}
-                value={type}
-                disabled={includes(roles, 'RELAI_ADMIN')}
-              >
-                <MenuItem value={'cb'} primaryText="cb" />
-                <MenuItem value={'cheque'} primaryText="cheque" />
-                <MenuItem value={'especes'} primaryText="especes" />
-              </CustomSelectField>
-            </div>
-            {!includes(roles, 'RELAI_ADMIN') &&
-              <div className="col-md-12">
+        {depotEnCours &&
+          <div className={styles.progress}><p>Dépot en cours</p><LinearProgress mode="indeterminate" /></div>}
+        {!depotEnCours &&
+          <form>
+            <div className={`row center-md ${styles.form}`}>
+              <div className="col-md-6">
                 <TextField
-                  type="text"
+                  type="number"
                   fullWidth
-                  floatingLabelText="Information supplémentaire"
-                  label="Information supplémentaire"
-                  onChange={(event, inf) => this.setState({ ...this.state, inf })}
+                  step="0.01"
+                  floatingLabelText={`Montant déposé ${manqueStr}`}
+                  label="Montant déposé"
+                  onChange={(event, m) => this.setState({ ...this.state, montant: m })}
                 />
-              </div>}
-          </div>
-        </form>
+              </div>
+              <div className="col-md-6">
+                <CustomSelectField
+                  fullWidth
+                  floatingLabelText="Type de dépot"
+                  label="Type de dépot"
+                  onChange={(event, typeId) => {
+                    const values = ['cb', 'cheque', 'especes'];
+                    this.setState({ ...this.state, type: values[typeId] });
+                  }}
+                  value={type}
+                  disabled={includes(roles, 'RELAI_ADMIN')}
+                >
+                  <MenuItem value={'cb'} primaryText="cb" />
+                  <MenuItem value={'cheque'} primaryText="cheque" />
+                  <MenuItem value={'especes'} primaryText="especes" />
+                </CustomSelectField>
+              </div>
+              {!includes(roles, 'RELAI_ADMIN') &&
+                <div className="col-md-12">
+                  <TextField
+                    type="text"
+                    fullWidth
+                    floatingLabelText="Information supplémentaire"
+                    label="Information supplémentaire"
+                    onChange={(event, inf) => this.setState({ ...this.state, inf })}
+                  />
+                </div>}
+            </div>
+          </form>}
       </Dialog>
     );
   }

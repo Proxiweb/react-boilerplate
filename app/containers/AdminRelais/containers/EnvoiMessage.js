@@ -4,8 +4,6 @@ import capitalize from 'lodash/capitalize';
 import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import { addDestinataire } from 'containers/AdminCommunication/actions';
-
-import Panel from 'components/Panel';
 import styles from './styles.css';
 
 class EnvoiMessage extends Component {

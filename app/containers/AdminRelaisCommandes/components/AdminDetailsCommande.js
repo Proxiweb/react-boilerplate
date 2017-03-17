@@ -115,11 +115,13 @@ class AdminDetailsCommande extends Component {
           {!children &&
             commandeUtilisateurs &&
             contenus &&
+            utils &&
             view === 'fournisseurs' &&
             <DetailsParFournisseur
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
               contenus={contenus}
+              utilisateurs={utils}
               commandeContenus={commandeContenus}
               handleValidate={() => this.setState({ view: 'validation' })}
             />}

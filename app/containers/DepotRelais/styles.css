@@ -3,6 +3,11 @@
   padding: 1em;
 }
 
+.form,
+.progress {
+  min-height: 180px;
+}
+
 .submit {
   margin-top: 1em;
 }
