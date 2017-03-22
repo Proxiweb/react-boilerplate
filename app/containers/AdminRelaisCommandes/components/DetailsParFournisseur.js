@@ -48,6 +48,7 @@ class DetailsParFournisseur extends Component {
         if (type === 'email' && email) {
           this.props.addDestinataire({ email, id: utilisateur.id, identite });
         } else if (type === 'sms' && telPortable) {
+          console.log(telPortable, utilisateur.id);
           this.props.addDestinataire({ telPortable, id: utilisateur.id, identite });
         }
       });

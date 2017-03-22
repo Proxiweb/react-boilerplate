@@ -77,8 +77,8 @@ class ListeAcheteurs extends Component {
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
           {stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret) && <p>Parametrez Proxiweb</p>}
-          {!utilisateurDepot &&
-            utilisateurId &&
+          {// !utilisateurDepot &&
+          utilisateurId &&
             <RaisedButton
               primary
               fullWidth
@@ -86,9 +86,9 @@ class ListeAcheteurs extends Component {
               disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
               onClick={() => this.setState({ ...this.state, depot: true })}
             />}
-          {utilisateurDepot && `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
-          {!utilisateurDepot &&
-            utilisateurId &&
+          {false && utilisateurDepot && `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
+          {// !utilisateurDepot &&
+          utilisateurId &&
             utilisateurBalance &&
             <DepotRelais
               utilisateur={utilisateur}

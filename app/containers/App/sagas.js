@@ -7,8 +7,8 @@ import omit from 'lodash/omit';
 import assign from 'lodash/assign';
 
 export function* apiListenerSaga() {
+  // eslint-disable-next-line
   while (true) {
-    // eslint-disable-line
     const action = yield take('*');
 
     if (action.type && action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {
