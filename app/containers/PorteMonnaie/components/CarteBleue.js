@@ -11,24 +11,24 @@ export default class CarteBleue extends Component {
     max: PropTypes.number.isRequired,
     email: PropTypes.string.isRequired,
     deposerCB: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
     montant: 10,
-  }
+  };
 
-  onToken = (token) => {
+  onToken = token => {
     const { deposerCB } = this.props;
     deposerCB({
       token: token.id,
       montant: parseFloat(this.state.montant) * 100,
     });
-  }
+  };
 
   render() {
     const { max, email } = this.props;
     const { montant } = this.state;
-    const frais = round((montant * 0.014) + 0.25, 2);
+    const frais = round(montant * 0.014 + 0.25, 2);
     const restant = round(montant - frais, 2);
     return (
       <div className="col-md-8">
@@ -51,7 +51,7 @@ export default class CarteBleue extends Component {
             email={email}
             amount={parseFloat(montant) * 100}
             currency="EUR"
-            stripeKey="pk_test_xuuHOnVKh0iHLw3fmV7CPja5"
+            stripeKey="pk_live_HozMz6PI4IGnNCZkvvinsLbu"
           >
             <RaisedButton
               primary

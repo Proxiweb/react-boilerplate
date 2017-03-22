@@ -97,6 +97,7 @@ export const annulerVirement = id => ({
 export const deposerCB = datas => ({
   type: depotCbConst.ASYNC_DEPOT_CB_START,
   url: 'charges',
+  method: 'post',
   datas,
 });
 
