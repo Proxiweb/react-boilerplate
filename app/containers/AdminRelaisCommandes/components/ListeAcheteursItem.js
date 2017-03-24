@@ -52,8 +52,9 @@ class ListeAcheteursItem extends Component {
 
     let iconColor = 'silver';
     if (this.state.paiements) {
-      const total = totaux.prix + totaux.recolteFond;
+      const total = round(parseFloat(totaux.prix + totaux.recolteFond), 2);
       const totalAvecDepot = round(depot + parseFloat(paiements.balance), 2);
+
       iconColor = total <= totalAvecDepot ? 'green' : 'orange';
     }
 
