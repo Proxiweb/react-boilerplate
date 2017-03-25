@@ -74,8 +74,8 @@ class CommnandeParProduitFournisseur extends Component {
       colorTrendingDown: 'green',
       tarif,
       produit,
-      handleChangeQte: offre.quantiteAjustable && !contenu.quantiteAjustee ? this.handleChangeQte : undefined,
-      handleResetQuantite: contenu.quantiteAjustee ? this.handleResetQuantite : undefined,
+      handleChangeQte: !readOnly && offre.quantiteAjustable && !contenu.quantiteAjustee ? this.handleChangeQte : undefined,
+      handleResetQuantite: !readOnly && contenu.quantiteAjustee ? this.handleResetQuantite : undefined,
     });
 
     return (
