@@ -174,7 +174,7 @@ class App extends Component {
         <Toolbar
           className={`${styles.noPrint} ${styles.toolbar}`}
           style={{
-            backgroundColor: muiTheme.appBar.color,
+            backgroundColor: process.env.NODE_ENV === 'development' ? '#438DED' : muiTheme.appBar.color,
             height: '50px',
           }}
         >
@@ -222,14 +222,12 @@ class App extends Component {
           messages={messages}
           anonRelaiId={anonRelaiId}
           header={
-            (
-              <MenuItem
-                primaryText="Menu"
-                rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
-                onTouchTap={this.closeDrawer}
-                style={drawerStyle}
-              />
-            )
+            <MenuItem
+              primaryText="Menu"
+              rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
+              onTouchTap={this.closeDrawer}
+              style={drawerStyle}
+            />
           }
         />
         <div className={`container-fluid ${styles.mainContent}`}>
@@ -255,14 +253,15 @@ const mapStateToProps = createStructuredSelector({
   locationState: selectLocationState(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    pushState: push,
-    logout,
-    refresh,
-    loadM: loadMessages,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      pushState: push,
+      logout,
+      refresh,
+      loadM: loadMessages,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
