@@ -130,12 +130,13 @@ const mapStateToProps = createStructuredSelector({
   locationState: selectLocationState(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadCde: loadCommandes,
-    pushState: push,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadCde: loadCommandes,
+      pushState: push,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FacturesDistributeur);

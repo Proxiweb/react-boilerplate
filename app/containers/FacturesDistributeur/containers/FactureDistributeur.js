@@ -125,8 +125,11 @@ class FactureDistributeur extends Component {
     if (!commande || !commandeUtilisateurs || !commandeContenus || !contenus || !utilisateurs) {
       return null;
     }
+
     const totaux = calculeTotauxCommande({
-      contenus,
+      contenus: Object.keys(contenus)
+        .filter(id => contenus[id].commandeId === commande.id)
+        .reduce((m, id) => ({ ...m, [id]: contenus[id] }), {}),
       commandeContenus,
       offres,
       commandeId: commande.id,
@@ -207,11 +210,12 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadU: fetchUtilisateurs,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadU: fetchUtilisateurs,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureDistributeur);
