@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
+import includes from 'lodash/includes';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Paper from 'material-ui/Paper';
 import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
+
 import {
   selectAsyncState,
   selectRelaisId,
@@ -18,7 +20,7 @@ import {
   selectProduits,
 } from './selectors';
 
-import { selectAuthUtilisateurId } from 'containers/CompteUtilisateur/selectors';
+import { selectAuthUtilisateurId, selectRoles } from 'containers/CompteUtilisateur/selectors';
 
 import { selectLocationState, selectPending } from 'containers/App/selectors';
 
@@ -42,6 +44,7 @@ export class Commande extends React.Component {
     loadCommandes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
+    roles: PropTypes.array.isRequired,
   };
 
   state = {
@@ -74,12 +77,11 @@ export class Commande extends React.Component {
 
   commandeUtilisateurExiste = commandeId => {
     const { commandesUtilisateurs, utilisateurId } = this.props;
-    return Object.keys(commandesUtilisateurs)
-      .find(
-        key =>
-          commandesUtilisateurs[key].utilisateurId === utilisateurId &&
-          commandesUtilisateurs[key].commandeId === commandeId
-      );
+    return Object.keys(commandesUtilisateurs).find(
+      key =>
+        commandesUtilisateurs[key].utilisateurId === utilisateurId &&
+        commandesUtilisateurs[key].commandeId === commandeId
+    );
   };
 
   isInWeek = (dateCommande, weekOffset = 0) => {
@@ -125,9 +127,11 @@ export class Commande extends React.Component {
       pending,
       utilisateurId,
       typesProduits,
+      roles,
     } = this.props;
 
     const { buttonClicked } = this.state;
+    const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
 
     if (!buttonClicked && commandes && Object.keys(commandes).length > 0 && typesProduits) {
       return (
@@ -144,6 +148,7 @@ export class Commande extends React.Component {
             utilisateurId={utilisateurId}
             commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
+            withLink={isAdmin}
           />
           <Semainier
             titreCol="La semaine prochaine"
@@ -156,6 +161,7 @@ export class Commande extends React.Component {
             utilisateurId={utilisateurId}
             commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
+            withLink={isAdmin}
           />
           <Semainier
             titreCol="Dans quinze jours"
@@ -168,6 +174,7 @@ export class Commande extends React.Component {
             utilisateurId={utilisateurId}
             commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
+            withLink={isAdmin}
           />
           <div className="col-xs">
             <CommandesLongTerme
@@ -180,6 +187,7 @@ export class Commande extends React.Component {
               pushState={pushState}
               relaiId={relaiId}
               utilisateurId={utilisateurId}
+              withLink={isAdmin}
             />
           </div>
         </div>
@@ -257,6 +265,7 @@ const mapStateToProps = createStructuredSelector({
   commandesUtilisateurs: selectCommandesUtilisateurs(),
   relaiId: selectRelaisId(),
   utilisateurId: selectAuthUtilisateurId(),
+  roles: selectRoles(),
   produits: selectProduits(),
   fournisseurs: selectFournisseurs(),
   typesProduits: selectTypesProduits(),

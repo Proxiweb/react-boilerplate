@@ -14,6 +14,7 @@ const Semainier = (
     utilisateurId,
     pending,
     buttonClicked,
+    withLink,
   }
 ) => (
   <div className="col-xs">
@@ -36,6 +37,7 @@ const Semainier = (
                 buttonClicked();
                 pushState(`/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`);
               }}
+              url={withLink ? `/admin/relais/${relaiId}/commandes/${key}` : null}
             />
           );
         })}
@@ -54,6 +56,7 @@ Semainier.propTypes = {
   utilisateurId: PropTypes.string.isRequired,
   titreCol: PropTypes.string.isRequired,
   pending: PropTypes.bool.isRequired,
+  withLink: PropTypes.bool.isRequired,
 };
 
 export default Semainier;

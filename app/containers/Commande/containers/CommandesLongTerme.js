@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import round from 'lodash/round';
 import { Card, CardActions, CardHeader } from 'material-ui/Card';
@@ -17,6 +18,7 @@ import {
 } from 'containers/Commande/selectors';
 
 import CommandePanel from 'containers/Commande/components/CommandePanel';
+import styles from './styles.css';
 
 const Offre = (
   {
@@ -30,10 +32,21 @@ const Offre = (
     utilisateurId,
     buttonClicked,
     commandeUtilisateurExiste,
+    withLink,
   }
 ) => (
   <Card style={{ marginBottom: 20 }}>
-    <CardHeader title={nom} subtitle={tarif} avatar={imageSrc} actAsExpander showExpandableButton />
+    <CardHeader
+      title={
+        withLink
+          ? <Link to={`/admin/relais/${relaiId}/commandes/${commandeId}`} className={styles.link}>{nom}</Link>
+          : nom
+      }
+      subtitle={tarif}
+      avatar={imageSrc}
+      actAsExpander
+      showExpandableButton
+    />
     {prct &&
       <div style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 10 }}>
         <LinearProgress
@@ -67,6 +80,7 @@ Offre.propTypes = {
   prct: PropTypes.number.isRequired,
   tarif: PropTypes.string.isRequired,
   pushState: PropTypes.func.isRequired,
+  withLink: PropTypes.bool.isRequired,
   buttonClicked: PropTypes.func.isRequired,
   commandeUtilisateurExiste: PropTypes.func.isRequired,
 };
@@ -83,7 +97,8 @@ class CommandesLongTerme extends Component {
     utilisateurId: PropTypes.string.isRequired,
     getCommandeInfos: PropTypes.func.isRequired,
     buttonClicked: PropTypes.func.isRequired,
-    pending: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
+    withLink: PropTypes.bool.isRequired,
   };
 
   getInfos = commandeId => {
@@ -134,6 +149,7 @@ class CommandesLongTerme extends Component {
       pending,
       relaiId,
       utilisateurId,
+      withLink,
     } = this.props;
     return (
       <div>
@@ -172,6 +188,7 @@ class CommandesLongTerme extends Component {
               utilisateurId={this.props.utilisateurId}
               commandeUtilisateurExiste={commandeUtilisateurExiste}
               buttonClicked={buttonClicked}
+              withLink={withLink}
             />
           );
         })}
