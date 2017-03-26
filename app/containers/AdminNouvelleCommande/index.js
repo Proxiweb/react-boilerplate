@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
+import moment from 'moment';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
@@ -13,10 +14,11 @@ import {
   selectCommandeLivraisons,
   selectCommandeCommandeUtilisateurs,
 } from 'containers/Commande/selectors';
+import { selectToken } from 'containers/CompteUtilisateur/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
 import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
-import moment from 'moment';
+import { post, del } from 'utils/apiClient';
 import styles from './styles.css';
 
 class NouvelleCommande extends Component {
@@ -28,6 +30,7 @@ class NouvelleCommande extends Component {
     fournisseurs: PropTypes.array.isRequired,
     fournisseursCommande: PropTypes.array,
     commandeUtilisateurs: PropTypes.array.isRequired,
+    token: PropTypes.string.isRequired,
     livraisonsCommande: PropTypes.array,
     create: PropTypes.func.isRequired,
   };
@@ -83,14 +86,39 @@ class NouvelleCommande extends Component {
   };
 
   addFourn = value => {
+    const { commande, token } = this.props;
     if (includes(this.state.cdeFourns, value)) return;
-    this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
+    if (!commande.id) {
+      this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
+      return;
+    }
+    post(`/api/commandes/${commande.id}/fournisseurs`, {
+      datas: { fournisseurId: value.id },
+      headers: { Authorization: `Bearer ${token}` },
+    }).then(() => {
+      this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
+    });
   };
 
-  delFourn = value => this.setState({
-    ...this.state,
-    cdeFourns: this.state.cdeFourns.filter(cde => cde.id !== value.id),
-  });
+  delFourn = value => {
+    const { commande, token } = this.props;
+    if (!commande.id) {
+      this.setState({
+        ...this.state,
+        cdeFourns: this.state.cdeFourns.filter(cde => cde.id !== value.id),
+      });
+      return;
+    }
+
+    del(`/api/commande/${commande.id}/fournisseurs/${value.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then(() => {
+      this.setState({
+        ...this.state,
+        cdeFourns: this.state.cdeFourns.filter(cde => cde.id !== value.id),
+      });
+    });
+  };
 
   changeParam = (key, value) => {
     const parametres = { ...this.state.parametres, [key]: value };
@@ -219,15 +247,17 @@ const mapStateToProps = createStructuredSelector({
   fournisseursCommande: selectFournisseursCommande(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   livraisonsCommande: selectCommandeLivraisons(),
+  token: selectToken(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    load: loadFournisseurs,
-    loadR: loadRelais,
-    create: createCommande,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadFournisseurs,
+      loadR: loadRelais,
+      create: createCommande,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(NouvelleCommande);
