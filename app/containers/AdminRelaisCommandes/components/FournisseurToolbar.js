@@ -6,24 +6,18 @@ import MailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 import styles from './styles.css';
 
-const FournisseurToolbar = ({ pushState, relaiId, commandeId, distribuee, validate, contacterAcheteurs }) => (
+const FournisseurToolbar = (
+  { pushState, relaiId, commandeId, distribuee, validate, contacterAcheteurs, finalisee }
+) => (
   <div className={`col-md-12 ${styles.toolbar}`}>
     <FlatButton
       label="Passer une commande"
       icon={<PersonIcon />}
       onClick={() => pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs`)}
     />
-    <FlatButton
-      label="Mail aux acheteurs"
-      icon={<MailIcon />}
-      onClick={() => contacterAcheteurs('email')}
-    />
-    <FlatButton
-      label="SMS aux acheteurs"
-      icon={<MessageIcon />}
-      onClick={() => contacterAcheteurs('sms')}
-    />
-    {distribuee && <RaisedButton primary label="Finaliser la commande" onClick={validate} />}
+    <FlatButton label="Mail aux acheteurs" icon={<MailIcon />} onClick={() => contacterAcheteurs('email')} />
+    <FlatButton label="SMS aux acheteurs" icon={<MessageIcon />} onClick={() => contacterAcheteurs('sms')} />
+    {distribuee && !finalisee && <RaisedButton primary label="Finaliser la commande" onClick={validate} />}
   </div>
 );
 
@@ -34,6 +28,7 @@ FournisseurToolbar.propTypes = {
   validate: PropTypes.func.isRequired,
   contacterAcheteurs: PropTypes.func.isRequired,
   distribuee: PropTypes.bool.isRequired,
+  finalisee: PropTypes.bool.isRequired,
 };
 
 export default FournisseurToolbar;

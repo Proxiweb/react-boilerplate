@@ -124,6 +124,7 @@ class AdminDetailsCommande extends Component {
               utilisateurs={utils}
               commandeContenus={commandeContenus}
               handleValidate={() => this.setState({ view: 'validation' })}
+              finalisation={commande.finalisation}
             />}
           {!children &&
             commandeUtilisateurs &&
@@ -178,13 +179,14 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadUtilisateurs: fetchUtilisateurs,
-    loadDepots: loadDepotsRelais,
-    pushState: push,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadUtilisateurs: fetchUtilisateurs,
+      loadDepots: loadDepotsRelais,
+      pushState: push,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);

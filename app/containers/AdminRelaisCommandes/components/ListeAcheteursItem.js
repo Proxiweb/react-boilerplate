@@ -27,7 +27,7 @@ class ListeAcheteursItem extends Component {
   };
 
   componentDidMount() {
-    if (this.props.utilisateur.stellarKeys) {
+    if (this.props.utilisateur.stellarKeys && !this.props.commandeUtilisateur.dateLivraison) {
       api
         .loadAccount(this.props.utilisateur.stellarKeys.adresse)
         .then(res => {
@@ -44,7 +44,7 @@ class ListeAcheteursItem extends Component {
   }
 
   computeDatas = () => {
-    const { utilisateur: { id }, depots, totaux } = this.props;
+    const { utilisateur: { id }, depots, totaux, commandeUtilisateur } = this.props;
     const { paiements } = this.state;
     const dep = depots.find(d => d.utilisateurId === id && !d.transfertEffectue && d.type === 'depot_relais');
     // si un dépot a été fait, en tenir compte

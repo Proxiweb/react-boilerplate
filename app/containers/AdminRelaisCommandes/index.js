@@ -129,19 +129,21 @@ class AdminRelaisCommandes extends Component {
   };
 
   buildRightIcon = (commandeId, relaiId, commande) => {
-    if (commande.finalisation) return null;
     return (
       <IconMenu iconButtonElement={iconButtonElement}>
-        <MenuItem
-          onClick={() => this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/edit`)}
-        >
-          Modifier
-        </MenuItem>
-        <MenuItem
-          onClick={() => this.props.pushState(`/distributeurs/${relaiId}/factures/${commandeId}?print=true`)}
-        >
-          Facture
-        </MenuItem>
+        {!commande.finalisation &&
+          <MenuItem
+            onClick={() => this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/edit`)}
+          >
+            Modifier
+          </MenuItem>}
+        {commande.finalisation &&
+          <MenuItem
+            onClick={() =>
+              this.props.pushState(`/distributeurs/${relaiId}/factures/${commandeId}?print=true`)}
+          >
+            Facture
+          </MenuItem>}
         {commande.commandeUtilisateurs.length === 0 &&
           <MenuItem onClick={() => this.removeCommande(commandeId)}>
             Supprimer
@@ -161,12 +163,14 @@ class AdminRelaisCommandes extends Component {
     let commandesFiltredIds = null;
     switch (this.state.typeCommandeListees) {
       case 0:
-        commandesFiltredIds = Object.keys(commandes)
-          .filter(id => commandes[id].dateCommande === null || moment().isBefore(commandes[id].dateCommande));
+        commandesFiltredIds = Object.keys(commandes).filter(
+          id => commandes[id].dateCommande === null || moment().isBefore(commandes[id].dateCommande)
+        );
         break;
       case 1:
-        commandesFiltredIds = Object.keys(commandes)
-          .filter(id => commandes[id].dateCommande !== null && moment().isAfter(commandes[id].dateCommande));
+        commandesFiltredIds = Object.keys(commandes).filter(
+          id => commandes[id].dateCommande !== null && moment().isAfter(commandes[id].dateCommande)
+        );
         break;
       case 2:
         commandesFiltredIds = Object.keys(commandes);
@@ -255,9 +259,14 @@ class AdminRelaisCommandes extends Component {
           </BottomNavigation>
         </div>
         <div
-          className={classnames('col-md-9', styles.panel, { [styles.nouvelleCommande]: !commandeId }, {
-            [styles.noScroll]: !commandeId,
-          })}
+          className={classnames(
+            'col-md-9',
+            styles.panel,
+            { [styles.nouvelleCommande]: !commandeId },
+            {
+              [styles.noScroll]: !commandeId,
+            }
+          )}
         >
           {this.props.children &&
             React.cloneElement(this.props.children, {
@@ -280,16 +289,17 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadCommandes,
-    loadUtilisateurs,
-    loadFournisseurs,
-    deleteCommande,
-    loadRelais,
-    pushState: push,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadCommandes,
+      loadUtilisateurs,
+      loadFournisseurs,
+      deleteCommande,
+      loadRelais,
+      pushState: push,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminRelaisCommandes);

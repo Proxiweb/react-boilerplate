@@ -6,7 +6,7 @@ import includes from 'lodash/includes';
 import capitalize from 'lodash/capitalize';
 import { createStructuredSelector } from 'reselect';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-
+import RaisedButton from 'material-ui/RaisedButton';
 import {
   selectFournisseursCommande,
   selectCommandeProduits,
@@ -18,6 +18,7 @@ import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors'
 import CommandeFournisseur from './CommandeFournisseur';
 import CommandeDistributeur from './CommandeDistributeur';
 import FournisseurToolbar from './FournisseurToolbar';
+import FinalisationDetails from './FinalisationDetails';
 import styles from './styles.css';
 import { addDestinataire } from 'containers/AdminCommunication/actions';
 
@@ -31,6 +32,7 @@ class DetailsParFournisseur extends Component {
     offres: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
+    finalisation: PropTypes.object,
     produits: PropTypes.array.isRequired,
     auth: PropTypes.object.isRequired,
     pushState: PropTypes.func.isRequired,
@@ -38,17 +40,32 @@ class DetailsParFournisseur extends Component {
     addDestinataire: PropTypes.func.isRequired,
   };
 
-  handleContacterAcheteurs = (type) => {
+  constructor(props) {
+    super(props);
+    const { finalisation } = this.props;
+    this.state = {
+      // eslint-disable-next-line
+      viewFinalisation: finalisation ? true : false,
+    };
+  }
+
+  componentWillReceiveProps = nextProps => {
+    if (this.props.params.commandeId !== nextProps.params.commandeId) {
+      // eslint-disable-next-line
+      this.setState({ viewFinalisation: nextProps.finalisation ? true : false });
+    }
+  };
+
+  handleContacterAcheteurs = type => {
     const { utilisateurs, commandeUtilisateurs } = this.props;
     utilisateurs
-      .filter((u) => commandeUtilisateurs.find(cu => cu.utilisateurId === u.id))
-      .forEach((utilisateur) => {
+      .filter(u => commandeUtilisateurs.find(cu => cu.utilisateurId === u.id))
+      .forEach(utilisateur => {
         const { telPortable, email, nom, prenom } = utilisateur;
         const identite = `${capitalize(prenom)} ${nom.toUpperCase()}`;
         if (type === 'email' && email) {
           this.props.addDestinataire({ email, id: utilisateur.id, identite });
         } else if (type === 'sms' && telPortable) {
-          console.log(telPortable, utilisateur.id);
           this.props.addDestinataire({ telPortable, id: utilisateur.id, identite });
         }
       });
@@ -65,7 +82,11 @@ class DetailsParFournisseur extends Component {
       params,
       auth,
       pushState,
+      finalisation,
     } = this.props;
+
+    const { viewFinalisation } = this.state;
+
     const { commandeId, relaiId } = params;
 
     const totaux = calculeTotauxCommande({
@@ -87,45 +108,56 @@ class DetailsParFournisseur extends Component {
             pushState={pushState}
             commandeId={commandeId}
             distribuee={distribuee}
+            finalisee={typeof finalisation === 'object'}
             validate={this.props.handleValidate}
             contacterAcheteurs={this.handleContacterAcheteurs}
           />}
-        <div className={`col-md-6 ${styles.totalDistrib}`}>
+        <div className={`col-md-4 ${styles.totalDistrib}`}>
           Total Commande:{' '}
           <strong>{parseFloat(totaux.prix).toFixed(2)} €</strong>
         </div>
-        <div className={`col-md-6 ${styles.totalDistrib}`}>
+        <div className={`col-md-4 ${styles.totalDistrib}`}>
           Total Distributeur:{' '}
           <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
         </div>
-        <div className={`col-md-12 ${styles.listeCommandes}`}>
-          {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
-            const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
-            return (
-              <div className="col-md-12">
-                <CommandeFournisseur
-                  key={idx}
-                  fournisseur={fournisseur}
-                  produits={pdts}
-                  commandeContenus={commandeContenus}
-                  contenus={contenus}
-                  offres={offres}
-                  commandeId={commandeId}
-                />
-              </div>
-            );
-          })}
-          <CommandeDistributeur
-            key={'1x'}
-            fournisseur={fournisseurs[0]}
-            produits={produits}
-            commandeContenus={commandeContenus}
-            contenus={contenus}
-            offres={offres}
-            commandeId={commandeId}
-            noFiltre
-          />
+        <div className={`col-md-4 ${styles.totalDistrib}`}>
+          {finalisation &&
+            <RaisedButton
+              label={`Afficher ${viewFinalisation ? 'la finalisation' : 'les détails'}`}
+              fullWidth
+              onClick={() => this.setState({ viewFinalisation: !this.state.viewFinalisation })}
+            />}
         </div>
+        {viewFinalisation && <FinalisationDetails destinataires={finalisation.destinataires} />}
+        {!viewFinalisation &&
+          <div className={`col-md-12 ${styles.listeCommandes}`}>
+            {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
+              const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
+              return (
+                <div className="col-md-12">
+                  <CommandeFournisseur
+                    key={idx}
+                    fournisseur={fournisseur}
+                    produits={pdts}
+                    commandeContenus={commandeContenus}
+                    contenus={contenus}
+                    offres={offres}
+                    commandeId={commandeId}
+                  />
+                </div>
+              );
+            })}
+            <CommandeDistributeur
+              key={'1x'}
+              fournisseur={fournisseurs[0]}
+              produits={produits}
+              commandeContenus={commandeContenus}
+              contenus={contenus}
+              offres={offres}
+              commandeId={commandeId}
+              noFiltre
+            />
+          </div>}
       </div>
     );
   }
@@ -138,12 +170,13 @@ const mapStateToProps = createStructuredSelector({
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    pushState: push,
-    addDestinataire,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      pushState: push,
+      addDestinataire,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);
