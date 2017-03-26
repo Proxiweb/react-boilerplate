@@ -74,7 +74,9 @@ class CommnandeParProduitFournisseur extends Component {
       colorTrendingDown: 'green',
       tarif,
       produit,
-      handleChangeQte: !readOnly && offre.quantiteAjustable && !contenu.quantiteAjustee ? this.handleChangeQte : undefined,
+      handleChangeQte: !readOnly && offre.quantiteAjustable && !contenu.quantiteAjustee
+        ? this.handleChangeQte
+        : undefined,
       handleResetQuantite: !readOnly && contenu.quantiteAjustee ? this.handleResetQuantite : undefined,
     });
 
@@ -92,13 +94,14 @@ class CommnandeParProduitFournisseur extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    diminuer: diminuerCommandeContenu,
-    supprimer: supprimerCommandeContenu,
-    modifierCommandeContenu,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      diminuer: diminuerCommandeContenu,
+      supprimer: supprimerCommandeContenu,
+      modifierCommandeContenu,
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(CommnandeParProduitFournisseur);
