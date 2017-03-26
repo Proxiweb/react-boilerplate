@@ -22,12 +22,12 @@ const FondsOkMessage = ({ color, montant, balance }) => {
         <div className="col-md-10">
           <span style={lineStyle}>
             {'Votre porte-monnaie présente un solde de '}<strong>{balance.toFixed(2)} €</strong><br />
-          {'Il sera débité de '}<strong>{montant} €</strong> quand cette commande sera distribuée.
+            {'Il sera débité de '}<strong>{montant} €</strong> quand cette commande sera distribuée.
           </span>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default FondsOkMessage;

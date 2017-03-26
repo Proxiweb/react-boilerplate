@@ -10,3 +10,21 @@
 }
 
 .nonDispo { color: red; }
+
+.accueilLink {
+  text-align: center;
+  margin-top: 1em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: white;
+}
+
+.accueilLink a {
+  text-decoration: none;
+  color: white;
+  text-shadow: 1px;
+}
+
+.accueilLink a:hover {
+  text-decoration: underline;
+}

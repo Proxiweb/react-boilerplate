@@ -1,11 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash/round';
-
+import { Link } from 'react-router';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import FondsOkMessage from './FondsOkMessage';
 import FondsWarningMessage from './FondsWarningMessage';
 
-export default class Paiement extends Component { // eslint-disable-line
+import styles from './styles.css';
+
+export default class Paiement extends Component {
+  // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
@@ -13,7 +16,7 @@ export default class Paiement extends Component { // eslint-disable-line
     commandeId: PropTypes.string,
     dateLimite: PropTypes.string.isRequired,
     balance: PropTypes.number.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -25,17 +28,20 @@ export default class Paiement extends Component { // eslint-disable-line
     const { prix, recolteFond } = calculeTotauxCommande({ contenus, commandeContenus, offres, commandeId });
     const montant = round(prix + recolteFond, 2).toFixed(2);
 
-    return balance > montant
-      ? <FondsOkMessage
-          color={muiTheme.appBar.color}
-          montant={montant}
-          balance={balance}
-        />
-      : <FondsWarningMessage
-          color={muiTheme.palette.warningColor}
-          montant={montant}
-          balance={balance}
-          dateLimite={dateLimite}
-        />;
-    }
+    return (
+      <div>
+        {balance > montant
+          ? <FondsOkMessage color={muiTheme.appBar.color} montant={montant} balance={balance} />
+          : <FondsWarningMessage
+              color={muiTheme.palette.warningColor}
+              montant={montant}
+              balance={balance}
+              dateLimite={dateLimite}
+            />}
+        <div className={styles.accueilLink}>
+          <span>{'<< '}<Link to="/">{"Retour à l'accueil"}</Link> {' <<'}</span>
+        </div>
+      </div>
+    );
   }
+}
