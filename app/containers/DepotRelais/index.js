@@ -25,6 +25,7 @@ class DepotRelais extends Component {
     deposer: PropTypes.func.isRequired,
     totalCommande: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
+    commandeId: PropTypes.string,
     utilisateurId: PropTypes.string,
     roles: PropTypes.array.isRequired,
     open: PropTypes.bool.isRequired,
@@ -56,13 +57,16 @@ class DepotRelais extends Component {
   };
 
   handleDeposer = () => {
-    const { deposer, utilisateur, relaiId } = this.props;
+    const { deposer, utilisateur, relaiId, commandeId } = this.props;
     const { montant } = this.state;
     const type = 'depot_relais';
-
+    const infosSupplement = { relaiId };
+    if (commandeId) {
+      infosSupplement.commandeId = commandeId;
+    }
     const depot = {
       utilisateurId: utilisateur.id,
-      infosSupplement: { relaiId },
+      infosSupplement,
       montant,
       type,
     };

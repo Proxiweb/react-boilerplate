@@ -96,6 +96,7 @@ class ListeAcheteurs extends Component {
               totalCommande={utilisateurTotalCommande}
               relaiId={relaiId}
               depot={utilisateurDepot}
+              commandeId={commandeId}
               open={this.state.depot}
               onRequestClose={this.handleClose}
               stellarKeys={stellarKeys}
