@@ -37,22 +37,17 @@ class DepotsRelais extends Component {
     }
   };
 
-  handleChangeList = (event, value) =>
-    this.setState({ bordereauSelected: value });
+  handleChangeList = (event, value) => this.setState({ bordereauSelected: value });
 
   render() {
     const { depots, utilisateurs } = this.props;
     const { bordereauSelected } = this.state;
 
     const depotsAvecInfos = depots.filter(
-      d =>
-        d.type === 'depot_relais' && d.infosSupplement && d.infosSupplement.ref,
+      d => d.type === 'depot_relais' && d.infosSupplement && d.infosSupplement.ref
     );
     const actuels = depots.filter(
-      d =>
-        d.type === 'depot_relais' &&
-        d.infosSupplement &&
-        !d.infosSupplement.ref,
+      d => d.type === 'depot_relais' && d.infosSupplement && !d.infosSupplement.ref
     );
     const borderauxG = groupBy(depotsAvecInfos, d => d.infosSupplement.ref);
 
@@ -62,6 +57,7 @@ class DepotsRelais extends Component {
           utilisateur: utilisateurs[b.utilisateurId],
           montant: b.montant,
           fait: b.transfertEffectue,
+          infosSupplement: b.infosSupplement,
         }))
       : null;
     return (
@@ -69,16 +65,11 @@ class DepotsRelais extends Component {
         <div className="col-md-2">
           {depots &&
             Object.keys(utilisateurs).length > 0 &&
-            <SelectableList
-              value={bordereauSelected}
-              onChange={this.handleChangeList}
-            >
+            <SelectableList value={bordereauSelected} onChange={this.handleChangeList}>
               {Object.keys(borderauxG)
                 .slice()
                 .sort((a, b) => a < b || a === 'actuel')
-                .map((key, idx) => (
-                  <ListItem key={idx} primaryText={key} value={key} />
-                ))}
+                .map((key, idx) => <ListItem key={idx} primaryText={key} value={key} />)}
             </SelectableList>}
         </div>
         <div className="col-md-6 col-md-offset-2">
@@ -97,11 +88,12 @@ const mapStateToProps = createStructuredSelector({
   depots: selectDepots(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadDepots: loadDepotsRelais,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadDepots: loadDepotsRelais,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepotsRelais);

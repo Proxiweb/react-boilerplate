@@ -11,13 +11,14 @@ import {
   TableFooter,
 } from 'material-ui/Table';
 
-export default class DepotsRelais extends Component { // eslint-disable-line
+export default class DepotsRelais extends Component {
+  // eslint-disable-line
   static propTypes = {
     depots: PropTypes.array.isRequired,
-  }
+  };
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-  }
+  };
 
   render() {
     const { depots } = this.props;
@@ -25,9 +26,7 @@ export default class DepotsRelais extends Component { // eslint-disable-line
     const total = depots.reduce((memo, depot) => memo + depot.montant, 0);
     const align = { textAlign: 'right' };
     return (
-      <Table
-        height={depots.length > 4 ? 200 : null}
-      >
+      <Table height={depots.length > 4 ? 200 : null}>
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}
@@ -36,18 +35,24 @@ export default class DepotsRelais extends Component { // eslint-disable-line
         >
           <TableRow style={{ color: 'black' }}>
             <TableHeaderColumn>Utilisateur</TableHeaderColumn>
+            <TableHeaderColumn>Code Commande</TableHeaderColumn>
             <TableHeaderColumn style={align}>Montant</TableHeaderColumn>
             <TableHeaderColumn style={align}>Fait</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
-          {depots.map((depot, idx) =>
+          {depots.map((depot, idx) => (
             <TableRow key={idx} selectable={false}>
-              <TableRowColumn>{capitalize(depot.utilisateur.prenom)} <strong>{depot.utilisateur.nom.toUpperCase()}</strong></TableRowColumn>
+              <TableRowColumn>
+                {capitalize(depot.utilisateur.prenom)} <strong>{depot.utilisateur.nom.toUpperCase()}</strong>
+              </TableRowColumn>
+              <TableRowColumn style={align}>
+                {depot.infosSupplement.commandeId ? depot.infosSupplement.commandeId : 'aucun'}
+              </TableRowColumn>
               <TableRowColumn style={align}>{parseFloat(depot.montant).toFixed(2)}</TableRowColumn>
               <TableRowColumn style={align}>{depot.fait ? 'oui' : 'non'}</TableRowColumn>
             </TableRow>
-          )}
+          ))}
         </TableBody>
         <TableFooter>
           <TableRow>
