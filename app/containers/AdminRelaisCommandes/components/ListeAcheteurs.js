@@ -5,6 +5,7 @@ import { List, makeSelectable } from 'material-ui/List';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import RaisedButton from 'material-ui/RaisedButton';
+import Subheader from 'material-ui/Subheader';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import DepotRelais from 'containers/DepotRelais';
 import { selectStellarKeys } from 'containers/App/selectors';
@@ -72,8 +73,11 @@ class ListeAcheteurs extends Component {
       .map(cu => ({
         ...cu,
         utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
-        livraison: livraisons[cu.livraisonId],
-        debutLivraison: livraisons[cu.livraisonId]
+        debutLivraisonISO: livraisons[cu.livraisonId]
+          ? moment(livraisons[cu.livraisonId].debut)
+              .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
+              .toISOString() : null,
+        debutLivraisonUnix: livraisons[cu.livraisonId]
           ? moment(livraisons[cu.livraisonId].debut)
               .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
               .unix()
@@ -81,10 +85,10 @@ class ListeAcheteurs extends Component {
       }))
       .slice()
       .sort(
-        (cu1, cu2) => cu1.debutLivraison > cu2.debutLivraison && cu1.utilisateur.nom > cu2.utilisateur.nom
+        (cu1, cu2) => cu1.debutLivraisonUnix > cu2.debutLivraisonUnix && cu1.utilisateur.nom > cu2.utilisateur.nom
       );
 
-    console.log(groupBy(acheteurs, 'debutLivraison'));
+    const acheteursGrp = groupBy(acheteurs, 'debutLivraisonISO');
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
@@ -117,24 +121,29 @@ class ListeAcheteurs extends Component {
         </div>
         <div className={`col-md-12 ${styles.listeAcheteurs}`}>
           <SelectableList value={utilisateurId}>
-            {acheteurs.map((cu, idx) => (
-              <ListeAcheteursItem
-                key={idx}
-                utilisateur={cu.utilisateur}
-                depots={depots}
-                commandeUtilisateur={cu}
-                value={cu.utilisateurId}
-                onClick={this.handleClick}
-                totaux={calculeTotauxCommande({
-                  contenus: contenus.filter(
-                    c => c.utilisateurId === cu.utilisateurId && c.commandeId === commandeId
-                  ),
-                  offres,
-                  commandeContenus,
-                  commandeId,
-                })}
-              />
-            ))}
+            {Object.keys(acheteursGrp).map(key =>
+              <div key={key}>
+                <Subheader>{moment(key).format('LL HH:mm')}</Subheader>
+                {acheteursGrp[key].map((cu, idx2) => (
+                  <ListeAcheteursItem
+                    key={idx2}
+                    utilisateur={cu.utilisateur}
+                    depots={depots}
+                    commandeUtilisateur={cu}
+                    value={cu.utilisateurId}
+                    onClick={this.handleClick}
+                    totaux={calculeTotauxCommande({
+                      contenus: contenus.filter(
+                        c => c.utilisateurId === cu.utilisateurId && c.commandeId === commandeId
+                      ),
+                      offres,
+                      commandeContenus,
+                      commandeId,
+                    })}
+                  />
+                ))}
+              </div>
+            )}
           </SelectableList>
         </div>
       </div>
