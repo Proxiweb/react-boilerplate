@@ -2,6 +2,8 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, makeSelectable } from 'material-ui/List';
+import moment from 'moment';
+import groupBy from 'lodash/groupBy';
 import RaisedButton from 'material-ui/RaisedButton';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import DepotRelais from 'containers/DepotRelais';
@@ -19,6 +21,7 @@ class ListeAcheteurs extends Component {
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     utilisateurs: PropTypes.array.isRequired,
+    livraisons: PropTypes.array.isRequired,
     depots: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -54,6 +57,7 @@ class ListeAcheteurs extends Component {
       commandeUtilisateurs,
       params: { commandeId, utilisateurId, relaiId },
       utilisateurs,
+      livraisons,
       stellarKeys,
       offres,
       commandeContenus,
@@ -61,7 +65,6 @@ class ListeAcheteurs extends Component {
     } = this.props;
 
     const { utilisateurDepot, utilisateurTotalCommande, utilisateurBalance } = this.state;
-
     const utilisateur = utilisateurs.find(u => u.id === utilisateurId);
     const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const acheteurs = commandeUtilisateurs
@@ -69,10 +72,19 @@ class ListeAcheteurs extends Component {
       .map(cu => ({
         ...cu,
         utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
+        livraison: livraisons[cu.livraisonId],
+        debutLivraison: livraisons[cu.livraisonId]
+          ? moment(livraisons[cu.livraisonId].debut)
+              .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
+              .unix()
+          : 0,
       }))
       .slice()
-      .sort((cu1, cu2) => cu1.utilisateur.nom > cu2.utilisateur.nom);
+      .sort(
+        (cu1, cu2) => cu1.debutLivraison > cu2.debutLivraison && cu1.utilisateur.nom > cu2.utilisateur.nom
+      );
 
+    console.log(groupBy(acheteurs, 'debutLivraison'));
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
@@ -115,7 +127,7 @@ class ListeAcheteurs extends Component {
                 onClick={this.handleClick}
                 totaux={calculeTotauxCommande({
                   contenus: contenus.filter(
-                    c => c.utilisateurId === cu.utilisateurId && c.commandeId === commandeId,
+                    c => c.utilisateurId === cu.utilisateurId && c.commandeId === commandeId
                   ),
                   offres,
                   commandeContenus,
