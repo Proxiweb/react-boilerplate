@@ -16,7 +16,6 @@ import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
 import runtime from 'offline-plugin/runtime';
 import styles from './styles.css';
 import Notifications from 'containers/Notifications';
