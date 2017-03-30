@@ -1,5 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
@@ -90,6 +91,7 @@ class AdminDetailsCommande extends Component {
     const { view } = this.state;
     return (
       <div className="row">
+        <Helmet title={`Commande ${commande.id}`} />
         <div className="col-md-4 col-lg-3">
           {!pending &&
             commandeUtilisateurs &&

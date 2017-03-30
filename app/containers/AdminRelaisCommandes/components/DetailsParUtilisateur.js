@@ -80,7 +80,7 @@ class DetailsParUtilisateur extends Component {
       .filter(c => c.utilisateurId === utilisateur.id);
 
     const depot = depots.find(
-      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais',
+      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais'
     );
 
     const totaux = calculeTotauxCommande({
@@ -94,7 +94,7 @@ class DetailsParUtilisateur extends Component {
     const totalCommande = round(totaux.prix + totaux.recolteFond, 2);
 
     const paiementOk = this.state.account ? credit >= totalCommande : false;
-
+    console.log(commandeUtilisateur);
     const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
       <div className={`row center-md ${styles.detailsParUtilisateur}`}>
@@ -102,7 +102,11 @@ class DetailsParUtilisateur extends Component {
         <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
           <div className="row">
             <div className="col-md">
-              <strong>{identite}</strong>
+              <strong>
+                {identite}
+                {commandeUtilisateur.createdAt &&
+                  ` passée le ${moment(commandeUtilisateur.createdAt).format(format)}`}
+              </strong>
             </div>
             <div className="col-md">
               <div className="row arround-md">
@@ -192,11 +196,12 @@ const mapStateToProps = createStructuredSelector({
   commandeStellarAdresse: selectCommandeStellarAdresse(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    pushState: push,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      pushState: push,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);
