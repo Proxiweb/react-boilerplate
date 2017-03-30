@@ -53,7 +53,7 @@ export default class DetailsCommande extends Component {
         selectable={selectable}
         multiSelectable={selectable}
         onCellHover={this.handleRowSelection}
-        height={contenusAgg.length > 4 ? 300 : null}
+        height={contenusAgg.length > 4 ? '300' : null}
       >
         <TableHeader
           displaySelectAll={selectable}
