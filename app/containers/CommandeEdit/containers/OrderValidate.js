@@ -226,6 +226,7 @@ class OrderValidate extends Component {
         {view === 'panier' &&
           !commande.dateLivraison &&
           commande.id &&
+          moment(commande.createdAt).add(1, 'minutes').isBefore(moment()) &&
           !commande.modifiee &&
           this.showCancel()}
         {commande.id &&

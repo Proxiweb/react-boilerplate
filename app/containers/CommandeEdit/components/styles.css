@@ -16,12 +16,12 @@
   margin-top: 1em;
   font-size: 1.2em;
   font-weight: bold;
-  color: white;
+  color: black;
 }
 
 .accueilLink a {
   text-decoration: none;
-  color: white;
+  color: black;
   text-shadow: 1px;
 }
 
