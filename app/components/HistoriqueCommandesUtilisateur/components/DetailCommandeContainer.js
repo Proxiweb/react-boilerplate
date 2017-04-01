@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import DetailCommande from 'components/DetailCommande';
 import { loadCommandes } from 'containers/Commande/actions';
@@ -30,7 +31,7 @@ class DetailCommandeContainer extends Component {
   };
 
   componentDidMount() {
-    if (!this.isLoaded()) {
+    if (!this.isLoaded(this.props)) {
       this.props.loadCommandeById({ id: this.props.commandeId });
     }
   }
@@ -39,14 +40,14 @@ class DetailCommandeContainer extends Component {
     if (
       this.props.commandeId !== nextProps.commandeId || this.props.utilisateurId !== nextProps.utilisateurId
     ) {
-      if (!this.isLoaded()) {
+      if (!this.isLoaded(nextProps)) {
         this.props.loadCommandeById({ id: nextProps.commandeId });
       }
     }
   }
 
-  isLoaded = () => {
-    const { commandesUtilisateurs, commandeId, utilisateurId, contenus } = this.props;
+  isLoaded = (props) => {
+    const { commandesUtilisateurs, commandeId, utilisateurId, contenus } = props;
 
     if (!commandesUtilisateurs || !contenus) return false;
 
@@ -55,10 +56,10 @@ class DetailCommandeContainer extends Component {
         commandesUtilisateurs[id].commandeId === commandeId &&
         commandesUtilisateurs[id].utilisateurId === utilisateurId
     );
-    return commandeUtilisateurId &&
-      Object.keys(contenus).filter(
-        id => contenus[id].commandeUtilisateurId === commandeUtilisateurId
-      ).length > 0;
+
+    return commandeUtilisateurId && Object.keys(contenus).filter(
+      id => contenus[id].commandeUtilisateurId === commandeUtilisateurId
+    ).length > 0;
   };
 
   render() {
@@ -100,11 +101,13 @@ class DetailCommandeContainer extends Component {
       .filter(id => contenus[id].commandeId === commandeId)
       .reduce((m, id) => ({ ...m, [id]: contenus[id] }), {});
 
+    const contenusUtilisateur = Object.keys(contenus)
+      .filter(id => contenus[id].commandeUtilisateurId === commandeUtilisateur.id)
+      .map(id => contenus[id]);
+
     return (
       <DetailCommande
-        contenus={Object.keys(contenus)
-          .filter(id => contenus[id].commandeUtilisateurId === commandeUtilisateur.id)
-          .map(id => contenus[id])}
+        contenus={contenusUtilisateur}
         commandeContenus={commandeContenus}
         commandeId={commandeId}
         offres={offres}

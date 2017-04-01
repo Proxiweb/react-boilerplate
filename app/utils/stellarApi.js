@@ -5,7 +5,7 @@ import toml from 'toml';
 const getServer = () => {
   switch (process.env.NODE_ENV) {
     case 'production':
-      StellarSdk.Network.usePublicNetwork();
+      StellarSdk.Network.useTestNetwork();
       return new StellarSdk.Server('https://horizon.stellar.org'); // -testnet
     case 'development':
     default:
@@ -33,6 +33,17 @@ const loadPayments = (accountId, limit = 10) =>
       .limit(limit)
       .call()
       .then(payments => resolve(payments.records))
+      .catch(err => reject(err)));
+
+const loadEffects = (accountId, limit = 10) =>
+  new Promise((resolve, reject) =>
+    getServer()
+      .effects()
+      .forAccount(accountId)
+      .order('desc')
+      .limit(limit)
+      .call()
+      .then(effects => resolve(effects.records))
       .catch(err => reject(err)));
 
 const trust = (currencyCode, maxTrust, issuer, stellarKeys) => new Promise((resolve, reject) => {
@@ -123,4 +134,5 @@ module.exports = {
   loadAccount,
   loadPayments,
   getServer,
+  loadEffects,
 };
