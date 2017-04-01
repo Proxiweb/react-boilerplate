@@ -132,6 +132,7 @@ class DetailsParUtilisateur extends Component {
             commandeId={params.commandeId}
             offres={offres}
             roles={roles}
+            souligneQte
           />
           <DetailCommandeTotal totaux={totaux} />
           {false &&

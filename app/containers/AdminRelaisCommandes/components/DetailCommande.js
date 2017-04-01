@@ -14,6 +14,7 @@ export default class DetailsCommande extends Component {
     commandeContenus: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
     selectable: PropTypes.bool.isRequired,
+    souligneQte: PropTypes.bool.isRequired,
   };
 
   static contextTypes = {
@@ -35,15 +36,15 @@ export default class DetailsCommande extends Component {
       commandeId,
       offres,
       roles,
+      souligneQte,
     } = this.props;
 
     const grouped = groupBy(contenus, 'offreId');
-    const contenusAgg = Object.keys(grouped)
-      .map(offreId =>
-        grouped[offreId].reduce(
-          (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
-          { offreId, quantite: 0, qteRegul: 0 },
-        ));
+    const contenusAgg = Object.keys(grouped).map(offreId =>
+      grouped[offreId].reduce(
+        (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
+        { offreId, quantite: 0, qteRegul: 0 }
+      ));
 
     const { muiTheme } = this.context;
     const isAdmin = includes(roles, 'ADMIN');
@@ -104,6 +105,7 @@ export default class DetailsCommande extends Component {
                     offre={offres[contenuComplet.offreId]}
                     commandeId={commandeId}
                     readOnly={!isAdmin}
+                    souligneQte={souligneQte}
                   />
                 );
               })}

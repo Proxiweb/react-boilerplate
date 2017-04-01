@@ -40,3 +40,8 @@
   width: 150px;
   text-align: right;
 }
+
+.souligneQte {
+  font-weight: bold;
+  color: blue;
+}

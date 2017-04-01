@@ -27,56 +27,52 @@ const buildCommandeRow = (
     idx,
     handleChangeQte,
     handleResetQuantite,
-  },
+    souligneQte,
+  }
 ) => [
-  (
-    <TableRowColumn className={styles.bigCol} key={`${idx}1`}>
-      <span>
-        {truncate(buildNomProduit(produit, offre), { length: 35 })}
-      </span>
-      {tarifEnBaisse &&
-        <TrendingDownIcon
-          style={{ verticalAlign: 'middle', color: colorTrendingDown }}
-          tooltip="Tarif en baisse"
-        />}
-    </TableRowColumn>
-  ),
-  (
-    <TableRowColumn className={styles.smallCol} key={`${idx}2`}>
-      {(parseInt(tarif.prix + tarif.recolteFond, 10) / 100).toFixed(2)}
-      {tarifEnBaisse &&
-        <span style={{ color: 'red' }}>
-          {' '}
-          <s>
-            {(parseInt(offre.tarifications[0].prix + offre.tarifications[0].recolteFond, 10) / 100).toFixed(
-              2,
-            )}
-          </s>
-        </span>}
-    </TableRowColumn>
-  ),
-  (
-    <TableRowColumn className={styles.smallCol} key={`${idx}3`}>
-      {!handleChangeQte ? contenu.quantite : <button onClick={handleChangeQte}>{contenu.quantite}</button>}
-      {handleResetQuantite &&
-        <button title="Revenir à la quantité initiale" onClick={handleResetQuantite}>x</button>}
-    </TableRowColumn>
-  ),
-  (
-    <TableRowColumn className={styles.smallCol} key={`${idx}4`}>
-      {round((tarif.prix + tarif.recolteFond) * (contenu.quantite + contenu.qteRegul) / 100, 2).toFixed(2)}
-      {tarifEnBaisse &&
-        <span style={{ color: 'red' }}>
-          {' '}
-          <s>
-            {round(
-              (offre.tarifications[0].prix + offre.tarifications[0].recolteFond) * contenu.quantite / 100,
-              2,
-            ).toFixed(2)}
-          </s>
-        </span>}
-    </TableRowColumn>
-  ),
+  <TableRowColumn className={styles.bigCol} key={`${idx}1`}>
+    <span>
+      {truncate(buildNomProduit(produit, offre), { length: 35 })}
+    </span>
+    {tarifEnBaisse &&
+      <TrendingDownIcon
+        style={{ verticalAlign: 'middle', color: colorTrendingDown }}
+        tooltip="Tarif en baisse"
+      />}
+  </TableRowColumn>,
+  <TableRowColumn className={styles.smallCol} key={`${idx}2`}>
+    {(parseInt(tarif.prix + tarif.recolteFond, 10) / 100).toFixed(2)}
+    {tarifEnBaisse &&
+      <span style={{ color: 'red' }}>
+        {' '}
+        <s>
+          {(parseInt(offre.tarifications[0].prix + offre.tarifications[0].recolteFond, 10) / 100).toFixed(2)}
+        </s>
+      </span>}
+  </TableRowColumn>,
+  <TableRowColumn
+    className={
+      `${styles.smallCol} ${souligneQte && contenu.quantite > 1 && Number.isInteger(contenu.quantite) ? styles.souligneQte : ''}`
+    }
+    key={`${idx}3`}
+  >
+    {!handleChangeQte ? contenu.quantite : <button onClick={handleChangeQte}>{contenu.quantite}</button>}
+    {handleResetQuantite &&
+      <button title="Revenir à la quantité initiale" onClick={handleResetQuantite}>x</button>}
+  </TableRowColumn>,
+  <TableRowColumn className={styles.smallCol} key={`${idx}4`}>
+    {round((tarif.prix + tarif.recolteFond) * (contenu.quantite + contenu.qteRegul) / 100, 2).toFixed(2)}
+    {tarifEnBaisse &&
+      <span style={{ color: 'red' }}>
+        {' '}
+        <s>
+          {round(
+            (offre.tarifications[0].prix + offre.tarifications[0].recolteFond) * contenu.quantite / 100,
+            2
+          ).toFixed(2)}
+        </s>
+      </span>}
+  </TableRowColumn>,
 ];
 
 export default buildCommandeRow;

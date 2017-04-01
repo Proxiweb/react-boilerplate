@@ -55,12 +55,13 @@ class CommnandeParProduitFournisseur extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    diminuer: diminuerCommandeContenu,
-    supprimer: supprimerCommandeContenu,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      diminuer: diminuerCommandeContenu,
+      supprimer: supprimerCommandeContenu,
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(CommnandeParProduitFournisseur);

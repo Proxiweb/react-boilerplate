@@ -18,6 +18,7 @@ class CommnandeParProduitFournisseur extends Component {
   static propTypes = {
     contenu: PropTypes.object.isRequired,
     readOnly: PropTypes.bool.isRequired,
+    souligneQte: PropTypes.bool.isRequired,
     produit: PropTypes.object.isRequired,
     qteTotalOffre: PropTypes.number.isRequired,
     offre: PropTypes.object.isRequired,
@@ -62,6 +63,7 @@ class CommnandeParProduitFournisseur extends Component {
       qteTotalOffre,
       idx,
       readOnly,
+      souligneQte,
     } = this.props;
 
     const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
@@ -78,6 +80,7 @@ class CommnandeParProduitFournisseur extends Component {
         ? this.handleChangeQte
         : undefined,
       handleResetQuantite: !readOnly && contenu.quantiteAjustee ? this.handleResetQuantite : undefined,
+      souligneQte,
     });
 
     return (
