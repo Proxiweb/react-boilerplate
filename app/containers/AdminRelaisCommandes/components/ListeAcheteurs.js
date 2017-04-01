@@ -84,7 +84,6 @@ class ListeAcheteurs extends Component {
         (cu1, cu2) => cu1.debutLivraison > cu2.debutLivraison && cu1.utilisateur.nom > cu2.utilisateur.nom
       );
 
-    console.log(groupBy(acheteurs, 'debutLivraison'));
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>

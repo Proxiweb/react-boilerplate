@@ -1,5 +1,5 @@
 .etatCommandeUtilisateur {
-  margin-bottom: 1em;
+  margin: 2em 0;
 }
 
 .totalCommande {
@@ -36,7 +36,7 @@
 
 .detailsParFournisseur,
 .detailsParUtilisateur {
-  padding: 2em;
+  padding: 0.5em 2em;
 }
 
 .listeAcheteurs {

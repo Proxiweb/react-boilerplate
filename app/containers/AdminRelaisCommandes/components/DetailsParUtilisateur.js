@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import Helmet from 'react-helmet';
 import round from 'lodash/round';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
@@ -26,6 +27,7 @@ import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
 import LivraisonCommande from './LivraisonCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import StellarAccount from 'components/StellarAccount';
+import HistoriqueCommandeUtilisateur from './HistoriqueCommandeUtilisateur';
 
 // eslint-disable-next-line
 class DetailsParUtilisateur extends Component {
@@ -49,11 +51,12 @@ class DetailsParUtilisateur extends Component {
     super(props);
     this.state = {
       account: null,
+      view: 0,
     };
   }
 
   handleAccountLoaded = account => {
-    this.setState({ account });
+    this.setState({ ...this.state, account });
   };
 
   render() {
@@ -94,94 +97,107 @@ class DetailsParUtilisateur extends Component {
     const totalCommande = round(totaux.prix + totaux.recolteFond, 2);
 
     const paiementOk = this.state.account ? credit >= totalCommande : false;
-    console.log(commandeUtilisateur);
+
     const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
       <div className={`row center-md ${styles.detailsParUtilisateur}`}>
         <Helmet title={`Commande de ${identite}`} />
-        <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
-          <div className="row">
-            <div className="col-md">
-              <strong>
-                {identite}
-                {commandeUtilisateur.createdAt &&
-                  ` passée le ${moment(commandeUtilisateur.createdAt).format(format)}`}
-              </strong>
-            </div>
-            <div className="col-md">
-              <div className="row arround-md">
+        <Tabs>
+          <Tab label="Détail commande">
+            <div className={`col-md-12 ${styles.etatCommandeUtilisateur}`}>
+              <div className="row">
                 <div className="col-md">
-                  {commandeUtilisateur.datePaiement
-                    ? `Payée le ${moment(commandeUtilisateur.datePaiement).format(format)}`
-                    : 'Non payée'}
+                  <strong>
+                    {identite}
+                    {commandeUtilisateur.createdAt &&
+                      ` passée le ${moment(commandeUtilisateur.createdAt).format(format)}`}
+                  </strong>
                 </div>
                 <div className="col-md">
-                  {commandeUtilisateur.dateLivraison
-                    ? `Livrée le ${moment(commandeUtilisateur.dateLivraison).format(format)}`
-                    : 'Non livrée'}
+                  <div className="row arround-md">
+                    <div className="col-md">
+                      {commandeUtilisateur.datePaiement
+                        ? `Payée le ${moment(commandeUtilisateur.datePaiement).format(format)}`
+                        : 'Non payée'}
+                    </div>
+                    <div className="col-md">
+                      {commandeUtilisateur.dateLivraison
+                        ? `Livrée le ${moment(commandeUtilisateur.dateLivraison).format(format)}`
+                        : 'Non livrée'}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="col-md-12">
-          <DetailCommande
-            contenus={contenusUtilisateur}
-            commandeContenus={commandeContenus.map(key => contenus[key])}
-            produits={produits}
-            commandeId={params.commandeId}
-            offres={offres}
-            roles={roles}
-            souligneQte
-          />
-          <DetailCommandeTotal totaux={totaux} />
-          {false &&
-            <CommandePaiementsUtilisateur
-              adresseStellarUtilisateur={utilisateurStellarAdresse}
-              adresseStellarCommande={commandeStellarAdresse}
-            />}
-        </div>
-        {!commandeUtilisateur.dateLivraison &&
-          paiementOk &&
-          <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />}
-        {!commandeUtilisateur.datePaiement &&
-          moment(commande.dateCommande).isAfter(moment()) &&
-          <div className="col-md-12" style={{ marginTop: '1em' }}>
-            <div className="row center-md">
-              <div className="col-md-4">
-                <RaisedButton
-                  fullWidth
-                  primary
-                  label="Modifier"
-                  onClick={() =>
-                    pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)}
-                />
-              </div>
-              <div className="col-md-4">
-                <RaisedButton
-                  fullWidth
-                  secondary
-                  label="Annuler"
-                  onClick={() =>
-                    pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`)}
-                />
-              </div>
+            <div className="col-md-12">
+              <DetailCommande
+                contenus={contenusUtilisateur}
+                commandeContenus={commandeContenus.map(key => contenus[key])}
+                produits={produits}
+                commandeId={params.commandeId}
+                offres={offres}
+                roles={roles}
+                souligneQte
+              />
+              <DetailCommandeTotal totaux={totaux} />
+              {false &&
+                <CommandePaiementsUtilisateur
+                  adresseStellarUtilisateur={utilisateurStellarAdresse}
+                  adresseStellarCommande={commandeStellarAdresse}
+                />}
             </div>
-          </div>}
-        <div className="col-md-6" style={{ marginTop: '1em' }}>
-          {utilisateur.stellarKeys &&
-            <StellarAccount
-              stellarAdr={utilisateur.stellarKeys.adresse}
-              onAccountLoaded={this.handleAccountLoaded}
-            />}
-          {!utilisateur.stellarKeys && <h3>Pas de compte</h3>}
-        </div>
-        <div className="col-md-6" style={{ marginTop: '1em' }}>
-          <h3>
-            {this.state.account && !paiementOk && <p>Manque {round(totalCommande - credit, 2)} €</p>}
-            {this.state.account && paiementOk && <p>Restera {round(credit - totalCommande, 2)} €</p>}
-          </h3>
-        </div>
+            {!commandeUtilisateur.dateLivraison &&
+              paiementOk &&
+              <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />}
+            {!commandeUtilisateur.datePaiement &&
+              moment(commande.dateCommande).isAfter(moment()) &&
+              <div className="col-md-12" style={{ marginTop: '1em' }}>
+                <div className="row center-md">
+                  <div className="col-md-4">
+                    <RaisedButton
+                      fullWidth
+                      primary
+                      label="Modifier"
+                      onClick={() =>
+                        pushState(
+                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
+                        )}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <RaisedButton
+                      fullWidth
+                      secondary
+                      label="Annuler"
+                      onClick={() =>
+                        pushState(
+                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
+                        )}
+                    />
+                  </div>
+                </div>
+              </div>}
+            <div className="col-md-6" style={{ marginTop: '1em' }}>
+              {utilisateur.stellarKeys &&
+                <StellarAccount
+                  stellarAdr={utilisateur.stellarKeys.adresse}
+                  onAccountLoaded={this.handleAccountLoaded}
+                />}
+              {!utilisateur.stellarKeys && <h3>Pas de compte</h3>}
+            </div>
+            <div className="col-md-6" style={{ marginTop: '1em' }}>
+              <h3>
+                {this.state.account && !paiementOk && <p>Manque {round(totalCommande - credit, 2)} €</p>}
+                {this.state.account && paiementOk && <p>Restera {round(credit - totalCommande, 2)} €</p>}
+              </h3>
+            </div>
+
+          </Tab>
+          <Tab label="Historique commandes">
+            <HistoriqueCommandeUtilisateur utilisateurId={utilisateur.id} />
+          </Tab>
+          <Tab label="Comptes" />
+        </Tabs>
       </div>
     );
   }
