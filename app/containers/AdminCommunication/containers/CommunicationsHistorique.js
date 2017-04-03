@@ -3,7 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { List, ListItem } from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
+import DoneIcon from 'material-ui/svg-icons/action/done';
+import WaitIcon from 'material-ui/svg-icons/action/query-builder';
+import TouchIcon from 'material-ui/svg-icons/action/touch-app';
+
+import EyeIcon from 'material-ui/svg-icons/action/visibility';
+import FailIcon from 'material-ui/svg-icons/action/report-problem';
 import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 import classnames from 'classnames';
@@ -13,16 +20,24 @@ import Panel from 'components/Panel';
 import styles from './styles.css';
 const bigIcon = { height: 100, width: 100 };
 
+const etatIcons = {
+  attente: () => <WaitIcon />,
+  succes: () => <DoneIcon />,
+  echec: () => <FailIcon />,
+  open: () => <EyeIcon />,
+  click: () => <TouchIcon />,
+};
+
 class CommunicationHistorique extends Component {
   static propTypes = {
     communications: PropTypes.array.isRequired,
     load: PropTypes.func.isRequired,
     del: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
     idSelected: null,
-  }
+  };
 
   componentDidMount() {
     const { communications, load } = this.props;
@@ -31,80 +46,105 @@ class CommunicationHistorique extends Component {
     }
   }
 
+  handleSuppression = id => {
+    if (confirm('Supprimer cette communication ?')) {
+      this.props.del(id);
+    }
+  };
+
   render() {
-    const { communications, del } = this.props;
+    const { communications } = this.props;
     const { idSelected } = this.state;
-    const communication = idSelected ? communications.find((d) => d.id === idSelected) : null;
+    const communication = idSelected ? communications.find(d => d.id === idSelected) : null;
 
     return (
-      <div className="row">
-        <div className={classnames('col-md-2', styles.panel)}>
-          <List>
-            {communications.map((com, idx) =>
-              <ListItem key={idx} primaryText={com.objet} onClick={() => this.setState({ idSelected: com.id })} />
-            )}
-          </List>
-        </div>
-        <div className={classnames('col-md-4', styles.panel)}>
-          { !idSelected && <p style={{ textAlign: 'center' }}>Sélectionnez une communication</p>}
-          { idSelected && (
+      <Paper className={styles.panel}>
+        <div className="row">
+          <div className={`col-md-2 ${styles.scroll}`}>
             <List>
-              {communication.destinataires.map((d, idx) =>
-                <ListItem key={idx} primaryText={d.denomination} />
-              )}
+              {communications.map((com, idx) => (
+                <ListItem
+                  key={idx}
+                  primaryText={com.objet}
+                  onClick={() => this.setState({ idSelected: com.id })}
+                />
+              ))}
             </List>
-          )}
-        </div>
-        { idSelected && (
-          <div className={classnames('col-md-6', styles.panel, 'textCenter')}>
-            <h1>{communication.objet}</h1>
-            {communication.messageCourt && <Panel>
-              <div className="row">
-                <div className="col-md-4">
-                  <MessageIcon style={bigIcon} />
+          </div>
+          <div className={classnames('col-md-4', styles.scroll)}>
+            {!idSelected && <p style={{ textAlign: 'center' }}>Sélectionnez une communication</p>}
+            {idSelected &&
+              communication &&
+              <List>
+                {communication.destinataires.map((d, idx) => (
+                  <ListItem
+                    key={idx}
+                    primaryText={d.identite}
+                    leftIcon={d.telPortable ? <MessageIcon /> : <EmailIcon />}
+                    rightIcon={etatIcons[d.etat]()}
+                  />
+                ))}
+              </List>}
+          </div>
+          <div className={classnames('col-md-6', 'textCenter')}>
+            {idSelected && communication && <h1>{communication.objet}</h1>}
+            {idSelected &&
+              communication &&
+              communication.messageCourt &&
+              <Panel>
+                <div className="row">
+                  <div className="col-md-4">
+                    <MessageIcon style={bigIcon} />
+                  </div>
+                  <div className="col-md-8">
+                    {communication.messageCourt}
+                  </div>
                 </div>
-                <div className="col-md-8">
-                  {communication.messageCourt}
+              </Panel>}
+            {communication &&
+              communication.messageLong &&
+              <Panel>
+                <div className="row">
+                  <div className="col-md-4">
+                    <EmailIcon style={bigIcon} />
+                  </div>
+                  <div className="col-md-8">
+                    <p
+                      dangerouslySetInnerHTML={{ __html: communication.messageLong }} // eslint-disable-line
+                    />
+                  </div>
                 </div>
-              </div>
-            </Panel>}
-            {communication.messageLong && <Panel>
-              <div className="row">
-                <div className="col-md-4">
-                  <EmailIcon style={bigIcon} />
-                </div>
-                <div className="col-md-8">
-                  <p
-                    dangerouslySetInnerHTML={{ __html: communication.messageLong }} // eslint-disable-line
+              </Panel>}
+            {communication &&
+              <div className="row center-md">
+                <div className="col-md">
+                  <RaisedButton
+                    label="Supprimer"
+                    secondary
+                    style={{ marginTop: 20 }}
+                    onClick={() => this.handleSuppression(communication.id)}
+                    icon={<TrashIcon />}
                   />
                 </div>
-              </div>
-            </Panel>}
-            <div className="row center-md">
-              <div className="col-md">
-                <RaisedButton
-                  label="Supprimer"
-                  secondary
-                  style={{ marginTop: 20 }}
-                  onClick={() => del(communication.id)}
-                  icon={<TrashIcon />}
-                />
-              </div>
-            </div>
+              </div>}
           </div>
-        )}
-      </div>
+        </div>
+      </Paper>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   communications: state.admin ? state.admin.communication.datas : [],
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadCommunications,
-  del: deleteCommunication,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadCommunications,
+      del: deleteCommunication,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommunicationHistorique);

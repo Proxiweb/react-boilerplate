@@ -1,8 +1,4 @@
-import c, {
-  SET_MESSAGE,
-  ADD_DESTINATAIRE,
-  REMOVE_DESTINATAIRE,
-} from './constants';
+import c, { SET_MESSAGE, ADD_DESTINATAIRE, REMOVE_DESTINATAIRE } from './constants';
 import update from 'react-addons-update';
 import findIndex from 'lodash/findIndex';
 import assign from 'lodash/assign';
@@ -52,23 +48,21 @@ const changeDest = (state, destinataire) => {
     if (com.id !== destinataire.communicationId) return com;
     return {
       ...com,
-      destinataires: com.destinataires.map(
-        d => d.id === destinataire.id ? destinataire : d,
-      ),
+      destinataires: com.destinataires.map(d => d.id === destinataire.id ? destinataire : d),
     };
   });
 
   return { ...state, datas };
 };
 
-const deleteCom = state => state;
+const deleteCom = (state, id) => ({ ...state, datas: state.datas.filter(com => com.id !== id) });
 
 const adminCommunicationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case c.ASYNC_LOAD_COMMUNICATIONS_SUCCESS:
       return { ...state, datas: action.datas.communications };
     case c.ASYNC_DELETE_COMMUNICATION_SUCCESS:
-      return deleteCom(state, action);
+      return deleteCom(state, action.req.payload.id);
     case SET_MESSAGE:
       return { ...state, message: action.message };
     case ADD_DESTINATAIRE:

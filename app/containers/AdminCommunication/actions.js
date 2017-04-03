@@ -13,16 +13,17 @@ export const sendCommunication = (apiKey, datas) => ({
   method: 'post',
   datas: { ...datas, apiKey },
   msgSuccess: 'Message envoyé',
-  msgError: 'Erreur lors de l\'envoi',
+  msgError: "Erreur lors de l'envoi",
 });
 
-export const deleteCommunication = (id) => ({
+export const deleteCommunication = id => ({
   type: findActionType('delete_communication', c, 'START'),
   url: `communications/${id}`,
   method: 'del',
+  payload: { id },
 });
 
-export const setMessage = (message) => ({
+export const setMessage = message => ({
   type: SET_MESSAGE,
   message,
 });

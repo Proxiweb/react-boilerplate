@@ -3,21 +3,19 @@ import { connect } from 'react-redux';
 import CommunicationFormContainer from './containers/CommunicationFormContainer';
 import CommunicationsHistorique from './containers/CommunicationsHistorique';
 
-class AdminCommunication extends Component { // eslint-disable-line
+// eslint-disable-next-line
+class AdminCommunication extends Component {
   static propTypes = {
     communicationId: PropTypes.string.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-  }
+  };
 
   render() {
     if (this.props.communicationId === 'courante') return <CommunicationFormContainer />;
-    if (this.props.communicationId === 'passees') return <CommunicationsHistorique />;
-    return (
-      <div>Anciennes</div>
-    );
+    return <CommunicationsHistorique />;
   }
 }
 

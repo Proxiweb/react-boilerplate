@@ -1,8 +1,11 @@
 .panel {
-  background-color: white;
   padding: 1rem;
-  max-height: calc(100vh - 100px);
+  min-height: calc(100vh - 100px);
+}
+
+.scroll {
   overflow-y: scroll;
+  min-height: calc(100vh - 100px - 1rem);
 }
 
 .wrapper {
