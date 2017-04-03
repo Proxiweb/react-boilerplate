@@ -14,32 +14,30 @@ import { selectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
 import { get } from 'utils/apiClient';
 import styles from './styles.css';
 
-class CommunicationFormContainer extends Component { // eslint-disable-line
+class CommunicationFormContainer extends Component {
+  // eslint-disable-line
   static propTypes = {
     communication: PropTypes.object.isRequired,
     apiKey: PropTypes.string.isRequired,
     sendMessage: PropTypes.func.isRequired,
     setMessage: PropTypes.func.isRequired,
     removeDest: PropTypes.func.isRequired,
-  }
+  };
 
-  constructor(props) {
-    super(props);
-    console.log('ici');
-    this.state = { smsOk: null };
-  }
+  state = {
+    smsOk: null,
+  };
 
   componentDidMount = () => {
-    console.log('mount');
     get('https://communication.proxiweb.fr/api/status', {
       headers: { 'Content-Type': 'application/json' },
     })
-      .then((res) => {
-        console.log(res);
-        this.setState({ smsOk: true });
+      .then(res => {
+        const { Send } = res.datas;
+        this.setState({ smsOk: Send });
       })
       .catch(() => this.setState({ smsOk: false }));
-  }
+  };
 
   handleSubmit = ({ message, objet, sms }) => {
     const communication = {
@@ -48,7 +46,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
       messageLong: message,
       objet,
       envoye: true,
-      destinataires: this.props.communication.destinataires.map((d) => ({
+      destinataires: this.props.communication.destinataires.map(d => ({
         email: d.email,
         telPortable: d.telPortable,
         etat: 'attente',
@@ -56,7 +54,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
       })),
     };
     this.props.sendMessage(this.props.apiKey, communication);
-  }
+  };
 
   render() {
     if (!this.props.communication) return null;
@@ -69,22 +67,21 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
           {destinataires.slice().sort((a, b) => a.identite > b.identite).map((dest, idx) => (
             <div key={idx} className="row end-md">
               <div className="col-md-4">
-                {dest.email && <Chip
-                  style={{ margin: 4 }}
-                  onRequestDelete={() => this.props.removeDest(dest.id, 'email')}
-                >
-                  <Avatar color="#444" icon={<EmailIcon />} />
-                  {dest.identite}
-                </Chip>}
+                {dest.email &&
+                  <Chip style={{ margin: 4 }} onRequestDelete={() => this.props.removeDest(dest.id, 'email')}>
+                    <Avatar color="#444" icon={<EmailIcon />} />
+                    {dest.identite}
+                  </Chip>}
               </div>
               <div className="col-md-4">
-                {dest.telPortable && <Chip
-                  style={{ margin: 4 }}
-                  onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
-                >
-                  <Avatar color="#444" icon={<MessageIcon />} />
-                  {dest.identite}
-                </Chip>}
+                {dest.telPortable &&
+                  <Chip
+                    style={{ margin: 4 }}
+                    onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
+                  >
+                    <Avatar color="#444" icon={<MessageIcon />} />
+                    {dest.identite}
+                  </Chip>}
               </div>
             </div>
           ))}
@@ -108,10 +105,14 @@ const mapStateToProps = createStructuredSelector({
   apiKey: selectAuthApiKey(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  sendMessage: sendCommunication,
-  setMessage,
-  removeDest: removeDestinataire,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      sendMessage: sendCommunication,
+      setMessage,
+      removeDest: removeDestinataire,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommunicationFormContainer);
