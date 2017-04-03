@@ -27,6 +27,8 @@ import DetailsParUtilisateur from './DetailsParUtilisateur';
 import ValidationCommandesAdherents from './ValidationCommandesAdherents';
 import FinalisationCommande from './FinalisationCommande';
 
+import styles from './styles.css';
+
 class AdminDetailsCommande extends Component {
   static propTypes = {
     pushState: PropTypes.func.isRequired,
@@ -95,7 +97,7 @@ class AdminDetailsCommande extends Component {
     return (
       <div className="row">
         <Helmet title={`Commande ${commande.id}`} />
-        <div className="col-md-4 col-lg-3">
+        <div className={`col-md-4 col-lg-3 ${styles.listeAcheteursContainer}`}>
           {!pending &&
             commandeUtilisateurs &&
             commandeContenus &&
