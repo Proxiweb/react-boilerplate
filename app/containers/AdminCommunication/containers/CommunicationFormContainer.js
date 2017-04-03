@@ -11,6 +11,7 @@ import CommunicationForm from 'components/CommunicationForm';
 import { sendCommunication, removeDestinataire, setMessage } from 'containers/AdminCommunication/actions';
 import { selectCommunicationDomain } from 'containers/AdminCommunication/selectors';
 import { selectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
+import { get } from 'utils/apiClient';
 import styles from './styles.css';
 
 class CommunicationFormContainer extends Component { // eslint-disable-line
@@ -20,6 +21,24 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
     sendMessage: PropTypes.func.isRequired,
     setMessage: PropTypes.func.isRequired,
     removeDest: PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    console.log('ici');
+    this.state = { smsOk: null };
+  }
+
+  componentDidMount = () => {
+    console.log('mount');
+    get('https://communication.proxiweb.fr/api/status', {
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((res) => {
+        console.log(res);
+        this.setState({ smsOk: true });
+      })
+      .catch(() => this.setState({ smsOk: false }));
   }
 
   handleSubmit = ({ message, objet, sms }) => {
@@ -76,6 +95,7 @@ class CommunicationFormContainer extends Component { // eslint-disable-line
             message={{ sms, objet, html }}
             nbreDest={destinataires.length}
             setMessage={this.props.setMessage}
+            smsOk={this.state.smsOk}
           />
         </div>
       </div>

@@ -9,3 +9,9 @@
   margin: 5px;
   border: solid 1px silver;
 }
+
+.msgSmsKo {
+  border: solid 1px red;
+  padding: 1em;
+  color: red;
+}
