@@ -24,6 +24,7 @@ class CommunicationForm extends Component { // eslint-disable-line
     setMessage: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired,
     nbreDest: PropTypes.number.isRequired,
+    smsOk: PropTypes.bool,
   }
 
   constructor(props) {
@@ -60,12 +61,13 @@ class CommunicationForm extends Component { // eslint-disable-line
   }
 
   render() {
-    const { sms, objet, html, rawHtml } = this.state;
+    const { sms, objet, html, rawHtml, smsOk } = this.state;
     if (!html) return null;
     return (
       <div className={`row ${styles.form}`}>
         <div className="col-md-12">
-          <TextField
+          {smsOk === false && <p className={styles.msgSmsKo}>{'L\'envoi d\'sms est désactivé.'}</p>}
+          {smsOk && <TextField
             hintText="Texte du sms"
             floatingLabelText={`Texte du sms (${140 - this.state.sms.length} car. restant)`}
             multiLine
@@ -73,9 +75,7 @@ class CommunicationForm extends Component { // eslint-disable-line
             rows={3}
             onChange={this.handleSmsChange}
             value={this.state.sms}
-          />
-        </div>
-        <div className="col-md-12">
+          />}
           <TextField
             hintText="objet du mail"
             floatingLabelText="Objet du mail"

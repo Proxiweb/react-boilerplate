@@ -5,7 +5,7 @@ import CommunicationsHistorique from './containers/CommunicationsHistorique';
 
 class AdminCommunication extends Component { // eslint-disable-line
   static propTypes = {
-    communicationId: PropTypes.object.isRequired,
+    communicationId: PropTypes.string.isRequired,
   }
 
   static contextTypes = {
