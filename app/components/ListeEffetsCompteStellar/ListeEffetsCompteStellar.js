@@ -10,6 +10,7 @@ import {
 import moment from 'moment';
 import round from 'lodash/round';
 import api from 'utils/stellarApi';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import styles from './styles.css';
 
@@ -36,10 +37,11 @@ const mergeEffectInfos = effect =>
       .catch(err => reject(err));
   });
 
-export default class ListePaiements extends Component {
+export default class ListeEffetsCompteStellar extends Component {
   // eslint-disable-line
   static propTypes = {
     stellarAddress: PropTypes.string.isRequired,
+    limit: PropTypes.number,
   };
 
   static contextTypes = {
@@ -60,13 +62,24 @@ export default class ListePaiements extends Component {
     this.loadEffects();
   };
 
-  loadEffects = () => api.loadEffects(this.props.stellarAddress, 5).then(effects => {
-    Promise.all(effects.map(effect => mergeEffectInfos(effect))).then(effectInfos =>
+  loadEffects = () => api.loadEffects(this.props.stellarAddress, this.props.limit || 5).then(effects => {
+      Promise.all(effects.map(effect => mergeEffectInfos(effect))).then(effectInfos =>
         this.setState({ effects: effectInfos }));
-  });
+    });
 
   render() {
-    if (!this.state.effects) return null;
+    if (!this.state.effects) {
+      return (
+        <RefreshIndicator
+          size={70}
+          left={120}
+          top={200}
+          status="loading"
+          style={{ display: 'inline-block', position: 'relative' }}
+        />
+      );
+    }
+
     const { effects } = this.state;
     const { palette } = this.context.muiTheme;
     const headeStyle = {
@@ -105,11 +118,9 @@ export default class ListePaiements extends Component {
                   {moment(effect.created_at).format('DD/MM/YYYY HH:mm')}
                 </TableRowColumn>
                 <TableRowColumn width="45" style={{ textAlign: 'center' }}>
-                  {
-                    `${type === 'account_credited' ? '+' : '-'} ${round(parseFloat(amount), 2).toFixed(2)}`
-                  }
+                  {`${type === 'account_credited' ? '+' : '-'} ${round(parseFloat(amount), 2).toFixed(2)}`}
                 </TableRowColumn>
-                <TableRowColumn width="240">{memo}</TableRowColumn>
+                <TableRowColumn width="240" style={{ textAlign: 'center' }}>{memo}</TableRowColumn>
               </TableRow>
             );
           })}
