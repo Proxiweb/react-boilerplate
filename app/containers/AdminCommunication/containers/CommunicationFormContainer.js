@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
 import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 
@@ -62,40 +63,46 @@ class CommunicationFormContainer extends Component {
     const destinataires = this.props.communication.destinataires;
 
     return (
-      <div className="row">
-        <div className={`col-md-6 ${styles.panel} ${styles.dest}`}>
-          {destinataires.slice().sort((a, b) => a.identite > b.identite).map((dest, idx) => (
-            <div key={idx} className="row end-md">
-              <div className="col-md-4">
-                {dest.email &&
-                  <Chip style={{ margin: 4 }} onRequestDelete={() => this.props.removeDest(dest.id, 'email')}>
-                    <Avatar color="#444" icon={<EmailIcon />} />
-                    {dest.identite}
-                  </Chip>}
+      <Paper>
+
+        <div className="row">
+          <div className={`col-md-6 ${styles.panel} ${styles.dest}`}>
+            {destinataires.slice().sort((a, b) => a.identite > b.identite).map((dest, idx) => (
+              <div key={idx} className="row end-md">
+                <div className="col-md-4">
+                  {dest.email &&
+                    <Chip
+                      style={{ margin: 4 }}
+                      onRequestDelete={() => this.props.removeDest(dest.id, 'email')}
+                    >
+                      <Avatar color="#444" icon={<EmailIcon />} />
+                      {dest.identite}
+                    </Chip>}
+                </div>
+                <div className="col-md-4">
+                  {dest.telPortable &&
+                    <Chip
+                      style={{ margin: 4 }}
+                      onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
+                    >
+                      <Avatar color="#444" icon={<MessageIcon />} />
+                      {dest.identite}
+                    </Chip>}
+                </div>
               </div>
-              <div className="col-md-4">
-                {dest.telPortable &&
-                  <Chip
-                    style={{ margin: 4 }}
-                    onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
-                  >
-                    <Avatar color="#444" icon={<MessageIcon />} />
-                    {dest.identite}
-                  </Chip>}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <div className={`col-md-6 ${styles.panel}`}>
+            <CommunicationForm
+              onSubmit={this.handleSubmit}
+              message={{ sms, objet, html }}
+              nbreDest={destinataires.length}
+              setMessage={this.props.setMessage}
+              smsOk={this.state.smsOk}
+            />
+          </div>
         </div>
-        <div className={`col-md-6 ${styles.panel}`}>
-          <CommunicationForm
-            onSubmit={this.handleSubmit}
-            message={{ sms, objet, html }}
-            nbreDest={destinataires.length}
-            setMessage={this.props.setMessage}
-            smsOk={this.state.smsOk}
-          />
-        </div>
-      </div>
+      </Paper>
     );
   }
 }

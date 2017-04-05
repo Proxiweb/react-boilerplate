@@ -38,7 +38,6 @@ export class PorteMonnaie extends React.Component {
   static propTypes = {
     compte: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    payments: PropTypes.array.isRequired,
     virements: PropTypes.oneOfType([PropTypes.array]),
     params: PropTypes.object.isRequired,
     loadVir: PropTypes.func.isRequired,
@@ -57,7 +56,7 @@ export class PorteMonnaie extends React.Component {
   };
 
   render() {
-    const { compte, payments, progVir, params, virements, annulVir, auth, depCb } = this.props;
+    const { compte, progVir, params, virements, annulVir, auth, depCb } = this.props;
     const muiTheme = this.context.muiTheme;
     if (!compte) return null;
     return (
