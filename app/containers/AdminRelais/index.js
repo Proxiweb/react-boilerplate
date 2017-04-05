@@ -20,7 +20,8 @@ import DepotsRelais from './containers/DepotsRelais';
 import Utilisateur from './containers/Utilisateur';
 import FournisseursRelais from './containers/FournisseursRelais';
 import ListeUtilisateurs from 'containers/ListeUtilisateurs';
-import EnvoiMessage from './containers/EnvoiMessage';
+import ActionsDiverses from './components/ActionsDiverses';
+import ProfilAdherentContainer from './containers/ProfilAdherentContainer';
 import InfosRelais from './containers/InfosRelais';
 // import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 import { push } from 'react-router-redux';
@@ -116,34 +117,26 @@ class AdminRelais extends Component {
                   onClick={() => pushState(`/relais/${relaiId}/commandes`)}
                 />}
               {relaisSelected && [
-                (
-                  <FlatButton
-                    label="Depots"
-                    icon={<EuroIcon />}
-                    onClick={() => this.setState({ viewSelected: 'depot' })}
-                  />
-                ),
-                (
-                  <FlatButton
-                    label="Adhérents"
-                    icon={<PeopleIcon />}
-                    onClick={() => this.setState({ viewSelected: 'adherents' })}
-                  />
-                ),
-                (
-                  <FlatButton
-                    label="Fournisseurs"
-                    icon={<FournisseursIcon />}
-                    onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
-                  />
-                ),
-                (
-                  <FlatButton
-                    label="Infos"
-                    icon={<InfoIcon />}
-                    onClick={() => this.setState({ viewSelected: 'infos' })}
-                  />
-                ),
+                <FlatButton
+                  label="Depots"
+                  icon={<EuroIcon />}
+                  onClick={() => this.setState({ viewSelected: 'depot' })}
+                />,
+                <FlatButton
+                  label="Adhérents"
+                  icon={<PeopleIcon />}
+                  onClick={() => this.setState({ viewSelected: 'adherents' })}
+                />,
+                <FlatButton
+                  label="Fournisseurs"
+                  icon={<FournisseursIcon />}
+                  onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
+                />,
+                <FlatButton
+                  label="Infos"
+                  icon={<InfoIcon />}
+                  onClick={() => this.setState({ viewSelected: 'infos' })}
+                />,
               ]}
             </div>
           </div>
@@ -152,7 +145,7 @@ class AdminRelais extends Component {
             <DepotsRelais relaiId={relaiId} utilisateurs={utilisateurs} />}
           {viewSelected === 'fournisseurs' && <FournisseursRelais relaiId={relaiId} params={params} />}
           {viewSelected === 'infos' && <InfosRelais relais={relaisSelected} params={params} test="5" />}
-          {viewSelected === 'adherents' &&
+          {(viewSelected === 'adherents' || viewSelected === 'nouvel_adherent') &&
             <div className={`row ${styles.adherents}`}>
               <div className="col-md-4">
                 <ListeUtilisateurs
@@ -161,11 +154,20 @@ class AdminRelais extends Component {
                 />
               </div>
               <div className="col-md-8">
+                {viewSelected === 'nouvel_adherent' &&
+                  !utilisateur &&
+                  <ProfilAdherentContainer relaiId={relaiId} />}
                 {utilisateur && <Utilisateur utilisateur={utilisateur} />}
                 {utilisateur &&
                   utilisateur.stellarKeys &&
                   <StellarAccount stellarAdr={utilisateur.stellarKeys.adresse} />}
-                {!utilisateur && <EnvoiMessage utilisateurs={utilisateurs} relaiId={relaiId} />}
+                {!utilisateur &&
+                  viewSelected === 'adherents' &&
+                  <ActionsDiverses
+                    utilisateurs={utilisateurs}
+                    relaiId={relaiId}
+                    setView={viewName => this.setState({ ...this.state, viewSelected: viewName })}
+                  />}
               </div>
             </div>}
         </div>
@@ -181,14 +183,15 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    load: loadRelais,
-    loadUtil: loadUtilisateurs,
-    // loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
-    pushState: push,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadRelais,
+      loadUtil: loadUtilisateurs,
+      // loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
+      pushState: push,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminRelais);
