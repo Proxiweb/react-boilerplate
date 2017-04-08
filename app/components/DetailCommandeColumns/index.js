@@ -61,7 +61,9 @@ const buildCommandeRow = (
       <button title="Revenir à la quantité initiale" onClick={handleResetQuantite}>x</button>}
   </TableRowColumn>,
   <TableRowColumn className={styles.smallCol} key={`${idx}4`}>
-    {round((tarif.prix + tarif.recolteFond) * (contenu.quantite + contenu.qteRegul) / 100, 2).toFixed(2)}
+    {round((tarif.prix + tarif.recolteFond) * (contenu.quantite + (contenu.qteRegul || 0)) / 100, 2).toFixed(
+      2
+    )}
     {tarifEnBaisse &&
       <span style={{ color: 'red' }}>
         {' '}
