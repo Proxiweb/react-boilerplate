@@ -235,6 +235,7 @@ export class CommandeEdit extends React.Component {
       commandeUtilisateurs,
       utilisateurs,
       authUtilisateurId,
+      commandeContenus,
       commande,
       supprimer, // eslint-disable-line
       locationState,
@@ -253,6 +254,10 @@ export class CommandeEdit extends React.Component {
     if (utilisateurs && utilisateurId !== authUtilisateurId) {
       autreUtilisateur = utilisateurs[utilisateurId];
     }
+
+    const contenus = Object.keys(commandeContenus)
+      .filter(id => commandeContenus[id].commandeId === params.commandeId)
+      .map(id => commandeContenus[id]);
 
     const computedStyles = computeStyles(muiTheme);
     return (
@@ -285,15 +290,17 @@ export class CommandeEdit extends React.Component {
                   : null
               }
             />
-            {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
+            {!panierExpanded &&
+              <DetailOffres commandeContenus={contenus} params={params} utilisateurId={utilisateurId} />}
           </div>
         </MediaQuery>
-        <MediaQuery query="(min-device-width: 1600px)">
+        <MediaQuery query="(min-device-width: 1601px)">
           <div className="col-lg-4">
-            {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
+            {!panierExpanded &&
+              <DetailOffres commandeContenus={contenus} params={params} utilisateurId={utilisateurId} />}
           </div>
         </MediaQuery>
-        <MediaQuery query="(min-device-width: 1600px)">
+        <MediaQuery query="(min-device-width: 1601px)">
           <div className="col-lg-5">
             {!commande || commande.contenus.length === 0
               ? <Paper>

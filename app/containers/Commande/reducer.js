@@ -424,16 +424,10 @@ function commandeReducer(state = initialState, action) {
 
     case 'ws/NOUVELLE_COMMANDE_UTILISATEUR': {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
-      return update(state, {
-        datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) },
-        },
-        pending: { $set: false },
-      });
-    }
-
-    case 'ws/MODIF_COMMANDE_UTILISATEUR': {
-      const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
+      const stateContenus = state.datas.entities.commandeContenus;
+      Object.keys(datas.entities.commandeContenus).forEach(
+        id => stateContenus[id] = datas.entities.commandeContenus[id]
+      );
       return update(state, {
         datas: {
           entities: {
@@ -441,7 +435,28 @@ function commandeReducer(state = initialState, action) {
               [action.datas.id]: { $set: datas.entities.commandeUtilisateurs[action.datas.id] },
             },
             commandeContenus: {
-              $set: merge(state.datas.entities.commandeContenus, datas.entities.commandeContenus),
+              $set: stateContenus,
+            },
+          },
+        },
+        pending: { $set: false },
+      });
+    }
+
+    case 'ws/MODIF_COMMANDE_UTILISATEUR': {
+      const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
+      const stateContenus = state.datas.entities.commandeContenus;
+      Object.keys(datas.entities.commandeContenus).forEach(
+        id => stateContenus[id] = datas.entities.commandeContenus[id]
+      );
+      return update(state, {
+        datas: {
+          entities: {
+            commandeUtilisateurs: {
+              [action.datas.id]: { $set: datas.entities.commandeUtilisateurs[action.datas.id] },
+            },
+            commandeContenus: {
+              $set: stateContenus,
             },
           },
         },
