@@ -156,26 +156,6 @@ const supprimeContenu = (state, contenu) => {
   });
 };
 
-// const majNouvelAchat = (state, commandeContenu) => {
-//   const majCu = update(
-//     state,
-//     { datas:
-//       { entities:
-//         { commandeUtilisateurs:
-//           { [commandeContenu.commandeUtilisateurId]:
-//             { contenus: { $push: [commandeContenu] },
-//           },
-//         },
-//       },
-//     },
-//     },
-//   );
-//   // const produit = state.datas.entities.produits[state.datas.entities.offres[commandeContenu.offreId].produitId];
-//   // const nStock = produit.stock - commandeContenu.quantite;
-//   // return update(majCu, { datas: { entities: { produits: { [produit.id]: { stock: { $set: nStock } } } } } });
-//   return majCu;
-// };
-
 function commandeReducer(state = initialState, action) {
   switch (action.type) {
     case c.ASYNC_LOAD_FOURNISSEURS_SUCCESS: {
@@ -452,8 +432,38 @@ function commandeReducer(state = initialState, action) {
       });
     }
 
-    // case 'ws/NOUVEL_ACHAT': // websocket
-    //   return majNouvelAchat(state, action.datas);
+    case 'ws/MODIF_COMMANDE_UTILISATEUR': {
+      const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
+      return update(state, {
+        datas: {
+          entities: {
+            commandeUtilisateurs: {
+              [action.datas.id]: { $set: datas.entities.commandeUtilisateurs[action.datas.id] },
+            },
+            commandeContenus: {
+              $set: merge(state.datas.entities.commandeContenus, datas.entities.commandeContenus),
+            },
+          },
+        },
+        pending: { $set: false },
+      });
+    }
+
+    case 'ws/SUPPRESSION_ACHAT':
+      return update(state, {
+        datas: {
+          entities: {
+            commandeContenus: {
+              $set: Object.keys(state.datas.entities.commandeContenus).reduce(
+                (m, id) =>
+                  id === action.datas.id ? m : { ...m, [id]: state.datas.entities.commandeContenus[id] },
+                {}
+              ),
+            },
+          },
+        },
+      });
+
     case 'ws/OFFRE_MODIF_STOCK':
       return update(state, {
         datas: {
