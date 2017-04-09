@@ -12,6 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import {
   selectOffresProduitAvecTotalAchats,
   selectCommandeTypesProduits,
+  selectCommandeContenus,
   selectFournisseurProduit,
   selectProduits,
 } from 'containers/Commande/selectors';
@@ -48,7 +49,7 @@ const constStyles = {
 class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array,
-    commandeContenus: PropTypes.array.isRequired,
+    commandeContenus: PropTypes.object.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
@@ -158,7 +159,11 @@ class DetailOffres extends Component {
           {viewOffre &&
             offres.map((offre, idx) => {
               const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
-              const qteCommande = commandeContenus.reduce((m, c) => m + c.quantite, 0);
+              const qteCommande = Object.keys(commandeContenus)
+                .filter(id => commandeContenus[id].commandeId === params.commandeId)
+                .map(id => commandeContenus[id])
+                .reduce((m, c) => m + c.quantite, 0);
+
               const tR = offre.tarifications.length > 1;
 
               return (
@@ -214,6 +219,7 @@ const mapStateToProps = createStructuredSelector({
   fournisseur: selectFournisseurProduit(),
   produitsById: selectProduits(),
   commande: selectCommande(), // commande courante en cours d'édition
+  commandeContenus: selectCommandeContenus(),
   auth: selectCompteUtilisateur(),
 });
 

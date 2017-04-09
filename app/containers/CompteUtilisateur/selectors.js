@@ -28,6 +28,9 @@ export const selectPaymentsPagingToken = () =>
 export const selectAuthUtilisateurId = () =>
   createSelector([selectCompteUtilisateur()], auth => auth ? auth.id : undefined);
 
+export const selectDatePaiementCotisation = () =>
+  createSelector([selectCompteUtilisateur()], auth => auth ? auth.datePaiementCotisation : undefined);
+
 export const selectRoles = () =>
   createSelector([selectCompteUtilisateur()], auth => auth ? auth.roles : undefined);
 

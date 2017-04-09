@@ -4,6 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 import moment from 'moment';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
@@ -25,7 +26,7 @@ import {
   setDistibution,
 } from 'containers/CommandeEdit/actions';
 
-import { selectCommande } from 'containers/CommandeEdit/selectors';
+import { selectCommande, isCotisationInCommande } from 'containers/CommandeEdit/selectors';
 
 import {
   selectCommande as selectCommandeProxiweb,
@@ -33,11 +34,12 @@ import {
   selectOffres,
   selectProduits,
   selectCommandeLivraisons,
+  selectOffreCotisation,
 } from 'containers/Commande/selectors';
 
 import { selectPending } from 'containers/App/selectors';
 
-// import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+import { selectDatePaiementCotisation } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
 
@@ -53,6 +55,12 @@ const constStyles = {
   },
   textAlignCenter: {
     textAlign: 'center',
+  },
+  paiementCotisation: {
+    textAlign: 'center',
+    backgroundColor: 'white',
+    marginTop: '1em',
+    padding: '1em',
   },
 };
 
@@ -73,9 +81,13 @@ class OrderValidate extends Component {
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
+    ajouter: PropTypes.func.isRequired,
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
+    offreCotisation: PropTypes.object.isRequired,
+    datePaiementCotisation: PropTypes.string,
+    cotisationDansCommande: PropTypes.bool.isRequired,
   };
 
   static contextTypes = {
@@ -111,6 +123,24 @@ class OrderValidate extends Component {
           onClick={() => this.props.sauvegarder(assign(commande, { commandeId, utilisateurId }))}
         />
       </div>
+    );
+  };
+
+  showPaiementCotisation = () => {
+    const { offreCotisation, utilisateurId, params: { commandeId } } = this.props;
+    return (
+      <RaisedButton
+        label="Payer la cotisation"
+        style={constStyles.margin20}
+        primary
+        onClick={() =>
+          this.props.ajouter(commandeId, {
+            offreId: offreCotisation.id,
+            quantite: 1,
+            commandeId,
+            utilisateurId,
+          })}
+      />
     );
   };
 
@@ -201,28 +231,51 @@ class OrderValidate extends Component {
   };
 
   render() {
-    const { commande, commandeContenus, params, offres, balance, commandeProxiweb, pending } = this.props;
+    const {
+      commande,
+      commandeContenus,
+      params,
+      offres,
+      balance,
+      commandeProxiweb,
+      pending,
+      datePaiementCotisation,
+      offreCotisation,
+      cotisationDansCommande,
+    } = this.props;
+
     const { view } = this.state;
     const contenusCommande = commande.contenus.map(
-      contenu => // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id] // quand le contenu vient d'être ajouté, contenu est un objet sans id
-      typeof contenu === 'object' ? contenu : commandeContenus[contenu]
+      contenu => typeof contenu === 'object' ? contenu : commandeContenus[contenu] // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id] // quand le contenu vient d'être ajouté, contenu est un objet sans id
     );
+    const cotisationAJour = datePaiementCotisation &&
+      moment(datePaiementCotisation).add(1, 'y').isAfter(moment());
 
     return (
       <div>
         {view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande)}
         {view === 'panier' && commande.livraisonId && this.showDistribSelected()}
-        <div style={constStyles.textAlignCenter}>
-          {view !== 'distribution' &&
-            commandeProxiweb.dateCommande &&
-            !commande.livraisonId &&
-            commande.contenus.length > 0 &&
-            this.showDistribButton()}
-        </div>
+        {view !== 'distribution' &&
+          commandeProxiweb.dateCommande &&
+          !commande.livraisonId &&
+          commande.contenus.length > 0 &&
+          (cotisationAJour || cotisationDansCommande) &&
+          <div style={constStyles.textAlignCenter}>
+            {this.showDistribButton()}
+          </div>}
         {view === 'panier' &&
+          (cotisationAJour || cotisationDansCommande) &&
           (commande.livraisonId || !commandeProxiweb.dateCommande) &&
           (!commande.id || commande.modifiee) &&
           this.showValidate()}
+        {view === 'panier' &&
+          !cotisationAJour &&
+          offreCotisation &&
+          !cotisationDansCommande &&
+          <Paper style={constStyles.paiementCotisation}>
+            <p>{"Vous n'êtes pas à jour de votre cotisation de 3 €"}</p>
+            {this.showPaiementCotisation()}
+          </Paper>}
         {view === 'panier' &&
           !commande.dateLivraison &&
           commande.id &&
@@ -252,22 +305,25 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
   commandeContenus: selectCommandeContenus(),
   produitsById: selectProduits(),
-  // balance: selectMontantBalance(),
+  datePaiementCotisation: selectDatePaiementCotisation(),
   livraisons: selectCommandeLivraisons(),
+  offreCotisation: selectOffreCotisation(),
+  cotisationDansCommande: isCotisationInCommande(),
   pending: selectPending(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    ajouter,
-    augmenter,
-    diminuer,
-    supprimer,
-    sauvegarder,
-    annuler,
-    setDistibution,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      ajouter,
+      augmenter,
+      diminuer,
+      supprimer,
+      sauvegarder,
+      annuler,
+      setDistibution,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderValidate);

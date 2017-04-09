@@ -21,8 +21,6 @@ import {
   selectProduits,
   selectParams,
   selectCommandeCommandeUtilisateurs,
-  selectCommandeContenus,
-  // selectCommandeCommandeContenus,
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
@@ -80,8 +78,6 @@ export class CommandeEdit extends React.Component {
     locationState: PropTypes.object.isRequired,
     commande: PropTypes.object,
     commandeUtilisateurs: PropTypes.array,
-    // cdeCommandeContenus: PropTypes.array.isRequired,
-    commandeContenus: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array,
     authUtilisateurId: PropTypes.string.isRequired,
     balance: PropTypes.number.isRequired,
@@ -235,7 +231,6 @@ export class CommandeEdit extends React.Component {
       commandeUtilisateurs,
       utilisateurs,
       authUtilisateurId,
-      commandeContenus,
       commande,
       supprimer, // eslint-disable-line
       locationState,
@@ -254,10 +249,6 @@ export class CommandeEdit extends React.Component {
     if (utilisateurs && utilisateurId !== authUtilisateurId) {
       autreUtilisateur = utilisateurs[utilisateurId];
     }
-
-    const contenus = Object.keys(commandeContenus)
-      .filter(id => commandeContenus[id].commandeId === params.commandeId)
-      .map(id => commandeContenus[id]);
 
     const computedStyles = computeStyles(muiTheme);
     return (
@@ -290,14 +281,12 @@ export class CommandeEdit extends React.Component {
                   : null
               }
             />
-            {!panierExpanded &&
-              <DetailOffres commandeContenus={contenus} params={params} utilisateurId={utilisateurId} />}
+            {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1601px)">
           <div className="col-lg-4">
-            {!panierExpanded &&
-              <DetailOffres commandeContenus={contenus} params={params} utilisateurId={utilisateurId} />}
+            {!panierExpanded && <DetailOffres params={params} utilisateurId={utilisateurId} />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1601px)">
@@ -337,7 +326,6 @@ const mapStateToProps = createStructuredSelector({
   produitsById: selectProduits(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   // cdeCommandeContenus: selectCommandeCommandeContenus(),
-  commandeContenus: selectCommandeContenus(),
   authUtilisateurId: selectAuthUtilisateurId(),
   utilisateurs: selectUtilisateurs(),
   params: selectParams(),

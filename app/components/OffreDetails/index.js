@@ -84,9 +84,9 @@ class OffreDetails extends Component {
           </div>
           <div className={styles.action}>
             {onClick &&
-              stock - qteCommande > 0 &&
+              (!stock || stock - qteCommande > 0) &&
               <RaisedButton primary onClick={onClick} icon={<AddShoppingCart />} />}
-            {stock - qteCommande === 0 && <span><s>En stock</s></span>}
+            {stock && stock - qteCommande === 0 && <span><s>En stock</s></span>}
           </div>
           {expandable &&
             <div className={styles.expand}>
