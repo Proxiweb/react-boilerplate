@@ -8,6 +8,7 @@ export function get(url, options = { headers: {}, query: {} }) {
       resolve({ datas: response.data });
     })
     .catch((error) => {
+      console.log(error);
       if (error.response) {
         // try {
         reject({ message: error.response.data });
@@ -18,7 +19,7 @@ export function get(url, options = { headers: {}, query: {} }) {
         reject({ data: { message: error.data.message || error } });
       } else {
         // Something happened in setting up the request that triggered an Error
-        reject(error.message);
+        reject(error.message || error);
       }
     }));
 }

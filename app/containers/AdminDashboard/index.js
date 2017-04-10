@@ -52,11 +52,15 @@ class Dashboard extends Component {
       { i: 'e', x: 6, y: 0, w: 2, h: 2 },
     ];
     if (!utilisateurs || !relais) return null;
+<<<<<<< Updated upstream
     const commandeUtilisateur = commandeUtilisateurId &&
       commandeUtilisateurs &&
       commandeUtilisateurs[commandeUtilisateurId]
       ? commandeUtilisateurs[commandeUtilisateurId]
       : null;
+=======
+
+>>>>>>> Stashed changes
     return (
       <ReactGridLayout
         className="layout"
