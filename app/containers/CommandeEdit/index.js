@@ -22,18 +22,19 @@ import {
   selectParams,
   selectCommandeCommandeUtilisateurs,
   selectUtilisateurs,
+  selectCommande,
 } from 'containers/Commande/selectors';
 
-import { loadCommandes } from 'containers/Commande/actions';
+import { loadCommandes, initCommande } from 'containers/Commande/actions';
 import { selectAuthUtilisateurId, selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
 import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 import Paper from 'material-ui/Paper';
 
-import { selectCommande } from './selectors';
+// import { selectCommande } from './selectors';
 
 import {
-  initCommande,
+  // initCommande,
   // setDistibution,
   load,
 } from './actions';
@@ -114,7 +115,7 @@ export class CommandeEdit extends React.Component {
     } = this.props;
 
     if (!commande) {
-      init(params.commandeId);
+      init(params.commandeId, authUtilisateurId);
     }
 
     router.setRouteLeaveHook(route, this.routerWillLeave);
@@ -218,10 +219,10 @@ export class CommandeEdit extends React.Component {
   routerWillLeave = () => {
     const { commande } = this.props;
 
-    if ((commande.id && !commande.modifiee) || commande.contenus.length === 0) return true;
+    if ((commande.id && commande.updatedAt) || commande.contenus.length === 0) return true;
 
-    const modifMsg1 = commande.modifiee ? ' a été modifiée mais' : '';
-    const modifMsg2 = commande.modifiee ? ' Annuler les modifications ' : 'Annuler';
+    const modifMsg1 = !commande.updatedAt ? ' a été modifiée mais' : '';
+    const modifMsg2 = commande.updatedAt ? ' Annuler les modifications ' : 'Annuler';
     return `La commande${modifMsg1} n'a pas été validée... ${modifMsg2} ?`;
   };
 
@@ -338,7 +339,7 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: url => dispatch(push(url)),
-    init: commandeId => dispatch(initCommande(commandeId)),
+    init: (commandeId, utilisateurId) => dispatch(initCommande(commandeId, utilisateurId)),
     loadCommandeUtilisateur: commandeUtilisateur => dispatch(load(commandeUtilisateur)),
     loadCdes: () => dispatch(loadCommandes()),
     // setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),

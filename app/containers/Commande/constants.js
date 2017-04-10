@@ -33,6 +33,7 @@ const supprimerCommandeContenusFournisseurConst = generateConstants(
 const relaisConst = generateConstants('app/Commande', 'load_relais');
 const typeProduits = generateConstants('app/Commande', 'load_types_produits');
 const AJOUTER = 'app/Commande/AJOUTER';
+const INIT_COMMANDE = 'app/Commande/INIT_COMMANDE';
 const NOUVEL_ACHAT = 'NOUVEL_ACHAT';
 const SUPPRESSION_ACHAT = 'SUPPRESSION_ACHAT';
 const MODIF_ACHAT = 'MODIF_ACHAT';
@@ -70,5 +71,6 @@ export default assign(
     MODIF_ACHAT,
     UPDATE_CATALOGUE_START,
     UPDATE_CATALOGUE_SUCCESS,
+    INIT_COMMANDE,
   }
 );

@@ -6,6 +6,11 @@
 import { findActionType } from 'utils/asyncSagaConstants';
 import c from './constants';
 
+export const initCommande = commandeId => ({
+  type: c.INIT,
+  payload: { commandeId },
+});
+
 export const loadCommandes = query => ({
   type: findActionType('load_commandes', c, 'START'),
   url: 'commandes',
