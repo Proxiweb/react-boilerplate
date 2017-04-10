@@ -14,6 +14,21 @@ import omit from 'lodash/omit';
 import assign from 'lodash/assign';
 import includes from 'lodash/includes';
 import uniq from 'lodash/uniq';
+import uuid from 'node-uuid';
+
+const nCommande = {
+  createdAt: null,
+  dateLivraison: null,
+  datePaiement: null,
+  livraisonId: null,
+  montant: 0,
+  plageHoraire: 0,
+  prestationRelai: 0,
+  recolteFond: 0,
+  updatedAt: null,
+  // commandeId: "eee9a49f-f3b7-493e-8c27-28956d8cd0a0"
+  //utilisateurId: "3c3fff89-9604-4729-b794-69dd60005dfe"
+};
 
 const initialState = {
   pending: false,
@@ -419,6 +434,16 @@ function commandeReducer(state = initialState, action) {
             pending: { $set: false },
           },
         },
+      });
+    }
+
+    case c.INIT_COMMANDE: {
+      const { commandeId, utilisateurId } = action.datas;
+      const id = uuid.v4();
+      const nouvelleCommande = { ...nCommande, id, commandeId, utilisateurId };
+      const nCommandeUtilisateurs = { ...state.datas.entities.commandeUtilisateurs, [id]: nouvelleCommande };
+      return update(state, {
+        datas: { entities: { commandeUtilisateurs: { $set: nCommandeUtilisateurs } } },
       });
     }
 
