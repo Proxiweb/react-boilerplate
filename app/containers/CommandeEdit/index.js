@@ -20,7 +20,7 @@ import {
   selectProduits,
   selectParams,
   selectCommandeCommandeUtilisateurs,
-  selectUtilisateurs, // selectCommande,
+  selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
 import { loadCommandes, initCommande } from 'containers/Commande/actions';
@@ -28,14 +28,6 @@ import { selectAuthUtilisateurId, selectMontantBalance } from 'containers/Compte
 import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 import Paper from 'material-ui/Paper';
-
-// import { selectCommande } from './selectors';
-
-import {
-  // initCommande,
-  // setDistibution,
-  load,
-} from './actions';
 
 import ProduitSelector from './containers/ProduitSelector';
 import OrderValidate from './containers/OrderValidate';
@@ -75,14 +67,12 @@ export class CommandeEdit extends React.Component {
     router: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     locationState: PropTypes.object.isRequired,
-    // commande: PropTypes.object,
     commandeUtilisateurs: PropTypes.array,
     utilisateurs: PropTypes.array,
     authUtilisateurId: PropTypes.string.isRequired,
     balance: PropTypes.number.isRequired,
     pushState: PropTypes.func.isRequired,
     init: PropTypes.func.isRequired,
-    loadCommandeUtilisateur: PropTypes.func.isRequired,
     loadCdes: PropTypes.func.isRequired,
   };
 
@@ -142,11 +132,6 @@ export class CommandeEdit extends React.Component {
       }
       this.setBalance(null, utilisateur.stellarKeys.adresse);
     }
-    // }
-
-    // if (commande && commande.utilisateurId !== utilisateurId) {
-    //   init(params.commandeId);
-    // }
 
     if (!commandeProduits) {
       loadCdes();
@@ -335,9 +320,7 @@ function mapDispatchToProps(dispatch) {
     dispatch,
     pushState: url => dispatch(push(url)),
     init: (commandeId, utilisateurId) => dispatch(initCommande(commandeId, utilisateurId)),
-    loadCommandeUtilisateur: commandeUtilisateur => dispatch(load(commandeUtilisateur)),
     loadCdes: () => dispatch(loadCommandes()),
-    // setDistibution: (commandeId, livraisonId, plageHoraire) => dispatch(setDistibution(commandeId, livraisonId, plageHoraire)),
   };
 }
 
