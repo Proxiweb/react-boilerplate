@@ -6,7 +6,7 @@
 import update from 'react-addons-update';
 import c from './constants';
 import cF from 'containers/AdminFournisseur/constants';
-import cE from 'containers/CommandeEdit/constants';
+// import cE from 'containers/CommandeEdit/constants';
 import { normalize, arrayOf } from 'normalizr';
 import { schemas } from './schemas';
 import merge from 'lodash/merge';
@@ -17,7 +17,6 @@ import uniq from 'lodash/uniq';
 import uuid from 'node-uuid';
 
 const nCommande = {
-  createdAt: null,
   dateLivraison: null,
   datePaiement: null,
   livraisonId: null,
@@ -25,9 +24,18 @@ const nCommande = {
   plageHoraire: 0,
   prestationRelai: 0,
   recolteFond: 0,
+  createdAt: null,
   updatedAt: null,
+  contenus: [],
   // commandeId: "eee9a49f-f3b7-493e-8c27-28956d8cd0a0"
   //utilisateurId: "3c3fff89-9604-4729-b794-69dd60005dfe"
+};
+
+const nCommandeContenu = {
+  createdAt: null,
+  updatedAt: null,
+  qteRegul: 0,
+  quantite: 0,
 };
 
 const initialState = {
@@ -37,6 +45,7 @@ const initialState = {
     result: [],
   },
   error: null,
+  cotisationId: '8b330a52-a605-4a67-aee7-3cb3c9274733',
 };
 
 const ajouter = (state, action) => {
@@ -224,7 +233,7 @@ function commandeReducer(state = initialState, action) {
     //   });
     // }
 
-    case cE.ASYNC_ANNULER_SUCCESS: {
+    case c.ASYNC_ANNULER_SUCCESS: {
       const { commandeId, id } = action.req.datas;
       return annuleCommandeUtilisateur(state, id, commandeId);
     }
@@ -438,12 +447,178 @@ function commandeReducer(state = initialState, action) {
     }
 
     case c.INIT_COMMANDE: {
-      const { commandeId, utilisateurId } = action.datas;
+      const { commandeId, utilisateurId } = action.payload;
       const id = uuid.v4();
       const nouvelleCommande = { ...nCommande, id, commandeId, utilisateurId };
       const nCommandeUtilisateurs = { ...state.datas.entities.commandeUtilisateurs, [id]: nouvelleCommande };
       return update(state, {
         datas: { entities: { commandeUtilisateurs: { $set: nCommandeUtilisateurs } } },
+      });
+    }
+
+    case c.AJOUTER_OFFRE: {
+      const { offreId, utilisateurId, commandeId } = action.payload;
+
+      // trouver commandeUtilisateur correspondant s'il existe
+      const commandeUtilisateurId = Object.keys(state.datas.entities.commandeUtilisateurs).find(
+        id =>
+          state.datas.entities.commandeUtilisateurs[id].utilisateurId === utilisateurId &&
+          state.datas.entities.commandeUtilisateurs[id].commandeId === commandeId
+      );
+
+      const commandeContenuId = commandeUtilisateurId
+        ? Object.keys(state.datas.entities.commandeContenus).find(
+            id =>
+              state.datas.entities.commandeContenus[id].utilisateurId === utilisateurId &&
+              state.datas.entities.commandeContenus[id].commandeId === commandeId &&
+              state.datas.entities.commandeContenus[id].offreId === offreId
+          )
+        : undefined;
+
+      const nCommandeContenuId = uuid.v4();
+
+      const quantiteContenuActuelle = commandeContenuId
+        ? state.datas.entities.commandeContenus[commandeContenuId].quantite
+        : 0;
+
+      // on ajoute à contenus le contenuId il est nouveau
+      const ajouteNouvelleOffre = !commandeContenuId
+        ? {
+            commandeUtilisateurs: {
+              [commandeUtilisateurId]: {
+                contenus: {
+                  $push: [nCommandeContenuId],
+                },
+                updatedAt: { $set: null },
+              },
+            },
+          }
+        : {
+            commandeUtilisateurs: {
+              [commandeUtilisateurId]: {
+                updatedAt: { $set: null },
+              },
+            },
+          };
+
+      const ajouteNouveauContenu = commandeContenuId
+        ? {
+            commandeContenus: {
+              [commandeContenuId]: {
+                quantite: { $set: quantiteContenuActuelle + 1 },
+              },
+            },
+          }
+        : {
+            commandeContenus: {
+              $set: {
+                ...state.datas.entities.commandeContenus,
+                [nCommandeContenuId]: {
+                  ...nCommandeContenu,
+                  quantite: 1,
+                  commandeUtilisateurId,
+                  commandeId,
+                  utilisateurId,
+                  offreId,
+                },
+              },
+            },
+          };
+
+      return update(state, {
+        datas: {
+          entities: {
+            ...ajouteNouvelleOffre,
+            ...ajouteNouveauContenu,
+          },
+        },
+      });
+    }
+
+    case c.DIMINUER_OFFRE: {
+      const { offreId, commandeId, utilisateurId } = action.payload;
+      const commandeContenuId = Object.keys(state.datas.entities.commandeContenus).find(
+        id =>
+          state.datas.entities.commandeContenus[id].utilisateurId === utilisateurId &&
+          state.datas.entities.commandeContenus[id].commandeId === commandeId &&
+          state.datas.entities.commandeContenus[id].offreId === offreId
+      );
+
+      const nouvelleQuantite = state.datas.entities.commandeContenus[commandeContenuId].quantite - 1;
+
+      const commandeUtilisateurId = Object.keys(state.datas.entities.commandeUtilisateurs).find(
+        id =>
+          state.datas.entities.commandeUtilisateurs[id].utilisateurId === utilisateurId &&
+          state.datas.entities.commandeUtilisateurs[id].commandeId === commandeId
+      );
+
+      if (nouvelleQuantite === 0) {
+        return update(state, {
+          datas: {
+            entities: {
+              commandeContenus: {
+                $set: Object.keys(state.datas.entities.commandeContenus).reduce(
+                  (m, id) =>
+                    id !== commandeContenuId
+                      ? { ...m, [id]: state.datas.entities.commandeContenus[id] }
+                      : { ...m }
+                ),
+              },
+              commandeUtilisateurs: {
+                [commandeUtilisateurId]: {
+                  updatedAt: { $set: null },
+                  contenus: {
+                    $set: state.datas.entities.commandeUtilisateurs[commandeUtilisateurId].contenus.filter(
+                      id => id !== commandeContenuId
+                    ),
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      return update(state, {
+        datas: {
+          entities: {
+            commandeContenus: {
+              [commandeContenuId]: {
+                quantite: {
+                  $set: nouvelleQuantite,
+                },
+              },
+            },
+            commandeUtilisateurs: {
+              [commandeUtilisateurId]: {
+                updatedAt: { $set: null },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    case c.SET_DISTRIBUTION: {
+      const { commandeId, utilisateurId, plageHoraire, livraisonId } = action.payload;
+      const commandeUtilisateurId = Object.keys(state.datas.entities.commandeUtilisateurs).find(
+        id =>
+          state.datas.entities.commandeUtilisateurs[id].utilisateurId === utilisateurId &&
+          state.datas.entities.commandeUtilisateurs[id].commandeId === commandeId
+      );
+
+      return update(state, {
+        datas: {
+          entities: {
+            commandeUtilisateurs: {
+              [commandeUtilisateurId]: {
+                livraisonId: { $set: livraisonId },
+                plageHoraire: { $set: plageHoraire },
+                updatedAt: { $set: null },
+              },
+            },
+          },
+        },
       });
     }
 

@@ -14,23 +14,21 @@ const calculeTotauxCommandeFn = (
     commandeContenus,
     offres,
     commandeId,
-  },
+  }
 ) => {
   const grouped = groupBy(contenus, 'offreId');
-  const contenusAgg = Object.keys(grouped)
-    .map(offreId =>
-      grouped[offreId].reduce(
-        (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
-        { offreId, quantite: 0, qteRegul: 0 },
-      ));
+  const contenusAgg = Object.keys(grouped).map(offreId =>
+    grouped[offreId].reduce(
+      (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
+      { offreId, quantite: 0, qteRegul: 0 }
+    ));
 
   const totaux = contenusAgg.reduce(
     (memo, contenu) => {
       const offre = offres[contenu.offreId];
       const commandeCommandeContenus = Object.keys(commandeContenus)
         .filter(
-          key =>
-            commandeContenus[key].commandeId === commandeId && commandeContenus[key].offreId === offre.id,
+          key => commandeContenus[key].commandeId === commandeId && commandeContenus[key].offreId === offre.id
         )
         .map(key => commandeContenus[key]);
 
@@ -47,7 +45,7 @@ const calculeTotauxCommandeFn = (
         recolteFond: memo.recolteFond + round(tarif.recolteFond * qte / 100, 2),
       };
     },
-    { prix: 0, recolteFond: 0, prixBase: 0, recolteFondBase: 0 },
+    { prix: 0, recolteFond: 0, prixBase: 0, recolteFondBase: 0 }
   );
 
   totaux.recolteFond = round(totaux.recolteFond, 2);

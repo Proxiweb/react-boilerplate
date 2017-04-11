@@ -6,9 +6,46 @@
 import { findActionType } from 'utils/asyncSagaConstants';
 import c from './constants';
 
-export const initCommande = commandeId => ({
-  type: c.INIT,
-  payload: { commandeId },
+export const initCommande = (commandeId, utilisateurId) => ({
+  type: c.INIT_COMMANDE,
+  payload: { commandeId, utilisateurId },
+});
+
+export function ajouterOffre(offre) {
+  return {
+    type: c.AJOUTER_OFFRE,
+    payload: { ...offre },
+  };
+}
+
+export function diminuerOffre(offre) {
+  return {
+    type: c.DIMINUER_OFFRE,
+    payload: { ...offre },
+  };
+}
+
+export function setDistibution({ commandeId, utilisateurId, plageHoraire, livraisonId }) {
+  return {
+    type: c.SET_DISTRIBUTION,
+    payload: { commandeId, utilisateurId, plageHoraire, livraisonId },
+  };
+}
+
+export const sauvegarder = datas => ({
+  type: findActionType('sauvegarder', c, 'START'),
+  url: datas.createdAt ? `commande_utilisateurs/${datas.id}` : 'commande_utilisateurs',
+  method: datas.createdAt ? 'put' : 'post',
+  msgPending: 'Sauvegarde commande',
+  datas: { ...datas },
+});
+
+export const annuler = ({ id, commandeId }) => ({
+  type: findActionType('annuler', c, 'START'),
+  url: `commande_utilisateurs/${id}`,
+  method: 'del',
+  msgPending: 'Annulation commande',
+  datas: { commandeId, id },
 });
 
 export const loadCommandes = query => ({

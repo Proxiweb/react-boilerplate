@@ -71,6 +71,7 @@ export default class DetailCommande extends Component {
       commandeId,
       commandeContenus,
       panierExpanded,
+      utilisateurId,
     } = this.props;
 
     const { muiTheme } = this.context;
@@ -142,11 +143,18 @@ export default class DetailCommande extends Component {
                   {!readOnly &&
                     <TableRowColumn className={styles.lessSmallCol}>
                       {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
-                        <button onClick={() => augmenter(commandeId, contenu.offreId)} title="quantite + 1">
+                        <button
+                          onClick={() =>
+                            augmenter({ commandeId, offreId: contenu.offreId, utilisateurId, quantite: 1 })}
+                          title="quantite + 1"
+                        >
                           +
                         </button>}
                       {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
-                        <button onClick={() => diminuer(commandeId, contenu.offreId)} title="quantite - 1">
+                        <button
+                          onClick={() => diminuer({ commandeId, offreId: contenu.offreId, utilisateurId })}
+                          title="quantite - 1"
+                        >
                           -
                         </button>}
                     </TableRowColumn>}

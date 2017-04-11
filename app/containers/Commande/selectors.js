@@ -13,6 +13,7 @@ export const selectParams = () => (state, props) => props.params;
 export const selectCommandeId = () => (state, props) => props.params.commandeId;
 export const selectRelaisId = () => (state, props) => props.params.relaiId;
 export const selectFournisseurId = () => (state, props) => props.params.fournisseurId;
+export const selectCotisationId = () => state => state.cotisationId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
 // const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';

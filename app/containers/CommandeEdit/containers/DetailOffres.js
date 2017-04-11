@@ -22,7 +22,7 @@ import { selectCommande } from 'containers/CommandeEdit/selectors';
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 
-import { ajouter } from 'containers/CommandeEdit/actions';
+import { ajouterOffre } from 'containers/Commande/actions';
 import OffreDetails from 'components/OffreDetails';
 import styles from './styles.css';
 
@@ -56,7 +56,7 @@ class DetailOffres extends Component {
     auth: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     fournisseur: PropTypes.object,
-    ajouter: PropTypes.func.isRequired,
+    ajouterOffre: PropTypes.func.isRequired,
     saveFavoris: PropTypes.func.isRequired,
   };
 
@@ -176,7 +176,7 @@ class DetailOffres extends Component {
                         qteCommande={qteCommande}
                         subTitle="Tarif dégressif (cliquez pour plus de détails)"
                         onClick={() =>
-                          this.props.ajouter(commandeId, {
+                          this.props.ajouterOffre({
                             offreId: offre.id,
                             quantite: 1,
                             commandeId,
@@ -193,7 +193,7 @@ class DetailOffres extends Component {
                         qteCommande={qteCommande}
                         subTitle="Tarif dégressif (+ infos...)"
                         onClick={() =>
-                          this.props.ajouter(commandeId, {
+                          this.props.ajouterOffre({
                             offreId: offre.id,
                             quantite: 1,
                             commandeId,
@@ -226,7 +226,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      ajouter,
+      ajouterOffre,
       saveFavoris: saveAccount,
     },
     dispatch
