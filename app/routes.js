@@ -7,9 +7,10 @@ const errorLoading = err => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
 };
 
-const loadModule = cb => componentModule => {
-  cb(null, componentModule.default);
-};
+const loadModule = cb =>
+  componentModule => {
+    cb(null, componentModule.default);
+  };
 
 export default function createRoutes(store) {
   // Create reusable async injectors using getAsyncInjectors factory
@@ -207,21 +208,24 @@ export default function createRoutes(store) {
       path: '/relais/:relaiId/commandes/:commandeId',
       name: 'commande',
       getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          System.import('containers/CommandeEdit/reducer'),
-          System.import('containers/CommandeEdit/sagas'),
-          System.import('containers/CommandeEdit/index'),
-        ]);
+        System.import('containers/CommandeEdit').then(loadModule(cb)).catch(errorLoading);
 
-        const renderRoute = loadModule(cb);
+        // const importModules = Promise.all([
+        //   // System.import('containers/CommandeEdit/reducer'),
+        //   // System.import('containers/CommandeEdit/sagas'),
+        //   System.import('containers/CommandeEdit/index'),
+        // ]);
+        //
+        // const renderRoute = loadModule(cb);
+        //
+        // importModules.then(([component]) => {
+        //   // reducer, sagas,
+        //   injectReducer('commande', reducer.default);
+        //   // injectSagas(sagas.default);
+        //   // renderRoute(component);
+        // });
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('commande', reducer.default);
-          injectSagas(sagas.default);
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
+        // importModules.catch(errorLoading);
       },
       childRoutes: [
         {
@@ -517,3 +521,5 @@ export default function createRoutes(store) {
     },
   ];
 }
+
+// 06 38 54 81 70

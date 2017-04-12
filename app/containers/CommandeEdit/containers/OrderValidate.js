@@ -319,7 +319,6 @@ class OrderValidate extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  // commande: selectCommande(), // commande courante en cours d'édition
   commandeProxiweb: selectCommandeProxiweb(),
   offres: selectOffres(),
   commandeContenus: selectCommandeContenus(),
