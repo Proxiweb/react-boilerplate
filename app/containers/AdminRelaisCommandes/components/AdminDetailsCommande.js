@@ -100,7 +100,6 @@ class AdminDetailsCommande extends Component {
         <div className={`col-md-4 col-lg-3 ${styles.listeAcheteursContainer}`}>
           {!pending &&
             commandeUtilisateurs &&
-            commandeContenus &&
             contenus &&
             livraisons &&
             utils &&
@@ -109,8 +108,7 @@ class AdminDetailsCommande extends Component {
             offres &&
             <ListeAcheteurs
               commandeUtilisateurs={commandeUtilisateurs}
-              commandeContenus={commandeContenus}
-              contenus={contenus}
+              commandeContenus={contenus}
               utilisateurs={utils}
               livraisons={livraisons}
               depots={depots}
@@ -129,15 +127,15 @@ class AdminDetailsCommande extends Component {
             <DetailsParFournisseur
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
-              contenus={contenus}
               utilisateurs={utils}
-              commandeContenus={commandeContenus}
+              commandeContenus={contenus}
               handleValidate={() => this.setState({ view: 'validation' })}
               finalisation={commande.finalisation}
             />}
           {!children &&
             commandeUtilisateurs &&
-            commandeUtilisateurs.filter(cu => cu.datePaiement).length < commandeUtilisateurs.length &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length <
+              commandeUtilisateurs.length &&
             contenus &&
             !commande.validation &&
             view === 'validation' &&
@@ -150,23 +148,31 @@ class AdminDetailsCommande extends Component {
             />}
           {!children &&
             commandeUtilisateurs &&
-            commandeUtilisateurs.filter(cu => cu.datePaiement).length < commandeUtilisateurs.length &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length <
+              commandeUtilisateurs.length &&
             contenus &&
             !commande.validation &&
             <h1>Validée</h1>}
           {!children &&
             commandeUtilisateurs &&
-            commandeUtilisateurs.filter(cu => cu.datePaiement).length === commandeUtilisateurs.length &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length ===
+              commandeUtilisateurs.length &&
             contenus &&
             view === 'validation' &&
             !commande.finalisation &&
-            <FinalisationCommande params={params} contenus={contenus} commandeContenus={commandeContenus} />}
+            <FinalisationCommande
+              params={params}
+              contenus={contenus}
+              commandeContenus={commandeContenus}
+            />}
           {children &&
             utils &&
             <DetailsParUtilisateur
               params={params}
               commande={commande}
-              commandeUtilisateur={commandeUtilisateurs.find(cu => cu.utilisateurId === params.utilisateurId)}
+              commandeUtilisateur={commandeUtilisateurs.find(
+                cu => cu.utilisateurId === params.utilisateurId,
+              )}
               roles={roles}
               depots={depots}
               utilisateur={utils.find(ut => ut.id === params.utilisateurId)}
@@ -196,7 +202,7 @@ const mapDispatchToProps = dispatch =>
       loadDepots: loadDepotsRelais,
       pushState: push,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);

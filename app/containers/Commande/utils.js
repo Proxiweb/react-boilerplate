@@ -15,13 +15,13 @@ const calculeTotauxCommandeFn = (
     commandeContenus,
     offres,
     commandeId,
+    filter,
   },
 ) => {
   const utilisateurCommandeContenus = Object.keys(commandeContenus)
     .filter(
       id =>
-        (!utilisateurId || commandeContenus[id].utilisateurId === utilisateurId) &&
-        commandeContenus[id].commandeId === commandeId,
+        (!filter || filter(commandeContenus[id])) && commandeContenus[id].commandeId === commandeId,
     )
     .map(id => commandeContenus[id]);
 

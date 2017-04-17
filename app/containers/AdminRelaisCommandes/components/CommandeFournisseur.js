@@ -38,20 +38,24 @@ class CommandeFournisseur extends Component {
     const {
       fournisseur,
       produits,
-      contenus,
       commandeContenus,
       commandeId,
       offres,
       key,
     } = this.props;
 
-    const contenusFournisseur = commandeContenus
-      .map(key => contenus[key])
+    const contenusFournisseur = Object.keys(commandeContenus)
+      .map(id => commandeContenus[id])
       .filter(c =>
-        produits.find(pdt => pdt.id === offres[c.offreId].produitId && pdt.fournisseurId === fournisseur.id));
+        produits.find(
+          pdt => pdt.id === offres[c.offreId].produitId && pdt.fournisseurId === fournisseur.id,
+        ));
 
     const totaux = calculeTotauxCommande({
-      contenus: contenusFournisseur,
+      filter: cc =>
+        produits.find(
+          pdt => pdt.id === offres[cc.offreId].produitId && pdt.fournisseurId === fournisseur.id,
+        ),
       offres,
       commandeContenus,
       commandeId,
@@ -66,8 +70,8 @@ class CommandeFournisseur extends Component {
         </div>
         <div className="col-md-12">
           <DetailCommande
-            contenus={contenusFournisseur}
-            commandeContenus={contenusFournisseur}
+            contenusFiltered={contenusFournisseur}
+            commandeContenus={Object.keys(commandeContenus).map(id => commandeContenus[id])}
             produits={produits}
             commandeId={commandeId}
             offres={offres}
@@ -79,11 +83,12 @@ class CommandeFournisseur extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    supprimeCommandeContenusFournisseur: supprimerCommandeContenusFournisseur,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      supprimeCommandeContenusFournisseur: supprimerCommandeContenusFournisseur,
+    },
+    dispatch,
+  );
 
 export default connect(null, mapDispatchToProps)(CommandeFournisseur);

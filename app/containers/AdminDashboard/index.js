@@ -5,7 +5,11 @@ import { createStructuredSelector } from 'reselect';
 import ReactGridLayout from 'react-grid-layout';
 
 import { loadUtilisateurs, loadRelais } from 'containers/Commande/actions';
-import { selectUtilisateurs, selectCommandesUtilisateurs, selectRelais } from 'containers/Commande/selectors';
+import {
+  selectUtilisateurs,
+  selectCommandesUtilisateurs,
+  selectRelais,
+} from 'containers/Commande/selectors';
 
 import { selectPending, selectNombreClients } from 'containers/App/selectors';
 
@@ -52,15 +56,13 @@ class Dashboard extends Component {
       { i: 'e', x: 6, y: 0, w: 2, h: 2 },
     ];
     if (!utilisateurs || !relais) return null;
-<<<<<<< Updated upstream
+
     const commandeUtilisateur = commandeUtilisateurId &&
       commandeUtilisateurs &&
       commandeUtilisateurs[commandeUtilisateurId]
       ? commandeUtilisateurs[commandeUtilisateurId]
       : null;
-=======
 
->>>>>>> Stashed changes
     return (
       <ReactGridLayout
         className="layout"
@@ -76,10 +78,10 @@ class Dashboard extends Component {
           {!commandeUtilisateur
             ? <Panel title="Auncune commande" />
             : <Commande
-                commandeUtilisateur={commandeUtilisateur}
-                pending={pending}
-                commandeUtilisateurId={commandeUtilisateurId}
-              />}
+              commandeUtilisateur={commandeUtilisateur}
+              pending={pending}
+              commandeUtilisateurId={commandeUtilisateurId}
+            />}
         </div>
         <div key={'b'}>
           <Utilisateurs
@@ -92,11 +94,11 @@ class Dashboard extends Component {
         <div key={'c'}>
           {utilisateurId
             ? <Utilisateur
-                utilisateur={utilisateurs[utilisateurId]}
-                pending={pending}
-                onClick={this.handleSelectCommandeUtilisateur}
-                commandeUtilisateurId={commandeUtilisateurId}
-              />
+              utilisateur={utilisateurs[utilisateurId]}
+              pending={pending}
+              onClick={this.handleSelectCommandeUtilisateur}
+              commandeUtilisateurId={commandeUtilisateurId}
+            />
             : <Panel title="Sélectionnez un utilisateur" />}
         </div>
         <div key={'d'}>
@@ -120,12 +122,13 @@ const mapStateToProps = createStructuredSelector({
   nombreClients: selectNombreClients(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadUtilisateurs,
-    loadRelais,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadUtilisateurs,
+      loadRelais,
+    },
+    dispatch,
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

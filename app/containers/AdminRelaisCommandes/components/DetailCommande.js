@@ -10,7 +10,7 @@ export default class DetailsCommande extends Component {
     roles: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     commandeId: PropTypes.string.isRequired,
-    contenus: PropTypes.array.isRequired,
+    contenusFiltered: PropTypes.array.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
     selectable: PropTypes.bool.isRequired,
@@ -30,7 +30,7 @@ export default class DetailsCommande extends Component {
   render() {
     const {
       produits,
-      contenus,
+      contenusFiltered,
       commandeContenus,
       selectable,
       commandeId,
@@ -39,11 +39,15 @@ export default class DetailsCommande extends Component {
       souligneQte,
     } = this.props;
 
-    const grouped = groupBy(contenus, 'offreId');
+    const grouped = groupBy(contenusFiltered, 'offreId');
     const contenusAgg = Object.keys(grouped).map(offreId =>
       grouped[offreId].reduce(
-        (m, c) => ({ offreId, quantite: m.quantite + c.quantite, qteRegul: m.qteRegul + c.qteRegul }),
-        { offreId, quantite: 0, qteRegul: 0 }
+        (m, c) => ({
+          offreId,
+          quantite: m.quantite + c.quantite,
+          qteRegul: m.qteRegul + c.qteRegul,
+        }),
+        { offreId, quantite: 0, qteRegul: 0 },
       ));
 
     const { muiTheme } = this.context;
@@ -84,21 +88,26 @@ export default class DetailsCommande extends Component {
         <TableBody displayRowCheckbox={selectable}>
           {commandeContenus &&
             contenusAgg
-              // .filter(pdt => contenus.find(c => c.offre.produitId === pdt.id))
+              // .filter(pdt => contenusFiltered.find(c => c.offre.produitId === pdt.id))
               .map((contenu, key) => {
-                const contenuComplet = contenus.find(c => c.offreId === contenu.offreId);
-                const produit = produits.find(pdt => pdt.id === offres[contenuComplet.offreId].produitId);
+                const contenuComplet = contenusFiltered.find(c => c.offreId === contenu.offreId);
+                const produit = produits.find(
+                  pdt => pdt.id === offres[contenuComplet.offreId].produitId,
+                );
                 if (!produit) return null;
                 return (
                   <DetailCommandeProduit
                     idx={key}
                     produit={produit}
                     selectable={selectable}
-                    contenu={contenus
+                    contenu={contenusFiltered
                       .filter(c => c.offreId === contenu.offreId)
-                      .reduce((m, c) => ({ ...c, quantite: c.qteRegul + c.quantite + m.quantite }), {
+                      .reduce(
+                        (m, c) => ({ ...c, quantite: c.qteRegul + c.quantite + m.quantite }),
+                      {
                         quantite: 0,
-                      })}
+                      },
+                      )}
                     qteTotalOffre={commandeContenus
                       .filter(c => c.offreId === contenu.offreId)
                       .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)}

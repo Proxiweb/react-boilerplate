@@ -27,9 +27,13 @@ export default class Paiement extends Component {
     const { muiTheme } = this.context;
 
     if (typeof contenus[0] === 'undefined') return null;
-    console.log('paiementi', contenus, commandeContenus);
 
-    const { prix, recolteFond } = calculeTotauxCommande({ contenus, commandeContenus, offres, commandeId });
+    const { prix, recolteFond } = calculeTotauxCommande({
+      contenus,
+      commandeContenus,
+      offres,
+      commandeId,
+    });
     const montant = round(prix + recolteFond, 2).toFixed(2);
 
     return (
@@ -37,11 +41,11 @@ export default class Paiement extends Component {
         {balance > montant
           ? <FondsOkMessage color={muiTheme.appBar.color} montant={montant} balance={balance} />
           : <FondsWarningMessage
-              color={muiTheme.palette.warningColor}
-              montant={montant}
-              balance={balance}
-              dateLimite={dateLimite}
-            />}
+            color={muiTheme.palette.warningColor}
+            montant={montant}
+            balance={balance}
+            dateLimite={dateLimite}
+          />}
         <div className={styles.accueilLink}>
           <span>{'<< '}<Link to="/">{"Retour à l'accueil"}</Link> {' <<'}</span>
         </div>

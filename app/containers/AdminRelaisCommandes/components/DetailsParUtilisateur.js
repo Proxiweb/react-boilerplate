@@ -79,16 +79,17 @@ class DetailsParUtilisateur extends Component {
 
     const { commandeId, relaiId, utilisateurId } = params;
 
-    const contenusUtilisateur = commandeContenus
-      .map(key => contenus[key])
-      .filter(c => c.utilisateurId === utilisateur.id);
+    const contenusUtilisateur = Object.keys(commandeContenus)
+      .map(key => commandeContenus[key])
+      .filter(c => c.utilisateurId === utilisateur.id && c.commandeId === commandeId);
 
     const depot = depots.find(
-      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais'
+      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais',
     );
 
     const totaux = calculeTotauxCommande({
-      contenus: contenusUtilisateur,
+      // contenus: contenusUtilisateur,
+      filter: cc => cc.utilisateurId === utilisateurId,
       offres,
       commandeContenus,
       commandeId: params.commandeId,
@@ -132,8 +133,8 @@ class DetailsParUtilisateur extends Component {
             </div>
             <div className="col-md-12">
               <DetailCommande
-                contenus={contenusUtilisateur}
-                commandeContenus={commandeContenus.map(key => contenus[key])}
+                contenusFiltered={contenusUtilisateur}
+                commandeContenus={Object.keys(commandeContenus).map(key => commandeContenus[key])}
                 produits={produits}
                 commandeId={params.commandeId}
                 offres={offres}
@@ -161,7 +162,7 @@ class DetailsParUtilisateur extends Component {
                       label="Modifier"
                       onClick={() =>
                         pushState(
-                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
+                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
                         )}
                     />
                   </div>
@@ -172,7 +173,7 @@ class DetailsParUtilisateur extends Component {
                       label="Annuler"
                       onClick={() =>
                         pushState(
-                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
+                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
                         )}
                     />
                   </div>
@@ -188,8 +189,12 @@ class DetailsParUtilisateur extends Component {
             </div>
             <div className="col-md-6" style={{ marginTop: '1em' }}>
               <h3>
-                {this.state.account && !paiementOk && <p>Manque {round(totalCommande - credit, 2)} €</p>}
-                {this.state.account && paiementOk && <p>Restera {round(credit - totalCommande, 2)} €</p>}
+                {this.state.account &&
+                  !paiementOk &&
+                  <p>Manque {round(totalCommande - credit, 2)} €</p>}
+                {this.state.account &&
+                  paiementOk &&
+                  <p>Restera {round(credit - totalCommande, 2)} €</p>}
               </h3>
             </div>
 
@@ -208,8 +213,8 @@ class DetailsParUtilisateur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  contenus: selectCommandeContenus(),
-  commandeContenus: selectCommandeCommandeContenus(),
+  // contenus: selectCommandeContenus(),
+  commandeContenus: selectCommandeContenus(),
   offres: selectOffres(),
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
@@ -222,7 +227,7 @@ const mapDispatchToProps = dispatch =>
     {
       pushState: push,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);

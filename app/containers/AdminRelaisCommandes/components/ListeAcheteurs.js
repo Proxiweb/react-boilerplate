@@ -42,7 +42,12 @@ class ListeAcheteurs extends Component {
 
   handleDepotRelais = () => this.setState({ ...this.state, depot: false });
 
-  handleClick = (utilisateurSelected, utilisateurDepot, utilisateurTotalCommande, utilisateurBalance) => {
+  handleClick = (
+    utilisateurSelected,
+    utilisateurDepot,
+    utilisateurTotalCommande,
+    utilisateurBalance,
+  ) => {
     this.setState({
       ...this.state,
       utilisateurSelected,
@@ -67,7 +72,7 @@ class ListeAcheteurs extends Component {
 
     const { utilisateurDepot, utilisateurTotalCommande, utilisateurBalance } = this.state;
     const utilisateur = utilisateurs.find(u => u.id === utilisateurId);
-    const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
+    // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const acheteurs = commandeUtilisateurs
       .filter(cu => cu.commandeId === commandeId)
       .map(cu => ({
@@ -87,7 +92,8 @@ class ListeAcheteurs extends Component {
       .slice()
       .sort(
         (cu1, cu2) =>
-          cu1.debutLivraisonUnix > cu2.debutLivraisonUnix && cu1.utilisateur.nom > cu2.utilisateur.nom
+          cu1.debutLivraisonUnix > cu2.debutLivraisonUnix &&
+          cu1.utilisateur.nom > cu2.utilisateur.nom,
       );
 
     const acheteursGrp = groupBy(acheteurs, 'debutLivraisonISO');
@@ -95,7 +101,9 @@ class ListeAcheteurs extends Component {
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
-          {stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret) && <p>Parametrez Proxiweb</p>}
+          {stellarKeys &&
+            (!stellarKeys.adresse || !stellarKeys.secret) &&
+            <p>Parametrez Proxiweb</p>}
           {// !utilisateurDepot &&
           utilisateurId &&
             <RaisedButton
@@ -105,7 +113,9 @@ class ListeAcheteurs extends Component {
               disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
               onClick={() => this.setState({ ...this.state, depot: true })}
             />}
-          {false && utilisateurDepot && `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
+          {false &&
+            utilisateurDepot &&
+            `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
           {// !utilisateurDepot &&
           utilisateurId &&
             utilisateurBalance &&
@@ -136,9 +146,7 @@ class ListeAcheteurs extends Component {
                     value={cu.utilisateurId}
                     onClick={this.handleClick}
                     totaux={calculeTotauxCommande({
-                      contenus: contenus.filter(
-                        c => c.utilisateurId === cu.utilisateurId && c.commandeId === commandeId
-                      ),
+                      filter: cc => cc.utilisateurId === cu.utilisateurId,
                       offres,
                       commandeContenus,
                       commandeId,

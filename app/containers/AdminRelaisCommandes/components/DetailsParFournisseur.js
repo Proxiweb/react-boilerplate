@@ -90,7 +90,7 @@ class DetailsParFournisseur extends Component {
     const { commandeId, relaiId } = params;
 
     const totaux = calculeTotauxCommande({
-      contenus: Object.keys(contenus).map(key => contenus[key]).filter(c => c.commandeId === commandeId),
+      filter: cc => cc.commandeId === commandeId,
       offres,
       commandeContenus,
       commandeId,
@@ -147,16 +147,17 @@ class DetailsParFournisseur extends Component {
                 </div>
               );
             })}
-            <CommandeDistributeur
-              key={'1x'}
-              fournisseur={fournisseurs[0]}
-              produits={produits}
-              commandeContenus={commandeContenus}
-              contenus={contenus}
-              offres={offres}
-              commandeId={commandeId}
-              noFiltre
-            />
+            {false &&
+              <CommandeDistributeur
+                key={'1x'}
+                fournisseur={fournisseurs[0]}
+                produits={produits}
+                commandeContenus={commandeContenus}
+                contenus={contenus}
+                offres={offres}
+                commandeId={commandeId}
+                noFiltre
+              />}
           </div>}
       </div>
     );
@@ -176,7 +177,7 @@ const mapDispatchToProps = dispatch =>
       pushState: push,
       addDestinataire,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);

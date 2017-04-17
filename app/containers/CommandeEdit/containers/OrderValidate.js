@@ -261,6 +261,7 @@ class OrderValidate extends Component {
       pending,
       datePaiementCotisation,
       offreCotisation,
+      utilisateurId,
       cotisationId,
     } = this.props;
 

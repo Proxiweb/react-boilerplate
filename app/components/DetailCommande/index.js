@@ -76,7 +76,7 @@ export default class DetailCommande extends Component {
 
     const { muiTheme } = this.context;
 
-    const totaux = calculeTotauxCommande({ contenus, offres, commandeContenus, commandeId });
+    const totaux = calculeTotauxCommande({ utilisateurId, offres, commandeContenus, commandeId });
 
     return (
       <div>
@@ -116,7 +116,7 @@ export default class DetailCommande extends Component {
                 .filter(
                   key =>
                     commandeContenus[key].commandeId === commandeId &&
-                    commandeContenus[key].offreId === offre.id
+                    commandeContenus[key].offreId === offre.id,
                 )
                 .map(key => commandeContenus[key]);
 
@@ -124,7 +124,11 @@ export default class DetailCommande extends Component {
                 .filter(cC => cC.utilisateurId !== contenu.utilisateurId)
                 .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0);
 
-              const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
+              const tarif = trouveTarification(
+                offre.tarifications,
+                qteTotalOffre,
+                contenu.quantite,
+              );
 
               const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
 
@@ -145,14 +149,20 @@ export default class DetailCommande extends Component {
                       {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
                         <button
                           onClick={() =>
-                            augmenter({ commandeId, offreId: contenu.offreId, utilisateurId, quantite: 1 })}
+                            augmenter({
+                              commandeId,
+                              offreId: contenu.offreId,
+                              utilisateurId,
+                              quantite: 1,
+                            })}
                           title="quantite + 1"
                         >
                           +
                         </button>}
                       {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
                         <button
-                          onClick={() => diminuer({ commandeId, offreId: contenu.offreId, utilisateurId })}
+                          onClick={() =>
+                            diminuer({ commandeId, offreId: contenu.offreId, utilisateurId })}
                           title="quantite - 1"
                         >
                           -

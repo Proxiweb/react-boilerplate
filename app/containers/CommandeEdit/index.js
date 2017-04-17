@@ -24,7 +24,10 @@ import {
 } from 'containers/Commande/selectors';
 
 import { loadCommandes, initCommande } from 'containers/Commande/actions';
-import { selectAuthUtilisateurId, selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectAuthUtilisateurId,
+  selectMontantBalance,
+} from 'containers/CompteUtilisateur/selectors';
 import { selectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 import Paper from 'material-ui/Paper';
@@ -107,7 +110,9 @@ export class CommandeEdit extends React.Component {
       utilisateurs,
     } = this.props;
 
-    const commandeUtilisateur = commandeUtilisateurs.find(cu => cu.utilisateurId === this.utilisateurId);
+    const commandeUtilisateur = commandeUtilisateurs.find(
+      cu => cu.utilisateurId === this.utilisateurId,
+    );
 
     if (!commandeUtilisateur) {
       init(params.commandeId, this.utilisateurId);
@@ -146,11 +151,11 @@ export class CommandeEdit extends React.Component {
     const premierTypeProduit = typeProduits && typeProduits.length ? typeProduits[0] : null;
     if (premierTypeProduit) {
       const pdts = commandeProduits.filter(
-        prod => prod.typeProduitId === premierTypeProduit.id && prod.enStock
+        prod => prod.typeProduitId === premierTypeProduit.id && prod.enStock,
       );
       if (pdts && pdts.length) {
         this.props.pushState(
-          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`
+          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`,
         );
       }
     }
@@ -205,7 +210,9 @@ export class CommandeEdit extends React.Component {
 
   routerWillLeave = () => {
     const { commandeUtilisateurs } = this.props;
-    const commandeUtilisateur = commandeUtilisateurs.find(cu => cu.utilisateurId === this.utilisateurId);
+    const commandeUtilisateur = commandeUtilisateurs.find(
+      cu => cu.utilisateurId === this.utilisateurId,
+    );
     if (commandeUtilisateur.updatedAt || commandeUtilisateur.contenus.length === 0) return true;
 
     const modifMsg1 = !commandeUtilisateur.updatedAt ? ' a été modifiée mais' : '';
@@ -223,7 +230,9 @@ export class CommandeEdit extends React.Component {
       supprimer, // eslint-disable-line
     } = this.props;
 
-    const commandeUtilisateur = commandeUtilisateurs.find(cu => cu.utilisateurId === this.utilisateurId);
+    const commandeUtilisateur = commandeUtilisateurs.find(
+      cu => cu.utilisateurId === this.utilisateurId,
+    );
     const commande = commandeUtilisateur;
 
     if (!commande) return null;
@@ -255,6 +264,9 @@ export class CommandeEdit extends React.Component {
               ShoppingCart
               livraisonNotSelected={!commande.livraisonId}
               commandeUtilisateur={commandeUtilisateur}
+              utilisateurId={this.utilisateurId}
+              toggleState={this.toggleState}
+              params={params}
               autreUtilisateur={
                 autreUtilisateur
                   ? `${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`
@@ -287,12 +299,12 @@ export class CommandeEdit extends React.Component {
                   </div>
                 </Paper>
               : <OrderValidate
-                  params={params}
-                  utilisateurId={this.utilisateurId}
-                  panierExpanded={false}
-                  balance={balance}
-                  commande={commande}
-                />}
+                params={params}
+                utilisateurId={this.utilisateurId}
+                panierExpanded={false}
+                balance={balance}
+                commande={commande}
+              />}
           </div>
         </MediaQuery>
       </div>
