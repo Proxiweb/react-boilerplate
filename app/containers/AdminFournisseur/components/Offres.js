@@ -18,6 +18,7 @@ class Offres extends Component {
     typesProduits: PropTypes.object.isRequired,
     produit: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
+    gereColisage: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -43,7 +44,7 @@ class Offres extends Component {
   createOffre = () => this.setState({ ...this.state, editMode: true, nouvelle: true });
 
   render() {
-    const { offres, typesProduits, produit, pending } = this.props;
+    const { offres, typesProduits, produit, pending, gereColisage } = this.props;
     const { type, editMode, itemEditIndex, nouvelle } = this.state;
 
     if (!typesProduits) return null;
@@ -99,6 +100,7 @@ class Offres extends Component {
               tva={produit.tva}
               handleToggeState={this.toggleState}
               quantiteUnite={typeProduit.quantiteUnite}
+              gereColisage={gereColisage}
             />
           </div>}
         {editMode &&
@@ -120,6 +122,7 @@ class Offres extends Component {
               }}
               tva={produit.tva}
               handleToggeState={this.toggleState}
+              gereColisage={gereColisage}
             />
           </div>}
       </div>

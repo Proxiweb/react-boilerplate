@@ -10,7 +10,7 @@ import AddIcon from 'material-ui/svg-icons/content/add';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
-import { selectFournisseurProduits } from 'containers/Commande/selectors';
+import { selectFournisseurProduits, selectFournisseurs } from 'containers/Commande/selectors';
 import { selectPending } from 'containers/App/selectors';
 import { loadTypesProduits } from 'containers/Commande/actions';
 import styles from './styles.css';
@@ -22,6 +22,7 @@ class CatalogueFournisseur extends Component {
     load: PropTypes.func.isRequired,
     loadTypes: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
+    fournisseurs: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     children: PropTypes.node,
     produits: PropTypes.array,
@@ -40,7 +41,7 @@ class CatalogueFournisseur extends Component {
     this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`);
 
   render() {
-    const { produits, params, pending } = this.props;
+    const { produits, params: { fournisseurId, produitId }, pending } = this.props;
     if (!produits) return null;
     return (
       <Paper>
@@ -60,7 +61,7 @@ class CatalogueFournisseur extends Component {
             }
             {produits.length > 0 &&
               <SelectableList
-                value={params.produitId}
+                value={produitId}
                 onChange={this.handleChangeList}
                 className={styles.listePdt}
               >
@@ -80,8 +81,9 @@ class CatalogueFournisseur extends Component {
           <div className={classnames('col-md-9', styles.panel)}>
             {this.props.children &&
               React.cloneElement(this.props.children, {
-                produit: produits.find(pdt => pdt.id === params.produitId),
+                produit: produits.find(pdt => pdt.id === produitId),
                 params,
+                fournisseur: fournisseurs[fournisseurId],
               })}
           </div>
         </div>
@@ -91,6 +93,7 @@ class CatalogueFournisseur extends Component {
 }
 const mapStateToProps = createStructuredSelector({
   produits: selectFournisseurProduits(),
+  fournisseurs: selectFournisseurs(),
   pending: selectPending(),
 });
 

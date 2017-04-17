@@ -62,6 +62,7 @@ class OffreFormContainer extends React.Component {
         pristine={pristine}
         valeurs={valeurs}
         handleToggeState={handleToggeState}
+        avecColisage
       />
     );
   }

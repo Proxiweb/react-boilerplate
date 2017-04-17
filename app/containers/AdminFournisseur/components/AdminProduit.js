@@ -15,6 +15,7 @@ import styles from './styles.css';
 class AdminProduit extends Component {
   static propTypes = {
     produit: PropTypes.object.isRequired,
+    fournisseur: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     save: PropTypes.func.isRequired,
   };
@@ -73,8 +74,8 @@ class AdminProduit extends Component {
           />
         </div>
         <div className={classnames('col-md-9', styles.offreInfo)}>
-          {editView === null && <Offres produit={produit} params={params} />}
-          {editView === 'offre' && <Offres produit={produit} params={params} />}
+          {editView === null && <Offres produit={produit} params={params} gereColisage={fournisseur.gereColisage} />}
+          {editView === 'offre' && <Offres produit={produit} params={params} gereColisage={fournisseur.gereColisage} />}
         </div>
       </div>
     );
