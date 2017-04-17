@@ -37,7 +37,8 @@ const headers = [
     tooltip: 'Total articles',
   },
 ];
-export default class DetailCommande extends Component { // eslint-disable-line
+export default class DetailCommande extends Component {
+  // eslint-disable-line
   static propTypes = {
     contenus: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
@@ -48,7 +49,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
     augmenter: PropTypes.func,
     readOnly: PropTypes.bool,
     panierExpanded: PropTypes.bool.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -57,7 +58,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
   static defaultProps = {
     readOnly: false,
     panierExpanded: false,
-  }
+  };
 
   render() {
     const {
@@ -70,6 +71,7 @@ export default class DetailCommande extends Component { // eslint-disable-line
       commandeId,
       commandeContenus,
       panierExpanded,
+      utilisateurId,
     } = this.props;
 
     const { muiTheme } = this.context;
@@ -95,9 +97,14 @@ export default class DetailCommande extends Component { // eslint-disable-line
                   key={idx}
                 >
                   {h.label}
-                </TableHeaderColumn>)
-              )}
-              {!readOnly && <TableHeaderColumn tooltip="Supprimer" className={styles.lessSmallCol} style={headerColStyle} />}
+                </TableHeaderColumn>
+              ))}
+              {!readOnly &&
+                <TableHeaderColumn
+                  tooltip="Supprimer"
+                  className={styles.lessSmallCol}
+                  style={headerColStyle}
+                />}
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
@@ -105,22 +112,19 @@ export default class DetailCommande extends Component { // eslint-disable-line
               if (!contenu) return null;
               const offre = offres[contenu.offreId];
 
-
-              const commandeCommandeContenus =
-                Object.keys(commandeContenus).filter((key) =>
-                  commandeContenus[key].commandeId === commandeId &&
-                  commandeContenus[key].offreId === offre.id
-                ).map((key) => commandeContenus[key]);
+              const commandeCommandeContenus = Object.keys(commandeContenus)
+                .filter(
+                  key =>
+                    commandeContenus[key].commandeId === commandeId &&
+                    commandeContenus[key].offreId === offre.id
+                )
+                .map(key => commandeContenus[key]);
 
               const qteTotalOffre = commandeCommandeContenus
-                                      .filter((cC) => cC.utilisateurId !== contenu.utilisateurId)
-                                      .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0);
+                .filter(cC => cC.utilisateurId !== contenu.utilisateurId)
+                .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0);
 
-              const tarif = trouveTarification(
-                offre.tarifications,
-                qteTotalOffre,
-                contenu.quantite
-              );
+              const tarif = trouveTarification(offre.tarifications, qteTotalOffre, contenu.quantite);
 
               const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
 
@@ -135,24 +139,52 @@ export default class DetailCommande extends Component { // eslint-disable-line
               });
               return (
                 <TableRow key={idx} selectable={false} displayBorder>
-                  { rows }
-                  {!readOnly && (<TableRowColumn className={styles.lessSmallCol}>
-                    <button onClick={() => augmenter(commandeId, contenu.offreId)} title="quantite + 1">+</button>
-                    <button onClick={() => diminuer(commandeId, contenu.offreId)} title="quantite - 1">-</button>
-                  </TableRowColumn>)}
+                  {rows}
+                  {!readOnly &&
+                    <TableRowColumn className={styles.lessSmallCol}>
+                      {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
+                        <button
+                          onClick={() =>
+                            augmenter({ commandeId, offreId: contenu.offreId, utilisateurId, quantite: 1 })}
+                          title="quantite + 1"
+                        >
+                          +
+                        </button>}
+                      {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
+                        <button
+                          onClick={() => diminuer({ commandeId, offreId: contenu.offreId, utilisateurId })}
+                          title="quantite - 1"
+                        >
+                          -
+                        </button>}
+                    </TableRowColumn>}
                 </TableRow>
-              ); })
-            }
+              );
+            })}
           </TableBody>
           <TableFooter />
         </Table>
-        {!panierExpanded && (
-          <div style={{ textAlign: 'center', padding: '1rem 0', backgroundColor: 'white', border: 'solid 1px gray' }}>
+        {!panierExpanded &&
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '1rem 0',
+              backgroundColor: 'white',
+              border: 'solid 1px gray',
+            }}
+          >
             Total : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2)} €</strong>{' '}
-            {totaux.prixBase !== totaux.prix ? <span style={{ color: 'red' }}><s>{round(totaux.prixBase + totaux.recolteFondBase, 2).toFixed(2)} €</s> </span> : ''}
-            ( dont <strong>{round(totaux.recolteFond, 2).toFixed(2)}</strong> € pour la prestation de distribution )
-          </div>
-        )}
+            {totaux.prixBase !== totaux.prix
+              ? <span style={{ color: 'red' }}>
+                  <s>{round(totaux.prixBase + totaux.recolteFondBase, 2).toFixed(2)} €</s>{' '}
+                </span>
+              : ''}
+            ( dont
+            {' '}
+            <strong>{round(totaux.recolteFond, 2).toFixed(2)}</strong>
+            {' '}
+            € pour la prestation de distribution )
+          </div>}
       </div>
     );
   }

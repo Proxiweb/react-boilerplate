@@ -28,7 +28,7 @@ import LivraisonCommande from './LivraisonCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import StellarAccount from 'components/StellarAccount';
 import HistoriqueCommandeUtilisateur from './HistoriqueCommandeUtilisateur';
-import ListePaiementsUtilisateur from './ListePaiementsUtilisateur';
+import ListeEffetsCompteStellar from 'components/ListeEffetsCompteStellar/ListeEffetsCompteStellar';
 
 // eslint-disable-next-line
 class DetailsParUtilisateur extends Component {
@@ -199,7 +199,7 @@ class DetailsParUtilisateur extends Component {
           </Tab>
           <Tab label="Comptes">
             {utilisateur.stellarKeys &&
-              <ListePaiementsUtilisateur stellarAddress={utilisateur.stellarKeys.adresse} />}
+              <ListeEffetsCompteStellar stellarAddress={utilisateur.stellarKeys.adresse} />}
           </Tab>
         </Tabs>
       </div>

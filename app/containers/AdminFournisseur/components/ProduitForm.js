@@ -25,19 +25,20 @@ const options = {
   },
 };
 
-const renderSelectField = datas => (
-  { input, label, meta: { touched, error }, ...custom } // eslint-disable-line
-) => (
-  <CustomSelectField
-    floatingLabelText={label}
-    errorText={touched && error}
-    {...input}
-    onChange={(event, index, value) => input.onChange(value)}
-    {...custom}
-  >
-    {datas.map(data => <MenuItem key={data.value} value={data.value} primaryText={data.label} />)}
-  </CustomSelectField>
-);
+const renderSelectField = datas =>
+  (
+    { input, label, meta: { touched, error }, ...custom } // eslint-disable-line
+  ) => (
+    <CustomSelectField
+      floatingLabelText={label}
+      errorText={touched && error}
+      {...input}
+      onChange={(event, index, value) => input.onChange(value)}
+      {...custom}
+    >
+      {datas.map(data => <MenuItem key={data.value} value={data.value} primaryText={data.label} />)}
+    </CustomSelectField>
+  );
 
 const renderUnitesConservation = renderSelectField([
   {
@@ -69,19 +70,21 @@ const renderTva = renderSelectField([
   },
 ]);
 
-const renderTypesProduits = typesProduits => renderSelectField(
-  Object.keys(typesProduits).map(value => ({
-    value: typesProduits[value].id,
-    label: typesProduits[value].nom,
-  }))
-);
+const renderTypesProduits = typesProduits =>
+  renderSelectField(
+    Object.keys(typesProduits).map(value => ({
+      value: typesProduits[value].id,
+      label: typesProduits[value].nom,
+    }))
+  );
 
-const renderClassementComplementaire = categoriesSecondaires => renderSelectField(
-  categoriesSecondaires.map(value => ({
-    value,
-    label: value,
-  }))
-);
+const renderClassementComplementaire = categoriesSecondaires =>
+  renderSelectField(
+    categoriesSecondaires.map(value => ({
+      value,
+      label: value,
+    }))
+  );
 
 class ProduitForm extends Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -194,6 +197,15 @@ class ProduitForm extends Component {
                 floatingLabelText="Classement complémentaire"
                 name="typeProduitSecondaire"
                 component={renderClassementComplementaire(categoriesSecondaires)}
+                fullWidth
+              />
+            </div>}
+          {categoriesSecondaires.length > 0 &&
+            <div className="col-md-6">
+              <Field
+                floatingLabelText="Classement complémentaire bis"
+                name="typeProduitTernaire"
+                component={TextField}
                 fullWidth
               />
             </div>}

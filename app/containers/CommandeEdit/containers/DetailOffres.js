@@ -10,20 +10,17 @@ import MediaQuery from 'components/MediaQuery';
 import StarIcon from 'material-ui/svg-icons/toggle/star';
 import { createStructuredSelector } from 'reselect';
 import {
-    selectOffresProduitAvecTotalAchats,
-    selectCommandeTypesProduits,
-    selectFournisseurProduit,
-    selectProduits,
+  selectOffresProduitAvecTotalAchats,
+  selectCommandeTypesProduits,
+  selectCommandeContenus,
+  selectFournisseurProduit,
+  selectProduits,
 } from 'containers/Commande/selectors';
-
-import { selectCommande } from 'containers/CommandeEdit/selectors';
 
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 
-import {
-  ajouter,
-} from 'containers/CommandeEdit/actions';
+import { ajouterOffre } from 'containers/Commande/actions';
 import OffreDetails from 'components/OffreDetails';
 import styles from './styles.css';
 
@@ -50,16 +47,16 @@ const constStyles = {
 class DetailOffres extends Component {
   static propTypes = {
     offres: PropTypes.array,
-    commande: PropTypes.object.isRequired,
+    commandeContenus: PropTypes.object.isRequired,
     utilisateurId: PropTypes.string.isRequired,
     produitsById: PropTypes.object.isRequired,
     typeProduits: PropTypes.array.isRequired,
     auth: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     fournisseur: PropTypes.object,
-    ajouter: PropTypes.func.isRequired,
+    ajouterOffre: PropTypes.func.isRequired,
     saveFavoris: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
@@ -72,20 +69,16 @@ class DetailOffres extends Component {
     };
   }
 
-  toggleFav = (produitId) => {
+  toggleFav = produitId => {
     const { auth, saveFavoris } = this.props;
     const produitsFavoris = includes(auth.produitsFavoris, produitId)
-      ? auth.produitsFavoris.filter((item) => item !== produitId)
+      ? auth.produitsFavoris.filter(item => item !== produitId)
       : auth.produitsFavoris.concat(produitId);
 
     const datas = { ...auth, produitsFavoris };
 
-    saveFavoris(
-      auth.id,
-      datas,
-      null
-    );
-  }
+    saveFavoris(auth.id, datas, null);
+  };
 
   render() {
     const { viewOffre } = this.state;
@@ -94,8 +87,8 @@ class DetailOffres extends Component {
       fournisseur,
       produitsById,
       typeProduits,
-      commande,
       utilisateurId,
+      commandeContenus,
       params,
       auth,
     } = this.props;
@@ -104,9 +97,8 @@ class DetailOffres extends Component {
 
     const { produitId, commandeId } = params;
     const produit = produitsById[produitId];
-    const contenus = commande.contenus;
 
-    const estFavoris = auth.produitsFavoris.find((item) => item === produitId);
+    const estFavoris = auth.produitsFavoris.find(item => item === produitId);
     return (
       <div className={styles.offreso}>
         <Paper>
@@ -119,92 +111,100 @@ class DetailOffres extends Component {
                   style={constStyles.starButton}
                   hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                   title="Ajouter aux favoris"
-                  icon={
-                    <StarIcon
-                      color={
-                        estFavoris ? '#ffd203' : 'silver'
-                      }
-                      style={constStyles.star}
-                    />
-                  }
-                />
-              }
+                  icon={<StarIcon color={estFavoris ? '#ffd203' : 'silver'} style={constStyles.star} />}
+                />}
             </div>
             <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
               <FlatButton
-                onClick={() => this.setState((oldState) => ({ viewOffre: !oldState.viewOffre }))}
+                onClick={() => this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
                 primary
                 hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                 label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
                 title={viewOffre ? 'Afficher les infos fournisseur' : 'Afficher les produits'}
               />
             </div>
-            {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
+            {viewOffre &&
+              <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
             <div className="col-md-10">
               <div className="row" style={constStyles.margin}>
                 <div className="col-md-6">
-                  {viewOffre && <img src={`https://proxiweb.fr/${produit.photo}`} alt={produit.nom} style={constStyles.imageStyle} />}
-                  {!viewOffre && <img src={`https://proxiweb.fr/${fournisseur.illustration}`} alt={produit.nom} style={constStyles.imageStyle} />}
+                  {viewOffre &&
+                    <img
+                      src={`https://proxiweb.fr/${produit.photo}`}
+                      alt={produit.nom}
+                      style={constStyles.imageStyle}
+                    />}
+                  {!viewOffre &&
+                    <img
+                      src={`https://proxiweb.fr/${fournisseur.illustration}`}
+                      alt={produit.nom}
+                      style={constStyles.imageStyle}
+                    />}
                 </div>
                 <div className="col-md-6">
                   {viewOffre &&
                     <p
                       dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
-                    />
-                  }
+                    />}
                   {!viewOffre &&
                     <p
                       dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} // eslint-disable-line
-                    />
-                  }
+                    />}
                 </div>
               </div>
             </div>
           </div>
-          { viewOffre && offres.map((offre, idx) => {
-            const typeProduit = typeProduits.find((typesPdt) => typesPdt.id === produit.typeProduitId);
-            const enStock = offre.stock === null || offre.stock > 0;
+          {viewOffre &&
+            offres.map((offre, idx) => {
+              const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
+              const qteCommande = Object.keys(commandeContenus)
+                .filter(id => commandeContenus[id].commandeId === params.commandeId)
+                .map(id => commandeContenus[id])
+                .reduce((m, c) => m + c.quantite, 0);
 
-            const offreCommande = contenus.find((cont) => cont.offreId === offre.id);
-            const qteCommande = offreCommande ? offreCommande.quantite : 0;
-            const tR = offre.tarifications.length > 1;
+              const tR = offre.tarifications.length > 1;
 
-            return (
-              <div key={idx} className={`row ${styles.offre}`}>
-                <div className="col-md-12">
-                  <MediaQuery query="(max-device-width: 1600px)">
-                    <OffreDetails
-                      typeProduit={typeProduit}
-                      offre={offre}
-                      qteCommande={qteCommande}
-                      subTitle="Tarif dégressif (cliquez pour plus de détails)"
-                      onClick={() =>
-                        this.props.ajouter(
-                          commandeId,
-                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
-                        )
-                      }
-                      expandable={tR}
-                    />
-                  </MediaQuery>
-                  <MediaQuery query="(min-device-width: 1600px)">
-                    <OffreDetails
-                      typeProduit={typeProduit}
-                      offre={offre}
-                      qteCommande={qteCommande}
-                      subTitle="Tarif dégressif (+ infos...)"
-                      onClick={() =>
-                        this.props.ajouter(
-                          commandeId,
-                          { offreId: offre.id, quantite: 1, commandeId, utilisateurId }
-                        )
-                      }
-                      expandable={tR}
-                    />
-                  </MediaQuery>
+              return (
+                <div key={idx} className={`row ${styles.offre}`}>
+                  <div className="col-md-12">
+                    <MediaQuery query="(max-device-width: 1600px)">
+                      <OffreDetails
+                        typeProduit={typeProduit}
+                        offre={offre}
+                        qteCommande={qteCommande}
+                        subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                        onClick={() =>
+                          this.props.ajouterOffre({
+                            offreId: offre.id,
+                            quantite: 1,
+                            commandeId,
+                            utilisateurId,
+                          })}
+                        stock={produit.stock}
+                        expandable={tR}
+                      />
+                    </MediaQuery>
+                    <MediaQuery query="(min-device-width: 1601px)">
+                      <OffreDetails
+                        typeProduit={typeProduit}
+                        offre={offre}
+                        qteCommande={qteCommande}
+                        subTitle="Tarif dégressif (+ infos...)"
+                        onClick={() =>
+                          this.props.ajouterOffre({
+                            offreId: offre.id,
+                            quantite: 1,
+                            commandeId,
+                            utilisateurId,
+                          })}
+                        expandable={tR}
+                        stock={produit.stock}
+                      />
+                    </MediaQuery>
+                  </div>
                 </div>
-              </div>);
-          })}
+              );
+            })}
         </Paper>
       </div>
     );
@@ -216,13 +216,17 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffresProduitAvecTotalAchats(),
   fournisseur: selectFournisseurProduit(),
   produitsById: selectProduits(),
-  commande: selectCommande(), // commande courante en cours d'édition
+  commandeContenus: selectCommandeContenus(),
   auth: selectCompteUtilisateur(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  ajouter,
-  saveFavoris: saveAccount,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      ajouterOffre,
+      saveFavoris: saveAccount,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailOffres);

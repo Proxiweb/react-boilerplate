@@ -22,5 +22,17 @@ export function* redirectOnProduitCreated() {
   }
 }
 
+export function* redirectOnAnnuler() {
+  while (1) {
+    // eslint-disable-line
+    try {
+      yield take(c.ASYNC_ANNULER_SUCCESS);
+      window.location = '/';
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
 // All sagas to be loaded
-export default [redirectOnCommandeCreated, redirectOnProduitCreated];
+export default [redirectOnCommandeCreated, redirectOnProduitCreated, redirectOnAnnuler];

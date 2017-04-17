@@ -33,6 +33,7 @@ class OffreDetails extends Component {
     qteCommande: PropTypes.number.isRequired,
     offre: PropTypes.object.isRequired,
     typeProduit: PropTypes.object.isRequired,
+    stock: PropTypes.number,
     subTitle: PropTypes.string,
     onClick: PropTypes.func,
     expandable: PropTypes.bool.isRequired,
@@ -54,6 +55,7 @@ class OffreDetails extends Component {
       subTitle,
       onClick,
       offre,
+      stock,
       typeProduit,
       qteCommande,
       expandable,
@@ -81,7 +83,10 @@ class OffreDetails extends Component {
             {subTitle && expandable && <div className={styles.subTitle}>{subTitle}</div>}
           </div>
           <div className={styles.action}>
-            {onClick && <RaisedButton primary onClick={onClick} icon={<AddShoppingCart />} />}
+            {onClick &&
+              (!stock || stock - qteCommande > 0) &&
+              <RaisedButton primary onClick={onClick} icon={<AddShoppingCart />} />}
+            {stock && stock - qteCommande === 0 && <span><s>En stock</s></span>}
           </div>
           {expandable &&
             <div className={styles.expand}>

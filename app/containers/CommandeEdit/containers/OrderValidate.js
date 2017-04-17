@@ -4,6 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 import moment from 'moment';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
@@ -18,15 +19,12 @@ import Paiement from 'containers/CommandeEdit/components/Paiement';
 
 import {
   ajouter,
-  augmenter,
-  diminuer,
-  supprimer,
-  sauvegarder,
-  annuler,
-  setDistibution,
+  // augmenter,
+  // diminuer,
+  supprimer, // sauvegarder, // annuler, // setDistibution,
 } from 'containers/CommandeEdit/actions';
 
-import { selectCommande } from 'containers/CommandeEdit/selectors';
+// import { selectCommande, isCotisationInCommande } from 'containers/CommandeEdit/selectors';
 
 import {
   selectCommande as selectCommandeProxiweb,
@@ -34,11 +32,21 @@ import {
   selectOffres,
   selectProduits,
   selectCommandeLivraisons,
+  selectOffreCotisation,
+  selectCotisationId,
 } from 'containers/Commande/selectors';
+
+import {
+  ajouterOffre,
+  diminuerOffre,
+  setDistibution,
+  sauvegarder,
+  annuler,
+} from 'containers/Commande/actions';
 
 import { selectPending } from 'containers/App/selectors';
 
-// import { selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+import { selectDatePaiementCotisation } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
 
@@ -54,6 +62,12 @@ const constStyles = {
   },
   textAlignCenter: {
     textAlign: 'center',
+  },
+  paiementCotisation: {
+    textAlign: 'center',
+    backgroundColor: 'white',
+    marginTop: '1em',
+    padding: '1em',
   },
 };
 
@@ -74,9 +88,13 @@ class OrderValidate extends Component {
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
+    ajouter: PropTypes.func.isRequired,
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
+    offreCotisation: PropTypes.object.isRequired,
+    datePaiementCotisation: PropTypes.string,
+    cotisationId: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
@@ -88,16 +106,18 @@ class OrderValidate extends Component {
   };
 
   selectionnePlageHoraire = (plageHoraire, livraisonId) => {
-    this.props.setDistibution(this.props.params.commandeId, plageHoraire, livraisonId);
+    const { params: { commandeId }, utilisateurId } = this.props;
+    this.props.setDistibution({ commandeId, utilisateurId, plageHoraire, livraisonId });
     this.setState({ view: 'panier' });
   };
 
   showValidate = () => {
-    const { commande, params, utilisateurId, pending } = this.props;
+    const { commande, params, utilisateurId, pending, commandeContenus } = this.props;
     const { commandeId } = params;
     const { palette } = this.context.muiTheme;
     let label = null;
-    if (commande.modifiee) {
+
+    if (commande.createdAt !== null && commande.updatedAt === null) {
       label = pending ? 'Sauvegarde des modifications...' : 'Sauvegarder mes modifications';
     } else {
       label = pending ? 'Validation de la commande...' : 'Valider la commande';
@@ -107,11 +127,38 @@ class OrderValidate extends Component {
         <RaisedButton
           label={label}
           style={constStyles.margin20}
-          labelColor={commande.modifiee ? 'black' : 'white'}
-          backgroundColor={commande.modifiee ? palette.warningColor : palette.primary1Color}
-          onClick={() => this.props.sauvegarder(assign(commande, { commandeId, utilisateurId }))}
+          labelColor={commande.updatedAt === null ? 'black' : 'white'}
+          backgroundColor={
+            commande.updatedAt === null ? palette.warningColor : palette.primary1Color
+          }
+          onClick={() =>
+            this.props.sauvegarder(
+              assign(commande, {
+                commandeId,
+                utilisateurId,
+                contenus: commande.contenus.map(id => ({ ...commandeContenus[id], id })),
+              }),
+            )}
         />
       </div>
+    );
+  };
+
+  showPaiementCotisation = () => {
+    const { offreCotisation, utilisateurId, params: { commandeId } } = this.props;
+    return (
+      <RaisedButton
+        label="Payer la cotisation"
+        style={constStyles.margin20}
+        primary
+        onClick={() =>
+          this.props.ajouter(commandeId, {
+            offreId: offreCotisation.id,
+            quantite: 1,
+            commandeId,
+            utilisateurId,
+          })}
+      />
     );
   };
 
@@ -155,6 +202,7 @@ class OrderValidate extends Component {
       produitsById,
       commandeContenus,
       panierExpanded,
+      utilisateurId,
     } = this.props;
 
     return (
@@ -169,6 +217,7 @@ class OrderValidate extends Component {
         commandeContenus={commandeContenus}
         commandeId={params.commandeId}
         panierExpanded={panierExpanded}
+        utilisateurId={utilisateurId}
       />
     );
   };
@@ -187,14 +236,14 @@ class OrderValidate extends Component {
   };
 
   showCancel = () => {
-    const { commande, pending } = this.props;
+    const { commande, params: { commandeId }, pending } = this.props;
     return (
       <div style={constStyles.textAlignCenter}>
         <RaisedButton
           label={`${!pending ? 'Annuler ma ' : 'Annulation de la '}commande`}
           secondary
           style={constStyles.margin20}
-          onClick={() => this.props.annuler(commande.id, commande.commandeId)}
+          onClick={() => this.props.annuler({ id: commande.id, commandeId })}
           icon={<TrashIcon />}
         />
       </div>
@@ -210,12 +259,19 @@ class OrderValidate extends Component {
       balance,
       commandeProxiweb,
       pending,
+      datePaiementCotisation,
+      offreCotisation,
+      cotisationId,
     } = this.props;
+
+    const cotisationDansCommande = commande.contenus.find(id => id === cotisationId);
     const { view } = this.state;
     const contenusCommande = commande.contenus.map(
-      contenu => typeof contenu === 'object' ? contenu : commandeContenus[contenu], // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id]
-      // quand le contenu vient d'être ajouté, contenu est un objet sans id
+      item => typeof item === 'string' ? commandeContenus[item] : item,
     );
+
+    const cotisationAJour = datePaiementCotisation &&
+      moment(datePaiementCotisation).add(1, 'y').isAfter(moment());
 
     return (
       <div>
@@ -223,22 +279,32 @@ class OrderValidate extends Component {
           ? this.showLivraisonSelector()
           : this.showDetailsCommande(contenusCommande)}
         {view === 'panier' && commande.livraisonId && this.showDistribSelected()}
-        <div style={constStyles.textAlignCenter}>
-          {view !== 'distribution' &&
-            commandeProxiweb.dateCommande &&
-            !commande.livraisonId &&
-            commande.contenus.length > 0 &&
-            this.showDistribButton()}
-        </div>
+        {view !== 'distribution' &&
+          commandeProxiweb.dateCommande &&
+          !commande.livraisonId &&
+          commande.contenus.length > 0 &&
+          (cotisationAJour || cotisationDansCommande) &&
+          <div style={constStyles.textAlignCenter}>
+            {this.showDistribButton()}
+          </div>}
         {view === 'panier' &&
+          (cotisationAJour || cotisationDansCommande) &&
           (commande.livraisonId || !commandeProxiweb.dateCommande) &&
-          (!commande.id || commande.modifiee) &&
+          (!commande.createdAt || !commande.updatedAt) &&
           this.showValidate()}
+        {view === 'panier' &&
+          !cotisationAJour &&
+          offreCotisation &&
+          !cotisationDansCommande &&
+          <Paper style={constStyles.paiementCotisation}>
+            <p>{"Vous n'êtes pas à jour de votre cotisation de 3 €"}</p>
+            {this.showPaiementCotisation()}
+          </Paper>}
         {view === 'panier' &&
           !commande.dateLivraison &&
           commande.id &&
           moment(commande.createdAt).add(1, 'minutes').isBefore(moment()) &&
-          !commande.modifiee &&
+          commande.updatedAt !== null &&
           this.showCancel()}
         {commande.id &&
           balance !== null &&
@@ -259,13 +325,14 @@ class OrderValidate extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commande: selectCommande(), // commande courante en cours d'édition
   commandeProxiweb: selectCommandeProxiweb(),
   offres: selectOffres(),
   commandeContenus: selectCommandeContenus(),
   produitsById: selectProduits(),
-  // balance: selectMontantBalance(),
+  datePaiementCotisation: selectDatePaiementCotisation(),
   livraisons: selectCommandeLivraisons(),
+  offreCotisation: selectOffreCotisation(),
+  cotisationId: selectCotisationId(),
   pending: selectPending(),
 });
 
@@ -273,8 +340,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       ajouter,
-      augmenter,
-      diminuer,
+      augmenter: offre => ajouterOffre(offre),
+      diminuer: offre => diminuerOffre(offre),
       supprimer,
       sauvegarder,
       annuler,

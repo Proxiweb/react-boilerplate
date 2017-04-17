@@ -25,6 +25,10 @@ export default class Paiement extends Component {
   render() {
     const { balance, contenus, offres, commandeContenus, commandeId, dateLimite } = this.props;
     const { muiTheme } = this.context;
+
+    if (typeof contenus[0] === 'undefined') return null;
+    console.log('paiementi', contenus, commandeContenus);
+
     const { prix, recolteFond } = calculeTotauxCommande({ contenus, commandeContenus, offres, commandeId });
     const montant = round(prix + recolteFond, 2).toFixed(2);
 

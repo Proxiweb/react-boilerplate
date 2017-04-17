@@ -6,12 +6,12 @@
 import { findActionType } from 'utils/asyncSagaConstants';
 import c from './constants';
 
-export const initCommande = (commandeId) => ({
+export const initCommande = commandeId => ({
   type: c.INIT_COMMANDE,
   payload: { commandeId },
 });
 
-export const sauvegarder = (datas) => ({
+export const sauvegarder = datas => ({
   type: findActionType('sauvegarder', c, 'START'),
   url: datas.id ? `commande_utilisateurs/${datas.id}` : 'commande_utilisateurs',
   method: datas.id ? 'put' : 'post',
@@ -47,7 +47,6 @@ export function diminuer(commandeId, offreId) {
     payload: { commandeId, offreId },
   };
 }
-
 
 export function supprimer(commandeId, offreId) {
   return {

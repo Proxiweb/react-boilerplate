@@ -9,6 +9,8 @@ import capitalize from 'lodash/capitalize';
 
 import { addDestinataire } from 'containers/AdminCommunication/actions';
 import { saveUtilisateur } from 'containers/Commande/actions';
+import ProfilAdherentContainer from './ProfilAdherentContainer';
+
 import Panel from 'components/Panel';
 import styles from './styles.css';
 
@@ -16,6 +18,7 @@ class Utilisateur extends Component {
   // eslint-disable-line
   static propTypes = {
     utilisateur: PropTypes.object.isRequired,
+    relaiId: PropTypes.string.isRequired,
     addDest: PropTypes.func.isRequired,
     saveUtilisateur: PropTypes.func.isRequired,
   };
@@ -32,77 +35,83 @@ class Utilisateur extends Component {
   };
 
   render() {
-    const { utilisateur, addDest } = this.props;
+    const { utilisateur, addDest, relaiId } = this.props;
     if (!utilisateur) return null;
     const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
     return (
-      <Panel padding={0}>
-        <div className="row">
-          <div className="col-md-3">
-            <div
-              style={{
-                lineHeight: '48px',
-                textAlign: 'left',
-                padding: '0 1em',
-              }}
-            >
-              {identite}
+      <div>
+        <Panel padding={0}>
+          <div className="row">
+            <div className="col-md-4">
+              <div
+                style={{
+                  lineHeight: '48px',
+                  textAlign: 'left',
+                  padding: '0 1em',
+                }}
+              >
+                {identite}
+              </div>
+            </div>
+            <div className={`col-md-2 ${styles.comToggle}`}>
+              {utilisateur.email &&
+                <Toggle
+                  label="email"
+                  toggled={utilisateur.notifications.email}
+                  onToggle={this.handleToggle}
+                  name="email"
+                />}
+            </div>
+            <div className={`col-md-3 ${styles.comToggle}`}>
+              {utilisateur.telPortable &&
+                <Toggle
+                  label="sms"
+                  toggled={utilisateur.notifications.sms}
+                  onToggle={this.handleToggle}
+                  name="sms"
+                />}
+            </div>
+            <div className="col-md-3">
+              {utilisateur.email &&
+                <IconButton
+                  tooltip="Envoyer un email"
+                  onClick={() =>
+                    addDest({
+                      id: utilisateur.id,
+                      email: utilisateur.email,
+                      identite,
+                    })}
+                >
+                  <EmailIcon />
+                </IconButton>}
+              {utilisateur.telPortable &&
+                <IconButton
+                  tooltip="Envoyer un sms"
+                  onClick={() =>
+                    addDest({
+                      id: utilisateur.id,
+                      telPortable: utilisateur.telPortable,
+                      identite,
+                    })}
+                >
+                  <MessageIcon />
+                </IconButton>}
             </div>
           </div>
-          <div className={`col-md-3 ${styles.comToggle}`}>
-            {utilisateur.email &&
-              <Toggle
-                label="email"
-                toggled={utilisateur.notifications.email}
-                onToggle={this.handleToggle}
-                name="email"
-              />}
-          </div>
-          <div className={`col-md-3 ${styles.comToggle}`}>
-            {utilisateur.telPortable &&
-              <Toggle
-                label="sms"
-                toggled={utilisateur.notifications.sms}
-                onToggle={this.handleToggle}
-                name="sms"
-              />}
-          </div>
-          <div className="col-md-3">
-            {utilisateur.email &&
-              <IconButton
-                tooltip="Envoyer un email"
-                onClick={() => addDest({
-                  id: utilisateur.id,
-                  email: utilisateur.email,
-                  identite,
-                })}
-              >
-                <EmailIcon />
-              </IconButton>}
-            {utilisateur.telPortable &&
-              <IconButton
-                tooltip="Envoyer un sms"
-                onClick={() => addDest({
-                  id: utilisateur.id,
-                  telPortable: utilisateur.telPortable,
-                  identite,
-                })}
-              >
-                <MessageIcon />
-              </IconButton>}
-          </div>
-        </div>
-      </Panel>
+        </Panel>
+        <ProfilAdherentContainer utilisateur={utilisateur} relaiId={relaiId} />
+      </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    addDest: addDestinataire,
-    saveUtilisateur,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      addDest: addDestinataire,
+      saveUtilisateur,
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(Utilisateur);

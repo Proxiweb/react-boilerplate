@@ -75,3 +75,9 @@
   flex: 1;
   text-align: right;
 }
+
+.subHeader {
+  text-align: center;
+  background-color: #E1E1E1;
+  line-height: 36px;
+}

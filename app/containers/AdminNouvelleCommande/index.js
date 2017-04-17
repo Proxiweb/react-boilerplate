@@ -88,7 +88,7 @@ class NouvelleCommande extends Component {
   addFourn = value => {
     const { commande, token } = this.props;
     if (includes(this.state.cdeFourns, value)) return;
-    if (!commande.id) {
+    if (!commande || !commande.id) {
       this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
       return;
     }

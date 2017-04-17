@@ -35,6 +35,7 @@
 }
 
 .detailsParFournisseur,
+.listeAcheteursContainer,
 .detailsParUtilisateur {
   padding: 0.5em 2em;
 }

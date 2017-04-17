@@ -8,9 +8,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import styles from './styles.css';
 
 const options = {
-  options: [
-    'inline', 'list', 'textAlign', 'link', 'remove', 'history',
-  ],
+  options: ['inline', 'list', 'textAlign', 'link', 'remove', 'history'],
   inline: {
     inDropdown: false,
     className: undefined,
@@ -18,14 +16,15 @@ const options = {
   },
 };
 
-class CommunicationForm extends Component { // eslint-disable-line
+class CommunicationForm extends Component {
+  // eslint-disable-line
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     setMessage: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired,
     nbreDest: PropTypes.number.isRequired,
     smsOk: PropTypes.bool,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -38,7 +37,7 @@ class CommunicationForm extends Component { // eslint-disable-line
     this.props.setMessage({ html, sms, objet });
   }
 
-  onEditorChange = (editorContent) => this.setState({ html: draftToHtml(editorContent) })
+  onEditorChange = editorContent => this.setState({ html: draftToHtml(editorContent) });
 
   getInitialHTML(html) {
     const contentBlocks = convertFromHTML(html);
@@ -46,10 +45,9 @@ class CommunicationForm extends Component { // eslint-disable-line
     return convertToRaw(contentState);
   }
 
-  handleObjetChange = (event) => this.setState({ objet: event.target.value })
+  handleObjetChange = event => this.setState({ objet: event.target.value });
 
-  handleSmsChange = (event) => this.setState({ sms: event.target.value })
-
+  handleSmsChange = event => this.setState({ sms: event.target.value });
 
   isValid = () => {
     const { html, objet } = this.state;
@@ -58,24 +56,27 @@ class CommunicationForm extends Component { // eslint-disable-line
     }
     if (!this.props.nbreDest) return false;
     return true;
-  }
+  };
 
   render() {
-    const { sms, objet, html, rawHtml, smsOk } = this.state;
+    const { sms, objet, html, rawHtml } = this.state;
+    const { smsOk } = this.props;
     if (!html) return null;
     return (
       <div className={`row ${styles.form}`}>
         <div className="col-md-12">
-          {smsOk === false && <p className={styles.msgSmsKo}>{'L\'envoi d\'sms est désactivé.'}</p>}
-          {smsOk && <TextField
-            hintText="Texte du sms"
-            floatingLabelText={`Texte du sms (${140 - this.state.sms.length} car. restant)`}
-            multiLine
-            fullWidth
-            rows={3}
-            onChange={this.handleSmsChange}
-            value={this.state.sms}
-          />}
+          {smsOk === false && <p className={styles.msgSmsKo}>{"L'envoi d'sms est HS :-("}</p>}
+          {smsOk !== false &&
+            <TextField
+              hintText="Texte du sms"
+              floatingLabelText={`Texte du sms (${140 - this.state.sms.length} car. restant)`}
+              multiLine
+              fullWidth
+              rows={3}
+              onChange={this.handleSmsChange}
+              value={this.state.sms}
+              disabled={smsOk === null}
+            />}
           <TextField
             hintText="objet du mail"
             floatingLabelText="Objet du mail"
