@@ -12,7 +12,8 @@ import assign from 'lodash/assign';
 
 import DetailCommande from 'components/DetailCommande';
 import LivraisonSelector from 'containers/CommandeEdit/components/components/LivraisonSelector';
-import DistributionSelected from 'containers/CommandeEdit/components/components/DistributionSelected';
+import DistributionSelected
+  from 'containers/CommandeEdit/components/components/DistributionSelected';
 import Paiement from 'containers/CommandeEdit/components/Paiement';
 
 import {
@@ -201,16 +202,26 @@ class OrderValidate extends Component {
   };
 
   render() {
-    const { commande, commandeContenus, params, offres, balance, commandeProxiweb, pending } = this.props;
+    const {
+      commande,
+      commandeContenus,
+      params,
+      offres,
+      balance,
+      commandeProxiweb,
+      pending,
+    } = this.props;
     const { view } = this.state;
     const contenusCommande = commande.contenus.map(
-      contenu => // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id] // quand le contenu vient d'être ajouté, contenu est un objet sans id
-      typeof contenu === 'object' ? contenu : commandeContenus[contenu]
+      contenu => typeof contenu === 'object' ? contenu : commandeContenus[contenu], // quand il s'agit d'une commande depuis Bd, il n'y a que l'id -> commandeContenus[id]
+      // quand le contenu vient d'être ajouté, contenu est un objet sans id
     );
 
     return (
       <div>
-        {view === 'distribution' ? this.showLivraisonSelector() : this.showDetailsCommande(contenusCommande)}
+        {view === 'distribution'
+          ? this.showLivraisonSelector()
+          : this.showDetailsCommande(contenusCommande)}
         {view === 'panier' && commande.livraisonId && this.showDistribSelected()}
         <div style={constStyles.textAlignCenter}>
           {view !== 'distribution' &&
@@ -236,6 +247,7 @@ class OrderValidate extends Component {
             contenus={contenusCommande}
             commandeContenus={commandeContenus}
             commandeId={params.commandeId}
+            utilisateurId={utilisateurId}
             balance={balance}
             offres={offres}
             pending={pending}
@@ -257,17 +269,18 @@ const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    ajouter,
-    augmenter,
-    diminuer,
-    supprimer,
-    sauvegarder,
-    annuler,
-    setDistibution,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      ajouter,
+      augmenter,
+      diminuer,
+      supprimer,
+      sauvegarder,
+      annuler,
+      setDistibution,
+    },
+    dispatch,
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderValidate);

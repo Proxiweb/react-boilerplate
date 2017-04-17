@@ -38,28 +38,26 @@ class PaiementsCommande extends Component {
     utilisateurs: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     load: PropTypes.func.isRequired,
-  }
+  };
 
   state = {
     paiements: {},
     totaux: {},
     utilisateurSelected: null,
     error: false,
-  }
+  };
 
   componentDidMount() {
     const { utilisateurs, commandeUtilisateurs, params } = this.props;
-    commandeUtilisateurs.forEach((cu) => {
-      const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
+    commandeUtilisateurs.forEach(cu => {
+      const ut = utilisateurs.find(u => u.id === cu.utilisateurId);
       this.loadAccount(cu.utilisateurId, ut.stellarKeys.adresse);
     });
     this.props.load(params.relaiId);
   }
 
   loadAccount(id, accountId) {
-    const contenus = Object
-                      .keys(this.props.contenus)
-                      .map((k) => this.props.contenus[k]);
+    const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const {
       params,
       commandeContenus,
@@ -70,10 +68,10 @@ class PaiementsCommande extends Component {
 
     api
       .loadAccount(accountId)
-      .then((res) => {
-        const bal = res.balances.find((b) => b.asset_code === 'PROXI');
+      .then(res => {
+        const bal = res.balances.find(b => b.asset_code === 'PROXI');
         const totaux = calculeTotauxCommande({
-          contenus: contenus.filter((c) => c.utilisateurId === id),
+          utilisateurId: c.utilisateurId,
           offres,
           commandeContenus,
           commandeId,
@@ -114,13 +112,14 @@ class PaiementsCommande extends Component {
     if (error) {
       return (
         <div className="col-md-12">
-          <h1>{'Les comptes n\'ont pu être chargé veuillez réessayer ultérieurement'}</h1>
+          <h1>{"Les comptes n'ont pu être chargé veuillez réessayer ultérieurement"}</h1>
         </div>
       );
     }
     return (
       <div className={classnames('col-md-12', styles.panel)}>
-        {depots && Object.keys(paiements).length === commandeUtilisateurs.length &&
+        {depots &&
+          Object.keys(paiements).length === commandeUtilisateurs.length &&
           <div className="row">
             <div className="col-md-12">
               <ValidationCommande
@@ -132,15 +131,15 @@ class PaiementsCommande extends Component {
             </div>
             <div className="col-md-4 col-md-offset-2">
               <SelectableList value={utilisateurSelected} onChange={this.handleChangeList}>
-                {
-                  commandeUtilisateurs
-                  .filter((cu) => cu.commandeId === params.commandeId)
+                {commandeUtilisateurs
+                  .filter(cu => cu.commandeId === params.commandeId)
                   .map((cu, idx) => {
-                    const ut = utilisateurs.find((u) => u.id === cu.utilisateurId);
-                    const dep = depots.find((d) =>
-                      d.utilisateurId === cu.utilisateurId &&
-                      !d.transfertEffectue &&
-                      d.type === 'depot_relais'
+                    const ut = utilisateurs.find(u => u.id === cu.utilisateurId);
+                    const dep = depots.find(
+                      d =>
+                        d.utilisateurId === cu.utilisateurId &&
+                        !d.transfertEffectue &&
+                        d.type === 'depot_relais',
                     );
                     // si un dépot a été fait, en tenir compte
                     const totalAvecDepot = dep && dep.montant
@@ -149,9 +148,7 @@ class PaiementsCommande extends Component {
 
                     let iconColor = 'silver';
                     if (paiements[ut.id]) {
-                      iconColor = totaux[ut.id] <= totalAvecDepot
-                        ? 'green'
-                        : 'orange';
+                      iconColor = totaux[ut.id] <= totalAvecDepot ? 'green' : 'orange';
                     }
                     return (
                       <ListItem
@@ -165,9 +162,8 @@ class PaiementsCommande extends Component {
                         leftIcon={cu.datePaiement ? null : <PastilleIcon color={iconColor} />}
                         rightIcon={dep && <WalletIcon />}
                       />
-                  );
-                  })
-                }
+                    );
+                  })}
               </SelectableList>
             </div>
             <div className="col-md-4">
@@ -177,10 +173,11 @@ class PaiementsCommande extends Component {
                   balance={paiements[utilisateurSelected]}
                   totalCommande={totaux[utilisateurSelected].toFixed(2)}
                   relaiId={params.relaiId}
-                  depot={depots.find((d) =>
-                    d.utilisateurId === utilisateurSelected &&
-                    !d.transfertEffectue &&
-                    d.type === 'depot_relais'
+                  depot={depots.find(
+                    d =>
+                      d.utilisateurId === utilisateurSelected &&
+                      !d.transfertEffectue &&
+                      d.type === 'depot_relais',
                   )}
                 />}
             </div>
@@ -199,8 +196,12 @@ const mapStateToProps = createStructuredSelector({
   depots: selectDepots(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadDepotsRelais,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadDepotsRelais,
+    },
+    dispatch,
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaiementsCommande);
