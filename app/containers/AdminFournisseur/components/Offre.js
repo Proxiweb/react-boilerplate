@@ -10,6 +10,7 @@ import Toggle from 'material-ui/Toggle';
 import styles from './styles.css';
 import { saveOffre } from 'containers/Commande/actions';
 import OffreDetails from 'components/OffreDetails';
+import { get } from 'utils/apiClient';
 
 class Offre extends Component {
   // eslint-disable-line
@@ -21,9 +22,32 @@ class Offre extends Component {
     index: PropTypes.number.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      deletable: true,
+    };
+    this.checkDelete();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.offre.id !== nextProps.offre.id) {
+      this.checkDelete();
+    }
+  }
+
+  checkDelete = () => {
+    get(`/api/offre_produits/${this.props.offre.id}/check`)
+    .then(res => {
+      this.setState({
+        deletable: res.datas.deletable,
+      });
+    });
+  }
+
   handleDelete = () => ({});
 
-  handleStore = () => ({});
+  handleStore = () => this.props.saveOffre({ ...offre, archive: true }, 'Offre archivée')
 
   handleToggle = () => this.props.save(
     {
@@ -67,17 +91,17 @@ class Offre extends Component {
                 tooltip="Supprimer (non implémenté)"
                 tooltipPosition="top-center"
               >
-                <TrashIcon color="gray" />
+                <TrashIcon color={`${this.state.deletable ? 'black' : 'gray'}`} />
               </IconButton>
             </div>
             <div className="col-md-2">
-              <IconButton
+              {!offre.archive && <IconButton
                 onClick={this.handleStore}
-                tooltip="Archiver (non implémenté)"
+                tooltip="Archiver"
                 tooltipPosition="top-center"
               >
-                <ArchiveIcon color="gray" />
-              </IconButton>
+                <ArchiveIcon color="black" />
+              </IconButton>}
             </div>
           </div>
           <div className="row">
