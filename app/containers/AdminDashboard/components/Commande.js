@@ -37,9 +37,7 @@ class Commande extends Component {
       <Panel
         title={
           commandeUtilisateur
-            ? `Commande du ${moment(commandeUtilisateur.createdAt).format(
-                'LLL',
-              )}`
+            ? `Commande du ${moment(commandeUtilisateur.createdAt).format('LLL')}`
             : 'Sélectionnez un utilisateur'
         }
       >
@@ -54,6 +52,7 @@ class Commande extends Component {
             )
             .map(key => commandeContenus[key])}
           offres={offres}
+          filter={cc => cc.commandeUtilisateurId === commandeUtilisateurId}
           commandeId={commandeUtilisateur.commandeId}
           readOnly
         />

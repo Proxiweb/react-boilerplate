@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import round from 'lodash/round';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 
 import {
   Table,
@@ -49,6 +51,7 @@ export default class DetailCommande extends Component {
     augmenter: PropTypes.func,
     readOnly: PropTypes.bool,
     panierExpanded: PropTypes.bool.isRequired,
+    filter: PropTypes.func,
   };
 
   static contextTypes = {
@@ -71,12 +74,17 @@ export default class DetailCommande extends Component {
       commandeId,
       commandeContenus,
       panierExpanded,
-      utilisateurId,
+      filter,
     } = this.props;
 
     const { muiTheme } = this.context;
 
-    const totaux = calculeTotauxCommande({ utilisateurId, offres, commandeContenus, commandeId });
+    const totaux = calculeTotauxCommande({
+      filter,
+      offres,
+      commandeContenus,
+      commandeId,
+    });
 
     return (
       <div>
@@ -88,7 +96,11 @@ export default class DetailCommande extends Component {
           fixedFooter
         >
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow style={{ backgroundColor: muiTheme.palette.tableHeaderBackgroundColor }}>
+            <TableRow
+              style={{
+                backgroundColor: muiTheme.palette.tableHeaderBackgroundColor,
+              }}
+            >
               {headers.map((h, idx) => (
                 <TableHeaderColumn
                   tooltip={h.tooltip || h.label}
@@ -122,7 +134,10 @@ export default class DetailCommande extends Component {
 
               const qteTotalOffre = commandeCommandeContenus
                 .filter(cC => cC.utilisateurId !== contenu.utilisateurId)
-                .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0);
+                .reduce(
+                  (memo, item) => memo + item.quantite + item.qteRegul,
+                  0,
+                );
 
               const tarif = trouveTarification(
                 offre.tarifications,
@@ -137,7 +152,10 @@ export default class DetailCommande extends Component {
                 idx,
                 offre,
                 tarifEnBaisse,
-                colorTrendingDown: shader(muiTheme.palette.tableHeaderBackgroundColor, -0.4),
+                colorTrendingDown: shader(
+                  muiTheme.palette.tableHeaderBackgroundColor,
+                  -0.4,
+                ),
                 tarif,
                 produit: produits[offre.produitId],
               });
@@ -146,7 +164,8 @@ export default class DetailCommande extends Component {
                   {rows}
                   {!readOnly &&
                     <TableRowColumn className={styles.lessSmallCol}>
-                      {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
+                      {contenu.offreId !==
+                        '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
                         <button
                           onClick={() =>
                             augmenter({
@@ -159,10 +178,15 @@ export default class DetailCommande extends Component {
                         >
                           +
                         </button>}
-                      {contenu.offreId !== '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
+                      {contenu.offreId !==
+                        '8b330a52-a605-4a67-aee7-3cb3c9274733' &&
                         <button
                           onClick={() =>
-                            diminuer({ commandeId, offreId: contenu.offreId, utilisateurId })}
+                            diminuer({
+                              commandeId,
+                              offreId: contenu.offreId,
+                              utilisateurId,
+                            })}
                           title="quantite - 1"
                         >
                           -
@@ -183,10 +207,22 @@ export default class DetailCommande extends Component {
               border: 'solid 1px gray',
             }}
           >
-            Total : <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2)} €</strong>{' '}
+            Total :
+            {' '}
+            <strong>
+              {round(totaux.prix + totaux.recolteFond, 2).toFixed(2)} €
+            </strong>
+            {' '}
             {totaux.prixBase !== totaux.prix
               ? <span style={{ color: 'red' }}>
-                  <s>{round(totaux.prixBase + totaux.recolteFondBase, 2).toFixed(2)} €</s>{' '}
+                  <s>
+                    {round(totaux.prixBase + totaux.recolteFondBase, 2).toFixed(
+                      2,
+                    )}
+                    {' '}
+                    €
+                  </s>
+                  {' '}
                 </span>
               : ''}
             ( dont

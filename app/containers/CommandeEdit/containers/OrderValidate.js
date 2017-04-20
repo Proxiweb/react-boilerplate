@@ -12,7 +12,8 @@ import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
 import assign from 'lodash/assign';
 
 import DetailCommande from 'components/DetailCommande';
-import LivraisonSelector from 'containers/CommandeEdit/components/components/LivraisonSelector';
+import LivraisonSelector
+  from 'containers/CommandeEdit/components/components/LivraisonSelector';
 import DistributionSelected
   from 'containers/CommandeEdit/components/components/DistributionSelected';
 import Paiement from 'containers/CommandeEdit/components/Paiement';
@@ -46,7 +47,9 @@ import {
 
 import { selectPending } from 'containers/App/selectors';
 
-import { selectDatePaiementCotisation } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectDatePaiementCotisation,
+} from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
 
@@ -107,18 +110,31 @@ class OrderValidate extends Component {
 
   selectionnePlageHoraire = (plageHoraire, livraisonId) => {
     const { params: { commandeId }, utilisateurId } = this.props;
-    this.props.setDistibution({ commandeId, utilisateurId, plageHoraire, livraisonId });
+    this.props.setDistibution({
+      commandeId,
+      utilisateurId,
+      plageHoraire,
+      livraisonId,
+    });
     this.setState({ view: 'panier' });
   };
 
   showValidate = () => {
-    const { commande, params, utilisateurId, pending, commandeContenus } = this.props;
+    const {
+      commande,
+      params,
+      utilisateurId,
+      pending,
+      commandeContenus,
+    } = this.props;
     const { commandeId } = params;
     const { palette } = this.context.muiTheme;
     let label = null;
 
     if (commande.createdAt !== null && commande.updatedAt === null) {
-      label = pending ? 'Sauvegarde des modifications...' : 'Sauvegarder mes modifications';
+      label = pending
+        ? 'Sauvegarde des modifications...'
+        : 'Sauvegarder mes modifications';
     } else {
       label = pending ? 'Validation de la commande...' : 'Valider la commande';
     }
@@ -129,14 +145,19 @@ class OrderValidate extends Component {
           style={constStyles.margin20}
           labelColor={commande.updatedAt === null ? 'black' : 'white'}
           backgroundColor={
-            commande.updatedAt === null ? palette.warningColor : palette.primary1Color
+            commande.updatedAt === null
+              ? palette.warningColor
+              : palette.primary1Color
           }
           onClick={() =>
             this.props.sauvegarder(
               assign(commande, {
                 commandeId,
                 utilisateurId,
-                contenus: commande.contenus.map(id => ({ ...commandeContenus[id], id })),
+                contenus: commande.contenus.map(id => ({
+                  ...commandeContenus[id],
+                  id,
+                })),
               }),
             )}
         />
@@ -145,7 +166,11 @@ class OrderValidate extends Component {
   };
 
   showPaiementCotisation = () => {
-    const { offreCotisation, utilisateurId, params: { commandeId } } = this.props;
+    const {
+      offreCotisation,
+      utilisateurId,
+      params: { commandeId },
+    } = this.props;
     return (
       <RaisedButton
         label="Payer la cotisation"
@@ -217,7 +242,7 @@ class OrderValidate extends Component {
         commandeContenus={commandeContenus}
         commandeId={params.commandeId}
         panierExpanded={panierExpanded}
-        utilisateurId={utilisateurId}
+        filter={cc => cc.utilisateurId === utilisateurId}
       />
     );
   };
@@ -265,13 +290,16 @@ class OrderValidate extends Component {
       cotisationId,
     } = this.props;
 
-    const cotisationDansCommande = commande.contenus.find(id => id === cotisationId);
+    const cotisationDansCommande = commande.contenus.find(
+      id => id === cotisationId,
+    );
     const { view } = this.state;
     const contenusCommande = commande.contenus.map(
-      item => typeof item === 'string' ? commandeContenus[item] : item,
+      item => (typeof item === 'string' ? commandeContenus[item] : item),
     );
 
-    const cotisationAJour = datePaiementCotisation &&
+    const cotisationAJour =
+      datePaiementCotisation &&
       moment(datePaiementCotisation).add(1, 'y').isAfter(moment());
 
     return (
@@ -279,7 +307,9 @@ class OrderValidate extends Component {
         {view === 'distribution'
           ? this.showLivraisonSelector()
           : this.showDetailsCommande(contenusCommande)}
-        {view === 'panier' && commande.livraisonId && this.showDistribSelected()}
+        {view === 'panier' &&
+          commande.livraisonId &&
+          this.showDistribSelected()}
         {view !== 'distribution' &&
           commandeProxiweb.dateCommande &&
           !commande.livraisonId &&

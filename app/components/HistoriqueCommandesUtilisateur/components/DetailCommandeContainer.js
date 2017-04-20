@@ -38,7 +38,8 @@ class DetailCommandeContainer extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      this.props.commandeId !== nextProps.commandeId || this.props.utilisateurId !== nextProps.utilisateurId
+      this.props.commandeId !== nextProps.commandeId ||
+      this.props.utilisateurId !== nextProps.utilisateurId
     ) {
       if (!this.isLoaded(nextProps)) {
         this.props.loadCommandeById({ id: nextProps.commandeId });
@@ -46,20 +47,28 @@ class DetailCommandeContainer extends Component {
     }
   }
 
-  isLoaded = (props) => {
-    const { commandesUtilisateurs, commandeId, utilisateurId, contenus } = props;
+  isLoaded = props => {
+    const {
+      commandesUtilisateurs,
+      commandeId,
+      utilisateurId,
+      contenus,
+    } = props;
 
     if (!commandesUtilisateurs || !contenus) return false;
 
     const commandeUtilisateurId = Object.keys(commandesUtilisateurs).find(
       id =>
         commandesUtilisateurs[id].commandeId === commandeId &&
-        commandesUtilisateurs[id].utilisateurId === utilisateurId
+        commandesUtilisateurs[id].utilisateurId === utilisateurId,
     );
 
-    return commandeUtilisateurId && Object.keys(contenus).filter(
-      id => contenus[id].commandeUtilisateurId === commandeUtilisateurId
-    ).length > 0;
+    return (
+      commandeUtilisateurId &&
+      Object.keys(contenus).filter(
+        id => contenus[id].commandeUtilisateurId === commandeUtilisateurId,
+      ).length > 0
+    );
   };
 
   render() {
@@ -90,7 +99,7 @@ class DetailCommandeContainer extends Component {
           Object.keys(commandesUtilisateurs).find(
             id =>
               commandesUtilisateurs[id].commandeId === commandeId &&
-              commandesUtilisateurs[id].utilisateurId === utilisateurId
+              commandesUtilisateurs[id].utilisateurId === utilisateurId,
           )
         ]
       : null;
@@ -102,7 +111,9 @@ class DetailCommandeContainer extends Component {
       .reduce((m, id) => ({ ...m, [id]: contenus[id] }), {});
 
     const contenusUtilisateur = Object.keys(contenus)
-      .filter(id => contenus[id].commandeUtilisateurId === commandeUtilisateur.id)
+      .filter(
+        id => contenus[id].commandeUtilisateurId === commandeUtilisateur.id,
+      )
       .map(id => contenus[id]);
 
     return (
@@ -113,6 +124,7 @@ class DetailCommandeContainer extends Component {
         offres={offres}
         produits={produits}
         readOnly
+        filter={cc => cc.commandeUtilisateurId === commandeUtilisateurId}
       />
     );
   }
@@ -130,7 +142,9 @@ const mapDispatchToProps = dispatch =>
     {
       loadCommandeById: loadCommandes,
     },
-    dispatch
+    dispatch,
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailCommandeContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailCommandeContainer,
+);
