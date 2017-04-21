@@ -17,7 +17,9 @@ import {
   selectProduits,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 
 import { ajouterOffre } from 'containers/Commande/actions';
@@ -111,20 +113,34 @@ class DetailOffres extends Component {
                   style={constStyles.starButton}
                   hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                   title="Ajouter aux favoris"
-                  icon={<StarIcon color={estFavoris ? '#ffd203' : 'silver'} style={constStyles.star} />}
+                  icon={
+                    <StarIcon
+                      color={estFavoris ? '#ffd203' : 'silver'}
+                      style={constStyles.star}
+                    />
+                  }
                 />}
             </div>
             <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
               <FlatButton
-                onClick={() => this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
+                onClick={() =>
+                  this.setState(oldState => ({
+                    viewOffre: !oldState.viewOffre,
+                  }))}
                 primary
                 hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                 label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
-                title={viewOffre ? 'Afficher les infos fournisseur' : 'Afficher les produits'}
+                title={
+                  viewOffre
+                    ? 'Afficher les infos fournisseur'
+                    : 'Afficher les produits'
+                }
               />
             </div>
             {viewOffre &&
-              <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
+              <div className={`${styles.produitTitre} col-md-12`}>
+                {produit.nom.toUpperCase()}
+              </div>}
             <div className="col-md-10">
               <div className="row" style={constStyles.margin}>
                 <div className="col-md-6">
@@ -148,17 +164,23 @@ class DetailOffres extends Component {
                     />}
                   {!viewOffre &&
                     <p
-                      dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} // eslint-disable-line
+                      dangerouslySetInnerHTML={{
+                        __html: fournisseur.presentation,
+                      }} // eslint-disable-line
                     />}
                 </div>
               </div>
             </div>
           </div>
           {viewOffre &&
-            offres.map((offre, idx) => {
-              const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
+            offres.filter(o => !o.archive).map((offre, idx) => {
+              const typeProduit = typeProduits.find(
+                typesPdt => typesPdt.id === produit.typeProduitId,
+              );
               const qteCommande = Object.keys(commandeContenus)
-                .filter(id => commandeContenus[id].commandeId === params.commandeId)
+                .filter(
+                  id => commandeContenus[id].commandeId === params.commandeId,
+                )
                 .map(id => commandeContenus[id])
                 .reduce((m, c) => m + c.quantite, 0);
 
@@ -226,7 +248,7 @@ const mapDispatchToProps = dispatch =>
       ajouterOffre,
       saveFavoris: saveAccount,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailOffres);
