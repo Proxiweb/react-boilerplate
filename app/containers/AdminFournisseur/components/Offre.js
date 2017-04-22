@@ -37,25 +37,29 @@ class Offre extends Component {
   }
 
   checkDelete = () => {
-    get(`/api/offre_produits/${this.props.offre.id}/check`)
-    .then(res => {
+    get(`/api/offre_produits/${this.props.offre.id}/check`).then(res => {
       this.setState({
         deletable: res.datas.deletable,
       });
     });
-  }
+  };
 
   handleDelete = () => ({});
 
-  handleStore = () => this.props.saveOffre({ ...offre, archive: true }, 'Offre archivée')
+  handleStore = offre => {
+    if (confirm('Archiver définitivement cette offre')) {
+      this.props.save({ ...offre, archive: true }, 'Offre archivée');
+    }
+  };
 
-  handleToggle = () => this.props.save(
-    {
-      ...this.props.offre,
-      active: !this.props.offre.active,
-    },
-    null
-  );
+  handleToggle = () =>
+    this.props.save(
+      {
+        ...this.props.offre,
+        active: !this.props.offre.active,
+      },
+      null,
+    );
 
   render() {
     const { offre, typeProduit, handleToggeState, index } = this.props;
@@ -63,25 +67,27 @@ class Offre extends Component {
       <div className="row">
         <div className="col-md-9">
           {
-            (
-              <div className={`row ${styles.offre}`}>
-                <div className="col-md-12">
-                  <OffreDetails
-                    key={index}
-                    typeProduit={typeProduit}
-                    offre={offre}
-                    expandable={false}
-                    style={{ marginBottom: '10px' }}
-                  />
-                </div>
+            <div className={`row ${styles.offre}`}>
+              <div className="col-md-12">
+                <OffreDetails
+                  key={index}
+                  typeProduit={typeProduit}
+                  offre={offre}
+                  expandable={false}
+                  style={{ marginBottom: '10px' }}
+                />
               </div>
-            )
+            </div>
           }
         </div>
         <div className="col-md-3">
           <div className="row">
             <div className="col-md-2">
-              <IconButton onClick={handleToggeState} tooltip="Modifier" tooltipPosition="top-center">
+              <IconButton
+                onClick={handleToggeState}
+                tooltip="Modifier"
+                tooltipPosition="top-center"
+              >
                 <EditIcon />
               </IconButton>
             </div>
@@ -91,17 +97,20 @@ class Offre extends Component {
                 tooltip="Supprimer (non implémenté)"
                 tooltipPosition="top-center"
               >
-                <TrashIcon color={`${this.state.deletable ? 'black' : 'gray'}`} />
+                <TrashIcon
+                  color={`${this.state.deletable ? 'black' : 'gray'}`}
+                />
               </IconButton>
             </div>
             <div className="col-md-2">
-              {!offre.archive && <IconButton
-                onClick={this.handleStore}
-                tooltip="Archiver"
-                tooltipPosition="top-center"
-              >
-                <ArchiveIcon color="black" />
-              </IconButton>}
+              {!offre.archive &&
+                <IconButton
+                  onClick={() => this.handleStore(offre)}
+                  tooltip="Archiver"
+                  tooltipPosition="top-center"
+                >
+                  <ArchiveIcon color="black" />
+                </IconButton>}
             </div>
           </div>
           <div className="row">
@@ -119,11 +128,12 @@ class Offre extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    save: saveOffre,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      save: saveOffre,
+    },
+    dispatch,
+  );
 
 export default connect(null, mapDispatchToProps)(Offre);
