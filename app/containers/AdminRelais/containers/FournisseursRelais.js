@@ -117,7 +117,10 @@ class FournisseursRelais extends Component {
       : [];
     const offresProduit = produitSelected
       ? offres.filter(
-          o => o.produitId === produitSelected && o.relaiId === params.relaiId,
+          o =>
+            o.produitId === produitSelected &&
+            o.relaiId === params.relaiId &&
+            !o.archive,
         )
       : [];
 
@@ -188,7 +191,6 @@ class FournisseursRelais extends Component {
             offresProduit
               .slice()
               .sort((o1, o2) => o1.active > o2.active)
-              .filter(o => !o.archive && o.relaiId === params.relaiId)
               .map((o, idx) => (
                 <OffreProduit
                   typeProduit={
