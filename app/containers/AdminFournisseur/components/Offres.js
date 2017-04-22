@@ -86,6 +86,7 @@ class Offres extends Component {
                     .map((off, idx) => (
                       <Offre
                         index={idx}
+                        key={idx}
                         offre={off}
                         typeProduit={typeProduit}
                         handleToggeState={() => this.toggleState(idx)}

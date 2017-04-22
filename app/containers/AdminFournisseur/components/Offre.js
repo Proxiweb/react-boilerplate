@@ -8,7 +8,7 @@ import ArchiveIcon from 'material-ui/svg-icons/action/assignment-returned';
 import Toggle from 'material-ui/Toggle';
 
 import styles from './styles.css';
-import { saveOffre } from 'containers/Commande/actions';
+import { saveOffre, deleteOffre } from 'containers/Commande/actions';
 import OffreDetails from 'components/OffreDetails';
 import { get } from 'utils/apiClient';
 
@@ -44,7 +44,12 @@ class Offre extends Component {
     });
   };
 
-  handleDelete = () => ({});
+  handleDelete = id => {
+    if (!this.state.deletable) return;
+    if (confirm('Supprimer définitivement cette offre')) {
+      this.props.delete(id);
+    }
+  };
 
   handleStore = offre => {
     if (confirm('Archiver définitivement cette offre')) {
@@ -93,8 +98,8 @@ class Offre extends Component {
             </div>
             <div className="col-md-2">
               <IconButton
-                onClick={this.handleDelete}
-                tooltip="Supprimer (non implémenté)"
+                onClick={() => this.handleDelete(offre.id)}
+                tooltip="Supprimer"
                 tooltipPosition="top-center"
               >
                 <TrashIcon
@@ -132,6 +137,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       save: saveOffre,
+      delete: deleteOffre,
     },
     dispatch,
   );
