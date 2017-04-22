@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Paper from 'material-ui/Paper';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { selectOffresDuProduit, selectTypesProduitsByIds } from 'containers/Commande/selectors';
+import {
+  selectOffresDuProduit,
+  selectTypesProduitsByIds,
+} from 'containers/Commande/selectors';
 import { selectPending } from 'containers/App/selectors';
 import Offre from './Offre';
 import OffreFormContainer from './OffreFormContainer';
@@ -28,19 +31,24 @@ class Offres extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.produit.id !== this.props.produit.id || nextProps.pending !== this.props.pending) {
+    if (
+      nextProps.produit.id !== this.props.produit.id ||
+      nextProps.pending !== this.props.pending
+    ) {
       this.setState({ ...this.state, editMode: false });
     }
   }
 
-  toggleState = itemEditIndex => this.setState({
-    ...this.state,
-    editMode: !this.state.editMode,
-    itemEditIndex,
-    nouvelle: false,
-  });
+  toggleState = itemEditIndex =>
+    this.setState({
+      ...this.state,
+      editMode: !this.state.editMode,
+      itemEditIndex,
+      nouvelle: false,
+    });
 
-  createOffre = () => this.setState({ ...this.state, editMode: true, nouvelle: true });
+  createOffre = () =>
+    this.setState({ ...this.state, editMode: true, nouvelle: true });
 
   render() {
     const { offres, typesProduits, produit, pending } = this.props;
@@ -116,10 +124,11 @@ class Offres extends Component {
                     prix: 100,
                   },
                 ],
-                poids: 10000,
+                poids: 1000000,
               }}
               tva={produit.tva}
               handleToggeState={this.toggleState}
+              quantiteUnite={typeProduit.quantiteUnite}
             />
           </div>}
       </div>

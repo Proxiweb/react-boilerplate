@@ -22,18 +22,29 @@ import RaisedButton from 'material-ui/RaisedButton';
 // });
 
 const renderTarifications = (
-  { fields, meta: { error }, tarifications } // eslint-disable-line
+  { fields, meta: { error }, tarifications }, // eslint-disable-line
 ) => (
   <div className="row">
-    <div className="col-md-12" style={{ textAlign: 'right', marginBottom: '1em', marginTop: '2em' }}>
-      <RaisedButton primary label=" + Nouvelle tarification" onTouchTap={() => fields.push()} />
+    <div
+      className="col-md-12"
+      style={{ textAlign: 'right', marginBottom: '1em', marginTop: '2em' }}
+    >
+      <RaisedButton
+        primary
+        label=" + Nouvelle tarification"
+        onTouchTap={() => fields.push()}
+      />
     </div>
     <div className="col-md-12">
       {fields.map((tarification, index) => (
         <div
           className="row"
           key={index}
-          style={{ marginBottom: '0.5em', padding: '0 1em 0.5em 1em 1em', border: 'solid 1px silver' }}
+          style={{
+            marginBottom: '0.5em',
+            padding: '0 1em 0.5em 1em 1em',
+            border: 'solid 1px silver',
+          }}
         >
           <div className="col-md-2">
             <Field
@@ -115,10 +126,16 @@ class offreForm extends Component {
     // tarifications modifiées pour
     // calcul automatique part distributeur
     let tarifications;
+    let poids;
     try {
       tarifications = valeurs.offre.values.tarifications;
     } catch (e) {
       tarifications = null;
+    }
+    try {
+      poids = valeurs.offre.values.poids;
+    } catch (e) {
+      poids = null;
     }
 
     return (
@@ -127,15 +144,30 @@ class offreForm extends Component {
           <div className="col-xs-12">
             <div className="row">
               <div className="col-xs-6">
-                <Field floatingLabelText="Description" fullWidth name="description" component={TextField} />
-              </div>
-              <div className="col-xs-6">
                 <Field
-                  floatingLabelText={`${quantiteUnite === 'mg' ? 'poids' : 'volume'} (${quantiteUnite})`}
-                  name="poids"
+                  floatingLabelText="Description"
                   fullWidth
+                  name="description"
                   component={TextField}
                 />
+              </div>
+              <div className="col-xs-6">
+                <div className="row">
+                  <div className="col-xs-8">
+                    <Field
+                      floatingLabelText={`${quantiteUnite === 'mg' ? 'poids' : 'volume'} (${quantiteUnite})`}
+                      name="poids"
+                      fullWidth
+                      component={TextField}
+                    />
+                  </div>
+                  <div
+                    className="col-xs-4"
+                    style={{ paddingTop: '40px', color: 'gray' }}
+                  >
+                    {`(${parseFloat(poids / 1000000, 2)} kg)`}
+                  </div>
+                </div>
               </div>
             </div>
             <Field
@@ -144,16 +176,38 @@ class offreForm extends Component {
               fullWidth
               component={TextField}
             />
-            <FieldArray name="tarifications" component={renderTarifications} props={{ tarifications }} />
+            <FieldArray
+              name="tarifications"
+              component={renderTarifications}
+              props={{ tarifications }}
+            />
           </div>
         </div>
         <div className="row center-md">
           {!pristine &&
-            <div className={`col-md-6 ${styles.formFooter}`} style={{ minHeight: 52 }}>
-              <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+            <div
+              className={`col-md-6 ${styles.formFooter}`}
+              style={{ minHeight: 52 }}
+            >
+              <RaisedButton
+                type="submit"
+                label="Valider"
+                primary
+                fullWidth
+                disabled={pending}
+              />
             </div>}
-          <div className={`col-md-6 ${styles.formFooter}`} style={{ minHeight: 52 }}>
-            <RaisedButton label="Annuler" secondary fullWidth disabled={pending} onClick={handleToggeState} />
+          <div
+            className={`col-md-6 ${styles.formFooter}`}
+            style={{ minHeight: 52 }}
+          >
+            <RaisedButton
+              label="Annuler"
+              secondary
+              fullWidth
+              disabled={pending}
+              onClick={handleToggeState}
+            />
           </div>
         </div>
       </form>

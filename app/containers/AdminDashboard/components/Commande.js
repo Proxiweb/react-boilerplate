@@ -44,13 +44,6 @@ class Commande extends Component {
         <DetailCommande
           produits={produits}
           commandeContenus={commandeContenus}
-          contenus={Object.keys(commandeContenus)
-            .filter(
-              key =>
-                commandeContenus[key].commandeUtilisateurId ===
-                commandeUtilisateurId,
-            )
-            .map(key => commandeContenus[key])}
           offres={offres}
           filter={cc => cc.commandeUtilisateurId === commandeUtilisateurId}
           commandeId={commandeUtilisateur.commandeId}

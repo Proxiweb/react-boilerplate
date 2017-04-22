@@ -105,26 +105,27 @@ class DetailCommandeContainer extends Component {
       : null;
 
     if (!commandeUtilisateur || !contenus || !produits || !offres) return null;
-
     const commandeContenus = Object.keys(contenus)
       .filter(id => contenus[id].commandeId === commandeId)
       .reduce((m, id) => ({ ...m, [id]: contenus[id] }), {});
 
-    const contenusUtilisateur = Object.keys(contenus)
-      .filter(
-        id => contenus[id].commandeUtilisateurId === commandeUtilisateur.id,
-      )
-      .map(id => contenus[id]);
+    // const contenusUtilisateur = Object.keys(contenus)
+    //   .filter(
+    //     id => contenus[id].commandeUtilisateurId === commandeUtilisateur.id,
+    //   )
+    //   .map(id => contenus[id]);
 
     return (
       <DetailCommande
-        contenus={contenusUtilisateur}
         commandeContenus={commandeContenus}
         commandeId={commandeId}
         offres={offres}
         produits={produits}
         readOnly
-        filter={cc => cc.commandeUtilisateurId === commandeUtilisateurId}
+        filter={cc => {
+          const test = cc.commandeUtilisateurId === commandeUtilisateur.id;
+          return test;
+        }}
       />
     );
   }

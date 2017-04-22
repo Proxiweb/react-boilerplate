@@ -48,14 +48,16 @@ class OffreFormContainer extends React.Component {
       valeurs,
       quantiteUnite,
     } = this.props;
+
     const tarifications = offre.tarifications.map(t => ({
       ...t,
       prix: round(t.prix / 100, 2),
-      recolteFond: round(t.recolteFond / 100, 2),
+      recolteFond: round(t.recolteFond / 1000, 2),
     }));
+
     return (
       <OffreForm
-        initialValues={{ ...offre, tarifications }}
+        initialValues={{ ...offre, tarifications, quantiteUnite }}
         onSubmit={this.handleSubmit}
         pending={pending}
         quantiteUnite={quantiteUnite}
@@ -73,11 +75,12 @@ const mapStateToProps = createStructuredSelector({
   valeurs: selectValeurs(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    save: saveOffre,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      save: saveOffre,
+    },
+    dispatch,
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(OffreFormContainer);

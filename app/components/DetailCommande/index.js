@@ -67,7 +67,7 @@ export default class DetailCommande extends Component {
     const {
       offres,
       produits,
-      contenus,
+      // contenus,
       diminuer,
       readOnly,
       augmenter,
@@ -85,6 +85,14 @@ export default class DetailCommande extends Component {
       commandeContenus,
       commandeId,
     });
+
+    const contenus = Object.keys(commandeContenus)
+      .filter(
+        id =>
+          (!filter || filter(commandeContenus[id])) &&
+          commandeContenus[id].commandeId === commandeId,
+      )
+      .map(id => commandeContenus[id]);
 
     return (
       <div>
