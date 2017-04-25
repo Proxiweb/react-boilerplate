@@ -46,7 +46,7 @@ class ListeAcheteurs extends Component {
     utilisateurSelected,
     utilisateurDepot,
     utilisateurTotalCommande,
-    utilisateurBalance,
+    utilisateurBalance
   ) => {
     this.setState({
       ...this.state,
@@ -70,7 +70,12 @@ class ListeAcheteurs extends Component {
       depots,
     } = this.props;
 
-    const { utilisateurDepot, utilisateurTotalCommande, utilisateurBalance } = this.state;
+    const {
+      utilisateurDepot,
+      utilisateurTotalCommande,
+      utilisateurBalance,
+    } = this.state;
+
     const utilisateur = utilisateurs.find(u => u.id === utilisateurId);
     // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const acheteurs = commandeUtilisateurs
@@ -93,7 +98,7 @@ class ListeAcheteurs extends Component {
       .sort(
         (cu1, cu2) =>
           cu1.debutLivraisonUnix > cu2.debutLivraisonUnix &&
-          cu1.utilisateur.nom > cu2.utilisateur.nom,
+          cu1.utilisateur.nom > cu2.utilisateur.nom
       );
 
     const acheteursGrp = groupBy(acheteurs, 'debutLivraisonISO');
@@ -110,7 +115,9 @@ class ListeAcheteurs extends Component {
               primary
               fullWidth
               label="Depot"
-              disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
+              disabled={
+                stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)
+              }
               onClick={() => this.setState({ ...this.state, depot: true })}
             />}
           {false &&

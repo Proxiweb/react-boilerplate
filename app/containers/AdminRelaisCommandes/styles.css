@@ -5,20 +5,6 @@
   min-height: calc(100vh - 105px);
 }
 
-.noScroll {
-  overflow-y: auto;
-}
-
-.nouvelleCommande {
-  background-color: transparent;
-}
-
-.addButton {
-  position: absolute;
-  bottom: 25px;
-  right: 25px;
-}
-
 .liste {
   padding: 0rem;
   height: calc(100vh - 165px);

@@ -27,7 +27,10 @@ class ListeAcheteursItem extends Component {
   };
 
   componentDidMount() {
-    if (this.props.utilisateur.stellarKeys && !this.props.commandeUtilisateur.dateLivraison) {
+    if (
+      this.props.utilisateur.stellarKeys &&
+      !this.props.commandeUtilisateur.dateLivraison
+    ) {
       api
         .loadAccount(this.props.utilisateur.stellarKeys.adresse)
         .then(res => {
@@ -44,9 +47,19 @@ class ListeAcheteursItem extends Component {
   }
 
   computeDatas = () => {
-    const { utilisateur: { id }, depots, totaux, commandeUtilisateur } = this.props;
+    const {
+      utilisateur: { id },
+      depots,
+      totaux,
+      commandeUtilisateur,
+    } = this.props;
     const { paiements } = this.state;
-    const dep = depots.find(d => d.utilisateurId === id && !d.transfertEffectue && d.type === 'depot_relais');
+    const dep = depots.find(
+      d =>
+        d.utilisateurId === id &&
+        !d.transfertEffectue &&
+        d.type === 'depot_relais'
+    );
     // si un dépot a été fait, en tenir compte
     const depot = dep && dep.montant ? parseFloat(dep.montant) : 0;
 
@@ -64,9 +77,21 @@ class ListeAcheteursItem extends Component {
     };
   };
 
-  render() {
-    const { key, utilisateur, commandeUtilisateur, onClick, totaux } = this.props;
+  handleClick = dep => {
+    const { utilisateur, totaux } = this.props;
     const totalCommande = round(totaux.prix + totaux.recolteFond, 2);
+
+    this.props.onClick(
+      utilisateur.id,
+      dep,
+      totalCommande,
+      this.state.paiements
+    );
+  };
+
+  render() {
+    const { key, utilisateur, commandeUtilisateur, onClick } = this.props;
+
     const datas = this.computeDatas();
     const { dep, iconColor } = datas;
     return (
@@ -74,10 +99,12 @@ class ListeAcheteursItem extends Component {
         key={key}
         primaryText={`${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}`}
         value={this.props.value}
-        onClick={() => onClick(utilisateur.id, dep, totalCommande, this.state.paiements)}
+        onClick={() => this.handleClick(dep)}
         leftIcon={
           commandeUtilisateur.dateLivraison
-            ? commandeUtilisateur.datePaiement ? <DoneAllIcon color="green" /> : <DoneIcon color="green" />
+            ? commandeUtilisateur.datePaiement
+                ? <DoneAllIcon color="green" />
+                : <DoneIcon color="green" />
             : <PastilleIcon color={iconColor} />
         }
         rightIcon={dep && <WalletIcon />}

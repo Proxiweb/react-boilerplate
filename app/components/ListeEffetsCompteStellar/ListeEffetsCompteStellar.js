@@ -15,7 +15,7 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import styles from './styles.css';
 
 const mergeEffectInfos = effect =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve, reject) =>
     effect
       .operation()
       .then(operation => {
@@ -34,8 +34,8 @@ const mergeEffectInfos = effect =>
           })
           .catch(err => reject(err));
       })
-      .catch(err => reject(err));
-  });
+      .catch(err => reject(err))
+  );
 
 export default class ListeEffetsCompteStellar extends Component {
   // eslint-disable-line
@@ -62,10 +62,14 @@ export default class ListeEffetsCompteStellar extends Component {
     this.loadEffects();
   };
 
-  loadEffects = () => api.loadEffects(this.props.stellarAddress, this.props.limit || 5).then(effects => {
-      Promise.all(effects.map(effect => mergeEffectInfos(effect))).then(effectInfos =>
-        this.setState({ effects: effectInfos }));
-    });
+  loadEffects = () =>
+    api
+      .loadEffects(this.props.stellarAddress, this.props.limit || 5)
+      .then(effects =>
+        Promise.all(
+          effects.map(effect => mergeEffectInfos(effect))
+        ).then(effectInfos => this.setState({ effects: effectInfos }))
+      );
 
   render() {
     if (!this.state.effects) {
@@ -89,11 +93,21 @@ export default class ListeEffetsCompteStellar extends Component {
       fontSize: '16px',
     };
     return (
-      <Table selectable={false} multiSelectable={false} className={styles.bordered}>
+      <Table
+        selectable={false}
+        multiSelectable={false}
+        className={styles.bordered}
+      >
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
-            <TableHeaderColumn tooltip="Date" style={headeStyle}>Date</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Opération" width="55" style={headeStyle}>
+            <TableHeaderColumn tooltip="Date" style={headeStyle}>
+              Date
+            </TableHeaderColumn>
+            <TableHeaderColumn
+              tooltip="Opération"
+              width="55"
+              style={headeStyle}
+            >
               Opération
             </TableHeaderColumn>
             <TableHeaderColumn tooltip="Objet" width="240" style={headeStyle}>
@@ -120,7 +134,9 @@ export default class ListeEffetsCompteStellar extends Component {
                 <TableRowColumn width="45" style={{ textAlign: 'center' }}>
                   {`${type === 'account_credited' ? '+' : '-'} ${round(parseFloat(amount), 2).toFixed(2)}`}
                 </TableRowColumn>
-                <TableRowColumn width="240" style={{ textAlign: 'center' }}>{memo}</TableRowColumn>
+                <TableRowColumn width="240" style={{ textAlign: 'center' }}>
+                  {memo}
+                </TableRowColumn>
               </TableRow>
             );
           })}

@@ -16,7 +16,9 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
+import {
+  selectUtilisateurStellarAdresse,
+} from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
 import moment from 'moment';
 const format = 'DD/MM/YY à HH:mm';
@@ -28,7 +30,8 @@ import LivraisonCommande from './LivraisonCommande';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import StellarAccount from 'components/StellarAccount';
 import HistoriqueCommandeUtilisateur from './HistoriqueCommandeUtilisateur';
-import ListeEffetsCompteStellar from 'components/ListeEffetsCompteStellar/ListeEffetsCompteStellar';
+import ListeEffetsCompteStellar
+  from 'components/ListeEffetsCompteStellar/ListeEffetsCompteStellar';
 
 // eslint-disable-next-line
 class DetailsParUtilisateur extends Component {
@@ -81,10 +84,15 @@ class DetailsParUtilisateur extends Component {
 
     const contenusUtilisateur = Object.keys(commandeContenus)
       .map(key => commandeContenus[key])
-      .filter(c => c.utilisateurId === utilisateur.id && c.commandeId === commandeId);
+      .filter(
+        c => c.utilisateurId === utilisateur.id && c.commandeId === commandeId
+      );
 
     const depot = depots.find(
-      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais',
+      d =>
+        d.utilisateurId === utilisateurId &&
+        !d.transfertEffectue &&
+        d.type === 'depot_relais'
     );
 
     const totaux = calculeTotauxCommande({
@@ -94,7 +102,8 @@ class DetailsParUtilisateur extends Component {
       commandeContenus,
       commandeId: params.commandeId,
     });
-    const credit = parseFloat(this.state.account ? this.state.account.balance : 0) +
+    const credit =
+      parseFloat(this.state.account ? this.state.account.balance : 0) +
       (depot ? depot.montant : 0);
     const totalCommande = round(totaux.prix + totaux.recolteFond, 2);
 
@@ -134,7 +143,9 @@ class DetailsParUtilisateur extends Component {
             <div className="col-md-12">
               <DetailCommande
                 contenusFiltered={contenusUtilisateur}
-                commandeContenus={Object.keys(commandeContenus).map(key => commandeContenus[key])}
+                commandeContenus={Object.keys(commandeContenus).map(
+                  key => commandeContenus[key]
+                )}
                 produits={produits}
                 commandeId={params.commandeId}
                 offres={offres}
@@ -162,7 +173,7 @@ class DetailsParUtilisateur extends Component {
                       label="Modifier"
                       onClick={() =>
                         pushState(
-                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
+                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
                         )}
                     />
                   </div>
@@ -173,7 +184,7 @@ class DetailsParUtilisateur extends Component {
                       label="Annuler"
                       onClick={() =>
                         pushState(
-                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`,
+                          `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
                         )}
                     />
                   </div>
@@ -204,7 +215,10 @@ class DetailsParUtilisateur extends Component {
           </Tab>
           <Tab label="Comptes">
             {utilisateur.stellarKeys &&
-              <ListeEffetsCompteStellar stellarAddress={utilisateur.stellarKeys.adresse} />}
+              false &&
+              <ListeEffetsCompteStellar
+                stellarAddress={utilisateur.stellarKeys.adresse}
+              />}
           </Tab>
         </Tabs>
       </div>
@@ -227,7 +241,9 @@ const mapDispatchToProps = dispatch =>
     {
       pushState: push,
     },
-    dispatch,
+    dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailsParUtilisateur
+);

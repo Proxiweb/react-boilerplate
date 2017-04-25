@@ -77,8 +77,7 @@ class DepotRelais extends Component {
   handleDepotExpress = () => {
     const { stellarKeys, utilisateur, deposer } = this.props;
     const { montant, type, info } = this.state;
-    console.log('auth', stellarKeys);
-    console.log('user', utilisateur.stellarKeys);
+
     if (!this.state.depotEnCours) {
       this.setState({ ...this.state, depotEnCours: true });
       api
@@ -115,7 +114,9 @@ class DepotRelais extends Component {
       roles,
       onRequestClose,
       stellarKeys,
+      open,
     } = this.props;
+
     const { montant, type, depotEnCours } = this.state;
     const manque = round(parseFloat(balance.balance) - totalCommande, 2);
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
@@ -211,7 +212,7 @@ const mapDispatchToProps = dispatch =>
     {
       deposer: ajouterDepot,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepotRelais);

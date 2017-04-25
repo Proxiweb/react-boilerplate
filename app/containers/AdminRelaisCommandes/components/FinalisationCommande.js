@@ -153,7 +153,6 @@ class FinalisationCommande extends Component {
       paiementOk: false,
     };
 
-    // console.log(finalisation, utilisateurs);
     this.props.createCommande({
       ...commande,
       finalisation: { dateFinalisation: moment().toISOString(), destinataires },

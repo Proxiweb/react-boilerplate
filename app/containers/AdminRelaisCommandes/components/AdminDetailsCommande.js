@@ -9,6 +9,7 @@ import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectOffres,
+  selectCommandeId,
   selectUtilisateurs,
   selectLivraisons,
 } from 'containers/Commande/selectors';
@@ -22,7 +23,7 @@ import { selectRoles } from 'containers/CompteUtilisateur/selectors';
 
 import DetailsParFournisseur from './DetailsParFournisseur';
 import ListeAcheteurs from './ListeAcheteurs';
-import { selectPending } from 'containers/App/selectors';
+import { selectPending, selectCommandes } from 'containers/App/selectors';
 import DetailsParUtilisateur from './DetailsParUtilisateur';
 import ValidationCommandesAdherents from './ValidationCommandesAdherents';
 import FinalisationCommande from './FinalisationCommande';
@@ -34,7 +35,8 @@ class AdminDetailsCommande extends Component {
     pushState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     params: PropTypes.object.isRequired,
-    commande: PropTypes.object.isRequired,
+    commandeId: PropTypes.string.isRequired,
+    commandes: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     contenus: PropTypes.object.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
@@ -74,7 +76,9 @@ class AdminDetailsCommande extends Component {
 
   handleChangeList = value => {
     const { relaiId, commandeId } = this.props.params;
-    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`);
+    this.props.pushState(
+      `/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`
+    );
   };
 
   render() {
@@ -82,7 +86,8 @@ class AdminDetailsCommande extends Component {
       pending,
       commandeUtilisateurs,
       commandeContenus,
-      commande,
+      commandes,
+      commandeId,
       depots,
       contenus,
       offres,
@@ -92,14 +97,16 @@ class AdminDetailsCommande extends Component {
       roles,
       children,
     } = this.props;
-    const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
+    const commande = commandes[commandeId];
+    const utils = utilisateurs
+      ? Object.keys(utilisateurs).map(id => utilisateurs[id])
+      : null;
     const { view } = this.state;
     return (
       <div className="row">
         <Helmet title={`Commande ${commande.id}`} />
         <div className={`col-md-4 col-lg-3 ${styles.listeAcheteursContainer}`}>
-          {!pending &&
-            commandeUtilisateurs &&
+          {commandeUtilisateurs &&
             contenus &&
             livraisons &&
             utils &&
@@ -171,7 +178,7 @@ class AdminDetailsCommande extends Component {
               params={params}
               commande={commande}
               commandeUtilisateur={commandeUtilisateurs.find(
-                cu => cu.utilisateurId === params.utilisateurId,
+                cu => cu.utilisateurId === params.utilisateurId
               )}
               roles={roles}
               depots={depots}
@@ -190,6 +197,7 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
   utilisateurs: selectUtilisateurs(),
   livraisons: selectLivraisons(),
+  commandeId: selectCommandeId(),
   depots: selectDepots(),
   roles: selectRoles(),
   offres: selectOffres(),
@@ -202,7 +210,9 @@ const mapDispatchToProps = dispatch =>
       loadDepots: loadDepotsRelais,
       pushState: push,
     },
-    dispatch,
+    dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  AdminDetailsCommande
+);
