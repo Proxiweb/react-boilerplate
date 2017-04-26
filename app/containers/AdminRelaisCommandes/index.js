@@ -26,7 +26,6 @@ import {
 
 import IconButton from 'material-ui/IconButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import HistoryIcon from 'material-ui/svg-icons/action/history';
 import SearchIcon from 'material-ui/svg-icons/action/search';

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import styles from './styles.css';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import { selectCommandeId } from 'containers/Commande/selectors';
 
