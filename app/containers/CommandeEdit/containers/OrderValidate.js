@@ -349,7 +349,6 @@ class OrderValidate extends Component {
           balance !== null &&
           view === 'panier' &&
           <Paiement
-            contenus={contenusCommande}
             commandeContenus={commandeContenus}
             commandeId={params.commandeId}
             utilisateurId={utilisateurId}

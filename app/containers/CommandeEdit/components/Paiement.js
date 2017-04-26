@@ -10,7 +10,7 @@ import styles from './styles.css';
 export default class Paiement extends Component {
   // eslint-disable-line
   static propTypes = {
-    contenus: PropTypes.array.isRequired,
+    utilisateurId: PropTypes.string.isRequired,
     offres: PropTypes.object.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     commandeId: PropTypes.string,
@@ -23,23 +23,32 @@ export default class Paiement extends Component {
   };
 
   render() {
-    const { balance, contenus, offres, commandeContenus, commandeId, dateLimite } = this.props;
+    const {
+      balance,
+      offres,
+      commandeContenus,
+      commandeId,
+      dateLimite,
+      utilisateurId,
+    } = this.props;
     const { muiTheme } = this.context;
 
-    if (typeof contenus[0] === 'undefined') return null;
-
     const { prix, recolteFond } = calculeTotauxCommande({
-      contenus,
       commandeContenus,
       offres,
       commandeId,
+      filter: cc => cc.utilisateurId === utilisateurId,
     });
     const montant = round(prix + recolteFond, 2).toFixed(2);
 
     return (
       <div>
         {balance > montant
-          ? <FondsOkMessage color={muiTheme.appBar.color} montant={montant} balance={balance} />
+          ? <FondsOkMessage
+            color={muiTheme.appBar.color}
+            montant={montant}
+            balance={balance}
+          />
           : <FondsWarningMessage
             color={muiTheme.palette.warningColor}
             montant={montant}
