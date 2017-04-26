@@ -14,12 +14,17 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  fetchUtilisateurs,
+} from 'containers/Commande/actions';
 
 import { selectPending } from 'containers/App/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 
 import Adresse from './Adresse';
 import styles from './styles.css';
@@ -41,11 +46,7 @@ class FactureFournisseur extends Component {
   };
 
   componentDidMount() {
-    const {
-      fournisseurs,
-      loadF,
-      params,
-    } = this.props;
+    const { fournisseurs, loadF, params } = this.props;
     const { fournisseurId } = params;
     this.loadAcheteurs();
     if (!fournisseurs.find(f => f.id === fournisseurId)) {
@@ -62,13 +63,12 @@ class FactureFournisseur extends Component {
   }
 
   loadAcheteurs() {
-    const {
-      commandeUtilisateurs,
-      utilisateurs,
-      loadU,
-    } = this.props;
+    const { commandeUtilisateurs, utilisateurs, loadU } = this.props;
     const utilisateursIds = commandeUtilisateurs
-      .filter(cu => !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
+      .filter(
+        cu =>
+          !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId),
+      ) // ne pas charger ceux déjà chargés
       .map(cu => cu.utilisateurId);
 
     loadU(utilisateursIds);
@@ -86,17 +86,18 @@ class FactureFournisseur extends Component {
     const contenus = commandeContenus.filter(
       cC =>
         cC.utilisateurId === utilisateurId &&
-        produits[offres[cC.offreId].produitId].fournisseurId === params.fournisseurId,
+        produits[offres[cC.offreId].produitId].fournisseurId ===
+          params.fournisseurId,
     );
 
     if (!contenus.length) return null;
 
     const { commandeId } = params;
     const totaux = calculeTotauxCommande({
-      contenus,
       commandeContenus,
       offres,
       commandeId,
+      filter: cc => cc.utilisateurId === utilisateurId,
     });
 
     const rows = contenus.map((contenu, idx) => {
@@ -155,7 +156,12 @@ class FactureFournisseur extends Component {
     } = this.props;
 
     if (
-      !fournisseurs || !commande || !commandeUtilisateurs || !commandeContenus || !contenus || !utilisateurs
+      !fournisseurs ||
+      !commande ||
+      !commandeUtilisateurs ||
+      !commandeContenus ||
+      !contenus ||
+      !utilisateurs
     ) {
       return null;
     }
@@ -166,7 +172,10 @@ class FactureFournisseur extends Component {
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
         {commandeUtilisateurs.map((cu, idx) => {
-          const contenusCommande = this.buildProducts(cu.utilisateurId, fournisseur.autoEntrepreneur);
+          const contenusCommande = this.buildProducts(
+            cu.utilisateurId,
+            fournisseur.autoEntrepreneur,
+          );
           if (!contenusCommande) return null;
           cpt += 1;
           return (
@@ -175,7 +184,13 @@ class FactureFournisseur extends Component {
                 <td colSpan="4">
                   <table>
                     <tr>
-                      <td style={{ fontSize: '20px', lineHeight: '20px', color: '#333' }}>
+                      <td
+                        style={{
+                          fontSize: '20px',
+                          lineHeight: '20px',
+                          color: '#333',
+                        }}
+                      >
                         <h3 className="factureTitle">
                           Facture Proxiweb{' '}
                           <small>
@@ -188,7 +203,13 @@ class FactureFournisseur extends Component {
                         </h3>
                       </td>
 
-                      <td style={{ fontSize: '20px', lineHeight: '20px', color: '#333' }}>
+                      <td
+                        style={{
+                          fontSize: '20px',
+                          lineHeight: '20px',
+                          color: '#333',
+                        }}
+                      >
                         <h3 className="factureTitle">
                           {moment(commande.dateCommande).format('LL')}
                         </h3>
@@ -203,10 +224,14 @@ class FactureFournisseur extends Component {
                   <table>
                     <tr>
                       <td>
-                        {fournisseur && <Adresse label="Fournisseur" datas={fournisseur} />}
+                        {fournisseur &&
+                          <Adresse label="Fournisseur" datas={fournisseur} />}
                       </td>
                       <td>
-                        <Adresse label="Client" datas={utils.find(u => u.id === cu.utilisateurId)} />
+                        <Adresse
+                          label="Client"
+                          datas={utils.find(u => u.id === cu.utilisateurId)}
+                        />
                       </td>
                     </tr>
                   </table>
@@ -231,7 +256,11 @@ class FactureFournisseur extends Component {
               {contenusCommande}
               {fournisseur.autoEntrepreneur &&
                 <tr>
-                  <td colSpan="4">{'T.V.A. non applicable. Article 293B du code général des impôts.'}</td>
+                  <td colSpan="4">
+                    {
+                      'T.V.A. non applicable. Article 293B du code général des impôts.'
+                    }
+                  </td>
                 </tr>}
             </table>
           );
@@ -250,12 +279,13 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadU: fetchUtilisateurs,
-    loadF: loadFournisseurs,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadU: fetchUtilisateurs,
+      loadF: loadFournisseurs,
+    },
+    dispatch,
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureFournisseur);

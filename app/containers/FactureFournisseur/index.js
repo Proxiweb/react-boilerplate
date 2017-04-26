@@ -16,12 +16,17 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  fetchUtilisateurs,
+} from 'containers/Commande/actions';
 
 import { selectPending } from 'containers/App/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 import Adresse from './components/Adresse';
 import moment from 'moment';
 import classnames from 'classnames';
@@ -74,13 +79,15 @@ class FactureFournisseur extends Component {
       params,
     } = this.props;
     const commandeContenus = cc.map(id => c[id]);
-    const contenus = commandeContenus.filter(cC => cC.utilisateurId === utilisateurId);
+    const contenus = commandeContenus.filter(
+      cC => cC.utilisateurId === utilisateurId,
+    );
     const { commandeId } = params;
     const totaux = calculeTotauxCommande({
-      contenus,
       commandeContenus,
       offres,
       commandeId,
+      filter: cc => cc.utilisateurId === utilisateurId,
     });
     if (!contenus.length) return null;
 
@@ -91,7 +98,8 @@ class FactureFournisseur extends Component {
       const offre = offres[contenu.offreId];
       const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
 
-      const tarifEnBaisse = offres[contenu.offreId].tarifications[0].prix > tarif.prix;
+      const tarifEnBaisse =
+        offres[contenu.offreId].tarifications[0].prix > tarif.prix;
 
       return (
         <tr className={styles.item} key={idx}>
@@ -105,7 +113,9 @@ class FactureFournisseur extends Component {
               <span style={{ color: 'red' }}>
                 {' '}
                 <s>
-                  {parseFloat(round(offre.tarifications[0].prix / 100 / 1.055, 2)).toFixed(2)}
+                  {parseFloat(
+                    round(offre.tarifications[0].prix / 100 / 1.055, 2),
+                  ).toFixed(2)}
                 </s>
               </span>}
           </td>
@@ -138,8 +148,11 @@ class FactureFournisseur extends Component {
       fournisseurs,
       params,
     } = this.props;
+
     const fournisseur = fournisseurs.find(f => f.id === params.fournisseurId);
-    const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
+    const utils = utilisateurs
+      ? Object.keys(utilisateurs).map(id => utilisateurs[id])
+      : null;
 
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
@@ -171,10 +184,14 @@ class FactureFournisseur extends Component {
                   <table>
                     <tr>
                       <td>
-                        {fournisseur && <Adresse label="Fournisseur" datas={fournisseur} />}
+                        {fournisseur &&
+                          <Adresse label="Fournisseur" datas={fournisseur} />}
                       </td>
                       <td>
-                        <Adresse label="Client" datas={utils.find(u => u.id === cu.utilisateurId)} />
+                        <Adresse
+                          label="Client"
+                          datas={utils.find(u => u.id === cu.utilisateurId)}
+                        />
                       </td>
                     </tr>
                   </table>
@@ -216,13 +233,14 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadU: fetchUtilisateurs,
-    loadF: loadFournisseurs,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadU: fetchUtilisateurs,
+      loadF: loadFournisseurs,
+    },
+    dispatch,
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureFournisseur);
 /* eslint-enable */

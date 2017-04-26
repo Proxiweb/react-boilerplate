@@ -15,10 +15,15 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  fetchUtilisateurs,
+} from 'containers/Commande/actions';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 
 import styles from './styles.css';
 
@@ -40,11 +45,7 @@ class CommandeFournisseur extends Component {
   };
 
   componentDidMount() {
-    const {
-      fournisseurs,
-      loadF,
-      params,
-    } = this.props;
+    const { fournisseurs, loadF, params } = this.props;
     const { fournisseurId } = params;
     this.loadAcheteurs();
     if (!fournisseurs.find(f => f.id === fournisseurId)) {
@@ -59,11 +60,7 @@ class CommandeFournisseur extends Component {
   }
 
   loadAcheteurs() {
-    const {
-      commandeUtilisateurs,
-      utilisateurs,
-      loadU,
-    } = this.props;
+    const { commandeUtilisateurs, utilisateurs, loadU } = this.props;
 
     const utilisateursIds = commandeUtilisateurs
       .filter(cu => !utilisateurs || !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
@@ -76,11 +73,20 @@ class CommandeFournisseur extends Component {
     const { offres, produits } = this.props;
     const offreId = commandeContenus[0].offreId;
 
-    const qteTotal = commandeContenus.reduce((memo, cont) => memo + cont.quantite + cont.qteRegul, 0);
+    const qteTotal = commandeContenus.reduce(
+      (memo, cont) => memo + cont.quantite + cont.qteRegul,
+      0,
+    );
 
-    const qteTotalOffreQte = commandeContenus.reduce((memo, cont) => memo + cont.quantite, 0);
+    const qteTotalOffreQte = commandeContenus.reduce(
+      (memo, cont) => memo + cont.quantite,
+      0,
+    );
 
-    const tarif = trouveTarification(offres[offreId].tarifications, qteTotalOffreQte);
+    const tarif = trouveTarification(
+      offres[offreId].tarifications,
+      qteTotalOffreQte,
+    );
 
     return (
       <tr className={styles.item} key={idx}>
@@ -132,23 +138,31 @@ class CommandeFournisseur extends Component {
     }
 
     const commandeContenusFournisseur = commandeContenus.filter(
-      id => produits[offres[contenus[id].offreId].produitId].fournisseurId === fournisseurId,
+      id =>
+        produits[offres[contenus[id].offreId].produitId].fournisseurId ===
+        fournisseurId,
     );
-    const commandeContenusColl = commandeContenusFournisseur.map(id => contenus[id]);
+    const commandeContenusColl = commandeContenusFournisseur.map(
+      id => contenus[id],
+    );
     const contenusFournGrp = groupBy(
       commandeContenusColl.filter(
-        cC => produits[offres[cC.offreId].produitId].fournisseurId === fournisseurId,
+        cC =>
+          produits[offres[cC.offreId].produitId].fournisseurId ===
+          fournisseurId,
       ),
       cc => cc.offreId,
     );
 
     const totaux = commandeContenusColl
       ? calculeTotauxCommande({
-          contenus: commandeContenusColl,
-          commandeContenus: commandeContenusFournisseur,
-          offres,
-          commandeId,
-        })
+        commandeContenus: contenus,
+        offres,
+        commandeId,
+        filter: cc =>
+            produits[offres[cc.offreId].produitId].fournisseurId ===
+            fournisseurId,
+      })
       : null;
 
     return (
@@ -183,12 +197,19 @@ class CommandeFournisseur extends Component {
                 Total TTC
               </td>
             </tr>
-            {Object.keys(contenusFournGrp)
-              .map((offreId, idx) => this.buildProduct(contenusFournGrp[offreId], idx))}
+            {Object.keys(contenusFournGrp).map((offreId, idx) =>
+              this.buildProduct(contenusFournGrp[offreId], idx),
+            )}
           </tbody>
         </table>
-        <div style={{ textAlign: 'right', fontSize: '1.2em', marginTop: '1em' }}>
-          Total: <strong>{round(totaux.prix, 2)} €</strong>
+        <div
+          style={{ textAlign: 'right', fontSize: '1.2em', marginTop: '1em' }}
+        >
+          {commandeUtilisateurs.length}
+          {' '}
+          acheteur(s) - Total:
+          {' '}
+          <strong>{round(totaux.prix, 2)} €</strong>
         </div>
       </div>
     );
@@ -203,12 +224,15 @@ const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadU: fetchUtilisateurs,
-    loadF: loadFournisseurs,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadU: fetchUtilisateurs,
+      loadF: loadFournisseurs,
+    },
+    dispatch,
+  );
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommandeFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CommandeFournisseur,
+);
