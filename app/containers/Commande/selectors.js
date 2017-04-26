@@ -32,27 +32,27 @@ const getModel = (substate, name) => {
 
 export const selectCommandes = () =>
   createSelector([selectCommandeDomain()], substate =>
-    getModel(substate, 'commandes')
+    getModel(substate, 'commandes'),
   );
 
 export const selectCommandesUtilisateurs = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'commandeUtilisateurs')
+    getModel(substate, 'commandeUtilisateurs'),
   );
 
 export const selectCommandeContenus = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'commandeContenus')
+    getModel(substate, 'commandeContenus'),
   );
 
 export const selectFournisseursIds = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'fournisseurs')
+    getModel(substate, 'fournisseurs'),
   );
 
 export const selectTypesProduitsByIds = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'typesProduits')
+    getModel(substate, 'typesProduits'),
   );
 
 export const selectFournisseurs = () =>
@@ -63,37 +63,37 @@ export const selectFournisseurs = () =>
         ? Object.keys(fournisseurs)
             .map(key => fournisseurs[key])
             .filter(fourn => fourn.visible)
-        : null)
+        : null),
   );
 
 export const selectProduits = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'produits')
+    getModel(substate, 'produits'),
   );
 
 export const selectTypesProduits = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'typesProduits')
+    getModel(substate, 'typesProduits'),
   );
 
 export const selectOffres = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'offres')
+    getModel(substate, 'offres'),
   );
 
 export const selectLivraisons = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'livraisons')
+    getModel(substate, 'livraisons'),
   );
 
 export const selectRelais = () =>
   createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'relais')
+    getModel(substate, 'relais'),
   );
 
 export const selectUtilisateurs = () =>
   createSelector([selectCommandeDomain()], substate =>
-    getModel(substate, 'utilisateurs')
+    getModel(substate, 'utilisateurs'),
   );
 
 export const selectRelaisSelected = () =>
@@ -102,13 +102,23 @@ export const selectRelaisSelected = () =>
     return relais[relaisId];
   });
 
+export const selectFournisseur = () =>
+  createSelector(
+    selectFournisseurId(),
+    selectFournisseursIds(),
+    (fournisseurId, fournisseurs) => {
+      if (!fournisseurId || !fournisseurs) return null;
+      return fournisseurs[fournisseurId];
+    },
+  );
+
 export const selectOffreCotisation = () =>
   createSelector(
     selectOffres(),
     offres =>
       (offres['8b330a52-a605-4a67-aee7-3cb3c9274733']
         ? offres['8b330a52-a605-4a67-aee7-3cb3c9274733']
-        : null)
+        : null),
   );
 
 export const selectFournisseursRelais = () =>
@@ -119,9 +129,10 @@ export const selectFournisseursRelais = () =>
       if (!fournisseurs || !relaisId) return null;
       return fournisseurs.filter(
         f =>
-          f.livraisonGlobale || f.relais.find(r => r.id === relaisId && r.actif)
+          f.livraisonGlobale ||
+          f.relais.find(r => r.id === relaisId && r.actif),
       );
-    }
+    },
   );
 
 export const selectUserIdCommandes = () =>
@@ -134,7 +145,7 @@ export const selectUserIdCommandes = () =>
       return Object.keys(commandeUtilisateurs)
         .filter(cuId => commandeUtilisateurs[cuId].utilisateurId === userId)
         .map(cuId => commandes[commandeUtilisateurs[cuId].commandeId]);
-    }
+    },
   );
 
 export const selectCommandesRelais = () =>
@@ -166,14 +177,14 @@ export const selectCommandesRelais = () =>
           cmdesRelais[commandeId] = commandes[commandeId];
         });
       return cmdesRelais;
-    }
+    },
   );
 
 export const selectOffresRelais = () =>
   createSelector(selectOffres(), selectRelaisId(), (offres, relaisId) => {
     if (!offres) return null;
     return Object.keys(offres).filter(
-      key => offres[key].active && offres[key].relaiId === relaisId
+      key => offres[key].active && offres[key].relaiId === relaisId,
     );
   });
 
@@ -188,7 +199,7 @@ export const selectCommande = () =>
     (commandes, commandeId) => {
       if (!commandes || !commandeId) return null;
       return commandes[commandeId];
-    }
+    },
   );
 
 /* les fournisseurs de la commande */
@@ -199,7 +210,7 @@ export const selectFournisseursCommande = () =>
     (commande, fournisseursIds) => {
       if (!commande || !fournisseursIds) return null;
       return commande.fournisseurs.map(key => fournisseursIds[key]);
-    }
+    },
   );
 
 /* tous les produits de ma commandes */
@@ -214,13 +225,13 @@ export const selectCommandeProduits = () =>
         Object.keys(produits)
           .filter(
             key =>
-              commande.fournisseurs.indexOf(produits[key].fournisseurId) !== -1
+              commande.fournisseurs.indexOf(produits[key].fournisseurId) !== -1,
           )
           // .filter(key => fournisseursIds[produits[key].fournisseurId].visible)
           .map(key => produits[key])
       );
       // .filter(pdt => pdt.enStock);
-    }
+    },
   );
 
 export const selectProduitsRelaisIds = () =>
@@ -230,9 +241,9 @@ export const selectProduitsRelaisIds = () =>
     (fournisseurs, produits) => {
       if (!fournisseurs || !produits) return null;
       return Object.keys(produits).filter(id =>
-        fournisseurs.find(f => produits[id].fournisseurId === f.id)
+        fournisseurs.find(f => produits[id].fournisseurId === f.id),
       );
-    }
+    },
   );
 
 export const selectProduitsIdsRelaisByTypeProduit = () =>
@@ -243,9 +254,9 @@ export const selectProduitsIdsRelaisByTypeProduit = () =>
     (produitsIds, produits, typeProduitId) => {
       if (!produitsIds || !produits || !typeProduitId) return null;
       return produitsIds.filter(
-        id => produits[id].typeProduitId === typeProduitId
+        id => produits[id].typeProduitId === typeProduitId,
       );
-    }
+    },
   );
 
 export const selectProduitsRelaisByTypeProduit = () =>
@@ -255,7 +266,7 @@ export const selectProduitsRelaisByTypeProduit = () =>
     (produitsIds, produits) => {
       if (!produitsIds || !produits) return null;
       return produitsIds.map(id => produits[id]);
-    }
+    },
   );
 
 export const selectTypesProduitsRelais = () =>
@@ -266,9 +277,9 @@ export const selectTypesProduitsRelais = () =>
     (typesProduitsByIds, produitsIds, produits) => {
       if (!typesProduitsByIds || !produitsIds || !produits) return null;
       return uniq(produitsIds.map(id => produits[id].typeProduitId)).map(
-        id => typesProduitsByIds[id]
+        id => typesProduitsByIds[id],
       );
-    }
+    },
   );
 
 export const selectCommandeLivraisonsIds = () =>
@@ -284,7 +295,7 @@ export const selectCommandeLivraisons = () =>
     (livraisonsIds, livraisons) => {
       if (!livraisonsIds || !livraisons) return null;
       return livraisonsIds.map(key => livraisons[key]);
-    }
+    },
   );
 
 /* tous les types produits de la commande */
@@ -295,9 +306,9 @@ export const selectCommandeTypesProduits = () =>
     (produits, typeProduits) => {
       if (!produits || !typeProduits) return null;
       return uniq(produits.map(pdt => pdt.typeProduitId)).map(
-        id => typeProduits[id]
+        id => typeProduits[id],
       );
-    }
+    },
   );
 
 /* tous les types produits visibles de la commande */
@@ -311,9 +322,9 @@ export const selectCommandeTypesProduitsVisibles = () =>
       return uniq(
         produits
           .filter(pdt => fournisseursIds[pdt.fournisseurId].visible)
-          .map(pdt => pdt.typeProduitId)
+          .map(pdt => pdt.typeProduitId),
       ).map(id => typeProduits[id]);
-    }
+    },
   );
 
 /* les commandesUtilisateurs de la commande */
@@ -328,13 +339,13 @@ export const selectCommandeCommandeUtilisateurs = () =>
       return Object.keys(commandesUtilisateurs)
         .filter(key => commandesUtilisateurs[key].commandeId === commandeId)
         .map(key => commandesUtilisateurs[key]);
-    }
+    },
   );
 
 export const selectCommandeStellarAdresse = () =>
   createSelector(
     selectCommande(),
-    commande => (commande.stellarKeys ? commande.stellarKeys.adresse : null)
+    commande => (commande.stellarKeys ? commande.stellarKeys.adresse : null),
   );
 
 /* les produits pour un typedeProduit donné */
@@ -345,7 +356,7 @@ export const selectCommandeProduitsByTypeProduit = () =>
     (produits, typeProduitId) => {
       if (!typeProduitId || !produits) return null;
       return produits.filter(pdt => pdt.typeProduitId === typeProduitId);
-    }
+    },
   );
 
 /* un produit */
@@ -356,7 +367,7 @@ export const selectProduitCommande = () =>
     (produits, produitId) =>
       (produits && produitId
         ? produits.find(pdt => pdt.id === produitId)
-        : null)
+        : null),
   );
 
 /* les offres commande d'un produit */
@@ -370,7 +381,7 @@ export const selectOffresCommandeByProduit = () =>
       return offresRelais
         .filter(key => offres[key].produitId === produit.id)
         .map(key => offres[key]);
-    }
+    },
   );
 
 /* les offres relais d'un produit
@@ -392,7 +403,7 @@ export const selectFournisseurProduit = () =>
     (produit, fournisseursIds) => {
       if (!produit) return null;
       return fournisseursIds[produit.fournisseurId];
-    }
+    },
   );
 
 /* les produits d'fournisseur */
@@ -405,7 +416,7 @@ export const selectFournisseurProduits = () =>
       return Object.keys(produits)
         .filter(key => produits[key].fournisseurId === fournisseurId)
         .map(key => produits[key]);
-    }
+    },
   );
 
 /* commandes d'un fournisseur */
@@ -420,11 +431,12 @@ export const selectFournisseurCommandes = () =>
         !fournisseurId ||
         !fournisseursIds ||
         !fournisseursIds[fournisseurId].commandes
-      )
-        { return null; }
+      ) {
+        return null;
+      }
 
       return fournisseursIds[fournisseurId].commandes.map(id => commandes[id]);
-    }
+    },
   );
 
 //
@@ -443,7 +455,7 @@ export const selectCommandeCommandeContenus = () =>
         return null;
       }
       return flatten(commandesUtilisateurs.map(cu => cu.contenus));
-    }
+    },
   );
 
 export const selectOffresProduitAvecTotalAchats = () =>
@@ -464,7 +476,7 @@ export const selectOffresProduitAvecTotalAchats = () =>
               .reduce((memo, contenu) => memo + contenu.quantite, 0)
           : 0,
       }));
-    }
+    },
   );
 
 export const selectAuthUtilisateurCommandeUtilisateur = () =>
@@ -476,20 +488,18 @@ export const selectAuthUtilisateurCommandeUtilisateur = () =>
     ],
     (commandeCommandeUtilisateurs, utilisateurId, commandeContenus) => {
       if (
-        !commandeCommandeUtilisateurs ||
-        !utilisateurId ||
-        !commandeContenus
+        !commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus
       ) {
         return null;
       }
       const cCu = commandeCommandeUtilisateurs.find(
-        cu => cu.utilisateurId === utilisateurId
+        cu => cu.utilisateurId === utilisateurId,
       );
       if (!cCu) return undefined;
 
       cCu.contenus = cCu.contenus.map(contenuId => commandeContenus[contenuId]);
       return cCu;
-    }
+    },
   );
 
 export const selectUserIdCommandeUtilisateur = () =>
@@ -504,7 +514,7 @@ export const selectUserIdCommandeUtilisateur = () =>
       commandeCommandeUtilisateurs,
       utilisateurId,
       commandeContenus,
-      commandeId
+      commandeId,
     ) => {
       if (
         !commandeCommandeUtilisateurs ||
@@ -515,7 +525,8 @@ export const selectUserIdCommandeUtilisateur = () =>
         return null;
       }
       const cCu = commandeCommandeUtilisateurs.find(
-        cu => cu.utilisateurId === utilisateurId && cu.commandeId === commandeId
+        cu =>
+          cu.utilisateurId === utilisateurId && cu.commandeId === commandeId,
       );
       if (!cCu) return undefined;
 
@@ -523,7 +534,7 @@ export const selectUserIdCommandeUtilisateur = () =>
         ? cCu.contenus.map(contenuId => commandeContenus[contenuId])
         : [];
       return cCu;
-    }
+    },
   );
 
 export const selectNombreAcheteurs = () =>
@@ -539,15 +550,15 @@ export const selectNombreAcheteurs = () =>
             if (!cont) return {};
             return cont.utilisateurId;
           }),
-        'utilisateurId'
+        'utilisateurId',
       ).length;
-    }
+    },
   );
 
 export const computeNombreCommandeContenus = () =>
   createSelector(
     selectCommandeContenus(),
-    commandeContenus => Object.keys(commandeContenus).length
+    commandeContenus => Object.keys(commandeContenus).length,
   );
 
 export const selectAsyncState = () =>

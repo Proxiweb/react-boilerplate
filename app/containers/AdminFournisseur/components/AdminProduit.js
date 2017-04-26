@@ -16,6 +16,7 @@ class AdminProduit extends Component {
   static propTypes = {
     produit: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    fournisseur: PropTypes.object.isRequired,
     save: PropTypes.func.isRequired,
   };
 
@@ -29,7 +30,9 @@ class AdminProduit extends Component {
 
   componentWillReceiveProps = nextProps => {
     if (this.props.params.produitId !== nextProps.params.produitId) {
-      this.setState({ editView: nextProps.params.produitId === 'new' ? 'produit' : null });
+      this.setState({
+        editView: nextProps.params.produitId === 'new' ? 'produit' : null,
+      });
     }
   };
 
@@ -41,13 +44,20 @@ class AdminProduit extends Component {
   };
 
   render() {
-    const { produit, params } = this.props;
+    const {
+      produit,
+      params,
+      fournisseur: { typeProduitSecondaireDefault, typeProduitDefault },
+    } = this.props;
     const { editView } = this.state;
+
     if (editView === 'produit') {
       const pdt = produit || {
         nom: 'Nouveau produit',
         description: '<p>Le nouveau produit</p>',
         fournisseurId: params.fournisseurId,
+        typeProduitId: typeProduitDefault,
+        typeProduitSecondaire: typeProduitSecondaireDefault,
       };
       return (
         <div className="row">
@@ -81,11 +91,12 @@ class AdminProduit extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    save: saveProduit,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      save: saveProduit,
+    },
+    dispatch,
+  );
 
 export default connect(null, mapDispatchToProps)(AdminProduit);

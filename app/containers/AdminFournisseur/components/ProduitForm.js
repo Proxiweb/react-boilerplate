@@ -25,20 +25,21 @@ const options = {
   },
 };
 
-const renderSelectField = datas =>
-  (
-    { input, label, meta: { touched, error }, ...custom } // eslint-disable-line
-  ) => (
-    <CustomSelectField
-      floatingLabelText={label}
-      errorText={touched && error}
-      {...input}
-      onChange={(event, index, value) => input.onChange(value)}
-      {...custom}
-    >
-      {datas.map(data => <MenuItem key={data.value} value={data.value} primaryText={data.label} />)}
-    </CustomSelectField>
-  );
+const renderSelectField = datas => (
+  { input, label, meta: { touched, error }, ...custom }, // eslint-disable-line
+) => (
+  <CustomSelectField
+    floatingLabelText={label}
+    errorText={touched && error}
+    {...input}
+    onChange={(event, index, value) => input.onChange(value)}
+    {...custom}
+  >
+    {datas.map(data => (
+      <MenuItem key={data.value} value={data.value} primaryText={data.label} />
+    ))}
+  </CustomSelectField>
+);
 
 const renderUnitesConservation = renderSelectField([
   {
@@ -75,7 +76,7 @@ const renderTypesProduits = typesProduits =>
     Object.keys(typesProduits).map(value => ({
       value: typesProduits[value].id,
       label: typesProduits[value].nom,
-    }))
+    })),
   );
 
 const renderClassementComplementaire = categoriesSecondaires =>
@@ -83,7 +84,7 @@ const renderClassementComplementaire = categoriesSecondaires =>
     categoriesSecondaires.map(value => ({
       value,
       label: value,
-    }))
+    })),
   );
 
 class ProduitForm extends Component {
@@ -135,15 +136,22 @@ class ProduitForm extends Component {
       valeurs,
     } = this.props;
 
-    const categoriesSecondaires = valeurs.produit && valeurs.produit.values.typeProduitId
-      ? typesProduits[valeurs.produit.values.typeProduitId].categoriesSecondaires
+    const categoriesSecondaires = valeurs.produit &&
+      valeurs.produit.values.typeProduitId
+      ? typesProduits[valeurs.produit.values.typeProduitId]
+          .categoriesSecondaires
       : [];
 
     return (
       <form onSubmit={handleSubmit}>
         <div className="row" style={{ minHeight: '400px' }}>
           <div className="col-md-12">
-            <Field floatingLabelText="Nom" name="nom" component={TextField} fullWidth />
+            <Field
+              floatingLabelText="Nom"
+              name="nom"
+              component={TextField}
+              fullWidth
+            />
           </div>
           <div className="col-md-12">
             <Field
@@ -162,10 +170,20 @@ class ProduitForm extends Component {
             />
           </div>
           <div className="col-md-3">
-            <Field floatingLabelText="Tva" name="tva" component={renderTva} fullWidth />
+            <Field
+              floatingLabelText="Tva"
+              name="tva"
+              component={renderTva}
+              fullWidth
+            />
           </div>
           <div className="col-md-3">
-            <Field floatingLabelText="Stock" name="stock" component={TextField} fullWidth />
+            <Field
+              floatingLabelText="Stock"
+              name="stock"
+              component={TextField}
+              fullWidth
+            />
           </div>
           <div className="col-md-3">
             <Field
@@ -196,7 +214,9 @@ class ProduitForm extends Component {
               <Field
                 floatingLabelText="Classement complémentaire"
                 name="typeProduitSecondaire"
-                component={renderClassementComplementaire(categoriesSecondaires)}
+                component={renderClassementComplementaire(
+                  categoriesSecondaires,
+                )}
                 fullWidth
               />
             </div>}
@@ -209,11 +229,28 @@ class ProduitForm extends Component {
                 fullWidth
               />
             </div>}
+          <div className="col-md-6">
+            <Field
+              floatingLabelText="Référence"
+              name="ref"
+              component={TextField}
+              fullWidth
+            />
+          </div>
         </div>
         {!pristine &&
           <div className="row center-md">
-            <div className={`col-md-8 ${styles.formFooter}`} style={{ minHeight: 52 }}>
-              <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
+            <div
+              className={`col-md-8 ${styles.formFooter}`}
+              style={{ minHeight: 52 }}
+            >
+              <RaisedButton
+                type="submit"
+                label="Valider"
+                primary
+                fullWidth
+                disabled={pending}
+              />
             </div>
           </div>}
       </form>
