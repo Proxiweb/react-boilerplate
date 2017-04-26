@@ -3,7 +3,10 @@ import { createSelector } from 'reselect';
 import uniq from 'lodash/uniq';
 import flatten from 'lodash/flatten';
 
-import { selectAuthUtilisateurId, selectUserId } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectAuthUtilisateurId,
+  selectUserId,
+} from 'containers/CompteUtilisateur/selectors';
 /**
  * Direct selector to the commande state domain
  */
@@ -12,7 +15,8 @@ export const selectLastFetched = () => state => state.commandes.lastFetched;
 export const selectParams = () => (state, props) => props.params;
 export const selectCommandeId = () => (state, props) => props.params.commandeId;
 export const selectRelaisId = () => (state, props) => props.params.relaiId;
-export const selectFournisseurId = () => (state, props) => props.params.fournisseurId;
+export const selectFournisseurId = () => (state, props) =>
+  props.params.fournisseurId;
 export const selectCotisationId = () => state => state.cotisationId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
@@ -27,46 +31,70 @@ const getModel = (substate, name) => {
 };
 
 export const selectCommandes = () =>
-  createSelector([selectCommandeDomain()], substate => getModel(substate, 'commandes'));
+  createSelector([selectCommandeDomain()], substate =>
+    getModel(substate, 'commandes')
+  );
 
 export const selectCommandesUtilisateurs = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'commandeUtilisateurs'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'commandeUtilisateurs')
+  );
 
 export const selectCommandeContenus = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'commandeContenus'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'commandeContenus')
+  );
 
 export const selectFournisseursIds = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'fournisseurs'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'fournisseurs')
+  );
 
 export const selectTypesProduitsByIds = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'typesProduits'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'typesProduits')
+  );
 
 export const selectFournisseurs = () =>
   createSelector(
     selectFournisseursIds(),
     fournisseurs =>
-      fournisseurs
-        ? Object.keys(fournisseurs).map(key => fournisseurs[key]).filter(fourn => fourn.visible)
-        : null
+      (fournisseurs
+        ? Object.keys(fournisseurs)
+            .map(key => fournisseurs[key])
+            .filter(fourn => fourn.visible)
+        : null)
   );
 
 export const selectProduits = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'produits'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'produits')
+  );
 
 export const selectTypesProduits = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'typesProduits'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'typesProduits')
+  );
 
 export const selectOffres = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'offres'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'offres')
+  );
 
 export const selectLivraisons = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'livraisons'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'livraisons')
+  );
 
 export const selectRelais = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, 'relais'));
+  createSelector(selectCommandeDomain(), substate =>
+    getModel(substate, 'relais')
+  );
 
 export const selectUtilisateurs = () =>
-  createSelector([selectCommandeDomain()], substate => getModel(substate, 'utilisateurs'));
+  createSelector([selectCommandeDomain()], substate =>
+    getModel(substate, 'utilisateurs')
+  );
 
 export const selectRelaisSelected = () =>
   createSelector(selectRelaisId(), selectRelais(), (relaisId, relais) => {
@@ -78,14 +106,23 @@ export const selectOffreCotisation = () =>
   createSelector(
     selectOffres(),
     offres =>
-      offres['8b330a52-a605-4a67-aee7-3cb3c9274733'] ? offres['8b330a52-a605-4a67-aee7-3cb3c9274733'] : null
+      (offres['8b330a52-a605-4a67-aee7-3cb3c9274733']
+        ? offres['8b330a52-a605-4a67-aee7-3cb3c9274733']
+        : null)
   );
 
 export const selectFournisseursRelais = () =>
-  createSelector(selectRelaisId(), selectFournisseurs(), (relaisId, fournisseurs) => {
-    if (!fournisseurs || !relaisId) return null;
-    return fournisseurs.filter(f => f.livraisonGlobale || f.relais.find(r => r.id === relaisId && r.actif));
-  });
+  createSelector(
+    selectRelaisId(),
+    selectFournisseurs(),
+    (relaisId, fournisseurs) => {
+      if (!fournisseurs || !relaisId) return null;
+      return fournisseurs.filter(
+        f =>
+          f.livraisonGlobale || f.relais.find(r => r.id === relaisId && r.actif)
+      );
+    }
+  );
 
 export const selectUserIdCommandes = () =>
   createSelector(
@@ -135,24 +172,35 @@ export const selectCommandesRelais = () =>
 export const selectOffresRelais = () =>
   createSelector(selectOffres(), selectRelaisId(), (offres, relaisId) => {
     if (!offres) return null;
-    return Object.keys(offres).filter(key => offres[key].active && offres[key].relaiId === relaisId);
+    return Object.keys(offres).filter(
+      key => offres[key].active && offres[key].relaiId === relaisId
+    );
   });
 
-export const selectResults = () => createSelector(selectCommandeDomain(), substate => substate.datas.result);
+export const selectResults = () =>
+  createSelector(selectCommandeDomain(), substate => substate.datas.result);
 
 /* la commande */
 export const selectCommande = () =>
-  createSelector(selectCommandes(), selectCommandeId(), (commandes, commandeId) => {
-    if (!commandes || !commandeId) return null;
-    return commandes[commandeId];
-  });
+  createSelector(
+    selectCommandes(),
+    selectCommandeId(),
+    (commandes, commandeId) => {
+      if (!commandes || !commandeId) return null;
+      return commandes[commandeId];
+    }
+  );
 
 /* les fournisseurs de la commande */
 export const selectFournisseursCommande = () =>
-  createSelector(selectCommande(), selectFournisseursIds(), (commande, fournisseursIds) => {
-    if (!commande || !fournisseursIds) return null;
-    return commande.fournisseurs.map(key => fournisseursIds[key]);
-  });
+  createSelector(
+    selectCommande(),
+    selectFournisseursIds(),
+    (commande, fournisseursIds) => {
+      if (!commande || !fournisseursIds) return null;
+      return commande.fournisseurs.map(key => fournisseursIds[key]);
+    }
+  );
 
 /* tous les produits de ma commandes */
 export const selectCommandeProduits = () =>
@@ -164,7 +212,10 @@ export const selectCommandeProduits = () =>
       if (!commande || !produits || !fournisseursIds) return null;
       return (
         Object.keys(produits)
-          .filter(key => commande.fournisseurs.indexOf(produits[key].fournisseurId) !== -1)
+          .filter(
+            key =>
+              commande.fournisseurs.indexOf(produits[key].fournisseurId) !== -1
+          )
           // .filter(key => fournisseursIds[produits[key].fournisseurId].visible)
           .map(key => produits[key])
       );
@@ -173,10 +224,16 @@ export const selectCommandeProduits = () =>
   );
 
 export const selectProduitsRelaisIds = () =>
-  createSelector(selectFournisseursRelais(), selectProduits(), (fournisseurs, produits) => {
-    if (!fournisseurs || !produits) return null;
-    return Object.keys(produits).filter(id => fournisseurs.find(f => produits[id].fournisseurId === f.id));
-  });
+  createSelector(
+    selectFournisseursRelais(),
+    selectProduits(),
+    (fournisseurs, produits) => {
+      if (!fournisseurs || !produits) return null;
+      return Object.keys(produits).filter(id =>
+        fournisseurs.find(f => produits[id].fournisseurId === f.id)
+      );
+    }
+  );
 
 export const selectProduitsIdsRelaisByTypeProduit = () =>
   createSelector(
@@ -185,15 +242,21 @@ export const selectProduitsIdsRelaisByTypeProduit = () =>
     selectTypeProduitId(),
     (produitsIds, produits, typeProduitId) => {
       if (!produitsIds || !produits || !typeProduitId) return null;
-      return produitsIds.filter(id => produits[id].typeProduitId === typeProduitId);
+      return produitsIds.filter(
+        id => produits[id].typeProduitId === typeProduitId
+      );
     }
   );
 
 export const selectProduitsRelaisByTypeProduit = () =>
-  createSelector(selectProduitsIdsRelaisByTypeProduit(), selectProduits(), (produitsIds, produits) => {
-    if (!produitsIds || !produits) return null;
-    return produitsIds.map(id => produits[id]);
-  });
+  createSelector(
+    selectProduitsIdsRelaisByTypeProduit(),
+    selectProduits(),
+    (produitsIds, produits) => {
+      if (!produitsIds || !produits) return null;
+      return produitsIds.map(id => produits[id]);
+    }
+  );
 
 export const selectTypesProduitsRelais = () =>
   createSelector(
@@ -202,7 +265,9 @@ export const selectTypesProduitsRelais = () =>
     selectProduits(),
     (typesProduitsByIds, produitsIds, produits) => {
       if (!typesProduitsByIds || !produitsIds || !produits) return null;
-      return uniq(produitsIds.map(id => produits[id].typeProduitId)).map(id => typesProduitsByIds[id]);
+      return uniq(produitsIds.map(id => produits[id].typeProduitId)).map(
+        id => typesProduitsByIds[id]
+      );
     }
   );
 
@@ -213,17 +278,27 @@ export const selectCommandeLivraisonsIds = () =>
   });
 
 export const selectCommandeLivraisons = () =>
-  createSelector(selectCommandeLivraisonsIds(), selectLivraisons(), (livraisonsIds, livraisons) => {
-    if (!livraisonsIds || !livraisons) return null;
-    return livraisonsIds.map(key => livraisons[key]);
-  });
+  createSelector(
+    selectCommandeLivraisonsIds(),
+    selectLivraisons(),
+    (livraisonsIds, livraisons) => {
+      if (!livraisonsIds || !livraisons) return null;
+      return livraisonsIds.map(key => livraisons[key]);
+    }
+  );
 
 /* tous les types produits de la commande */
 export const selectCommandeTypesProduits = () =>
-  createSelector(selectCommandeProduits(), selectTypesProduits(), (produits, typeProduits) => {
-    if (!produits || !typeProduits) return null;
-    return uniq(produits.map(pdt => pdt.typeProduitId)).map(id => typeProduits[id]);
-  });
+  createSelector(
+    selectCommandeProduits(),
+    selectTypesProduits(),
+    (produits, typeProduits) => {
+      if (!produits || !typeProduits) return null;
+      return uniq(produits.map(pdt => pdt.typeProduitId)).map(
+        id => typeProduits[id]
+      );
+    }
+  );
 
 /* tous les types produits visibles de la commande */
 export const selectCommandeTypesProduitsVisibles = () =>
@@ -234,38 +309,54 @@ export const selectCommandeTypesProduitsVisibles = () =>
     (fournisseursIds, produits, typeProduits) => {
       if (!produits || !typeProduits) return null;
       return uniq(
-        produits.filter(pdt => fournisseursIds[pdt.fournisseurId].visible).map(pdt => pdt.typeProduitId)
+        produits
+          .filter(pdt => fournisseursIds[pdt.fournisseurId].visible)
+          .map(pdt => pdt.typeProduitId)
       ).map(id => typeProduits[id]);
     }
   );
 
 /* les commandesUtilisateurs de la commande */
 export const selectCommandeCommandeUtilisateurs = () =>
-  createSelector(selectCommandesUtilisateurs(), selectCommandeId(), (commandesUtilisateurs, commandeId) => {
-    if (!commandesUtilisateurs || !commandeId) {
-      return null;
+  createSelector(
+    selectCommandesUtilisateurs(),
+    selectCommandeId(),
+    (commandesUtilisateurs, commandeId) => {
+      if (!commandesUtilisateurs || !commandeId) {
+        return null;
+      }
+      return Object.keys(commandesUtilisateurs)
+        .filter(key => commandesUtilisateurs[key].commandeId === commandeId)
+        .map(key => commandesUtilisateurs[key]);
     }
-    return Object.keys(commandesUtilisateurs)
-      .filter(key => commandesUtilisateurs[key].commandeId === commandeId)
-      .map(key => commandesUtilisateurs[key]);
-  });
+  );
 
 export const selectCommandeStellarAdresse = () =>
-  createSelector(selectCommande(), commande => commande.stellarKeys ? commande.stellarKeys.adresse : null);
+  createSelector(
+    selectCommande(),
+    commande => (commande.stellarKeys ? commande.stellarKeys.adresse : null)
+  );
 
 /* les produits pour un typedeProduit donné */
 export const selectCommandeProduitsByTypeProduit = () =>
-  createSelector(selectCommandeProduits(), selectTypeProduitId(), (produits, typeProduitId) => {
-    if (!typeProduitId || !produits) return null;
-    return produits.filter(pdt => pdt.typeProduitId === typeProduitId);
-  });
+  createSelector(
+    selectCommandeProduits(),
+    selectTypeProduitId(),
+    (produits, typeProduitId) => {
+      if (!typeProduitId || !produits) return null;
+      return produits.filter(pdt => pdt.typeProduitId === typeProduitId);
+    }
+  );
 
 /* un produit */
 export const selectProduitCommande = () =>
   createSelector(
     selectCommandeProduitsByTypeProduit(),
     selectProduitId(),
-    (produits, produitId) => produits && produitId ? produits.find(pdt => pdt.id === produitId) : null
+    (produits, produitId) =>
+      (produits && produitId
+        ? produits.find(pdt => pdt.id === produitId)
+        : null)
   );
 
 /* les offres commande d'un produit */
@@ -276,7 +367,9 @@ export const selectOffresCommandeByProduit = () =>
     selectOffres(),
     (produit, offresRelais, offres) => {
       if (!produit || !offres) return null;
-      return offresRelais.filter(key => offres[key].produitId === produit.id).map(key => offres[key]);
+      return offresRelais
+        .filter(key => offres[key].produitId === produit.id)
+        .map(key => offres[key]);
     }
   );
 
@@ -286,24 +379,34 @@ export const selectOffresCommandeByProduit = () =>
 export const selectOffresDuProduit = () =>
   createSelector(selectProduitId(), selectOffres(), (produitId, offres) => {
     if (!produitId || !offres) return null;
-    return Object.keys(offres).filter(key => offres[key].produitId === produitId).map(key => offres[key]);
+    return Object.keys(offres)
+      .filter(key => offres[key].produitId === produitId)
+      .map(key => offres[key]);
   });
 
 /* le fournisseur d'un produit */
 export const selectFournisseurProduit = () =>
-  createSelector(selectProduitCommande(), selectFournisseursIds(), (produit, fournisseursIds) => {
-    if (!produit) return null;
-    return fournisseursIds[produit.fournisseurId];
-  });
+  createSelector(
+    selectProduitCommande(),
+    selectFournisseursIds(),
+    (produit, fournisseursIds) => {
+      if (!produit) return null;
+      return fournisseursIds[produit.fournisseurId];
+    }
+  );
 
 /* les produits d'fournisseur */
 export const selectFournisseurProduits = () =>
-  createSelector(selectProduits(), selectFournisseurId(), (produits, fournisseurId) => {
-    if (!produits || !fournisseurId) return null;
-    return Object.keys(produits)
-      .filter(key => produits[key].fournisseurId === fournisseurId)
-      .map(key => produits[key]);
-  });
+  createSelector(
+    selectProduits(),
+    selectFournisseurId(),
+    (produits, fournisseurId) => {
+      if (!produits || !fournisseurId) return null;
+      return Object.keys(produits)
+        .filter(key => produits[key].fournisseurId === fournisseurId)
+        .map(key => produits[key]);
+    }
+  );
 
 /* commandes d'un fournisseur */
 export const selectFournisseurCommandes = () =>
@@ -312,8 +415,13 @@ export const selectFournisseurCommandes = () =>
     selectFournisseurId(),
     selectFournisseursIds(),
     (commandes, fournisseurId, fournisseursIds) => {
-      if (!commandes || !fournisseurId || !fournisseursIds || !fournisseursIds[fournisseurId].commandes)
-        return null;
+      if (
+        !commandes ||
+        !fournisseurId ||
+        !fournisseursIds ||
+        !fournisseursIds[fournisseurId].commandes
+      )
+        { return null; }
 
       return fournisseursIds[fournisseurId].commandes.map(id => commandes[id]);
     }
@@ -328,16 +436,23 @@ export const selectFournisseurCommandes = () =>
 
 /* commandesContenus de la commande */
 export const selectCommandeCommandeContenus = () =>
-  createSelector([selectCommandeCommandeUtilisateurs()], commandesUtilisateurs => {
-    if (!commandesUtilisateurs) {
-      return null;
+  createSelector(
+    [selectCommandeCommandeUtilisateurs()],
+    commandesUtilisateurs => {
+      if (!commandesUtilisateurs) {
+        return null;
+      }
+      return flatten(commandesUtilisateurs.map(cu => cu.contenus));
     }
-    return flatten(commandesUtilisateurs.map(cu => cu.contenus));
-  });
+  );
 
 export const selectOffresProduitAvecTotalAchats = () =>
   createSelector(
-    [selectOffresCommandeByProduit(), selectCommandeCommandeContenus(), selectCommandeContenus()],
+    [
+      selectOffresCommandeByProduit(),
+      selectCommandeCommandeContenus(),
+      selectCommandeContenus(),
+    ],
     (offres, commandeCommandeContenus, commandeContenus) => {
       if (!offres) return null;
       return offres.map(offre => ({
@@ -354,12 +469,22 @@ export const selectOffresProduitAvecTotalAchats = () =>
 
 export const selectAuthUtilisateurCommandeUtilisateur = () =>
   createSelector(
-    [selectCommandeCommandeUtilisateurs(), selectAuthUtilisateurId(), selectCommandeContenus()],
+    [
+      selectCommandeCommandeUtilisateurs(),
+      selectAuthUtilisateurId(),
+      selectCommandeContenus(),
+    ],
     (commandeCommandeUtilisateurs, utilisateurId, commandeContenus) => {
-      if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus) {
+      if (
+        !commandeCommandeUtilisateurs ||
+        !utilisateurId ||
+        !commandeContenus
+      ) {
         return null;
       }
-      const cCu = commandeCommandeUtilisateurs.find(cu => cu.utilisateurId === utilisateurId);
+      const cCu = commandeCommandeUtilisateurs.find(
+        cu => cu.utilisateurId === utilisateurId
+      );
       if (!cCu) return undefined;
 
       cCu.contenus = cCu.contenus.map(contenuId => commandeContenus[contenuId]);
@@ -369,9 +494,24 @@ export const selectAuthUtilisateurCommandeUtilisateur = () =>
 
 export const selectUserIdCommandeUtilisateur = () =>
   createSelector(
-    [selectCommandeCommandeUtilisateurs(), selectUserId(), selectCommandeContenus(), selectCommandeId()],
-    (commandeCommandeUtilisateurs, utilisateurId, commandeContenus, commandeId) => {
-      if (!commandeCommandeUtilisateurs || !utilisateurId || !commandeContenus || !commandeId) {
+    [
+      selectCommandeCommandeUtilisateurs(),
+      selectUserId(),
+      selectCommandeContenus(),
+      selectCommandeId(),
+    ],
+    (
+      commandeCommandeUtilisateurs,
+      utilisateurId,
+      commandeContenus,
+      commandeId
+    ) => {
+      if (
+        !commandeCommandeUtilisateurs ||
+        !utilisateurId ||
+        !commandeContenus ||
+        !commandeId
+      ) {
         return null;
       }
       const cCu = commandeCommandeUtilisateurs.find(
@@ -379,7 +519,9 @@ export const selectUserIdCommandeUtilisateur = () =>
       );
       if (!cCu) return undefined;
 
-      cCu.contenus = cCu.contenus ? cCu.contenus.map(contenuId => commandeContenus[contenuId]) : [];
+      cCu.contenus = cCu.contenus
+        ? cCu.contenus.map(contenuId => commandeContenus[contenuId])
+        : [];
       return cCu;
     }
   );
@@ -391,17 +533,22 @@ export const selectNombreAcheteurs = () =>
       if (!commandeContenus) return null;
       if (commandeCommandeContenus.length === 0) return 0;
       return uniq(
-        commandeCommandeContenus.map(contId => commandeContenus[contId]).map(cont => {
-          if (!cont) return {};
-          return cont.utilisateurId;
-        }),
+        commandeCommandeContenus
+          .map(contId => commandeContenus[contId])
+          .map(cont => {
+            if (!cont) return {};
+            return cont.utilisateurId;
+          }),
         'utilisateurId'
       ).length;
     }
   );
 
 export const computeNombreCommandeContenus = () =>
-  createSelector(selectCommandeContenus(), commandeContenus => Object.keys(commandeContenus).length);
+  createSelector(
+    selectCommandeContenus(),
+    commandeContenus => Object.keys(commandeContenus).length
+  );
 
 export const selectAsyncState = () =>
   createSelector(selectCommandeDomain(), substate => ({

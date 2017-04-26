@@ -130,22 +130,25 @@ class OrderValidate extends Component {
     const { commandeId } = params;
     const { palette } = this.context.muiTheme;
     let label = null;
-
+    let textButtonColor = null;
+    console.log(commande);
     if (commande.createdAt !== null && commande.updatedAt === null) {
+      textButtonColor = 'black';
       label = pending
         ? 'Sauvegarde des modifications...'
         : 'Sauvegarder mes modifications';
     } else {
       label = pending ? 'Validation de la commande...' : 'Valider la commande';
+      textButtonColor = 'white';
     }
     return (
       <div className={styles.validation}>
         <RaisedButton
           label={label}
           style={constStyles.margin20}
-          labelColor={commande.updatedAt === null ? 'black' : 'white'}
+          labelColor={textButtonColor}
           backgroundColor={
-            commande.updatedAt === null
+            commande.createdAt !== null && commande.updatedAt === null
               ? palette.warningColor
               : palette.primary1Color
           }
@@ -158,7 +161,7 @@ class OrderValidate extends Component {
                   ...commandeContenus[id],
                   id,
                 })),
-              }),
+              })
             )}
         />
       </div>
@@ -177,7 +180,7 @@ class OrderValidate extends Component {
         style={constStyles.margin20}
         primary
         onClick={() =>
-          this.props.ajouter(commandeId, {
+          this.props.augmenter({
             offreId: offreCotisation.id,
             quantite: 1,
             commandeId,
@@ -243,6 +246,7 @@ class OrderValidate extends Component {
         commandeId={params.commandeId}
         panierExpanded={panierExpanded}
         filter={cc => cc.utilisateurId === utilisateurId}
+        utilisateurId={utilisateurId}
       />
     );
   };
@@ -277,7 +281,7 @@ class OrderValidate extends Component {
 
   render() {
     const {
-      commande,
+      commande, // commandeUtilisateur
       commandeContenus,
       params,
       offres,
@@ -290,12 +294,16 @@ class OrderValidate extends Component {
       cotisationId,
     } = this.props;
 
-    const cotisationDansCommande = commande.contenus.find(
-      id => id === cotisationId,
+    const cotisationDansCommande = Object.keys(commandeContenus).find(
+      id =>
+        commandeContenus[id].utilisateurId === utilisateurId &&
+        commandeContenus[id].offreId === offreCotisation.id &&
+        commandeContenus[id].commandeId === params.commandeId
     );
+
     const { view } = this.state;
     const contenusCommande = commande.contenus.map(
-      item => (typeof item === 'string' ? commandeContenus[item] : item),
+      item => (typeof item === 'string' ? commandeContenus[item] : item)
     );
 
     const cotisationAJour =
@@ -378,7 +386,7 @@ const mapDispatchToProps = dispatch =>
       annuler,
       setDistibution,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderValidate);

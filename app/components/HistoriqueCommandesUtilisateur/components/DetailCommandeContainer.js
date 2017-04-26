@@ -60,13 +60,13 @@ class DetailCommandeContainer extends Component {
     const commandeUtilisateurId = Object.keys(commandesUtilisateurs).find(
       id =>
         commandesUtilisateurs[id].commandeId === commandeId &&
-        commandesUtilisateurs[id].utilisateurId === utilisateurId,
+        commandesUtilisateurs[id].utilisateurId === utilisateurId
     );
 
     return (
       commandeUtilisateurId &&
       Object.keys(contenus).filter(
-        id => contenus[id].commandeUtilisateurId === commandeUtilisateurId,
+        id => contenus[id].commandeUtilisateurId === commandeUtilisateurId
       ).length > 0
     );
   };
@@ -99,7 +99,7 @@ class DetailCommandeContainer extends Component {
           Object.keys(commandesUtilisateurs).find(
             id =>
               commandesUtilisateurs[id].commandeId === commandeId &&
-              commandesUtilisateurs[id].utilisateurId === utilisateurId,
+              commandesUtilisateurs[id].utilisateurId === utilisateurId
           )
         ]
       : null;
@@ -122,6 +122,7 @@ class DetailCommandeContainer extends Component {
         offres={offres}
         produits={produits}
         readOnly
+        utilisateurId={utilisateurId}
         filter={cc => {
           const test = cc.commandeUtilisateurId === commandeUtilisateur.id;
           return test;
@@ -143,9 +144,9 @@ const mapDispatchToProps = dispatch =>
     {
       loadCommandeById: loadCommandes,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  DetailCommandeContainer,
+  DetailCommandeContainer
 );

@@ -48,6 +48,7 @@ class Commande extends Component {
           filter={cc => cc.commandeUtilisateurId === commandeUtilisateurId}
           commandeId={commandeUtilisateur.commandeId}
           readOnly
+          utilisateurId={commandeUtilisateur.utilisateurId}
         />
       </Panel>
     );

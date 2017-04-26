@@ -46,6 +46,7 @@ export default class DetailCommande extends Component {
     offres: PropTypes.object.isRequired,
     commandeContenus: PropTypes.object.isRequired,
     commandeId: PropTypes.string,
+    utilisateurId: PropTypes.string.isRequired,
     produits: PropTypes.object.isRequired,
     diminuer: PropTypes.func,
     augmenter: PropTypes.func,
@@ -74,6 +75,7 @@ export default class DetailCommande extends Component {
       commandeId,
       commandeContenus,
       panierExpanded,
+      utilisateurId,
       filter,
     } = this.props;
 
@@ -90,7 +92,7 @@ export default class DetailCommande extends Component {
       .filter(
         id =>
           (!filter || filter(commandeContenus[id])) &&
-          commandeContenus[id].commandeId === commandeId,
+          commandeContenus[id].commandeId === commandeId
       )
       .map(id => commandeContenus[id]);
 
@@ -136,7 +138,7 @@ export default class DetailCommande extends Component {
                 .filter(
                   key =>
                     commandeContenus[key].commandeId === commandeId &&
-                    commandeContenus[key].offreId === offre.id,
+                    commandeContenus[key].offreId === offre.id
                 )
                 .map(key => commandeContenus[key]);
 
@@ -144,13 +146,13 @@ export default class DetailCommande extends Component {
                 .filter(cC => cC.utilisateurId !== contenu.utilisateurId)
                 .reduce(
                   (memo, item) => memo + item.quantite + item.qteRegul,
-                  0,
+                  0
                 );
 
               const tarif = trouveTarification(
                 offre.tarifications,
                 qteTotalOffre,
-                contenu.quantite,
+                contenu.quantite
               );
 
               const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
@@ -162,7 +164,7 @@ export default class DetailCommande extends Component {
                 tarifEnBaisse,
                 colorTrendingDown: shader(
                   muiTheme.palette.tableHeaderBackgroundColor,
-                  -0.4,
+                  -0.4
                 ),
                 tarif,
                 produit: produits[offre.produitId],
@@ -225,7 +227,7 @@ export default class DetailCommande extends Component {
               ? <span style={{ color: 'red' }}>
                   <s>
                     {round(totaux.prixBase + totaux.recolteFondBase, 2).toFixed(
-                      2,
+                      2
                     )}
                     {' '}
                     €
