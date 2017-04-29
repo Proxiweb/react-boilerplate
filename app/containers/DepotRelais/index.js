@@ -77,7 +77,7 @@ class DepotRelais extends Component {
   handleDepotExpress = () => {
     const { stellarKeys, utilisateur, deposer } = this.props;
     const { montant, type, info } = this.state;
-    console.log('keys', stellarKeys);
+
     if (!this.state.depotEnCours) {
       this.setState({ ...this.state, depotEnCours: true });
       api
