@@ -84,7 +84,14 @@ class AdminRelaisCommandes extends Component {
   }
 
   render() {
-    const { commandes, livraisons, params, relais, pending } = this.props;
+    const {
+      commandes,
+      livraisons,
+      params,
+      relais,
+      pending,
+      children,
+    } = this.props;
     const { action, commandeId, relaiId } = params;
 
     if (!commandes || !livraisons) return null;
@@ -92,7 +99,13 @@ class AdminRelaisCommandes extends Component {
     return (
       <div className="row">
         <div className={classnames('col-md-3', styles.panel)}>
-          <NewCommandeButton action={action} params={params} />
+          {!children &&
+            <NewCommandeButton
+              commandeId={commandeId}
+              action={action}
+              params={params}
+              relaiId={relaiId}
+            />}
           {commandes &&
             <ListeCommandes
               params={params}

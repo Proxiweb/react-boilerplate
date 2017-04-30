@@ -7,7 +7,11 @@ import moment from 'moment';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
-import { loadFournisseurs, createCommande, loadRelais } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  createCommande,
+  loadRelais,
+} from 'containers/Commande/actions';
 import {
   selectFournisseursRelais,
   selectFournisseursCommande,
@@ -15,9 +19,12 @@ import {
   selectCommandeCommandeUtilisateurs,
 } from 'containers/Commande/selectors';
 import { selectToken } from 'containers/CompteUtilisateur/selectors';
-import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
-import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
-import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
+import NouvelleCommandeListeFournisseurs
+  from './components/NouvelleCommandeListeFournisseurs';
+import NouvelleCommandeParametres
+  from './components/NouvelleCommandeParametres';
+import NouvelleCommandeDistribution
+  from './components/NouvelleCommandeDistribution';
 import { post, del } from 'utils/apiClient';
 import styles from './styles.css';
 
@@ -48,12 +55,17 @@ class NouvelleCommande extends Component {
   componentDidMount() {
     const {
       fournisseursCommande,
-      commande,
+      commandes,
       livraisonsCommande,
+      params: { commandeId },
     } = this.props;
 
     if (fournisseursCommande && fournisseursCommande.length) {
-      this.initCmde(fournisseursCommande, commande, livraisonsCommande);
+      this.initCmde(
+        fournisseursCommande,
+        commandes[commandeId],
+        livraisonsCommande,
+      );
     }
   }
 
@@ -75,28 +87,39 @@ class NouvelleCommande extends Component {
   };
 
   addDistrib = value => {
-    this.setState({ ...this.state, distributions: [...this.state.distributions, value] });
+    this.setState({
+      ...this.state,
+      distributions: [...this.state.distributions, value],
+    });
   };
 
   delDistrib = index => {
     this.setState({
       ...this.state,
-      distributions: this.state.distributions.filter((dist, idx) => idx !== index),
+      distributions: this.state.distributions.filter(
+        (dist, idx) => idx !== index,
+      ),
     });
   };
 
   addFourn = value => {
-    const { commande, token } = this.props;
+    const { commandes, token, params: { commandeId } } = this.props;
     if (includes(this.state.cdeFourns, value)) return;
-    if (!commande || !commande.id) {
-      this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
+    if (!commandes || !commandes[commandeId]) {
+      this.setState({
+        ...this.state,
+        cdeFourns: [...this.state.cdeFourns, value],
+      });
       return;
     }
-    post(`/api/commandes/${commande.id}/fournisseurs`, {
+    post(`/api/commandes/${commandes.id}/fournisseurs`, {
       datas: { fournisseurId: value.id },
       headers: { Authorization: `Bearer ${token}` },
     }).then(() => {
-      this.setState({ ...this.state, cdeFourns: [...this.state.cdeFourns, value] });
+      this.setState({
+        ...this.state,
+        cdeFourns: [...this.state.cdeFourns, value],
+      });
     });
   };
 
@@ -130,7 +153,10 @@ class NouvelleCommande extends Component {
       parametres.heureLimite &&
       parametres.dateLimite
     ) {
-      const dateCommande = this.calculeDateCommande(parametres.dateLimite, parametres.heureLimite);
+      const dateCommande = this.calculeDateCommande(
+        parametres.dateLimite,
+        parametres.heureLimite,
+      );
       const livraisons = relais.distributionJours.map(livr => {
         const dateDebut = moment(dateCommande)
           .weekday(livr.jour)
@@ -146,7 +172,9 @@ class NouvelleCommande extends Component {
           fin: dateFin.toISOString(),
         };
       });
-      distributions = livraisons.filter(livr => moment(livr.debut).isAfter(dateCommande));
+      distributions = livraisons.filter(livr =>
+        moment(livr.debut).isAfter(dateCommande),
+      );
     }
     this.setState({
       ...this.state,
@@ -173,7 +201,15 @@ class NouvelleCommande extends Component {
 
   create = () => {
     const { parametres, distributions, cdeFourns } = this.state;
-    const { resume, montantMin, montantMinRelai, dateLimite, heureLimite, qteMin, qteMinRelai } = parametres;
+    const {
+      resume,
+      montantMin,
+      montantMinRelai,
+      dateLimite,
+      heureLimite,
+      qteMin,
+      qteMinRelai,
+    } = parametres;
     const { commandeId } = this.props.params;
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
@@ -193,7 +229,12 @@ class NouvelleCommande extends Component {
 
   render() {
     const { fournisseurs, commande, commandeUtilisateurs } = this.props;
-    const { cdeFourns, parametres, distributions, confirmDestroyOpen } = this.state;
+    const {
+      cdeFourns,
+      parametres,
+      distributions,
+      confirmDestroyOpen,
+    } = this.state;
     const { muiTheme } = this.context;
 
     return (
@@ -201,7 +242,11 @@ class NouvelleCommande extends Component {
         <div className="col-md-10">
           <Paper className={styles.panel}>
             <Tabs
-              inkBarStyle={{ height: 7, backgroundColor: muiTheme.appBar.color, marginTop: -7 }}
+              inkBarStyle={{
+                height: 7,
+                backgroundColor: muiTheme.appBar.color,
+                marginTop: -7,
+              }}
               contentContainerClassName={styles.tab}
             >
               <Tab label="Fournisseurs">
@@ -213,7 +258,10 @@ class NouvelleCommande extends Component {
                 />
               </Tab>
               <Tab label="Paramètres">
-                <NouvelleCommandeParametres parametres={parametres} changeParam={this.changeParam} />
+                <NouvelleCommandeParametres
+                  parametres={parametres}
+                  changeParam={this.changeParam}
+                />
               </Tab>
               <Tab label="Distribution">
                 <NouvelleCommandeDistribution
@@ -257,7 +305,7 @@ const mapDispatchToProps = dispatch =>
       loadR: loadRelais,
       create: createCommande,
     },
-    dispatch
+    dispatch,
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(NouvelleCommande);

@@ -13,13 +13,14 @@ export const selectMessagesUtilisateurLoaded = () =>
   createSelector(selectMessages(), messages => messages && messages.loaded);
 
 export const selectMessagesUtilisateur = () =>
-  createSelector(selectMessages(), msg => msg ? msg.datas : null);
+  createSelector(selectMessages(), msg => (msg ? msg.datas : null));
 
 export const selectMessage = () =>
   createSelector(
     selectMessagesUtilisateur(),
     selectParams(),
-    (messages, params) => messages ? messages.find(msg => msg.id === params.messageId) : null,
+    (messages, params) =>
+      (messages ? messages.find(msg => msg.id === params.messageId) : null)
   );
 
 const selectLocationState = () => {

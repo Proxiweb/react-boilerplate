@@ -1,28 +1,32 @@
 import React, { Component, PropTypes } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { bindActionCreators } from 'redux';
 import styles from './styles.css';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import { selectCommandeId } from 'containers/Commande/selectors';
+import { selectRoute } from 'containers/App/selectors';
 
 class NewCommandeButton extends Component {
   static propTypes = {
-    commandeId: PropTypes.string,
-    action: PropTypes.string,
+    relaiId: PropTypes.string.isRequired,
+  };
+
+  handleNewCommande = () => {
+    this.props.pushState(
+      `/admin/relais/${this.props.relaiId}/commandes/nouvelle`
+    );
   };
 
   render() {
-    const { commandeId, action } = this.props;
-
-    if (!commandeId || !action) return null;
-
     return (
       <div style={{ textAlign: 'center' }}>
         <FloatingActionButton
           primary
           className={styles.addButton}
-          onClick={this.newCommande}
+          onClick={this.handleNewCommande}
         >
           <ContentAdd />
         </FloatingActionButton>
@@ -31,8 +35,12 @@ class NewCommandeButton extends Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  commandeId: selectCommandeId(),
-});
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      pushState: push,
+    },
+    dispatch
+  );
 
-export default connect(mapStateToProps)(NewCommandeButton);
+export default connect(null, mapDispatchToProps)(NewCommandeButton);
