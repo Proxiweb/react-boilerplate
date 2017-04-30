@@ -19,7 +19,9 @@ import {
 
 import { payerCommandeUtilisateur } from 'containers/Commande/actions';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 
 import styles from './styles.css';
 
@@ -60,35 +62,37 @@ class ValidationCommandesAdherents extends Component {
         ...this.state,
         paiementEnCours: `Déja payé ${round(cdu.montant + cdu.recolteFond, 2)}`,
       });
-      setTimeout(
-        () => {
-          const index = this.state.index + 1;
-          this.setState({ ...this.state, index, paiementEnCours: null });
+      setTimeout(() => {
+        const index = this.state.index + 1;
+        this.setState({ ...this.state, index, paiementEnCours: null });
 
-          if (index < Object.keys(commandeUtilisateurs).length) {
-            this.pay();
-          }
-        },
-        1000,
-      );
+        if (index < Object.keys(commandeUtilisateurs).length) {
+          this.pay();
+        }
+      }, 1000);
     } else {
-      const utilisateurCourant = commandeUtilisateurs[this.state.index].utilisateurId;
+      const utilisateurCourant =
+        commandeUtilisateurs[this.state.index].utilisateurId;
       const contenusUtilisateur = Object.keys(contenus)
         .filter(
-          id => contenus[id].utilisateurId === utilisateurCourant && contenus[id].commandeId === commandeId,
+          id =>
+            contenus[id].utilisateurId === utilisateurCourant &&
+            contenus[id].commandeId === commandeId
         )
         .map(id => contenus[id]);
 
       const utilisateur = utilisateurs.find(u => u.id === utilisateurCourant);
-
+      console.log('cc', commandeContenus);
       const { prix, recolteFond } = calculeTotauxCommande({
-        contenus: contenusUtilisateur,
         offres,
-        commandeContenus,
+        commandeContenus: contenusUtilisateur,
         commandeId,
       });
 
-      this.setState({ ...this.state, paiementEnCours: (prix + recolteFond).toFixed(2) });
+      this.setState({
+        ...this.state,
+        paiementEnCours: (prix + recolteFond).toFixed(2),
+      });
 
       api
         .pay({
@@ -114,32 +118,30 @@ class ValidationCommandesAdherents extends Component {
         })
         .catch(e => {
           console.log(e);
-          this.setState({ ...this.state, index, paiementEnCours: 'Non effectué !' });
+          this.setState({
+            ...this.state,
+            index,
+            paiementEnCours: 'Non effectué !',
+          });
           const index = this.state.index + 1;
-          setTimeout(
-            () => {
-              this.setState({ ...this.state, index, paiementEnCours: null });
-            },
-            3000,
-          );
+          setTimeout(() => {
+            this.setState({ ...this.state, index, paiementEnCours: null });
+          }, 3000);
         });
     }
   };
 
   render() {
-    const {
-      commandeUtilisateurs,
-      utilisateurs,
-    } = this.props;
+    const { commandeUtilisateurs, utilisateurs } = this.props;
 
     const { index, paiementEnCours } = this.state;
     // const validees = commandeUtilisateurs.filter(cu => cu.datePaiement).length;
     let message;
     if (commandeUtilisateurs[index]) {
-      const utilisateur = utilisateurs.find(u => u.id === commandeUtilisateurs[index].utilisateurId);
-      message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(
-        utilisateur.prenom,
-      )}${paiementEnCours !== null ? ` - ${paiementEnCours} € ...` : ''}`;
+      const utilisateur = utilisateurs.find(
+        u => u.id === commandeUtilisateurs[index].utilisateurId
+      );
+      message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}${paiementEnCours !== null ? ` - ${paiementEnCours} € ...` : ''}`;
     } else {
       message = 'Terminé !';
     }
@@ -158,7 +160,11 @@ class ValidationCommandesAdherents extends Component {
             </div>
             <div className={`col-md-12 ${styles.mT}`}>
               {index < commandeUtilisateurs.length &&
-                <RaisedButton label="Effectuer les paiements" primary onClick={this.pay} />}
+                <RaisedButton
+                  label="Effectuer les paiements"
+                  primary
+                  onClick={this.pay}
+                />}
             </div>
           </div>
         </div>
@@ -176,6 +182,9 @@ const mapStateToProps = createStructuredSelector({
   commande: selectCommande(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ payerCommandeUtilisateur }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ payerCommandeUtilisateur }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ValidationCommandesAdherents);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ValidationCommandesAdherents
+);
