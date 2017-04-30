@@ -155,13 +155,6 @@ class AdminDetailsCommande extends Component {
             />}
           {!children &&
             commandeUtilisateurs &&
-            commandeUtilisateurs.filter(cu => cu.datePaiement).length <
-              commandeUtilisateurs.length &&
-            contenus &&
-            !commande.validation &&
-            <h1>Validée</h1>}
-          {!children &&
-            commandeUtilisateurs &&
             commandeUtilisateurs.filter(cu => cu.datePaiement).length ===
               commandeUtilisateurs.length &&
             contenus &&

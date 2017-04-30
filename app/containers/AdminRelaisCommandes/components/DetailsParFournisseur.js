@@ -13,7 +13,9 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 
 import CommandeFournisseur from './CommandeFournisseur';
 import CommandeDistributeur from './CommandeDistributeur';
@@ -45,14 +47,16 @@ class DetailsParFournisseur extends Component {
     const { finalisation } = this.props;
     this.state = {
       // eslint-disable-next-line
-      viewFinalisation: finalisation ? true : false,
+      viewFinalisation: finalisation ? true : false
     };
   }
 
   componentWillReceiveProps = nextProps => {
     if (this.props.params.commandeId !== nextProps.params.commandeId) {
       // eslint-disable-next-line
-      this.setState({ viewFinalisation: nextProps.finalisation ? true : false });
+      this.setState({
+        viewFinalisation: nextProps.finalisation ? true : false,
+      });
     }
   };
 
@@ -66,7 +70,11 @@ class DetailsParFournisseur extends Component {
         if (type === 'email' && email) {
           this.props.addDestinataire({ email, id: utilisateur.id, identite });
         } else if (type === 'sms' && telPortable) {
-          this.props.addDestinataire({ telPortable, id: utilisateur.id, identite });
+          this.props.addDestinataire({
+            telPortable,
+            id: utilisateur.id,
+            identite,
+          });
         }
       });
   };
@@ -96,19 +104,22 @@ class DetailsParFournisseur extends Component {
       commandeId,
     });
 
-    const nbreCommandeLivrees = commandeUtilisateurs.filter(cu => cu.dateLivraison).length;
+    const nbreCommandeLivrees = commandeUtilisateurs.filter(
+      cu => cu.dateLivraison
+    ).length;
     const distribuee = nbreCommandeLivrees === commandeUtilisateurs.length;
 
     return (
       <div className={`row ${styles.detailsParFournisseur}`}>
-        {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
+        {(includes(auth.roles, 'ADMIN') ||
+          includes(auth.roles, 'RELAI_ADMIN')) &&
           <FournisseurToolbar
             relaiId={relaiId}
             role={auth.roles}
             pushState={pushState}
             commandeId={commandeId}
             distribuee={distribuee}
-            finalisee={typeof finalisation === 'object'}
+            finalisee={finalisation !== null}
             validate={this.props.handleValidate}
             contacterAcheteurs={this.handleContacterAcheteurs}
           />}
@@ -125,14 +136,20 @@ class DetailsParFournisseur extends Component {
             <RaisedButton
               label={`Afficher ${viewFinalisation ? 'la finalisation' : 'les détails'}`}
               fullWidth
-              onClick={() => this.setState({ viewFinalisation: !this.state.viewFinalisation })}
+              onClick={() =>
+                this.setState({
+                  viewFinalisation: !this.state.viewFinalisation,
+                })}
             />}
         </div>
-        {viewFinalisation && <FinalisationDetails destinataires={finalisation.destinataires} />}
+        {viewFinalisation &&
+          <FinalisationDetails destinataires={finalisation.destinataires} />}
         {!viewFinalisation &&
           <div className={`col-md-12 ${styles.listeCommandes}`}>
             {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
-              const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
+              const pdts = produits.filter(
+                pdt => pdt.fournisseurId === fournisseur.id
+              );
               return (
                 <div className="col-md-12">
                   <CommandeFournisseur
@@ -177,7 +194,9 @@ const mapDispatchToProps = dispatch =>
       pushState: push,
       addDestinataire,
     },
-    dispatch,
+    dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailsParFournisseur
+);
