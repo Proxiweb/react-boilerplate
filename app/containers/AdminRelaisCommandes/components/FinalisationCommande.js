@@ -50,43 +50,41 @@ class FinalisationCommande extends Component {
     this.state = {
       paiements: null,
       error: false,
-      revenus: this.props.fournisseurs.reduce(
-        (memo, f) => {
-          const fournisseurContenus = Object.keys(contenus)
-            .filter(
-              id =>
-                contenus[id].commandeId === commandeId &&
-                produits.find(pdt => pdt.id === offres[contenus[id].offreId].produitId).fournisseurId ===
-                  f.id,
-            )
-            .map(id => contenus[id]);
+      revenus: this.props.fournisseurs.reduce((memo, f) => {
+        const fournisseurContenus = Object.keys(contenus)
+          .filter(
+            id =>
+              contenus[id].commandeId === commandeId &&
+              produits.find(
+                pdt => pdt.id === offres[contenus[id].offreId].produitId
+              ).fournisseurId === f.id
+          )
+          .map(id => contenus[id]);
 
-          let prix = 0;
-          let recolteFond = 0;
+        let prix = 0;
+        let recolteFond = 0;
 
-          if (fournisseurContenus.length) {
-            const totaux = calculeTotauxCommande({
-              contenus: fournisseurContenus,
-              offres,
-              commandeContenus,
-              commandeId,
-            });
-            prix = round(totaux.prix, 2);
-            recolteFond = totaux.recolteFond;
-          }
+        if (fournisseurContenus.length) {
+          const totaux = calculeTotauxCommande({
+            // contenus: fournisseurContenus,
+            offres,
+            commandeContenus: fournisseurContenus,
+            commandeId,
+          });
+          prix = round(totaux.prix, 2);
+          recolteFond = totaux.recolteFond;
+        }
 
-          return {
-            ...memo,
-            [f.id]: {
-              nom: f.nom,
-              prix,
-              recolteFond,
-              sync: true,
-            },
-          };
-        },
-        {},
-      ),
+        return {
+          ...memo,
+          [f.id]: {
+            nom: f.nom,
+            prix,
+            recolteFond,
+            sync: true,
+          },
+        };
+      }, {}),
     };
     this.loadAccount();
   }
@@ -95,7 +93,10 @@ class FinalisationCommande extends Component {
     const [field, id] = event.target.name.split('_');
     const { prix, recolteFond, nom, sync } = this.state.revenus[id];
 
-    const fournVentil = { ...this.state.revenus[id], [field]: parseFloat(event.target.value) };
+    const fournVentil = {
+      ...this.state.revenus[id],
+      [field]: parseFloat(event.target.value),
+    };
 
     if (sync) {
       const total = round(prix + recolteFond, 2);
@@ -127,13 +128,14 @@ class FinalisationCommande extends Component {
       });
   };
 
-  toggleSync = id => this.setState({
-    ...this.state,
-    revenus: {
-      ...this.state.revenus,
-      [id]: { ...this.state.revenus[id], sync: !this.state.revenus[id].sync },
-    },
-  });
+  toggleSync = id =>
+    this.setState({
+      ...this.state,
+      revenus: {
+        ...this.state.revenus,
+        [id]: { ...this.state.revenus[id], sync: !this.state.revenus[id].sync },
+      },
+    });
 
   saveCommande = () => {
     const { utilisateurs, params: { relaiId }, commande } = this.props;
@@ -142,13 +144,19 @@ class FinalisationCommande extends Component {
       return { id, montant: prix, nom, paiementOk: false, type: 'fournisseur' };
     });
 
-    const distributeurId = Object.keys(utilisateurs)
-      .find(id => utilisateurs[id].relaiId === relaiId && includes(utilisateurs[id].roles, 'RELAI_ADMIN'));
+    const distributeurId = Object.keys(utilisateurs).find(
+      id =>
+        utilisateurs[id].relaiId === relaiId &&
+        includes(utilisateurs[id].roles, 'RELAI_ADMIN')
+    );
 
     destinataires.push = {
       id: distributeurId,
-      montant: Object.keys(this.state.revenus).reduce((m, id) => m + this.state.revenus[id].recolteFond, 0),
-      nom: `${capitalize(utilisateurs[distributeurId].prenom,)} ${utilisateurs[distributeurId].nom.toUpperCase()}`,
+      montant: Object.keys(this.state.revenus).reduce(
+        (m, id) => m + this.state.revenus[id].recolteFond,
+        0
+      ),
+      nom: `${capitalize(utilisateurs[distributeurId].prenom)} ${utilisateurs[distributeurId].nom.toUpperCase()}`,
       type: 'distributeur',
       paiementOk: false,
     };
@@ -161,43 +169,58 @@ class FinalisationCommande extends Component {
   };
 
   render() {
-    const totalRecolteFond = Object.keys(this.state.revenus)
-      .reduce((m, id) => m + this.state.revenus[id].recolteFond, 0);
-    const totalCommande = Object.keys(this.state.revenus)
-      .reduce((m, id) => m + this.state.revenus[id].recolteFond + this.state.revenus[id].prix, 0);
+    const totalRecolteFond = Object.keys(this.state.revenus).reduce(
+      (m, id) => m + this.state.revenus[id].recolteFond,
+      0
+    );
+    const totalCommande = Object.keys(this.state.revenus).reduce(
+      (m, id) =>
+        m + this.state.revenus[id].recolteFond + this.state.revenus[id].prix,
+      0
+    );
     return (
       <div className="row center-md" style={{ padding: '1em' }}>
-        {Object.keys(this.state.revenus).filter(id => this.state.revenus[id].prix).map((id, idx) => {
-          return (
-            <div key={idx} className="col-md-6">
-              <div className="row">
-                <div className="col-md-12">
-                  <FlatButton
-                    label={truncate(this.state.revenus[id].nom, { length: 25 })}
-                    icon={<SwapHorizIcon color={this.state.revenus[id].sync ? 'green' : 'silver'} />}
-                    onClick={() => this.toggleSync(id)}
-                  />
-                </div>
-                <div className="col-md-12">
-                  <input
-                    value={this.state.revenus[id].prix}
-                    step="0.01"
-                    type="number"
-                    name={`prix_${id}`}
-                    onChange={this.handleChange} // eslint-disable-line
-                  />
-                  <input
-                    value={this.state.revenus[id].recolteFond}
-                    step="0.01"
-                    type="number"
-                    name={`recolteFond_${id}`}
-                    onChange={this.handleChange} // eslint-disable-line
-                  />
+        {Object.keys(this.state.revenus)
+          .filter(id => this.state.revenus[id].prix)
+          .map((id, idx) => {
+            return (
+              <div key={idx} className="col-md-6">
+                <div className="row">
+                  <div className="col-md-12">
+                    <FlatButton
+                      label={truncate(this.state.revenus[id].nom, {
+                        length: 25,
+                      })}
+                      icon={
+                        <SwapHorizIcon
+                          color={
+                            this.state.revenus[id].sync ? 'green' : 'silver'
+                          }
+                        />
+                      }
+                      onClick={() => this.toggleSync(id)}
+                    />
+                  </div>
+                  <div className="col-md-12">
+                    <input
+                      value={this.state.revenus[id].prix}
+                      step="0.01"
+                      type="number"
+                      name={`prix_${id}`}
+                      onChange={this.handleChange} // eslint-disable-line
+                    />
+                    <input
+                      value={this.state.revenus[id].recolteFond}
+                      step="0.01"
+                      type="number"
+                      name={`recolteFond_${id}`}
+                      onChange={this.handleChange} // eslint-disable-line
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
         <div className="col-md-12">
           <div className="row center-md">
             <div className="col-md-6">
@@ -218,9 +241,16 @@ class FinalisationCommande extends Component {
                 </h3>}
             </div>
             {this.state.paiements &&
-              Math.abs(totalCommande - parseFloat(this.state.paiements.balance)) < 0.0099 &&
+              Math.abs(
+                totalCommande - parseFloat(this.state.paiements.balance)
+              ) < 0.0099 &&
               <div className="col-md-10">
-                <RaisedButton label="Valider la ventilation" primary fullWidth onClick={this.saveCommande} />
+                <RaisedButton
+                  label="Valider la ventilation"
+                  primary
+                  fullWidth
+                  onClick={this.saveCommande}
+                />
               </div>}
           </div>
         </div>
@@ -237,11 +267,14 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    createCommande,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      createCommande,
+    },
+    dispatch
+  );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FinalisationCommande);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FinalisationCommande
+);
