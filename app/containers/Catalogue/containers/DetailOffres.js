@@ -36,13 +36,7 @@ class DetailOffres extends Component {
 
   render() {
     const { viewOffre } = this.state;
-    const {
-      offres,
-      fournisseurs,
-      produits,
-      typeProduits,
-      params,
-    } = this.props;
+    const { offres, fournisseurs, produits, typeProduits, params } = this.props;
 
     if (!offres || !typeProduits) return null;
     const { produitId, relaiId } = params;
@@ -58,12 +52,16 @@ class DetailOffres extends Component {
         <div className="row">
           <div className={`col-md-12 ${styles.fournisseurSwitch}`}>
             <FlatButton
-              onClick={() => this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
+              onClick={() =>
+                this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
               primary
               label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
             />
           </div>
-          {viewOffre && <div className={`${styles.produitTitre} col-md-12`}>{produit.nom.toUpperCase()}</div>}
+          {viewOffre &&
+            <div className={`${styles.produitTitre} col-md-12`}>
+              {produit.nom.toUpperCase()}
+            </div>}
           <div className="col-md-12">
             <div className="row" style={{ margin: 5 }}>
               <div className="col-md-6">
@@ -82,27 +80,40 @@ class DetailOffres extends Component {
               </div>
               <div className="col-md-6">
                 {viewOffre &&
-                  <p className={styles.right} dangerouslySetInnerHTML={{ __html: produit.description }} />}
-                {!viewOffre && <p dangerouslySetInnerHTML={{ __html: fournisseur.presentation }} />}
+                  <p
+                    className={styles.right}
+                    dangerouslySetInnerHTML={{ __html: produit.description }}
+                  />}
+                {!viewOffre &&
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: fournisseur.presentation,
+                    }}
+                  />}
               </div>
             </div>
           </div>
         </div>
         <div style={{ padding: '1em' }}>
-          {viewOffre && offres.filter(o => o.active && o.relaiId === relaiId).map((offre, idx) => {
-              const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
-              const tR = offre.tarifications.length > 1;
-              return (
-                <OffreDetails
-                  key={idx}
-                  typeProduit={typeProduit}
-                  offre={offre}
-                  subTitle="Tarif dégressif (cliquez pour plus de détails)"
-                  expandable={tR}
-                  style={{ marginBottom: '10px' }}
-                />
-              );
-            })}
+          {viewOffre &&
+            offres
+              .filter(o => o.active && o.relaiId === relaiId && !o.archive)
+              .map((offre, idx) => {
+                const typeProduit = typeProduits.find(
+                  typesPdt => typesPdt.id === produit.typeProduitId
+                );
+                const tR = offre.tarifications.length > 1;
+                return (
+                  <OffreDetails
+                    key={idx}
+                    typeProduit={typeProduit}
+                    offre={offre}
+                    subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                    expandable={tR}
+                    style={{ marginBottom: '10px' }}
+                  />
+                );
+              })}
         </div>
       </Paper>
     );

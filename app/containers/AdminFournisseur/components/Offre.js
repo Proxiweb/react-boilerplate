@@ -53,7 +53,10 @@ class Offre extends Component {
 
   handleStore = offre => {
     if (confirm('Archiver définitivement cette offre')) {
-      this.props.save({ ...offre, archive: true }, 'Offre archivée');
+      this.props.save(
+        { ...offre, archive: true, active: false },
+        'Offre archivée'
+      );
     }
   };
 
@@ -63,7 +66,7 @@ class Offre extends Component {
         ...this.props.offre,
         active: !this.props.offre.active,
       },
-      null,
+      null
     );
 
   render() {
@@ -139,7 +142,7 @@ const mapDispatchToProps = dispatch =>
       save: saveOffre,
       delete: deleteOffre,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(null, mapDispatchToProps)(Offre);

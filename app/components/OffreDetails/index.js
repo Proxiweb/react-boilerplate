@@ -11,19 +11,35 @@ import {
   TableHeaderColumn,
 } from 'material-ui/Table';
 import IconButton from 'material-ui/IconButton';
-import KeyboardDownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import KeyboardDownIcon
+  from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import KeyboardUpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 
-import { prixAuKg, detailPrix } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  prixAuKg,
+  detailPrix,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 import styles from './styles.css';
 
 const generateTarifMin = (tarifications, idx) => {
   if (idx === 0)
-    return <span><strong>1</strong> à <strong>{tarifications[1].qteMinRelais - 1}</strong></span>;
+    { return (
+      <span>
+        <strong>1</strong>
+        {' '}
+        à
+        {' '}
+        <strong>{tarifications[1].qteMinRelais - 1}</strong>
+      </span>
+    ); }
   const tarif = tarifications[idx];
   return tarifications[idx + 1]
     ? <span>
-        <strong>{tarif.qteMinRelais}</strong> à <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong>
+        <strong>{tarif.qteMinRelais}</strong>
+        {' '}
+        à
+        {' '}
+        <strong>{tarifications[idx + 1].qteMinRelais - 1}</strong>
       </span>
     : <span><strong>{tarif.qteMinRelais} et plus</strong></span>;
 };
@@ -63,11 +79,14 @@ class OffreDetails extends Component {
     const { expanded } = this.state;
     const dPrix = detailPrix(offre, typeProduit, qteCommande, 'json');
     const pAuKg = prixAuKg(offre, typeProduit, 'json');
-
+    console.log('offre', offre);
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <div className={styles.text} onClick={expandable ? this.toggleState : null}>
+          <div
+            className={styles.text}
+            onClick={expandable ? this.toggleState : null}
+          >
             <div className={styles.title}>
               <span>
                 <strong style={{ color: '#1565C0' }}>
@@ -80,17 +99,26 @@ class OffreDetails extends Component {
                   </small>}
               </span>
             </div>
-            {subTitle && expandable && <div className={styles.subTitle}>{subTitle}</div>}
+            {subTitle &&
+              expandable &&
+              <div className={styles.subTitle}>{subTitle}</div>}
           </div>
           <div className={styles.action}>
             {onClick &&
               (!stock || stock - qteCommande > 0) &&
-              <RaisedButton primary onClick={onClick} icon={<AddShoppingCart />} />}
+              <RaisedButton
+                primary
+                onClick={onClick}
+                icon={<AddShoppingCart />}
+              />}
             {stock && stock - qteCommande === 0 && <span><s>En stock</s></span>}
           </div>
           {expandable &&
             <div className={styles.expand}>
-              <IconButton onClick={this.toggleState} style={{ width: '100%', textAlign: 'right' }}>
+              <IconButton
+                onClick={this.toggleState}
+                style={{ width: '100%', textAlign: 'right' }}
+              >
                 {!expanded && <KeyboardDownIcon />}
                 {expanded && <KeyboardUpIcon />}
               </IconButton>
@@ -99,12 +127,20 @@ class OffreDetails extends Component {
         {expanded &&
           <div style={{ padding: '1em' }}>
             <Table selectable={false} multiSelectable={false}>
-              <TableHeader displaySelectAll={false} adjustForCheckbox={false} style={{ color: 'black' }}>
+              <TableHeader
+                displaySelectAll={false}
+                adjustForCheckbox={false}
+                style={{ color: 'black' }}
+              >
                 <TableRow>
-                  <TableHeaderColumn style={{ textAlign: 'left', color: 'black' }}>
+                  <TableHeaderColumn
+                    style={{ textAlign: 'left', color: 'black' }}
+                  >
                     Quantité achetée <sup>*</sup>
                   </TableHeaderColumn>
-                  <TableHeaderColumn style={{ textAlign: 'right', color: 'black' }}>
+                  <TableHeaderColumn
+                    style={{ textAlign: 'right', color: 'black' }}
+                  >
                     Tarif
                   </TableHeaderColumn>
                 </TableRow>
@@ -116,14 +152,20 @@ class OffreDetails extends Component {
                       {generateTarifMin(tarifications, index)}
                     </TableRowColumn>
                     <TableRowColumn style={{ textAlign: 'right' }}>
-                      {parseFloat(round((t.prix + t.recolteFond) / 100, 2)).toFixed(2)} €
+                      {parseFloat(
+                        round((t.prix + t.recolteFond) / 100, 2)
+                      ).toFixed(2)}
+                      {' '}
+                      €
                     </TableRowColumn>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
             <p style={{ textAlign: 'center' }}>
-              <sup>*</sup> Quantité globale achetée par tous les participants de la commande
+              <sup>*</sup>
+              {' '}
+              Quantité globale achetée par tous les participants de la commande
             </p>
           </div>}
       </div>
