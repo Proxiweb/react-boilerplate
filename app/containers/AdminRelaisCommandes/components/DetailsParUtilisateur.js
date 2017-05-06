@@ -215,7 +215,6 @@ class DetailsParUtilisateur extends Component {
           </Tab>
           <Tab label="Comptes">
             {utilisateur.stellarKeys &&
-              false &&
               <ListeEffetsCompteStellar
                 stellarAddress={utilisateur.stellarKeys.adresse}
               />}
