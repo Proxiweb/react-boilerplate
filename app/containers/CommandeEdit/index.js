@@ -111,7 +111,7 @@ export class CommandeEdit extends React.Component {
     } = this.props;
 
     const commandeUtilisateur = commandeUtilisateurs.find(
-      cu => cu.utilisateurId === this.utilisateurId,
+      cu => cu.utilisateurId === this.utilisateurId
     );
 
     if (!commandeUtilisateur) {
@@ -148,15 +148,16 @@ export class CommandeEdit extends React.Component {
     const { commandeId, relaiId } = params;
 
     // sélectionner le premier produit du premier type
-    const premierTypeProduit = typeProduits && typeProduits.length ? typeProduits[0] : null;
+    const premierTypeProduit = typeProduits && typeProduits.length
+      ? typeProduits[0]
+      : null;
     if (premierTypeProduit) {
       const pdts = commandeProduits.filter(
-        prod => prod.typeProduitId === premierTypeProduit.id && prod.enStock,
+        prod => prod.typeProduitId === premierTypeProduit.id && prod.enStock
       );
       if (pdts && pdts.length) {
-        this.props.pushState(
-          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`,
-        );
+        this.props
+          .pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`);
       }
     }
   }
@@ -206,17 +207,30 @@ export class CommandeEdit extends React.Component {
     this.setState({ ...this.state, balance });
   };
 
-  toggleState = () => this.setState({ ...this.state, panierExpanded: !this.state.panierExpanded });
+  toggleState = () =>
+    this.setState({
+      ...this.state,
+      panierExpanded: !this.state.panierExpanded,
+    });
 
   routerWillLeave = () => {
     const { commandeUtilisateurs } = this.props;
     const commandeUtilisateur = commandeUtilisateurs.find(
-      cu => cu.utilisateurId === this.utilisateurId,
+      cu => cu.utilisateurId === this.utilisateurId
     );
-    if (commandeUtilisateur.updatedAt || commandeUtilisateur.contenus.length === 0) return true;
+    if (
+      commandeUtilisateur.updatedAt ||
+      commandeUtilisateur.contenus.length === 0
+    ) {
+      return true;
+    }
 
-    const modifMsg1 = !commandeUtilisateur.updatedAt ? ' a été modifiée mais' : '';
-    const modifMsg2 = commandeUtilisateur.updatedAt ? ' Annuler les modifications ' : 'Annuler';
+    const modifMsg1 = !commandeUtilisateur.updatedAt
+      ? ' a été modifiée mais'
+      : '';
+    const modifMsg2 = commandeUtilisateur.updatedAt
+      ? ' Annuler les modifications '
+      : 'Annuler';
     return `La commande${modifMsg1} n'a pas été validée... ${modifMsg2} ?`;
   };
 
@@ -227,11 +241,11 @@ export class CommandeEdit extends React.Component {
       utilisateurs,
       authUtilisateurId,
       // commande,
-      supprimer, // eslint-disable-line
+      supprimer // eslint-disable-line
     } = this.props;
 
     const commandeUtilisateur = commandeUtilisateurs.find(
-      cu => cu.utilisateurId === this.utilisateurId,
+      cu => cu.utilisateurId === this.utilisateurId
     );
     const commande = commandeUtilisateur;
 
@@ -250,7 +264,9 @@ export class CommandeEdit extends React.Component {
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
           title="Nouvelle commande"
-          meta={[{ name: 'description', content: 'Description of CommandeEdit' }]}
+          meta={[
+            { name: 'description', content: 'Description of CommandeEdit' },
+          ]}
         />
         <ProduitSelector params={params} utilisateurId={this.utilisateurId} />
         <MediaQuery query="(max-device-width: 1600px)">
@@ -273,12 +289,20 @@ export class CommandeEdit extends React.Component {
                   : null
               }
             />
-            {!panierExpanded && <DetailOffres params={params} utilisateurId={this.utilisateurId} />}
+            {!panierExpanded &&
+              <DetailOffres
+                params={params}
+                utilisateurId={this.utilisateurId}
+              />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1601px)">
           <div className="col-lg-4">
-            {!panierExpanded && <DetailOffres params={params} utilisateurId={this.utilisateurId} />}
+            {!panierExpanded &&
+              <DetailOffres
+                params={params}
+                utilisateurId={this.utilisateurId}
+              />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1601px)">
@@ -293,8 +317,15 @@ export class CommandeEdit extends React.Component {
                       <h1 style={computedStyles.panierVide}>Panier vide</h1>
                     </div>
                     {autreUtilisateur &&
-                      <div className="col-md-12" style={constStyles.alignCenter}>
-                        Commande de {autreUtilisateur.prenom} {autreUtilisateur.nom.toUpperCase()}
+                      <div
+                        className="col-md-12"
+                        style={constStyles.alignCenter}
+                      >
+                        Commande de
+                        {' '}
+                        {autreUtilisateur.prenom}
+                        {' '}
+                        {autreUtilisateur.nom.toUpperCase()}
                       </div>}
                   </div>
                 </Paper>
@@ -331,9 +362,12 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: url => dispatch(push(url)),
-    init: (commandeId, utilisateurId) => dispatch(initCommande(commandeId, utilisateurId)),
+    init: (commandeId, utilisateurId) =>
+      dispatch(initCommande(commandeId, utilisateurId)),
     loadCdes: () => dispatch(loadCommandes()),
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CommandeEdit));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withRouter(CommandeEdit)
+);

@@ -8,14 +8,19 @@ import includes from 'lodash/includes';
 import shader from 'shader';
 import IconButton from 'material-ui/IconButton';
 import ActionDoneIcon from 'material-ui/svg-icons/action/done';
-import KeyboardDownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import KeyboardDownIcon
+  from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import KeyboardUpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
-import LigneFondsWarning from 'containers/CommandeEdit/components/LigneFondsWarning';
+import LigneFondsWarning
+  from 'containers/CommandeEdit/components/LigneFondsWarning';
 import LigneFondsOk from 'containers/CommandeEdit/components/LigneFondsOk';
 
 import { sauvegarder } from 'containers/CommandeEdit/actions';
 
-import { selectOffres, selectCommandeContenus } from 'containers/Commande/selectors';
+import {
+  selectOffres,
+  selectCommandeContenus,
+} from 'containers/Commande/selectors';
 
 import { selectPending } from 'containers/App/selectors';
 
@@ -78,12 +83,15 @@ class PanierCollapsable extends Component {
 
   buildTitle = (nbreProduits, panierExpanded) => {
     const { commandeUtilisateur, autreUtilisateur } = this.props;
-    if (commandeUtilisateur && commandeUtilisateur.id) {
+
+    if (commandeUtilisateur && commandeUtilisateur.createdAt) {
       return autreUtilisateur ? `Commande de ${autreUtilisateur}` : '';
     }
 
     if (!panierExpanded) {
-      const formule = nbreProduits > 0 ? 'Cliquez ici pour valider votre commande' : '';
+      const formule = nbreProduits > 0
+        ? 'Cliquez ici pour valider votre commande'
+        : '';
       return autreUtilisateur ? `${formule} de ${autreUtilisateur}` : formule;
     }
 
@@ -104,7 +112,6 @@ class PanierCollapsable extends Component {
       panierExpanded,
       commandeId,
       utilisateurId,
-      nbreProduits,
       balance,
       expandable,
       modifiee,
@@ -118,11 +125,19 @@ class PanierCollapsable extends Component {
     const { expanded } = this.state;
 
     const totaux = calculeTotauxCommande({
-      filter: cc => includes(commande.contenus, cc.id) && cc.utilisateurId === utilisateurId,
+      filter: cc => cc.utilisateurId === utilisateurId,
       commandeId,
       offres,
       commandeContenus,
     });
+
+    const nbreProduits = Object.keys(commandeContenus)
+      .filter(
+        id =>
+          commandeContenus[id].commandeId === commandeId &&
+          commandeContenus[id].utilisateurId === utilisateurId
+      )
+      .reduce((mem, id) => mem + commandeContenus[id].quantite, 0);
 
     let msgPaiement = null;
     if (!expanded) {
@@ -136,22 +151,29 @@ class PanierCollapsable extends Component {
     } else {
       label = pending ? 'Validation' : 'Valider';
     }
-
+    console.log('là');
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <div className={styles.text} onClick={expandable ? this.toggleState : null}>
+          <div
+            className={styles.text}
+            onClick={expandable ? this.toggleState : null}
+          >
             <div className={styles.title}>
               <span>
                 Panier :
                 {' '}
-                <strong>{round(totaux.prix + totaux.recolteFond, 2).toFixed(2) || 0} €</strong>
+                <strong>
+                  {round(totaux.prix + totaux.recolteFond, 2).toFixed(2) || 0} €
+                </strong>
                 {panierExpanded // eslint-disable-line
                   ? <span>
                       {' '}
                       (dont
                       {' '}
-                      <strong>{round(totaux.recolteFond, 2).toFixed(2)} €</strong>
+                      <strong>
+                        {round(totaux.recolteFond, 2).toFixed(2)} €
+                      </strong>
                       {' '}
                       pour la prestation de distribution)
                     </span>
@@ -175,15 +197,25 @@ class PanierCollapsable extends Component {
                 label={label}
                 labelColor={modifiee ? 'black' : 'white'}
                 backgroundColor={
-                  modifiee ? muiTheme.palette.warningColor : muiTheme.palette.primary1Color
+                  modifiee
+                    ? muiTheme.palette.warningColor
+                    : muiTheme.palette.primary1Color
                 }
                 icon={<ActionDoneIcon />}
-                onClick={() => this.props.sauvegarder({ ...commande, commandeId, utilisateurId })}
+                onClick={() =>
+                  this.props.sauvegarder({
+                    ...commande,
+                    commandeId,
+                    utilisateurId,
+                  })}
               />}
           </div>
           {expandable &&
             <div className={styles.expand}>
-              <IconButton onClick={this.toggleState} style={constStyles.iconExpandableButton}>
+              <IconButton
+                onClick={this.toggleState}
+                style={constStyles.iconExpandableButton}
+              >
                 {!expanded && <KeyboardDownIcon />}
                 {expanded && <KeyboardUpIcon />}
               </IconButton>
@@ -215,7 +247,7 @@ const mapDispatchToProps = dispatch =>
     {
       sauvegarder: datas => dispatch(sauvegarder(datas)),
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanierCollapsable);
