@@ -150,7 +150,7 @@ class FinalisationCommande extends Component {
         includes(utilisateurs[id].roles, 'RELAI_ADMIN')
     );
 
-    destinataires.push = {
+    destinataires.push({
       id: distributeurId,
       montant: Object.keys(this.state.revenus).reduce(
         (m, id) => m + this.state.revenus[id].recolteFond,
@@ -159,7 +159,7 @@ class FinalisationCommande extends Component {
       nom: `${capitalize(utilisateurs[distributeurId].prenom)} ${utilisateurs[distributeurId].nom.toUpperCase()}`,
       type: 'distributeur',
       paiementOk: false,
-    };
+    });
 
     this.props.createCommande(
       {
