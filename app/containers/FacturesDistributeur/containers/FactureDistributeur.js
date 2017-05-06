@@ -14,14 +14,18 @@ import {
   selectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 
 import { fetchUtilisateurs } from 'containers/Commande/actions';
 
 import { selectPending } from 'containers/App/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 
 import Adresse from './Adresse';
 import styles from './styles.css';
@@ -34,7 +38,6 @@ class FactureDistributeur extends Component {
     auth: PropTypes.object.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
     commandeContenus: PropTypes.array.isRequired,
-    contenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     produits: PropTypes.object.isRequired,
     utilisateurs: PropTypes.object,
@@ -55,49 +58,34 @@ class FactureDistributeur extends Component {
   }
 
   loadAcheteurs() {
-    const {
-      commandeUtilisateurs,
-      utilisateurs,
-      loadU,
-    } = this.props;
+    const { commandeUtilisateurs, utilisateurs, loadU } = this.props;
     const utilisateursIds = commandeUtilisateurs
-      .filter(cu => !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
+      .filter(
+        cu => !utilisateurs || !Object.keys(utilisateurs)[cu.utilisateurId]
+      ) // ne pas charger ceux déjà chargés
       .map(cu => cu.utilisateurId);
-
     loadU(utilisateursIds);
   }
 
   buildCommandeUtilisateurRow = (utilisateurId, idx) => {
-    const {
-      commandeContenus: cc,
-      contenus: c,
-      offres,
-      utilisateurs,
-      params,
-    } = this.props;
-    const commandeContenus = cc.map(id => c[id]);
-    const contenus = commandeContenus.filter(cC => cC.utilisateurId === utilisateurId);
-
-    if (!commandeContenus.length) return null;
+    const { commandeContenus, offres, utilisateurs, params } = this.props;
+    if (!Object.keys(commandeContenus).length) return null;
 
     const { commandeId } = params;
 
     const totaux = calculeTotauxCommande({
-      contenus,
       commandeContenus,
       offres,
       commandeId,
+      filter: cc => cc.utilisateurId === utilisateurId,
     });
-
-    // const rows = contenus.map(contenu => {
-    // const qteTotalOffre = commandeContenus
-    //   .filter(cont => cont.offreId === contenu.offreId)
-    //   .reduce((memo, cont) => memo + cont.quantite + cont.qteRegul, 0);
 
     return (
       <tr className={styles.item} key={idx}>
         <td>
-          {utilisateurs[utilisateurId].nom.toUpperCase()} {capitalize(utilisateurs[utilisateurId].prenom)}
+          {utilisateurs[utilisateurId].nom.toUpperCase()}
+          {' '}
+          {capitalize(utilisateurs[utilisateurId].prenom)}
         </td>
         <td style={{ textAlign: 'right' }}>
           {parseFloat(totaux.recolteFond).toFixed(2)} €
@@ -115,21 +103,22 @@ class FactureDistributeur extends Component {
     const {
       commandeUtilisateurs,
       commandeContenus,
-      contenus,
       commande,
       offres,
       utilisateurs,
       auth,
     } = this.props;
 
-    if (!commande || !commandeUtilisateurs || !commandeContenus || !contenus || !utilisateurs) {
+    if (
+      !commande ||
+      !commandeUtilisateurs ||
+      !commandeContenus ||
+      !utilisateurs
+    ) {
       return null;
     }
 
     const totaux = calculeTotauxCommande({
-      contenus: Object.keys(contenus)
-        .filter(id => contenus[id].commandeId === commande.id)
-        .reduce((m, id) => ({ ...m, [id]: contenus[id] }), {}),
       commandeContenus,
       offres,
       commandeId: commande.id,
@@ -143,7 +132,13 @@ class FactureDistributeur extends Component {
               <td colSpan="4">
                 <table>
                   <tr>
-                    <td style={{ fontSize: '20px', lineHeight: '20px', color: '#333' }}>
+                    <td
+                      style={{
+                        fontSize: '20px',
+                        lineHeight: '20px',
+                        color: '#333',
+                      }}
+                    >
                       <h3 className="factureTitle">
                         Facture Proxiweb{' '}
                         <small>
@@ -154,7 +149,13 @@ class FactureDistributeur extends Component {
                       </h3>
                     </td>
 
-                    <td style={{ fontSize: '20px', lineHeight: '20px', color: '#333' }}>
+                    <td
+                      style={{
+                        fontSize: '20px',
+                        lineHeight: '20px',
+                        color: '#333',
+                      }}
+                    >
                       <h3 className="factureTitle">
                         {moment(commande.dateCommande).format('LL')}
                       </h3>
@@ -185,14 +186,20 @@ class FactureDistributeur extends Component {
                 Prestation distribution HT
               </td>
             </tr>
-            {commandeUtilisateurs.map((cu, idx) => this.buildCommandeUtilisateurRow(cu.utilisateurId, idx))}
+            {commandeUtilisateurs.map((cu, idx) =>
+              this.buildCommandeUtilisateurRow(cu.utilisateurId, idx)
+            )}
             <tr>
               <td colSpan="2" style={{ textAlign: 'right' }}>
                 Total: <strong>{totaux.recolteFond} €</strong>
               </td>
             </tr>
             <tr>
-              <td colSpan="2">{'T.V.A. non applicable. Article 293B du code général des impôts.'}</td>
+              <td colSpan="2">
+                {
+                  'T.V.A. non applicable. Article 293B du code général des impôts.'
+                }
+              </td>
             </tr>
           </tbody>
         </table>
@@ -218,4 +225,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FactureDistributeur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FactureDistributeur
+);

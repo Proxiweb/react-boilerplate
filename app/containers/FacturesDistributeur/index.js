@@ -32,14 +32,10 @@ class FacturesDistributeur extends Component {
     commandes: PropTypes.array,
     commandeUtilisateurs: PropTypes.array,
     commandeContenus: PropTypes.array,
-    contenus: PropTypes.object,
   };
 
   componentDidMount() {
-    const {
-      params: { commandeId },
-      loadCde,
-    } = this.props;
+    const { params: { commandeId }, loadCde } = this.props;
 
     loadCde({ id: commandeId });
   }
@@ -52,7 +48,9 @@ class FacturesDistributeur extends Component {
 
   handleChangeList = (event, value) => {
     this.props.loadCde(value);
-    this.props.pushState(`/distributeurs/${this.props.params.relaiId}/factures/${value}`);
+    this.props.pushState(
+      `/distributeurs/${this.props.params.relaiId}/factures/${value}`
+    );
   };
 
   render() {
@@ -60,7 +58,6 @@ class FacturesDistributeur extends Component {
       commandes,
       params,
       commandeUtilisateurs,
-      contenus,
       commandeContenus,
       locationState,
     } = this.props;
@@ -74,13 +71,11 @@ class FacturesDistributeur extends Component {
         <div>
           {this.props.children &&
             commandeUtilisateurs &&
-            contenus &&
             commandeContenus &&
             React.cloneElement(this.props.children, {
               commande: commandes[params.commandeId],
               params,
               commandeUtilisateurs,
-              contenus,
               commandeContenus,
             })}
         </div>
@@ -91,30 +86,39 @@ class FacturesDistributeur extends Component {
       <div className="row">
         {!print &&
           <div className={classnames('col-md-3', styles.panel)}>
-            <SelectableList value={params.commandeId} onChange={this.handleChangeList}>
+            <SelectableList
+              value={params.commandeId}
+              onChange={this.handleChangeList}
+            >
               {Object.keys(commandes)
                 .slice()
                 .filter(id => commandes[id].dateCommande)
-                .sort((a, b) => moment(a.dateCommande).unix() < moment(b.dateCommande).unix())
+                .sort(
+                  (a, b) =>
+                    moment(a.dateCommande).unix() <
+                    moment(b.dateCommande).unix()
+                )
                 .map((id, idx) => (
                   <ListItem
                     key={idx}
-                    primaryText={moment(commandes[id].dateCommande).format('LL')}
+                    primaryText={moment(commandes[id].dateCommande).format(
+                      'LL'
+                    )}
                     value={id}
                   />
                 ))}
             </SelectableList>
           </div>}
-        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
+        <div
+          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
+        >
           {this.props.children &&
             commandeUtilisateurs &&
-            contenus &&
             commandeContenus &&
             React.cloneElement(this.props.children, {
               commande: commandes[params.commandeId],
               params,
               commandeUtilisateurs,
-              contenus,
               commandeContenus,
             })}
         </div>
@@ -124,8 +128,8 @@ class FacturesDistributeur extends Component {
 }
 const mapStateToProps = createStructuredSelector({
   commandes: selectCommandesRelais(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  contenus: selectCommandeContenus(),
+  commandeContenus: selectCommandeContenus(),
+  // contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   locationState: selectLocationState(),
 });
@@ -139,4 +143,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FacturesDistributeur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FacturesDistributeur
+);
