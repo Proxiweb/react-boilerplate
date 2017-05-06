@@ -134,7 +134,7 @@ class DetailsParFournisseur extends Component {
         <div className={`col-md-4 ${styles.totalDistrib}`}>
           {finalisation &&
             <RaisedButton
-              label={`Afficher ${viewFinalisation ? 'la finalisation' : 'les détails'}`}
+              label={!viewFinalisation ? 'finalisation' : 'détails'}
               fullWidth
               onClick={() =>
                 this.setState({
@@ -143,7 +143,10 @@ class DetailsParFournisseur extends Component {
             />}
         </div>
         {viewFinalisation &&
-          <FinalisationDetails destinataires={finalisation.destinataires} />}
+          <FinalisationDetails
+            destinataires={finalisation.destinataires}
+            params={params}
+          />}
         {!viewFinalisation &&
           <div className={`col-md-12 ${styles.listeCommandes}`}>
             {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {

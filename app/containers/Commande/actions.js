@@ -110,13 +110,13 @@ export const supprimerCommandeContenu = contenu => ({
   msgSuccess: 'Contenu commande supprimé',
 });
 
-export const createCommande = commande => ({
+export const createCommande = (commande, msgSuccess = 'Commande crée') => ({
   type: findActionType('create_commande', c, 'START'),
   url: `commandes${commande.id ? `/${commande.id}` : ''}`,
   method: commande.id ? 'put' : 'post',
   datas: { ...commande },
   msgPending: 'Création commande',
-  msgSuccess: 'Commande crée',
+  msgSuccess,
 });
 
 export const livreCommandeUtilisateur = id => ({
@@ -172,7 +172,7 @@ export const deleteOffre = id => ({
 export const importeOffres = (
   fournisseurId,
   produitId,
-  relaiDestinationId,
+  relaiDestinationId
 ) => ({
   type: findActionType('importe_offres', c, 'START'),
   url: 'offre_produits/importer',
@@ -193,7 +193,7 @@ export const loadFournisseurs = query => ({
 
 export const saveFournisseur = (
   fournisseur,
-  msgSuccess: 'Fournisseur sauvegardé',
+  msgSuccess: 'Fournisseur sauvegardé'
 ) => ({
   type: findActionType('save_fournisseur', c, 'START'),
   url: `fournisseurs${fournisseur.id ? `/${fournisseur.id}` : ''}`,

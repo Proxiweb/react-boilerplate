@@ -68,17 +68,26 @@ class ListeCommandeItem extends Component {
   render() {
     const { commande, relaiId } = this.props;
     const commandeId = commande.id;
+    const paiementsOk =
+      commande.finalisation &&
+      commande.finalisation.destinataires.filter(
+        d => d.montant > 0 && !d.paiementOk
+      ).length === 0;
+    if (commande.finalisation) {
+      console.log(paiementsOk);
+    }
     return (
       <ListItem
         primaryText={
           commande.dateCommande
-            ? moment(commande.dateCommande).format('LLLL')
+            ? moment(commande.dateCommande).format('DD MMMM HH:mm')
             : 'date indéfinie'
         }
         secondaryText={<CommandeListeTypesProduits commande={commande} />}
         value={commande.id}
         rightIconButton={this.buildRightIcon(relaiId, commande)}
         onTouchTap={() => this.handleClick(commandeId)}
+        style={{ backgroundColor: paiementsOk ? '#a2f9a2' : 'white' }}
       />
     );
   }

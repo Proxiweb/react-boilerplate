@@ -161,11 +161,16 @@ class FinalisationCommande extends Component {
       paiementOk: false,
     };
 
-    this.props.createCommande({
-      ...commande,
-      finalisation: { dateFinalisation: moment().toISOString(), destinataires },
-      msgSuccess: 'Commande finalisée',
-    });
+    this.props.createCommande(
+      {
+        ...commande,
+        finalisation: {
+          dateFinalisation: moment().toISOString(),
+          destinataires,
+        },
+      },
+      'Commande finalisée'
+    );
   };
 
   render() {

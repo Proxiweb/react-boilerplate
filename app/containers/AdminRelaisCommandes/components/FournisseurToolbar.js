@@ -25,13 +25,15 @@ const FournisseurToolbar = ({
         )}
     />
     <FlatButton
-      label="Mail aux acheteurs"
+      label="aux acheteurs"
       icon={<MailIcon />}
+      title="Mail aux acheteurs"
       onClick={() => contacterAcheteurs('email')}
     />
     <FlatButton
-      label="SMS aux acheteurs"
+      label="aux acheteurs"
       icon={<MessageIcon />}
+      title="SMS aux acheteurs"
       onClick={() => contacterAcheteurs('sms')}
     />
     {distribuee &&
