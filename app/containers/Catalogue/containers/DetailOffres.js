@@ -67,7 +67,11 @@ class DetailOffres extends Component {
               <div className="col-md-6">
                 {viewOffre &&
                   <img
-                    src={`https://proxiweb.fr/${produit.photo}`}
+                    src={
+                      produit.photo.search('http') !== -1
+                        ? produit.photo
+                        : `https://proxiweb.fr/${produit.photo}`
+                    }
                     alt={produit.nom}
                     style={{ width: '100%', height: 'auto', maxWidth: 200 }}
                   />}

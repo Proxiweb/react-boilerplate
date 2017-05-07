@@ -83,7 +83,7 @@ class FournisseursRelais extends Component {
     this.props.importe(
       fournisseurSelected,
       produitSelected,
-      relaiDestinationId,
+      relaiDestinationId
     );
   };
 
@@ -120,7 +120,7 @@ class FournisseursRelais extends Component {
           o =>
             o.produitId === produitSelected &&
             o.relaiId === params.relaiId &&
-            !o.archive,
+            !o.archive
         )
       : [];
 
@@ -151,7 +151,7 @@ class FournisseursRelais extends Component {
                           o =>
                             o.produitId === pdt.id &&
                             o.active &&
-                            o.relaiId === params.relaiId,
+                            o.relaiId === params.relaiId
                         )
                           ? 'green'
                           : 'silver'
@@ -168,7 +168,11 @@ class FournisseursRelais extends Component {
             <div className="row">
               <div className="col-md-4">
                 <img
-                  src={`https://proxiweb.fr/${produits[produitSelected].photo}`}
+                  src={
+                    produits[produitSelected].photo.search('http') !== -1
+                      ? produits[produitSelected].photo
+                      : `https://proxiweb.fr/${produits[produitSelected].photo}`
+                  }
                   alt={produits[produitSelected].nom}
                   style={{
                     width: '100%',
@@ -243,7 +247,7 @@ const mapDispatchToProps = dispatch =>
       importe: importeOffres,
       saveOffre: (offre, msg) => saveOffre(offre, msg),
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FournisseursRelais);

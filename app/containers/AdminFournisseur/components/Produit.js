@@ -43,13 +43,25 @@ export default class Produit extends Component {
         <div className={`col-md-12 ${styles.photo}`}>
           {!produit.photo &&
             <div className={styles.sansPhoto}>
-              <PhotoIcon color="gray" style={{ height: '200px', width: '200px' }} />
+              <PhotoIcon
+                color="gray"
+                style={{ height: '200px', width: '200px' }}
+              />
             </div>}
           {produit.photo &&
             <img
-              src={`https://proxiweb.fr/${produit.photo}`}
+              src={
+                produit.photo.search('http') !== -1
+                  ? produit.photo
+                  : `https://proxiweb.fr/${produit.photo}`
+              }
               alt={produit.nom}
-              style={{ width: '100%', height: 'auto', maxWidth: 200, border: 'solid 1px gray' }}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxWidth: 200,
+                border: 'solid 1px gray',
+              }}
             />}
           <div
             className={styles.textLeft}

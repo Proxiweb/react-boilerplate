@@ -146,7 +146,11 @@ class DetailOffres extends Component {
                 <div className="col-md-6">
                   {viewOffre &&
                     <img
-                      src={`https://proxiweb.fr/${produit.photo}`}
+                      src={
+                        produit.photo.search('http') !== -1
+                          ? produit.photo
+                          : `https://proxiweb.fr/${produit.photo}`
+                      }
                       alt={produit.nom}
                       style={constStyles.imageStyle}
                     />}
@@ -175,11 +179,11 @@ class DetailOffres extends Component {
           {viewOffre &&
             offres.filter(o => !o.archive).map((offre, idx) => {
               const typeProduit = typeProduits.find(
-                typesPdt => typesPdt.id === produit.typeProduitId,
+                typesPdt => typesPdt.id === produit.typeProduitId
               );
               const qteCommande = Object.keys(commandeContenus)
                 .filter(
-                  id => commandeContenus[id].commandeId === params.commandeId,
+                  id => commandeContenus[id].commandeId === params.commandeId
                 )
                 .map(id => commandeContenus[id])
                 .reduce((m, c) => m + c.quantite, 0);
@@ -248,7 +252,7 @@ const mapDispatchToProps = dispatch =>
       ajouterOffre,
       saveFavoris: saveAccount,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailOffres);
