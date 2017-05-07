@@ -172,14 +172,17 @@ export const deleteOffre = id => ({
 export const importeOffres = (
   fournisseurId,
   produitId,
-  relaiDestinationId
+  relaiDestinationId,
+  msgSuccess: 'Offre importée'
 ) => ({
   type: findActionType('importe_offres', c, 'START'),
   url: 'offre_produits/importer',
   method: 'post',
-  datas: { fournisseurId, produitId, relaiDestinationId },
+  datas: produitId
+    ? { fournisseurId, produitId, relaiDestinationId }
+    : { fournisseurId, relaiDestinationId },
   msgPending: 'Sauvegarde en cours...',
-  msgSuccess: 'Offre importée',
+  msgSuccess,
 });
 /**
 * query : { relaiId || id, jointures: true }

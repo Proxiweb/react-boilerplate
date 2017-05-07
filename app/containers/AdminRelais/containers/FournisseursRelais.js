@@ -36,7 +36,7 @@ class FournisseursRelais extends Component {
     load: PropTypes.func.isRequired,
     loadF: PropTypes.func.isRequired,
     loadT: PropTypes.func.isRequired,
-    importe: PropTypes.func.isRequired,
+    importeOffres: PropTypes.func.isRequired,
     saveOffre: PropTypes.func.isRequired,
     fournisseurs: PropTypes.array,
     produits: PropTypes.object,
@@ -80,10 +80,12 @@ class FournisseursRelais extends Component {
   handleImporterOffres = () => {
     const { produitSelected, fournisseurSelected } = this.state;
     const { relaiId: relaiDestinationId } = this.props.params;
-    this.props.importe(
+    const msgSuccess = `Offre${!produitSelected ? 's' : ''} importée${!produitSelected ? 's' : ''}`;
+    this.props.importeOffres(
       fournisseurSelected,
-      produitSelected,
-      relaiDestinationId
+      produitSelected || null,
+      relaiDestinationId,
+      msgSuccess
     );
   };
 
@@ -225,6 +227,20 @@ class FournisseursRelais extends Component {
               params={params}
               fournisseur={fournisseur.nom.toUpperCase()}
             />}
+          {!produitSelected &&
+            fournisseurSelected &&
+            offresProduit.length === 0 &&
+            // offresProduit.filter(o => o.active).length === 0 &&
+            <div className="row center-md" style={{ marginTop: '1em' }}>
+              <div className="col-md-6">
+                <RaisedButton
+                  primary
+                  label="Importer toutes les offres"
+                  fullWidth
+                  onClick={this.handleImporterOffres}
+                />
+              </div>
+            </div>}
         </div>
       </div>
     );
@@ -244,7 +260,7 @@ const mapDispatchToProps = dispatch =>
       load: loadFournisseurs,
       loadF: loadFournisseur,
       loadT: loadTypesProduits,
-      importe: importeOffres,
+      importeOffres,
       saveOffre: (offre, msg) => saveOffre(offre, msg),
     },
     dispatch
