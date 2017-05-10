@@ -15,12 +15,16 @@ import {
   selectCommandesRelais,
   selectLivraisons,
   selectTypesProduits,
-  selectFournisseurs,
+  selectFournisseursIds,
+  selectOffres,
   selectCommandesUtilisateurs,
   selectProduits,
 } from './selectors';
 
-import { selectAuthUtilisateurId, selectRoles } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectAuthUtilisateurId,
+  selectRoles,
+} from 'containers/CompteUtilisateur/selectors';
 
 import { selectLocationState, selectPending } from 'containers/App/selectors';
 
@@ -29,7 +33,13 @@ import Semainier from './components/Semainier';
 import CommandesLongTerme from './containers/CommandesLongTerme';
 import moment from 'moment';
 
-import { loadCommandes, ajouter, loadCommande } from './actions';
+import {
+  loadCommandes,
+  loadOffres,
+  loadFournisseurs,
+  ajouter,
+  loadCommande,
+} from './actions';
 
 export class Commande extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -39,9 +49,11 @@ export class Commande extends React.Component {
     utilisateurId: PropTypes.string.isRequired,
     relaiId: PropTypes.string.isRequired,
     produits: PropTypes.object,
-    fournisseurs: PropTypes.array,
+    fournisseurs: PropTypes.object,
     typesProduits: PropTypes.object,
     loadCommandes: PropTypes.func.isRequired,
+    loadOffres: PropTypes.func.isRequired,
+    loadFournisseurs: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     roles: PropTypes.array.isRequired,
@@ -52,9 +64,9 @@ export class Commande extends React.Component {
   };
 
   componentDidMount() {
-    const {
-      relaiId,
-    } = this.props; // eslint-disable-line
+    const { relaiId } = this.props; // eslint-disable-line
+    this.props.loadFournisseurs({ relaiId, jointures: true });
+    this.props.loadOffres({ relaiId, jointures: true });
     this.props.loadCommandes({ relaiId, periode: 'courantes' });
   }
 
@@ -63,14 +75,22 @@ export class Commande extends React.Component {
     const commande = commandes[id];
     return uniq(
       flatten(
-        commande.fournisseurs.filter(frnId => fournisseurs.find(frn => frn.id === frnId)).map(
-          frnId =>
+        commande.datesLimites
+          .filter(
+            dL =>
+              fournisseurs[dL.fournisseurId] &&
+              fournisseurs[dL.fournisseurId].visible
+          )
+          .map(dL =>
             Object.keys(produits)
-              .filter(pdtId => produits[pdtId].visible && produits[pdtId].fournisseurId === frnId)
+              .filter(
+                pdtId =>
+                  produits[pdtId].visible &&
+                  produits[pdtId].fournisseurId === dL.fournisseurId
+              )
               .map(pdtId => produits[pdtId].typeProduitId)
               .map(typePdtId => typesProduits[typePdtId].nom)
-          // .find(pdtId => produits[pdtId].fournisseurId === frnId)
-        )
+          )
       )
     );
   };
@@ -87,7 +107,10 @@ export class Commande extends React.Component {
   isInWeek = (dateCommande, weekOffset = 0) => {
     const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
     const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
-    return moment(dateCommande).isAfter(moment()) && moment(dateCommande).isBetween(debut, fin);
+    return (
+      moment(dateCommande).isAfter(moment()) &&
+      moment(dateCommande).isBetween(debut, fin)
+    );
   };
 
   filterByWeek = (weekOffset = 0) =>
@@ -128,12 +151,21 @@ export class Commande extends React.Component {
       utilisateurId,
       typesProduits,
       roles,
+      offres,
+      fournisseurs,
     } = this.props;
 
     const { buttonClicked } = this.state;
     const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
 
-    if (!buttonClicked && commandes && Object.keys(commandes).length > 0 && typesProduits) {
+    if (
+      !buttonClicked &&
+      commandes &&
+      Object.keys(commandes).length > 0 &&
+      Object.keys(offres).length > 0 &&
+      Object.keys(fournisseurs).length > 0 &&
+      typesProduits
+    ) {
       return (
         <div className="row">
           {this.buildTitleAndMeta()}
@@ -146,7 +178,8 @@ export class Commande extends React.Component {
             pushState={pushState}
             pending={pending}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -159,7 +192,8 @@ export class Commande extends React.Component {
             pending={pending}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -172,7 +206,8 @@ export class Commande extends React.Component {
             getCommandeInfos={key => this.getCommandeInfos(key)}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -182,7 +217,8 @@ export class Commande extends React.Component {
               getCommandeInfos={key => this.getCommandeInfos(key)}
               pending={pending}
               commandes={commandes}
-              commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+              commandeUtilisateurExiste={commandeId =>
+                this.commandeUtilisateurExiste(commandeId)}
               buttonClicked={() => this.setState({ buttonClicked: true })}
               pushState={pushState}
               relaiId={relaiId}
@@ -213,7 +249,7 @@ export class Commande extends React.Component {
       );
     }
 
-    if (!commandes) {
+    if (!commandes || !offres || !fournisseurs || !typesProduits) {
       return (
         <div className={`${styles.loader} row`}>
           {this.buildTitleAndMeta()}
@@ -247,7 +283,9 @@ export class Commande extends React.Component {
         <div className="row center-md">
           <div className="col-md-6">
             <Paper className={`${styles.noCommande}`}>
-              {commandes && Object.keys(commandes).length === 0 && <h2>Pas de commande en cours...</h2>}
+              {commandes &&
+                Object.keys(commandes).length === 0 &&
+                <h2>Pas de commande en cours...</h2>}
             </Paper>
           </div>
         </div>
@@ -267,7 +305,8 @@ const mapStateToProps = createStructuredSelector({
   utilisateurId: selectAuthUtilisateurId(),
   roles: selectRoles(),
   produits: selectProduits(),
-  fournisseurs: selectFournisseurs(),
+  fournisseurs: selectFournisseursIds(),
+  offres: selectOffres(),
   typesProduits: selectTypesProduits(),
   asyncState: selectAsyncState(),
   route: selectLocationState(),
@@ -278,6 +317,8 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     loadCommandes: page => dispatch(loadCommandes(page)),
+    loadOffres: query => dispatch(loadOffres(query)),
+    loadFournisseurs: query => dispatch(loadFournisseurs(query)),
     loadCommande: id => dispatch(loadCommande(id)),
     pushState: url => dispatch(push(url)),
     ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),

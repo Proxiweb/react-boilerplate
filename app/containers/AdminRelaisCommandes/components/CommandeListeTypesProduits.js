@@ -16,22 +16,27 @@ class CommandeListeTypesProduits extends Component {
     typesProduits: PropTypes.object,
     produits: PropTypes.object,
     fournisseurs: PropTypes.object,
-  }
+  };
 
   render() {
     const { fournisseurs, produits, typesProduits, commande } = this.props;
     if (!fournisseurs || !produits || !typesProduits) return null;
     const types = uniq(
-      commande
-        .fournisseurs
-        .filter((id) => fournisseurs[id].visible)
-        .reduce((memo, fId) =>
-          memo.concat(
-            Object.keys(produits)
-              .filter((id) => produits[id].fournisseurId === fId)
-        ), [])
-        .map((pdtId) => produits[pdtId].typeProduitId)
-    ).map((typeProduitId) => typesProduits[typeProduitId].nom).join(', ');
+      commande.datesLimites
+        .filter(dL => fournisseurs[dL.fournisseurId].visible)
+        .reduce(
+          (memo, dL) =>
+            memo.concat(
+              Object.keys(produits).filter(
+                id => produits[id].fournisseurId === dL.fournisseurId
+              )
+            ),
+          []
+        )
+        .map(pdtId => produits[pdtId].typeProduitId)
+    )
+      .map(typeProduitId => typesProduits[typeProduitId].nom)
+      .join(', ');
 
     return <div className={styles.typesProduits}>{types}</div>;
   }
