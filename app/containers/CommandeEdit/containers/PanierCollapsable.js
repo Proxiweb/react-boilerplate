@@ -151,7 +151,7 @@ class PanierCollapsable extends Component {
     } else {
       label = pending ? 'Validation' : 'Valider';
     }
-    console.log('là');
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>

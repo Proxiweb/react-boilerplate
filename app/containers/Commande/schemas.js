@@ -6,7 +6,6 @@ const utilisateurs = new Schema('utilisateurs');
 const fournisseurs = new Schema('fournisseurs');
 const commandeContenus = new Schema('commandeContenus');
 const offres = new Schema('offres');
-const livraisons = new Schema('livraisons');
 const relais = new Schema('relais');
 const produits = new Schema('produits');
 const typesProduits = new Schema('typesProduits');
@@ -14,10 +13,6 @@ const typesProduits = new Schema('typesProduits');
 commandeUtilisateurs.define({
   utilisateur: utilisateurs,
   contenus: arrayOf(commandeContenus),
-});
-
-livraisons.define({
-  relai: relais,
 });
 
 commandeContenus.define({
@@ -45,7 +40,6 @@ fournisseurs.define({
 commandes.define({
   commandeUtilisateurs: arrayOf(commandeUtilisateurs),
   fournisseurs: arrayOf(fournisseurs),
-  livraisons: arrayOf(livraisons),
 });
 
 export const schemas = {
@@ -58,5 +52,4 @@ export const schemas = {
   COMMANDES: commandes,
   UTILISATEURS: utilisateurs,
   OFFRES: offres,
-  LIVRAISONS: livraisons,
 };

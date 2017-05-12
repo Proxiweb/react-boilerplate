@@ -11,7 +11,6 @@ import {
   selectOffres,
   selectCommandeId,
   selectUtilisateurs,
-  selectLivraisons,
 } from 'containers/Commande/selectors';
 
 import { fetchUtilisateurs } from 'containers/Commande/actions';
@@ -45,7 +44,6 @@ class AdminDetailsCommande extends Component {
     children: PropTypes.node,
     depots: PropTypes.array,
     utilisateurs: PropTypes.array.isRequired,
-    livraisons: PropTypes.object.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
     loadDepots: PropTypes.func.isRequired,
   };
@@ -93,7 +91,6 @@ class AdminDetailsCommande extends Component {
       offres,
       params,
       utilisateurs,
-      livraisons,
       roles,
       children,
     } = this.props;
@@ -108,7 +105,6 @@ class AdminDetailsCommande extends Component {
         <div className={`col-md-4 col-lg-3 ${styles.listeAcheteursContainer}`}>
           {commandeUtilisateurs &&
             contenus &&
-            livraisons &&
             utils &&
             utils.length > 0 &&
             depots &&
@@ -117,7 +113,7 @@ class AdminDetailsCommande extends Component {
               commandeUtilisateurs={commandeUtilisateurs}
               commandeContenus={contenus}
               utilisateurs={utils}
-              livraisons={livraisons}
+              distributions={commande.distributions}
               depots={depots}
               offres={offres}
               params={params}
@@ -189,7 +185,6 @@ const mapStateToProps = createStructuredSelector({
   contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),
   utilisateurs: selectUtilisateurs(),
-  livraisons: selectLivraisons(),
   commandeId: selectCommandeId(),
   depots: selectDepots(),
   roles: selectRoles(),

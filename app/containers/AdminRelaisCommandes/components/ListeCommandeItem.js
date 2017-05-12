@@ -73,9 +73,7 @@ class ListeCommandeItem extends Component {
       commande.finalisation.destinataires.filter(
         d => d.montant > 0 && !d.paiementOk
       ).length === 0;
-    if (commande.finalisation) {
-      console.log(paiementsOk);
-    }
+
     return (
       <ListItem
         primaryText={

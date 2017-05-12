@@ -32,7 +32,6 @@ class OffreProduit extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.offre.id !== nextProps.offre.id) {
-      console.log(nextProps.offre);
       this.checkDelete(nextProps.offre);
     }
   }
@@ -54,7 +53,6 @@ class OffreProduit extends Component {
 
   render() {
     const { typeProduit, offre, handleStore, idx } = this.props;
-    console.log(offre);
     return (
       <div className={`row ${styles.offre}`}>
         <div className="col-md-8">
@@ -99,7 +97,7 @@ const mapDispatchToProps = dispatch =>
       saveOffre: (offre, msg) => saveOffre(offre, msg),
       deleteOffre: id => deleteOffre(id),
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(null, mapDispatchToProps)(OffreProduit);

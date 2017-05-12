@@ -28,7 +28,7 @@ const nCommande = {
   updatedAt: null,
   contenus: [],
   // commandeId: "eee9a49f-f3b7-493e-8c27-28956d8cd0a0"
-  //utilisateurId: "3c3fff89-9604-4729-b794-69dd60005dfe"
+  // utilisateurId: "3c3fff89-9604-4729-b794-69dd60005dfe"
 };
 
 const nCommandeContenu = {
@@ -75,7 +75,7 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
     .filter(
       id =>
         commandeUtilisateurs[id] &&
-        !includes(commandeUtilisateurs[id].contenus, id),
+        !includes(commandeUtilisateurs[id].contenus, id)
     )
     .reduce((memo, id) => ({ [id]: commandeContenus[id] }), {});
 
@@ -107,7 +107,7 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
 const supprimeCommandeContenusFournisseur = (
   state,
   fournisseurId,
-  commandeId,
+  commandeId
 ) => {
   const {
     commandeContenus,
@@ -120,25 +120,25 @@ const supprimeCommandeContenusFournisseur = (
     id =>
       commandeContenus[id].commandeId === commandeId &&
       produits[offres[commandeContenus[id].offreId].produitId].fournisseurId ===
-        fournisseurId,
+        fournisseurId
   );
 
   const commandeUtilisateursModifiee = uniq(
     // il peut y a voir plusieurs contenus pour une meme commandeUtilisateur
     commandeContenusASupprimerIds.map(
-      ccId => commandeContenus[ccId].commandeUtilisateurId,
-    ),
+      ccId => commandeContenus[ccId].commandeUtilisateurId
+    )
   ).reduce(
     (memo, cuId) => ({
       ...memo,
       [cuId]: {
         ...commandeUtilisateurs[cuId],
         contenus: commandeUtilisateurs[cuId].contenus.filter(
-          id => !includes(commandeContenusASupprimerIds, id),
+          id => !includes(commandeContenusASupprimerIds, id)
         ),
       },
     }),
-    {},
+    {}
   );
 
   const commandeContenusModifiee = Object.keys(commandeContenus)
@@ -148,7 +148,7 @@ const supprimeCommandeContenusFournisseur = (
         ...memo,
         [id]: commandeContenus[id],
       }),
-      {},
+      {}
     );
 
   return update(state, {
@@ -171,7 +171,7 @@ const supprimeContenu = (state, contenu) => {
     contenu.commandeUtilisateurId
   ].contenus.filter(cont => cont !== contenu.id); // eslint-disable-line
   const commandeContenusRestants = Object.keys(
-    commandeContenus,
+    commandeContenus
   ).reduce((memo, cont) => {
     const aIns = cont.id !== contenu.id ? { [contenu.id]: contenu } : {};
     return { ...memo, aIns };
@@ -195,7 +195,7 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_FOURNISSEURS_SUCCESS: {
       const datas = normalize(
         action.datas.fournisseurs,
-        arrayOf(schemas.FOURNISSEURS),
+        arrayOf(schemas.FOURNISSEURS)
       );
       return update(state, {
         datas: {
@@ -208,7 +208,7 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_OFFRES_SUCCESS: {
       const datas = normalize(
         action.datas.offre_produits,
-        arrayOf(schemas.OFFRES),
+        arrayOf(schemas.OFFRES)
       );
       return update(state, {
         datas: {
@@ -222,13 +222,12 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_COMMANDES_SUCCESS: {
       const datas = normalize(
         action.datas.commandes,
-        arrayOf(schemas.COMMANDES),
+        arrayOf(schemas.COMMANDES)
       );
       const defaults = {
         commandes: {},
         commandeContenus: {},
         commandeUtilisateurs: {},
-        livraisons: {},
         fournisseurs: {},
       };
       return update(state, {
@@ -275,7 +274,7 @@ function commandeReducer(state = initialState, action) {
       const { commandes } = state.datas.entities;
       const commandesRestantes = Object.keys(commandes).reduce(
         (memo, key) => (key !== id ? { ...memo, [key]: commandes[key] } : memo),
-        {},
+        {}
       );
 
       return update(state, {
@@ -333,10 +332,10 @@ function commandeReducer(state = initialState, action) {
             offres: {
               $set: Object.keys(state.datas.entities.offres).reduce(
                 (m, id) =>
-                  (id !== action.req.id
+                  id !== action.req.id
                     ? { ...m, [id]: state.datas.entities.offres[id] }
-                    : { ...m }),
-                {},
+                    : { ...m },
+                {}
               ),
             },
             pending: { $set: false },
@@ -358,7 +357,7 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_TYPES_PRODUITS_SUCCESS: {
       const datas = normalize(
         action.datas.type_produits,
-        arrayOf(schemas.TYPES_PRODUITS),
+        arrayOf(schemas.TYPES_PRODUITS)
       );
       return update(state, {
         datas: {
@@ -399,7 +398,7 @@ function commandeReducer(state = initialState, action) {
       return supprimeCommandeContenusFournisseur(
         state,
         fournisseurId,
-        commandeId,
+        commandeId
       );
     }
 
@@ -433,7 +432,7 @@ function commandeReducer(state = initialState, action) {
     case c.SUPPRESSION_ACHAT: {
       const nCommandeContenus = omit(
         state.datas.entities.commandeContenus,
-        action.datas.id,
+        action.datas.id
       );
       return update(state, {
         datas: { entities: { commandeContenus: { $set: nCommandeContenus } } },
@@ -460,7 +459,7 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_UTILISATEURS_SUCCESS: {
       const datas = normalize(
         action.datas.utilisateurs,
-        arrayOf(schemas.UTILISATEURS),
+        arrayOf(schemas.UTILISATEURS)
       );
       return update(state, {
         datas: {
@@ -473,7 +472,7 @@ function commandeReducer(state = initialState, action) {
     case c.ASYNC_LOAD_COMMANDE_UTILISATEURS_SUCCESS: {
       const datas = normalize(
         action.datas.commande_utilisateurs,
-        arrayOf(schemas.COMMANDE_UTILISATEURS),
+        arrayOf(schemas.COMMANDE_UTILISATEURS)
       );
       return update(state, {
         datas: {
@@ -520,13 +519,13 @@ function commandeReducer(state = initialState, action) {
 
       // trouver commandeUtilisateur correspondant s'il existe
       const commandeUtilisateurId = Object.keys(
-        state.datas.entities.commandeUtilisateurs,
+        state.datas.entities.commandeUtilisateurs
       ).find(
         id =>
           state.datas.entities.commandeUtilisateurs[id].utilisateurId ===
             utilisateurId &&
           state.datas.entities.commandeUtilisateurs[id].commandeId ===
-            commandeId,
+            commandeId
       );
 
       const commandeContenuId = commandeUtilisateurId
@@ -536,7 +535,7 @@ function commandeReducer(state = initialState, action) {
                 utilisateurId &&
               state.datas.entities.commandeContenus[id].commandeId ===
                 commandeId &&
-              state.datas.entities.commandeContenus[id].offreId === offreId,
+              state.datas.entities.commandeContenus[id].offreId === offreId
           )
         : undefined;
 
@@ -603,26 +602,26 @@ function commandeReducer(state = initialState, action) {
     case c.DIMINUER_OFFRE: {
       const { offreId, commandeId, utilisateurId } = action.payload;
       const commandeContenuId = Object.keys(
-        state.datas.entities.commandeContenus,
+        state.datas.entities.commandeContenus
       ).find(
         id =>
           state.datas.entities.commandeContenus[id].utilisateurId ===
             utilisateurId &&
           state.datas.entities.commandeContenus[id].commandeId === commandeId &&
-          state.datas.entities.commandeContenus[id].offreId === offreId,
+          state.datas.entities.commandeContenus[id].offreId === offreId
       );
 
       const nouvelleQuantite =
         state.datas.entities.commandeContenus[commandeContenuId].quantite - 1;
 
       const commandeUtilisateurId = Object.keys(
-        state.datas.entities.commandeUtilisateurs,
+        state.datas.entities.commandeUtilisateurs
       ).find(
         id =>
           state.datas.entities.commandeUtilisateurs[id].utilisateurId ===
             utilisateurId &&
           state.datas.entities.commandeUtilisateurs[id].commandeId ===
-            commandeId,
+            commandeId
       );
 
       if (nouvelleQuantite === 0) {
@@ -632,12 +631,12 @@ function commandeReducer(state = initialState, action) {
               commandeContenus: {
                 $set: Object.keys(state.datas.entities.commandeContenus).reduce(
                   (m, id) =>
-                    (id !== commandeContenuId
+                    id !== commandeContenuId
                       ? {
                         ...m,
                         [id]: state.datas.entities.commandeContenus[id],
                       }
-                      : { ...m }),
+                      : { ...m }
                 ),
               },
               commandeUtilisateurs: {
@@ -683,13 +682,13 @@ function commandeReducer(state = initialState, action) {
         livraisonId,
       } = action.payload;
       const commandeUtilisateurId = Object.keys(
-        state.datas.entities.commandeUtilisateurs,
+        state.datas.entities.commandeUtilisateurs
       ).find(
         id =>
           state.datas.entities.commandeUtilisateurs[id].utilisateurId ===
             utilisateurId &&
           state.datas.entities.commandeUtilisateurs[id].commandeId ===
-            commandeId,
+            commandeId
       );
 
       return update(state, {
@@ -711,7 +710,7 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       const stateContenus = state.datas.entities.commandeContenus;
       Object.keys(datas.entities.commandeContenus).forEach(
-        id => stateContenus[id] = datas.entities.commandeContenus[id],
+        id => (stateContenus[id] = datas.entities.commandeContenus[id])
       );
       return update(state, {
         datas: {
@@ -734,7 +733,7 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       const stateContenus = state.datas.entities.commandeContenus;
       Object.keys(datas.entities.commandeContenus).forEach(
-        id => stateContenus[id] = datas.entities.commandeContenus[id],
+        id => (stateContenus[id] = datas.entities.commandeContenus[id])
       );
       return update(state, {
         datas: {
@@ -760,13 +759,13 @@ function commandeReducer(state = initialState, action) {
             commandeContenus: {
               $set: Object.keys(state.datas.entities.commandeContenus).reduce(
                 (m, id) =>
-                  (id === action.datas.id
+                  id === action.datas.id
                     ? m
                     : {
                       ...m,
                       [id]: state.datas.entities.commandeContenus[id],
-                    }),
-                {},
+                    },
+                {}
               ),
             },
           },

@@ -22,7 +22,7 @@ class ListeAcheteurs extends Component {
     contenus: PropTypes.object.isRequired,
     commandeContenus: PropTypes.array.isRequired,
     utilisateurs: PropTypes.array.isRequired,
-    livraisons: PropTypes.array.isRequired,
+    distributions: PropTypes.array.isRequired,
     depots: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -63,7 +63,7 @@ class ListeAcheteurs extends Component {
       commandeUtilisateurs,
       params: { commandeId, utilisateurId, relaiId },
       utilisateurs,
-      livraisons,
+      distributions,
       stellarKeys,
       offres,
       commandeContenus,
@@ -80,20 +80,23 @@ class ListeAcheteurs extends Component {
     // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const acheteurs = commandeUtilisateurs
       .filter(cu => cu.commandeId === commandeId)
-      .map(cu => ({
-        ...cu,
-        utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
-        debutLivraisonISO: livraisons[cu.livraisonId]
-          ? moment(livraisons[cu.livraisonId].debut)
-              .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
-              .toISOString()
-          : null,
-        debutLivraisonUnix: livraisons[cu.livraisonId]
-          ? moment(livraisons[cu.livraisonId].debut)
-              .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
-              .unix()
-          : 0,
-      }))
+      .map(cu => {
+        const distribution = distributions.find(d => d.id === cu.livraisonId);
+        return {
+          ...cu,
+          utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
+          debutLivraisonISO: distribution
+            ? moment(distribution.debut)
+                .add(distribution.plageHoraire, 'minutes')
+                .toISOString()
+            : null,
+          debutLivraisonUnix: distribution
+            ? moment(distribution.debut)
+                .add(distribution.plageHoraire, 'minutes')
+                .unix()
+            : 0,
+        };
+      })
       .slice()
       .sort(
         (cu1, cu2) =>

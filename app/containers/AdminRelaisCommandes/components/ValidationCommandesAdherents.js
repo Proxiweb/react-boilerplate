@@ -82,7 +82,7 @@ class ValidationCommandesAdherents extends Component {
         .map(id => contenus[id]);
 
       const utilisateur = utilisateurs.find(u => u.id === utilisateurCourant);
-      console.log('cc', commandeContenus);
+
       const { prix, recolteFond } = calculeTotauxCommande({
         offres,
         commandeContenus: contenusUtilisateur,

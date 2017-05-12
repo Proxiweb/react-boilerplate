@@ -81,11 +81,6 @@ export const selectOffres = () =>
     getModel(substate, 'offres')
   );
 
-export const selectLivraisons = () =>
-  createSelector(selectCommandeDomain(), substate =>
-    getModel(substate, 'livraisons')
-  );
-
 export const selectRelais = () =>
   createSelector(selectCommandeDomain(), substate =>
     getModel(substate, 'relais')
@@ -148,36 +143,18 @@ export const selectUserIdCommandes = () =>
   );
 
 export const selectCommandesRelais = () =>
-  createSelector(
-    selectCommandes(),
-    selectLivraisons(),
-    selectRelaisId(),
-    (commandes, livraisons, relaiId) => {
-      if (typeof commandes !== 'object' || typeof livraisons !== 'object') {
-        return null;
-      }
-      const cmdesRelais = {};
-      Object.keys(commandes)
-        .filter(commandeId => {
-          let inRelais = false;
-          if (!commandes[commandeId].livraisons) {
-            // eslint-disable-next-line
-            console.log(`La commande ${commandeId} n'a pas de livraison`);
-            return false;
-          }
-          commandes[commandeId].livraisons.forEach(cmdeLivr => {
-            if (livraisons[cmdeLivr].relaiId === relaiId) {
-              inRelais = true;
-            }
-          });
-          return inRelais;
-        })
-        .forEach(commandeId => {
-          cmdesRelais[commandeId] = commandes[commandeId];
-        });
-      return cmdesRelais;
+  createSelector(selectCommandes(), selectRelaisId(), (commandes, relaiId) => {
+    if (typeof commandes !== 'object') {
+      return null;
     }
-  );
+    return Object.keys(commandes).reduce(
+      (memo, id) =>
+        commandes[id].distributions.find(d => d.relaiId === relaiId)
+          ? { ...memo, [id]: commandes[id] }
+          : { ...memo },
+      {}
+    );
+  });
 
 export const selectOffresRelais = () =>
   createSelector(selectOffres(), selectRelaisId(), (offres, relaisId) => {
@@ -279,22 +256,6 @@ export const selectTypesProduitsRelais = () =>
       return uniq(produitsIds.map(id => produits[id].typeProduitId)).map(
         id => typesProduitsByIds[id]
       );
-    }
-  );
-
-export const selectCommandeLivraisonsIds = () =>
-  createSelector(selectCommande(), commande => {
-    if (!commande) return null;
-    return commande.livraisons;
-  });
-
-export const selectCommandeLivraisons = () =>
-  createSelector(
-    selectCommandeLivraisonsIds(),
-    selectLivraisons(),
-    (livraisonsIds, livraisons) => {
-      if (!livraisonsIds || !livraisons) return null;
-      return livraisonsIds.map(key => livraisons[key]);
     }
   );
 

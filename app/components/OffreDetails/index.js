@@ -22,8 +22,8 @@ import {
 import styles from './styles.css';
 
 const generateTarifMin = (tarifications, idx) => {
-  if (idx === 0)
-    { return (
+  if (idx === 0) {
+    return (
       <span>
         <strong>1</strong>
         {' '}
@@ -31,7 +31,8 @@ const generateTarifMin = (tarifications, idx) => {
         {' '}
         <strong>{tarifications[1].qteMinRelais - 1}</strong>
       </span>
-    ); }
+    );
+  }
   const tarif = tarifications[idx];
   return tarifications[idx + 1]
     ? <span>
@@ -79,7 +80,7 @@ class OffreDetails extends Component {
     const { expanded } = this.state;
     const dPrix = detailPrix(offre, typeProduit, qteCommande, 'json');
     const pAuKg = prixAuKg(offre, typeProduit, 'json');
-    console.log('offre', offre);
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>

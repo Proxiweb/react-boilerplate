@@ -13,7 +13,6 @@ import {
   selectAsyncState,
   selectRelaisId,
   selectCommandesRelais,
-  selectLivraisons,
   selectTypesProduits,
   selectFournisseursIds,
   selectOffres,
@@ -107,6 +106,7 @@ export class Commande extends React.Component {
   isInWeek = (dateCommande, weekOffset = 0) => {
     const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
     const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
+
     return (
       moment(dateCommande).isAfter(moment()) &&
       moment(dateCommande).isBetween(debut, fin)
@@ -124,15 +124,15 @@ export class Commande extends React.Component {
       .sort(key => !this.props.commandes[key].noCommande);
 
   commandesLongTerme = () => {
-    const { commandes } = this.props; // , livraisons
-    return Object.keys(this.props.commandes)
+    const { commandes } = this.props;
+    return Object.keys(commandes)
       .filter(
         key =>
           !commandes[key].dateCommande ||
           moment(commandes[key].dateCommande).isAfter(moment().add(3, 'weeks'))
       )
       .slice()
-      .sort(key => !this.props.commandes[key].noCommande);
+      .sort(key => !commandes[key].noCommande);
   };
 
   buildTitleAndMeta = () => (
@@ -157,7 +157,6 @@ export class Commande extends React.Component {
 
     const { buttonClicked } = this.state;
     const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
-
     if (
       !buttonClicked &&
       commandes &&
@@ -299,7 +298,6 @@ const mapStateToProps = createStructuredSelector({
   // est passé en props, fonctionne aussi avec le routage /relais/xxx/commandes
   commandes: selectCommandesRelais(),
 
-  livraisons: selectLivraisons(),
   commandesUtilisateurs: selectCommandesUtilisateurs(),
   relaiId: selectRelaisId(),
   utilisateurId: selectAuthUtilisateurId(),

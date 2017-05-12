@@ -2,11 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { List, ListItem } from 'material-ui/List';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectRelaisSelected } from 'containers/Commande/selectors';
+import {
+  selectRelaisSelected,
+  selectCommande,
+} from 'containers/Commande/selectors';
 import Subheader from 'material-ui/Subheader';
 import moment from 'moment';
 import shader from 'shader';
-import styles from './LivraisonSelector.css';
+import styles from './DistributionSelector.css';
 
 const greyColor = { color: 'rgb(77, 71, 71)' };
 
@@ -33,11 +36,12 @@ const getStyles = (props, context) => ({
   },
 });
 
-class LivraisonSelector extends Component {
+class DistributionSelector extends Component {
   // eslint-disable-line
   static propTypes = {
-    livraisons: PropTypes.array.isRequired,
+    distributions: PropTypes.array.isRequired,
     relais: PropTypes.object.isRequired,
+    commande: PropTypes.object.isRequired,
     plageHoraire: PropTypes.number,
     livraisonId: PropTypes.string,
     selectionnePlageHoraire: PropTypes.func.isRequired,
@@ -48,22 +52,40 @@ class LivraisonSelector extends Component {
   };
 
   render() {
-    const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons, relais } = this.props;
+    const {
+      plageHoraire,
+      livraisonId,
+      selectionnePlageHoraire,
+      commande,
+      relais,
+    } = this.props;
 
     const range = relais.rangeDistribMinutes;
     const comptutedStyles = getStyles(this.props, this.context);
     return (
       <div className="row">
-        <div className={`col-md-8 col-md-offset-2 ${styles.livraisonSelector}`}>
+        <div
+          className={`col-md-8 col-md-offset-2 ${styles.distributionSelector}`}
+        >
           <div className={styles.lSTitre}>Sélectionnez un créneau horaire</div>
-          {livraisons.map((livr, idx1) => (
+          {commande.distributions.map((dist, idx1) => (
             <List key={idx1}>
-              <Subheader className={styles.subHeader}>{moment(livr.debut).format('dddd Do MMMM')}</Subheader>
-              {buildHoursRanges(livr.debut, livr.fin, range).map((data, idx) => (
+              <Subheader className={styles.subHeader}>
+                {moment(dist.debut).format('dddd Do MMMM')}
+              </Subheader>
+              {buildHoursRanges(
+                dist.debut,
+                dist.fin,
+                range
+              ).map((data, idx) => (
                 <ListItem
-                  onClick={() => selectionnePlageHoraire(idx, livr.id)}
+                  onClick={() => selectionnePlageHoraire(idx, dist.id)}
                   key={idx}
-                  style={idx === plageHoraire && livraisonId === livr.id ? comptutedStyles.selected : {}}
+                  style={
+                    idx === plageHoraire && livraisonId === dist.id
+                      ? comptutedStyles.selected
+                      : {}
+                  }
                 >
                   <span style={greyColor}>De </span><strong>{data[0]}</strong>
                   <span style={greyColor}> à </span><strong>{data[1]}</strong>
@@ -79,6 +101,7 @@ class LivraisonSelector extends Component {
 
 const mapStateToProps = createStructuredSelector({
   relais: selectRelaisSelected(),
+  commande: selectCommande(),
 });
 
-export default connect(mapStateToProps)(LivraisonSelector);
+export default connect(mapStateToProps)(DistributionSelector);

@@ -19,7 +19,6 @@ import {
 
 import {
   selectCommandes,
-  selectLivraisons,
   selectCommandeId,
   selectRelaisSelected,
 } from 'containers/Commande/selectors';
@@ -45,7 +44,6 @@ import styles from './styles.css';
 class AdminRelaisCommandes extends Component {
   static propTypes = {
     commandes: PropTypes.object,
-    livraisons: PropTypes.object,
     pending: PropTypes.bool.isRequired,
     relais: PropTypes.object,
     commandeId: PropTypes.string,
@@ -84,17 +82,10 @@ class AdminRelaisCommandes extends Component {
   }
 
   render() {
-    const {
-      commandes,
-      livraisons,
-      params,
-      relais,
-      pending,
-      children,
-    } = this.props;
+    const { commandes, params, relais, pending, children } = this.props;
     const { action, commandeId, relaiId } = params;
 
-    if (!commandes || !livraisons) return null;
+    if (!commandes) return null;
 
     return (
       <div className="row">
@@ -110,7 +101,6 @@ class AdminRelaisCommandes extends Component {
             <ListeCommandes
               params={params}
               commandes={commandes}
-              livraisons={livraisons}
               relais={relais}
               pending={pending}
             />}
@@ -135,7 +125,6 @@ class AdminRelaisCommandes extends Component {
 const mapStateToProps = createStructuredSelector({
   relais: selectRelaisSelected(),
   commandes: selectCommandes(),
-  livraisons: selectLivraisons(),
   pending: selectPending(),
 });
 

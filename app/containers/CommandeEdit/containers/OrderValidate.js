@@ -12,8 +12,8 @@ import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
 import assign from 'lodash/assign';
 
 import DetailCommande from 'components/DetailCommande';
-import LivraisonSelector
-  from 'containers/CommandeEdit/components/components/LivraisonSelector';
+import DistributionSelector
+  from 'containers/CommandeEdit/components/components/DistributionSelector';
 import DistributionSelected
   from 'containers/CommandeEdit/components/components/DistributionSelected';
 import Paiement from 'containers/CommandeEdit/components/Paiement';
@@ -32,7 +32,6 @@ import {
   selectCommandeContenus,
   selectOffres,
   selectProduits,
-  selectCommandeLivraisons,
   selectOffreCotisation,
   selectCotisationId,
 } from 'containers/Commande/selectors';
@@ -82,7 +81,6 @@ class OrderValidate extends Component {
     commandeContenus: PropTypes.object.isRequired,
     commande: PropTypes.object.isRequired,
     utilisateurId: PropTypes.string.isRequired,
-    livraisons: PropTypes.array.isRequired,
     commandeProxiweb: PropTypes.object.isRequired,
     balance: PropTypes.number,
     panierExpanded: PropTypes.bool.isRequired,
@@ -131,7 +129,7 @@ class OrderValidate extends Component {
     const { palette } = this.context.muiTheme;
     let label = null;
     let textButtonColor = null;
-    console.log(commande);
+
     if (commande.createdAt !== null && commande.updatedAt === null) {
       textButtonColor = 'black';
       label = pending
@@ -191,13 +189,11 @@ class OrderValidate extends Component {
   };
 
   showDistribSelected = () => {
-    const { commande, livraisons, params } = this.props;
-    const livraison = livraisons.find(liv => liv.id === commande.livraisonId);
-    if (!livraison) return <p>Livraison manquante</p>;
+    const { commande, params } = this.props;
     return (
       <div className={styles.distributionSelected}>
         <DistributionSelected
-          livraison={livraison}
+          livraisonId={commande.livraisonId}
           noPlageHoraire={commande.plageHoraire}
           className={styles.distriItem}
           params={params}
@@ -251,11 +247,10 @@ class OrderValidate extends Component {
     );
   };
 
-  showLivraisonSelector = () => {
-    const { commande, livraisons, params } = this.props;
+  showDistributionSelector = () => {
+    const { commande, params } = this.props;
     return (
-      <LivraisonSelector
-        livraisons={livraisons}
+      <DistributionSelector
         plageHoraire={commande.plageHoraire}
         livraisonId={commande.livraisonId}
         selectionnePlageHoraire={this.selectionnePlageHoraire}
@@ -313,7 +308,7 @@ class OrderValidate extends Component {
     return (
       <div>
         {view === 'distribution'
-          ? this.showLivraisonSelector()
+          ? this.showDistributionSelector()
           : this.showDetailsCommande(contenusCommande)}
         {view === 'panier' &&
           commande.livraisonId &&
@@ -368,7 +363,6 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeContenus(),
   produitsById: selectProduits(),
   datePaiementCotisation: selectDatePaiementCotisation(),
-  livraisons: selectCommandeLivraisons(),
   offreCotisation: selectOffreCotisation(),
   cotisationId: selectCotisationId(),
   pending: selectPending(),
