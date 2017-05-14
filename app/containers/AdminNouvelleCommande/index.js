@@ -137,6 +137,17 @@ class NouvelleCommande extends Component {
     });
   };
 
+  handleModifDateLimiteFourn = (fournisseurId, date) =>
+    this.setState({
+      ...this.state,
+      datesLimites: this.state.datesLimites.map(
+        dL =>
+          dL.fournisseurId !== fournisseurId
+            ? { ...dL }
+            : { ...dL, dateLimite: moment(date).toISOString() }
+      ),
+    });
+
   changeParam = (key, value) => {
     const parametres = { ...this.state.parametres, [key]: value };
     let distributions = this.state.distributions;
@@ -203,6 +214,7 @@ class NouvelleCommande extends Component {
       qteMin,
       qteMinRelai,
     } = parametres;
+    console.log(datesLimites);
     const { commandeId, relaiId } = this.props.params;
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
@@ -221,7 +233,12 @@ class NouvelleCommande extends Component {
   };
 
   render() {
-    const { fournisseurs, commande, commandeUtilisateurs } = this.props;
+    const {
+      fournisseurs,
+      commande,
+      commandeUtilisateurs,
+      params: { commandeId },
+    } = this.props;
 
     const {
       datesLimites,
@@ -253,6 +270,7 @@ class NouvelleCommande extends Component {
                 <NouvelleCommandeListeFournisseurs
                   addFourn={this.addFourn}
                   delFourn={this.delFourn}
+                  onModifDateLimiteFourn={this.handleModifDateLimiteFourn}
                   fournisseurs={fournisseurs}
                   datesLimites={datesLimites}
                 />
@@ -270,7 +288,7 @@ class NouvelleCommande extends Component {
               <div className="col-md-6">
                 <RaisedButton
                   primary
-                  label={`${commande && commande.id ? 'Modifier' : 'Créer'} cette commande`}
+                  label={`${commandeId ? 'Modifier' : 'Créer'} cette commande`}
                   onClick={() => this.create()}
                   fullWidth
                   disabled={!this.validate()}

@@ -58,16 +58,28 @@ export class Commande extends React.Component {
     roles: PropTypes.array.isRequired,
   };
 
-  state = {
-    buttonClicked: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      buttonClicked: false,
+      lastUpdated: new Date(),
+    };
+  }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const { relaiId } = this.props; // eslint-disable-line
+    this.timer = setInterval(
+      () => this.setState({ ...this.state, lastUpdated: new Date() }),
+      30000 // 30 sec
+    );
     this.props.loadFournisseurs({ relaiId, jointures: true });
     this.props.loadOffres({ relaiId, jointures: true });
     this.props.loadCommandes({ relaiId, periode: 'courantes' });
-  }
+  };
+
+  componentWillUnmount = () => {
+    clearInterval(this.timer);
+  };
 
   getCommandeInfos = id => {
     const { produits, commandes, typesProduits, fournisseurs } = this.props;
@@ -78,7 +90,9 @@ export class Commande extends React.Component {
           .filter(
             dL =>
               fournisseurs[dL.fournisseurId] &&
-              fournisseurs[dL.fournisseurId].visible
+              fournisseurs[dL.fournisseurId].visible &&
+              (!dL.dateLimite ||
+                moment(dL.dateLimite).isAfter(this.state.lastUpdated))
           )
           .map(dL =>
             Object.keys(produits)
@@ -118,7 +132,10 @@ export class Commande extends React.Component {
       .filter(
         key =>
           !this.props.commandes[key].terminee &&
-          this.isInWeek(this.props.commandes[key].dateCommande, weekOffset)
+          this.isInWeek(
+            this.props.commandes[key].distributions[0].debut,
+            weekOffset
+          )
       )
       .slice()
       .sort(key => !this.props.commandes[key].noCommande);
@@ -155,7 +172,8 @@ export class Commande extends React.Component {
       fournisseurs,
     } = this.props;
 
-    const { buttonClicked } = this.state;
+    const { buttonClicked, lastUpdated } = this.state;
+
     const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
     if (
       !buttonClicked &&
