@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import round from 'lodash/round';
 import classnames from 'classnames';
 import groupBy from 'lodash/groupBy';
@@ -75,17 +75,17 @@ class CommandeFournisseur extends Component {
 
     const qteTotal = commandeContenus.reduce(
       (memo, cont) => memo + cont.quantite + cont.qteRegul,
-      0,
+      0
     );
 
     const qteTotalOffreQte = commandeContenus.reduce(
       (memo, cont) => memo + cont.quantite,
-      0,
+      0
     );
 
     const tarif = trouveTarification(
       offres[offreId].tarifications,
-      qteTotalOffreQte,
+      qteTotalOffreQte
     );
 
     return (
@@ -140,18 +140,17 @@ class CommandeFournisseur extends Component {
     const commandeContenusFournisseur = commandeContenus.filter(
       id =>
         produits[offres[contenus[id].offreId].produitId].fournisseurId ===
-        fournisseurId,
+        fournisseurId
     );
     const commandeContenusColl = commandeContenusFournisseur.map(
-      id => contenus[id],
+      id => contenus[id]
     );
     const contenusFournGrp = groupBy(
       commandeContenusColl.filter(
         cC =>
-          produits[offres[cC.offreId].produitId].fournisseurId ===
-          fournisseurId,
+          produits[offres[cC.offreId].produitId].fournisseurId === fournisseurId
       ),
-      cc => cc.offreId,
+      cc => cc.offreId
     );
 
     const totaux = commandeContenusColl
@@ -177,7 +176,7 @@ class CommandeFournisseur extends Component {
                       <h3>Commande Proxiweb <small>{commandeId}</small></h3>
                     </td>
                     <td className={styles.title}>
-                      <h3>{moment(commande.dateCommande).format('LL')}</h3>
+                      <h3>{format(commande.dateCommande, 'DD MM')}</h3>
                     </td>
                   </tr>
                 </table>
@@ -198,7 +197,7 @@ class CommandeFournisseur extends Component {
               </td>
             </tr>
             {Object.keys(contenusFournGrp).map((offreId, idx) =>
-              this.buildProduct(contenusFournGrp[offreId], idx),
+              this.buildProduct(contenusFournGrp[offreId], idx)
             )}
           </tbody>
         </table>
@@ -230,9 +229,9 @@ const mapDispatchToProps = dispatch =>
       loadU: fetchUtilisateurs,
       loadF: loadFournisseurs,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  CommandeFournisseur,
+  CommandeFournisseur
 );

@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectRelaisSelected } from 'containers/Commande/selectors';
 import Subheader from 'material-ui/Subheader';
-import moment from 'moment';
+import differenceInMinutes from 'date-fns/difference_in_minutes';
+import addMinutes from 'date-fns/add_minutes';
+import { format } from 'utils/dates';
 import shader from 'shader';
 import styles from './LivraisonSelector.css';
 
@@ -12,16 +14,14 @@ const greyColor = { color: 'rgb(77, 71, 71)' };
 
 export const buildHoursRanges = (start, end, range) => {
   if (range === null) {
-    return [[moment(start).format('HH:mm'), moment(end).format('HH:mm')]];
+    return [[format(start, 'HH:mm'), format(end, 'HH:mm')]];
   }
-  const duration = moment.duration(moment(end).diff(moment(start)));
-  const duree = duration.asMinutes();
   const datas = [];
-  for (let cpt = 0; cpt < duree; cpt += range) {
+  for (let cpt = 0; cpt < differenceInMinutes(end, start); cpt += range) {
     // eslint-disable-line
-    const debut = moment(start).add(cpt, 'minutes');
-    const fin = moment(start).add(cpt + range, 'minutes');
-    datas[cpt] = [debut.format('HH:mm'), fin.format('HH:mm')];
+    const debut = addMinutes(start, cpt);
+    const fin = addMinutes(start, cpt + range);
+    datas[cpt] = [format(debut, 'HH:mm'), format(fin, 'HH:mm')];
   }
   return datas;
 };
@@ -48,7 +48,13 @@ class LivraisonSelector extends Component {
   };
 
   render() {
-    const { plageHoraire, livraisonId, selectionnePlageHoraire, livraisons, relais } = this.props;
+    const {
+      plageHoraire,
+      livraisonId,
+      selectionnePlageHoraire,
+      livraisons,
+      relais,
+    } = this.props;
 
     const range = relais.rangeDistribMinutes;
     const comptutedStyles = getStyles(this.props, this.context);
@@ -58,12 +64,22 @@ class LivraisonSelector extends Component {
           <div className={styles.lSTitre}>Sélectionnez un créneau horaire</div>
           {livraisons.map((livr, idx1) => (
             <List key={idx1}>
-              <Subheader className={styles.subHeader}>{moment(livr.debut).format('dddd Do MMMM')}</Subheader>
-              {buildHoursRanges(livr.debut, livr.fin, range).map((data, idx) => (
+              <Subheader className={styles.subHeader}>
+                {format(livr.debut, 'dddd Do MMMM')}
+              </Subheader>
+              {buildHoursRanges(
+                livr.debut,
+                livr.fin,
+                range
+              ).map((data, idx) => (
                 <ListItem
                   onClick={() => selectionnePlageHoraire(idx, livr.id)}
                   key={idx}
-                  style={idx === plageHoraire && livraisonId === livr.id ? comptutedStyles.selected : {}}
+                  style={
+                    idx === plageHoraire && livraisonId === livr.id
+                      ? comptutedStyles.selected
+                      : {}
+                  }
                 >
                   <span style={greyColor}>De </span><strong>{data[0]}</strong>
                   <span style={greyColor}> à </span><strong>{data[1]}</strong>

@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import moment from 'moment';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import { livreCommandeUtilisateur } from 'containers/Commande/actions';
@@ -22,17 +21,23 @@ class LivraisonCommande extends Component {
   render() {
     return (
       <div className={`col-md-8 ${styles.livraison}`}>
-        <RaisedButton fullWidth primary label="Livraison OK" onClick={this.handleSave} />
+        <RaisedButton
+          fullWidth
+          primary
+          label="Livraison OK"
+          onClick={this.handleSave}
+        />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    livre: livreCommandeUtilisateur,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      livre: livreCommandeUtilisateur,
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(LivraisonCommande);

@@ -5,7 +5,10 @@ import { bindActionCreators } from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
-import moment from 'moment';
+import isBefore from 'date-fns/is_before';
+import { format } from 'utils/dates';
+import isAfter from 'date-fns/is_after';
+import addYears from 'date-fns/add_years';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
@@ -308,7 +311,7 @@ class OrderValidate extends Component {
 
     const cotisationAJour =
       datePaiementCotisation &&
-      moment(datePaiementCotisation).add(1, 'y').isAfter(moment());
+      isAfter(addYears(datePaiementCotisation, 1), new Date());
 
     return (
       <div>
@@ -342,7 +345,7 @@ class OrderValidate extends Component {
         {view === 'panier' &&
           !commande.dateLivraison &&
           commande.id &&
-          moment(commande.createdAt).add(1, 'minutes').isBefore(moment()) &&
+          isBefore(addMinutes(commande.createdAt, 1), new Date()) &&
           commande.updatedAt !== null &&
           this.showCancel()}
         {commande.id &&
@@ -355,7 +358,10 @@ class OrderValidate extends Component {
             balance={balance}
             offres={offres}
             pending={pending}
-            dateLimite={moment(commandeProxiweb.dateCommande).format('LLLL')}
+            dateLimite={format(
+              commandeProxiweb.dateCommande,
+              'DDDD DD MM YYYY'
+            )}
           />}
       </div>
     );

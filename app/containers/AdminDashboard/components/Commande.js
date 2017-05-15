@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import capitalize from 'lodash/capitalize';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import Panel from './Panel';
 
 import {
@@ -37,7 +37,7 @@ class Commande extends Component {
       <Panel
         title={
           commandeUtilisateur
-            ? `Commande du ${moment(commandeUtilisateur.createdAt).format('LLL')}`
+            ? `Commande du ${format(commandeUtilisateur.createdAt, 'DD MMMM YYYY')}`
             : 'Sélectionnez un utilisateur'
         }
       >

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import { ListItem } from 'material-ui/List';
 import { bindActionCreators } from 'redux';
 import { deleteCommande } from 'containers/Commande/actions';
@@ -80,7 +80,7 @@ class ListeCommandeItem extends Component {
       <ListItem
         primaryText={
           commande.dateCommande
-            ? moment(commande.dateCommande).format('DD MMMM HH:mm')
+            ? format(commande.dateCommande, 'DD MMMM HH:mm')
             : 'date indéfinie'
         }
         secondaryText={<CommandeListeTypesProduits commande={commande} />}

@@ -4,7 +4,7 @@ import { buildHoursRanges } from './LivraisonSelector';
 
 import { selectRelaisSelected } from 'containers/Commande/selectors';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
+import { format } from 'utils/dates';
 
 class DistributionSelected extends Component {
   // eslint-disable-line
@@ -16,12 +16,15 @@ class DistributionSelected extends Component {
 
   render() {
     const { livraison, noPlageHoraire, relais } = this.props;
-    const ranges = buildHoursRanges(livraison.debut, livraison.fin, relais.rangeDistribMinutes)[
-      noPlageHoraire
-    ];
+    const ranges = buildHoursRanges(
+      livraison.debut,
+      livraison.fin,
+      relais.rangeDistribMinutes
+    )[noPlageHoraire];
     return (
       <div>
-        {moment(livraison.debut).format('[ Distribution le ] dddd Do MMMM [de] ')}{ranges.join(' à ')}
+        {format(livraison.debut, '[ Distribution le ] dddd Do MMMM [de] ')}
+        {ranges.join(' à ')}
       </div>
     );
   }

@@ -11,7 +11,11 @@ import MessageIcon from 'material-ui/svg-icons/communication/message';
 
 import { Column, Table } from 'react-virtualized';
 import shallowCompare from 'react-addons-shallow-compare';
-import moment from 'moment';
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+import isValid from 'date-fns/is_valid';
+import addYears from 'date-fns/add_years';
+import { format } from 'utils/dates';
 import capitalize from 'lodash/capitalize';
 import { loadUtilisateurs } from './actions';
 import { addDestinataire } from 'containers/AdminCommunication/actions';
@@ -24,17 +28,18 @@ const buildDest = (rowData, moyen) => ({
   identite: `${rowData.nom.toUpperCase()} ${capitalize(rowData.prenom)}`,
 });
 
-class AdminUtilisateurs extends Component { // eslint-disable-line
+class AdminUtilisateurs extends Component {
+  // eslint-disable-line
   static propTypes = {
     utilisateurs: PropTypes.array.isRequired,
     relais: PropTypes.array.isRequired,
     loadUtilisateursDatas: PropTypes.func.isRequired,
     addDest: PropTypes.func.isRequired,
-  }
+  };
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -69,20 +74,28 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
     return shallowCompare(this, nextProps, nextState);
   }
 
-  componentWillUnmount() { // eslint-disable-line
+  componentWillUnmount() {
+    // eslint-disable-line
     window.removeEventListener('resize', this.handleResize);
   }
 
   getFiltredDatas = () => {
     const { filtre, datas } = this.state;
-    return (filtre.relais || filtre.cotisation) ?
-      datas
-        .filter((d) => {
-          let convient = false;
-          if (!filtre.relais || filtre.relais === 'indifferent') convient = true;
-          if (filtre.relais && filtre.relais === 'pas_de_relais' && !d.relaiId) convient = true;
-          if (filtre.relais && d.relaiId === filtre.relais) convient = true;
-          if (convient) {
+    return filtre.relais || filtre.cotisation
+      ? datas.filter(d => {
+        let convient = false;
+        if (!filtre.relais || filtre.relais === 'indifferent') {
+          convient = true;
+        }
+        if (
+            filtre.relais &&
+            filtre.relais === 'pas_de_relais' &&
+            !d.relaiId
+          ) {
+          convient = true;
+        }
+        if (filtre.relais && d.relaiId === filtre.relais) convient = true;
+        if (convient) {
             switch (filtre.cotisation) { // eslint-disable-line
               case 'cotisation_null':
                 if (d.datePaiementCotisation) {
@@ -94,7 +107,9 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                   convient = false;
                   break;
                 }
-                if (moment().isAfter(moment(d.datePaiementCotisation).add(1, 'years'))) {
+                if (
+                  isAfter(new Date(), addYears(d.datePaiementCotisation, 1))
+                ) {
                   convient = false;
                 }
                 break;
@@ -103,18 +118,20 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                   convient = false;
                   break;
                 }
-                if (moment().isBefore(moment(d.datePaiementCotisation).add(1, 'years'))) {
+                if (
+                  isBefore(new Date(), addYears(d.datePaiementCotisation, 1))
+                ) {
                   convient = false;
                 }
                 break;
             }
-          }
-          return convient;
-        })
+        }
+        return convient;
+      })
       : datas;
-  }
+  };
 
-  handleChange = (event) => {
+  handleChange = event => {
     if (!event.target.value) {
       this.setState({
         datas: this.props.utilisateurs,
@@ -123,22 +140,38 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
     } else {
       this.setState({
         datas: this.props.utilisateurs.filter(
-          (u) => u.nom && u.nom.toLowerCase().indexOf(event.target.value) !== -1
+          u => u.nom && u.nom.toLowerCase().indexOf(event.target.value) !== -1
         ),
         filtre: { relais: null, cotisation: 'cotisation_all' },
       });
     }
-  }
+  };
 
-  headerRenderer = ({ label, sortBy, sortDirection, dataKey }) => <div>{label}{sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}</div>
+  headerRenderer = ({ label, sortBy, sortDirection, dataKey }) => (
+    <div>
+      {label}
+      {sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}
+    </div>
+  );
 
-  handleResize = () => this.setState({ ...this.state, height: window.innerHeight - 238, width: window.innerWidth - 30 });
+  handleResize = () =>
+    this.setState({
+      ...this.state,
+      height: window.innerHeight - 238,
+      width: window.innerWidth - 30,
+    });
 
-  handleSort = ({ sortBy, sortDirection }) => this.setState({ ...this.state, sortBy, sortDirection })
+  handleSort = ({ sortBy, sortDirection }) =>
+    this.setState({ ...this.state, sortBy, sortDirection });
 
-  handleRelaiChange = (event, idx, relais) => this.setState({ ...this.state, filtre: { ...this.state.filtre, relais } })
+  handleRelaiChange = (event, idx, relais) =>
+    this.setState({ ...this.state, filtre: { ...this.state.filtre, relais } });
 
-  handleCotisationChange = (event, idx, cotisation) => this.setState({ ...this.state, filtre: { ...this.state.filtre, cotisation } })
+  handleCotisationChange = (event, idx, cotisation) =>
+    this.setState({
+      ...this.state,
+      filtre: { ...this.state.filtre, cotisation },
+    });
 
   render() {
     const { sortBy, sortDirection } = this.state;
@@ -148,9 +181,7 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
     const datas = this.getFiltredDatas().slice().sort((a, b) => {
       if (sortBy === 'nom') {
         if (!a.nom || !a.prenom) return false;
-        return sortDirection === 'ASC' ?
-          a.nom > b.nom :
-          a.nom < b.nom;
+        return sortDirection === 'ASC' ? a.nom > b.nom : a.nom < b.nom;
       }
       return false;
     });
@@ -159,7 +190,10 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
         <div className={`col-md-12 ${styles.panel}`}>
           <div className="row">
             <div className="col-lg">
-              <TextField hintText="Nom recherché" onChange={this.handleChange} />
+              <TextField
+                hintText="Nom recherché"
+                onChange={this.handleChange}
+              />
             </div>
             <div className="col-lg">
               <CustomSelectField
@@ -167,12 +201,18 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 onChange={this.handleCotisationChange}
               >
                 <MenuItem value="cotisation_all" primaryText="Indifférent" />
-                <MenuItem value="cotisation_ok" primaryText="Cotisation à jour" />
-                <MenuItem value="cotisation_ko" primaryText="Cotisation pas à jour" />
+                <MenuItem
+                  value="cotisation_ok"
+                  primaryText="Cotisation à jour"
+                />
+                <MenuItem
+                  value="cotisation_ko"
+                  primaryText="Cotisation pas à jour"
+                />
                 <MenuItem value="cotisation_null" primaryText="Jamais cotisé" />
               </CustomSelectField>
             </div>
-            {relais.length && (
+            {relais.length &&
               <div className="col-lg">
                 <CustomSelectField
                   value={this.state.filtre.relais}
@@ -180,10 +220,11 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 >
                   <MenuItem value="indifferent" primaryText="Indifférent" />
                   <MenuItem value="pas_de_relais" primaryText="Pas de relais" />
-                  {relais.map((r) => <MenuItem value={r.id} primaryText={r.nom} />)}
+                  {relais.map(r => (
+                    <MenuItem value={r.id} primaryText={r.nom} />
+                  ))}
                 </CustomSelectField>
-              </div>
-            )}
+              </div>}
             <div className="col-lg">{datas.length} adhérents</div>
           </div>
         </div>
@@ -196,9 +237,11 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
               rowHeight={30}
               rowCount={datas.length}
               rowGetter={({ index }) => datas[index]}
-              rowStyle={(obj) => ({
+              rowStyle={obj => ({
                 borderBottom: 'solid 1px silver',
-                backgroundColor: obj.index % 2 === 0 || obj.index === -1 ? 'white' : palette.oddColor,
+                backgroundColor: obj.index % 2 === 0 || obj.index === -1
+                  ? 'white'
+                  : palette.oddColor,
               })}
               sort={this.handleSort}
               sortBy={sortBy}
@@ -209,17 +252,15 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 dataKey="nom"
                 width="300"
                 headerRenderer={this.headerRenderer}
-                cellDataGetter={
-                  ({ rowData }) => `${rowData.nom ? rowData.nom.toUpperCase() : ''} ${capitalize(rowData.prenom)}`
-                }
+                cellDataGetter={({ rowData }) =>
+                  `${rowData.nom ? rowData.nom.toUpperCase() : ''} ${capitalize(rowData.prenom)}`}
                 disableSort={false}
               />
               <Column
                 label="Date création"
                 dataKey="createdAt"
-                cellDataGetter={
-                  ({ rowData }) => moment(rowData.createdAt).format('DD/MM/YYYY')
-                }
+                cellDataGetter={({ rowData }) =>
+                  format(rowData.createdAt, 'DD/MM/YYYY')}
                 width="200"
                 disableSort={false}
               />
@@ -227,23 +268,20 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
                 label="Date Cotis."
                 dataKey="datePaiementCotisation"
                 width="200"
-                cellDataGetter={
-                  ({ rowData }) => (moment(rowData.datePaiementCotisation).isValid() ?
-                                    moment(rowData.datePaiementCotisation).format('DD/MM/YYYY') :
-                                    '---')
-                }
+                cellDataGetter={({ rowData }) =>
+                  isValid(rowData.datePaiementCotisation)
+                    ? format(rowData.datePaiementCotisation, 'DD/MM/YYYY')
+                    : '---'}
               />
               <Column
                 label="Relai"
                 dataKey="relaiId"
                 width="200"
-                cellDataGetter={
-                  ({ rowData }) => {
-                    if (!rowData.relaiId) return '';
-                    const relai = relais.find((r) => r.id === rowData.relaiId);
-                    return relai ? relai.nom : rowData.relaiId;
-                  }
-                }
+                cellDataGetter={({ rowData }) => {
+                  if (!rowData.relaiId) return '';
+                  const relai = relais.find(r => r.id === rowData.relaiId);
+                  return relai ? relai.nom : rowData.relaiId;
+                }}
               />
               <Column
                 label="Communication"
@@ -275,14 +313,18 @@ class AdminUtilisateurs extends Component { // eslint-disable-line
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   utilisateurs: state.admin.utilisateurs.datas,
   relais: state.admin.relais.datas,
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  loadUtilisateursDatas: loadUtilisateurs,
-  addDest: addDestinataire,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadUtilisateursDatas: loadUtilisateurs,
+      addDest: addDestinataire,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminUtilisateurs);

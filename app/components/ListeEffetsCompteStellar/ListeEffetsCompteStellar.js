@@ -7,7 +7,7 @@ import {
   TableRowColumn,
   TableHeaderColumn,
 } from 'material-ui/Table';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import round from 'lodash/round';
 import api from 'utils/stellarApi';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
@@ -50,8 +50,6 @@ export default class ListeEffetsCompteStellar extends Component {
 
   constructor(props) {
     super(props);
-    require('moment/locale/fr'); // eslint-disable-line
-    moment.locale('fr');
     this.state = { effects: null };
   }
 
@@ -129,7 +127,7 @@ export default class ListeEffetsCompteStellar extends Component {
                 }}
               >
                 <TableRowColumn>
-                  {moment(effect.created_at).format('DD/MM/YYYY HH:mm')}
+                  {format(effect.created_at, 'DD/MM/YYYY HH:mm')}
                 </TableRowColumn>
                 <TableRowColumn width="45" style={{ textAlign: 'center' }}>
                   {`${type === 'account_credited' ? '+' : '-'} ${round(parseFloat(amount), 2).toFixed(2)}`}

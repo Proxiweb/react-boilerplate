@@ -2,7 +2,10 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, makeSelectable } from 'material-ui/List';
-import moment from 'moment';
+import { format } from 'utils/dates';
+import compareDesc from 'date-fns/compare_desc';
+import addMinutes from 'date-fns/add_minutes';
+import getTime from 'date-fns/get_time';
 import groupBy from 'lodash/groupBy';
 import RaisedButton from 'material-ui/RaisedButton';
 import Subheader from 'material-ui/Subheader';
@@ -84,14 +87,20 @@ class ListeAcheteurs extends Component {
         ...cu,
         utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
         debutLivraisonISO: livraisons[cu.livraisonId]
-          ? moment(livraisons[cu.livraisonId].debut)
-              .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
-              .toISOString()
+          ? format(
+              addMinutes(
+                livraisons[cu.livraisonId].debut,
+                livraisons[cu.livraisonId].plageHoraire
+              )
+            )
           : null,
         debutLivraisonUnix: livraisons[cu.livraisonId]
-          ? moment(livraisons[cu.livraisonId].debut)
-              .add(livraisons[cu.livraisonId].plageHoraire, 'minutes')
-              .unix()
+          ? getTime(
+              addMinutes(
+                livraisons[cu.livraisonId].debut,
+                livraisons[cu.livraisonId].plageHoraire
+              )
+            )
           : 0,
       }))
       .slice()
@@ -143,7 +152,7 @@ class ListeAcheteurs extends Component {
           <SelectableList value={utilisateurId}>
             {Object.keys(acheteursGrp).map(key => (
               <div key={key}>
-                <Subheader>{moment(key).format('LL HH:mm')}</Subheader>
+                <Subheader>{format(key, 'LL HH:mm')}</Subheader>
                 {acheteursGrp[key].map((cu, idx2) => (
                   <ListeAcheteursItem
                     key={idx2}

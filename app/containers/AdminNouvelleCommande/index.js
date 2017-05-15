@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
+import setISODay from 'date-fns/set_iso_day';
+import addHours from 'date-fns/add_hours';
+import addMinutes from 'date-fns/add_minutes';
+import isAfter from 'date-fns/is_after';
+import { format } from 'utils/dates';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
@@ -64,7 +68,7 @@ class NouvelleCommande extends Component {
       this.initCmde(
         fournisseursCommande,
         commandes[commandeId],
-        livraisonsCommande,
+        livraisonsCommande
       );
     }
   }
@@ -97,7 +101,7 @@ class NouvelleCommande extends Component {
     this.setState({
       ...this.state,
       distributions: this.state.distributions.filter(
-        (dist, idx) => idx !== index,
+        (dist, idx) => idx !== index
       ),
     });
   };
@@ -155,25 +159,32 @@ class NouvelleCommande extends Component {
     ) {
       const dateCommande = this.calculeDateCommande(
         parametres.dateLimite,
-        parametres.heureLimite,
+        parametres.heureLimite
       );
       const livraisons = relais.distributionJours.map(livr => {
-        const dateDebut = moment(dateCommande)
-          .weekday(livr.jour)
-          .hours(livr.heureDebut.split(':')[0])
-          .minutes(livr.heureDebut.split(':')[1]);
-        const dateFin = moment(dateCommande)
-          .weekday(livr.jour)
-          .hours(livr.heureFin.split(':')[0])
-          .minutes(livr.heureFin.split(':')[1]);
+        const dateDebut = setMinutes(
+          setHours(
+            setISODay(dateCommande, livr.jour - 1),
+            livr.heureDebut.split(':')[0]
+          ),
+          livr.heureDebut.split(':')[1]
+        );
+
+        const dateFin = setMinutes(
+          setHours(
+            setISODay(dateCommande, livr.jour - 1),
+            livr.heureFin.split(':')[0]
+          ),
+          livr.heureFin.split(':')[1]
+        );
 
         return {
-          debut: dateDebut.toISOString(),
-          fin: dateFin.toISOString(),
+          debut: format(dateDebut),
+          fin: format(dateFin),
         };
       });
       distributions = livraisons.filter(livr =>
-        moment(livr.debut).isAfter(dateCommande),
+        isAfter(livr.debut, dateCommande)
       );
     }
     this.setState({
@@ -194,9 +205,9 @@ class NouvelleCommande extends Component {
 
   calculeDateCommande = (dateLimite, heureLimite) => {
     if (!dateLimite || !heureLimite) return null;
-    const hLim = parseInt(moment(heureLimite).format('HH'), 10);
-    const mLim = parseInt(moment(heureLimite).format('mm'), 10);
-    return moment(dateLimite).hours(hLim).minutes(mLim);
+    const hLim = parseInt(format(heureLimite, 'HH'), 10);
+    const mLim = parseInt(format(heureLimite, 'mm'), 10);
+    return addMinutes(addHours(dateLimite, hLim), mLim);
   };
 
   create = () => {
@@ -214,7 +225,7 @@ class NouvelleCommande extends Component {
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
       id: commandeId !== 'nouvelle' ? commandeId : undefined,
-      dateCommande: dateCommande ? dateCommande.toISOString() : null,
+      dateCommande: dateCommande ? format(dateCommande) : null,
       resume,
       montantMin,
       montantMinRelai,
@@ -305,7 +316,7 @@ const mapDispatchToProps = dispatch =>
       loadR: loadRelais,
       create: createCommande,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(NouvelleCommande);

@@ -1,6 +1,6 @@
 import { take, put, call, fork, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
-import moment from 'moment';
+import differenceInMinutes from 'date-fns/difference_in_minutes';
 import { push } from 'react-router-redux';
 import { findActionType } from '../../utils/asyncSagaConstants';
 import { delay } from 'redux-saga';
@@ -9,7 +9,11 @@ import { addEffect } from './actions';
 
 import { addMessage } from 'containers/App/actions';
 
-import { accountLoaded, loadAccountError, storeStellarKeys } from 'containers/CompteUtilisateur/actions';
+import {
+  accountLoaded,
+  loadAccountError,
+  storeStellarKeys,
+} from 'containers/CompteUtilisateur/actions';
 
 // import {
 //   selectPayments
@@ -55,12 +59,13 @@ function effects(accountId) {
   return eventChannel(emitter => {
     // eslint-disable-line
     return server.effects().forAccount(accountId).stream({
-      onmessage: txResponse => txResponse.operation().then(op => {
+      onmessage: txResponse =>
+        txResponse.operation().then(op => {
           op.transaction().then(trx => {
             emitter({ op, trx });
           });
         }),
-      onerror: err => console.log(err), // eslint-disable-line
+      onerror: err => console.log(err) // eslint-disable-line
     });
   });
 }
@@ -116,7 +121,7 @@ export function* listenStellarPaymentsOnLoginSuccess() {
     // eslint-disable-line
     const effect = yield take(channel);
     yield put(addEffect(effect));
-    const since = moment().diff(moment(effect.trx.created_at), 'minutes');
+    const since = differenceInMinutes(new Date(), effect.trx.created_at);
     if (since < 2) {
       yield put(addMessage({ type: 'success', text: 'nouveau paiement' }));
     }
@@ -129,8 +134,15 @@ export function* listenDepotCb() {
     yield take(depotCbConst.ASYNC_DEPOT_CB_SUCCESS);
     yield call(delay, 5000);
     const state = yield select();
-    if (state.compteUtilisateur && state.compteUtilisateur.auth && state.compteUtilisateur.auth.stellarKeys) {
-      yield fork(loadAccountSaga, state.compteUtilisateur.auth.stellarKeys.adresse);
+    if (
+      state.compteUtilisateur &&
+      state.compteUtilisateur.auth &&
+      state.compteUtilisateur.auth.stellarKeys
+    ) {
+      yield fork(
+        loadAccountSaga,
+        state.compteUtilisateur.auth.stellarKeys.adresse
+      );
     }
   }
 }

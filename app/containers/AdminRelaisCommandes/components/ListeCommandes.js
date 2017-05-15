@@ -7,7 +7,11 @@ import HistoryIcon from 'material-ui/svg-icons/action/history';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 
-import moment from 'moment';
+import getTime from 'date-fns/get_time';
+import subMonths from 'date-fns/sub_months';
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+import { format } from 'utils/dates';
 import {
   BottomNavigation,
   BottomNavigationItem,
@@ -43,8 +47,8 @@ class ListeCommandes extends Component {
       this.props.loadCommandes({
         relaiId: this.props.params.relaiId,
         periode: 'precise',
-        debut: moment().subtract(offsetRecentes, 'months').toISOString(),
-        fin: moment().subtract(offsetRecentes - 3, 'months').toISOString(),
+        debut: format(subMonths(new Date(), offsetRecentes)),
+        fin: format(subMonths(new Date(), offsetRecentes - 3)),
       });
     }
 
@@ -63,13 +67,13 @@ class ListeCommandes extends Component {
         return Object.keys(commandes).filter(
           id =>
             commandes[id].dateCommande === null ||
-            moment().isBefore(commandes[id].dateCommande)
+            isBefore(new Date(), commandes[id].dateCommande)
         );
       case 1:
         return Object.keys(commandes).filter(
           id =>
             commandes[id].dateCommande !== null &&
-            moment().isAfter(commandes[id].dateCommande)
+            isAfter(new Date(), commandes[id].dateCommande)
         );
       case 2:
       default:
@@ -117,8 +121,8 @@ class ListeCommandes extends Component {
               .sort(
                 (key1, key2) =>
                   !commandes[key1].dateCommande ||
-                  moment(commandes[key1].dateCommande).unix() <
-                    moment(commandes[key2].dateCommande).unix()
+                  getTime(commandes[key1].dateCommande) <
+                    getTime(commandes[key2].dateCommande)
               )
               .map((key, idx) => (
                 <ListeCommandeItem

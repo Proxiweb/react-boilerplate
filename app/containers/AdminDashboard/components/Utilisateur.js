@@ -5,7 +5,7 @@ const SelectableList = makeSelectable(List);
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import capitalize from 'lodash/capitalize';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import Panel from './Panel';
 
 import {
@@ -81,9 +81,7 @@ class Utilisateur extends Component {
       <Panel
         title={
           utilisateur
-            ? `${utilisateur.nom.toUpperCase()} ${capitalize(
-                utilisateur.prenom,
-              )}`
+            ? `${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}`
             : 'Sélectionnez un utilisateur'
         }
       >
@@ -94,7 +92,7 @@ class Utilisateur extends Component {
 
             {Object.keys(commandeUtilisateurs)
               .filter(
-                id => commandeUtilisateurs[id].utilisateurId === utilisateur.id,
+                id => commandeUtilisateurs[id].utilisateurId === utilisateur.id
               )
               .map(id => (
                 <ListItem
@@ -102,7 +100,7 @@ class Utilisateur extends Component {
                   innerDivStyle={{ padding: '4px 0' }}
                   nestedListStyle={{ padding: '5px' }}
                 >
-                  {moment(commandeUtilisateurs[id].createdAt).format('LLL')}
+                  {format(commandeUtilisateurs[id].createdAt, 'MMMM D YYYY')}
                 </ListItem>
               ))}
           </SelectableList>}
@@ -118,12 +116,13 @@ const mapStateToProps = createStructuredSelector({
   commandeUtilisateurs: selectCommandesUtilisateurs(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    loadCommandeUtilisateurs,
-    loadFournisseurs,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadCommandeUtilisateurs,
+      loadFournisseurs,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Utilisateur);

@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import moment from 'moment';
+import compareDesc from 'date-fns/compare_desc';
+import { format } from 'utils/dates';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
@@ -37,11 +38,7 @@ class FacturesFournisseur extends Component {
   };
 
   componentDidMount() {
-    const {
-      params: { fournisseurId, commandeId },
-      load,
-      loadCde,
-    } = this.props;
+    const { params: { fournisseurId, commandeId }, load, loadCde } = this.props;
 
     load(fournisseurId);
     loadCde({ id: commandeId });
@@ -55,7 +52,9 @@ class FacturesFournisseur extends Component {
 
   handleChangeList = (event, value) => {
     this.props.loadCde(value);
-    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/factures/${value}`);
+    this.props.pushState(
+      `/fournisseurs/${this.props.params.fournisseurId}/factures/${value}`
+    );
   };
 
   render() {
@@ -94,17 +93,26 @@ class FacturesFournisseur extends Component {
       <div className="row">
         {!print &&
           <div className={classnames('col-md-3', styles.panel)}>
-            <SelectableList value={params.commandeId} onChange={this.handleChangeList}>
+            <SelectableList
+              value={params.commandeId}
+              onChange={this.handleChangeList}
+            >
               {commandes
                 .slice()
                 .filter(cde => cde.dateCommande)
-                .sort((a, b) => moment(a.dateCommande).unix() < moment(b.dateCommande).unix())
+                .sort(compareDesc)
                 .map((cde, idx) => (
-                  <ListItem key={idx} primaryText={moment(cde.dateCommande).format('LL')} value={cde.id} />
+                  <ListItem
+                    key={idx}
+                    primaryText={format(cde.dateCommande, 'DD MMMM')}
+                    value={cde.id}
+                  />
                 ))}
             </SelectableList>
           </div>}
-        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
+        <div
+          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
+        >
           {this.props.children &&
             commandeUtilisateurs &&
             contenus &&
@@ -129,13 +137,16 @@ const mapStateToProps = createStructuredSelector({
   locationState: selectLocationState(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    load: loadFournisseur,
-    loadCde: loadCommandes,
-    pushState: push,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadFournisseur,
+      loadCde: loadCommandes,
+      pushState: push,
+    },
+    dispatch
+  );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FacturesFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FacturesFournisseur
+);

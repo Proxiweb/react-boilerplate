@@ -20,7 +20,6 @@ import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { persistStore } from 'redux-persist';
-import moment from 'moment';
 
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
@@ -30,11 +29,16 @@ const openSansObserver = new FontFaceObserver('Ubuntu', {});
 import styles from './containers/App/styles.css';
 
 // When Open Sans is loaded, add a font-family using Open Sans to the body
-openSansObserver.load().then(() => {
-  document.body.classList.add(styles.fontLoaded);
-}, () => {
-  document.body.classList.remove(styles.fontLoaded);
-});
+openSansObserver.load().then(
+  () => {
+    document.body.classList.add(styles.fontLoaded);
+  },
+  () => {
+    document.body.classList.remove(styles.fontLoaded);
+  }
+);
+
+window.__localeId__ = 'fr';
 
 // Import Language Provider
 import LanguageProvider from './containers/LanguageProvider';
@@ -74,9 +78,6 @@ import 'react-resizable/css/styles.css';
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
-
-moment.locale('fr');
-
 persistStore(store, {
   whitelist: ['compteUtilisateur', 'global'], // 'commande'
   debounce: 1500,
@@ -147,7 +148,7 @@ const render = messages => {
         </MuiThemeProvider>
       </LanguageProvider>
     </Provider>,
-    document.getElementById('app'),
+    document.getElementById('app')
   );
 };
 
@@ -162,8 +163,10 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  Promise.all([System.import('intl'), System.import('intl/locale-data/jsonp/en.js')])
-    .then(() => render(translationMessages));
+  Promise.all([
+    System.import('intl'),
+    System.import('intl/locale-data/jsonp/en.js'),
+  ]).then(() => render(translationMessages));
 } else {
   render(translationMessages);
 }

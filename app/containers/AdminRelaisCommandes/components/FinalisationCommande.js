@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import truncate from 'lodash/truncate';
 import round from 'lodash/round';
 import capitalize from 'lodash/capitalize';
@@ -165,7 +165,7 @@ class FinalisationCommande extends Component {
       {
         ...commande,
         finalisation: {
-          dateFinalisation: moment().toISOString(),
+          dateFinalisation: format(new Date()),
           destinataires,
         },
       },

@@ -1,6 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
+import isWithinRange from 'date-fns/is_within_range';
+import addWeeks from 'date-fns/add_weeks';
+import startOfDay from 'date-fns/start_of_day';
+import endOfDay from 'date-fns/end_of_day';
+import startOfWeek from 'date-fns/start_of_week';
+import endOfWeek from 'date-fns/end_of_week';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 import includes from 'lodash/includes';
@@ -20,14 +26,16 @@ import {
   selectProduits,
 } from './selectors';
 
-import { selectAuthUtilisateurId, selectRoles } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectAuthUtilisateurId,
+  selectRoles,
+} from 'containers/CompteUtilisateur/selectors';
 
 import { selectLocationState, selectPending } from 'containers/App/selectors';
 
 import styles from './styles.css';
 import Semainier from './components/Semainier';
 import CommandesLongTerme from './containers/CommandesLongTerme';
-import moment from 'moment';
 
 import { loadCommandes, ajouter, loadCommande } from './actions';
 
@@ -52,9 +60,7 @@ export class Commande extends React.Component {
   };
 
   componentDidMount() {
-    const {
-      relaiId,
-    } = this.props; // eslint-disable-line
+    const { relaiId } = this.props; // eslint-disable-line
     this.props.loadCommandes({ relaiId, periode: 'courantes' });
   }
 
@@ -63,14 +69,20 @@ export class Commande extends React.Component {
     const commande = commandes[id];
     return uniq(
       flatten(
-        commande.fournisseurs.filter(frnId => fournisseurs.find(frn => frn.id === frnId)).map(
-          frnId =>
-            Object.keys(produits)
-              .filter(pdtId => produits[pdtId].visible && produits[pdtId].fournisseurId === frnId)
-              .map(pdtId => produits[pdtId].typeProduitId)
-              .map(typePdtId => typesProduits[typePdtId].nom)
-          // .find(pdtId => produits[pdtId].fournisseurId === frnId)
-        )
+        commande.fournisseurs
+          .filter(frnId => fournisseurs.find(frn => frn.id === frnId))
+          .map(
+            frnId =>
+              Object.keys(produits)
+                .filter(
+                  pdtId =>
+                    produits[pdtId].visible &&
+                    produits[pdtId].fournisseurId === frnId
+                )
+                .map(pdtId => produits[pdtId].typeProduitId)
+                .map(typePdtId => typesProduits[typePdtId].nom)
+            // .find(pdtId => produits[pdtId].fournisseurId === frnId)
+          )
       )
     );
   };
@@ -85,9 +97,11 @@ export class Commande extends React.Component {
   };
 
   isInWeek = (dateCommande, weekOffset = 0) => {
-    const debut = moment().add(weekOffset, 'w').startOf('week').startOf('day');
-    const fin = moment().add(weekOffset, 'w').endOf('week').endOf('day');
-    return moment(dateCommande).isAfter(moment()) && moment(dateCommande).isBetween(debut, fin);
+    if (!isAfter(dateCommande, new Date())) return false;
+    const plusWeekOffset = addWeeks(new Date(), weekOffset);
+    const debut = startOfDay(startOfWeek(plusWeekOffset));
+    const fin = endOfDay(endOfWeek(plusWeekOffset));
+    return isWithinRange(dateCommande, debut, fin);
   };
 
   filterByWeek = (weekOffset = 0) =>
@@ -106,7 +120,7 @@ export class Commande extends React.Component {
       .filter(
         key =>
           !commandes[key].dateCommande ||
-          moment(commandes[key].dateCommande).isAfter(moment().add(3, 'weeks'))
+          isAfter(commandes[key].dateCommande, addWeeks(new Date(), 3))
       )
       .slice()
       .sort(key => !this.props.commandes[key].noCommande);
@@ -133,7 +147,12 @@ export class Commande extends React.Component {
     const { buttonClicked } = this.state;
     const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
 
-    if (!buttonClicked && commandes && Object.keys(commandes).length > 0 && typesProduits) {
+    if (
+      !buttonClicked &&
+      commandes &&
+      Object.keys(commandes).length > 0 &&
+      typesProduits
+    ) {
       return (
         <div className="row">
           {this.buildTitleAndMeta()}
@@ -146,7 +165,8 @@ export class Commande extends React.Component {
             pushState={pushState}
             pending={pending}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -159,7 +179,8 @@ export class Commande extends React.Component {
             pending={pending}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -172,7 +193,8 @@ export class Commande extends React.Component {
             getCommandeInfos={key => this.getCommandeInfos(key)}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -182,7 +204,8 @@ export class Commande extends React.Component {
               getCommandeInfos={key => this.getCommandeInfos(key)}
               pending={pending}
               commandes={commandes}
-              commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+              commandeUtilisateurExiste={commandeId =>
+                this.commandeUtilisateurExiste(commandeId)}
               buttonClicked={() => this.setState({ buttonClicked: true })}
               pushState={pushState}
               relaiId={relaiId}
@@ -247,7 +270,9 @@ export class Commande extends React.Component {
         <div className="row center-md">
           <div className="col-md-6">
             <Paper className={`${styles.noCommande}`}>
-              {commandes && Object.keys(commandes).length === 0 && <h2>Pas de commande en cours...</h2>}
+              {commandes &&
+                Object.keys(commandes).length === 0 &&
+                <h2>Pas de commande en cours...</h2>}
             </Paper>
           </div>
         </div>

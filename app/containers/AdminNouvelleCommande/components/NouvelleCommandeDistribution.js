@@ -4,25 +4,30 @@ import TimePicker from 'material-ui/TimePicker';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
-import moment from 'moment';
+import { format } from 'utils/dates';
 
-export default class NouvelleCommandeDistribution extends Component {  // eslint-disable-line
+export default class NouvelleCommandeDistribution extends Component {
+  // eslint-disable-line
   static propTypes = {
     delDistrib: PropTypes.func.isRequired,
     addDistrib: PropTypes.func.isRequired,
     distributions: PropTypes.array.isRequired,
     dateLimiteCommande: PropTypes.object,
-  }
+  };
 
   state = {
     dateLimite: null,
     heureDebut: null,
     heureFin: null,
-  }
-
+  };
 
   render() {
-    const { addDistrib, delDistrib, distributions, dateLimiteCommande } = this.props;
+    const {
+      addDistrib,
+      delDistrib,
+      distributions,
+      dateLimiteCommande,
+    } = this.props;
     const { dateLimite, heureDebut, heureFin } = this.state;
     return (
       <div className="row center-md" style={{ paddingTop: '2em' }}>
@@ -41,7 +46,8 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 cancelLabel="Annuler"
                 minDate={dateLimiteCommande}
                 DateTimeFormat={Intl.DateTimeFormat}
-                onChange={(event, value) => this.setState((oldVal) => ({ ...oldVal, dateLimite: value }))}
+                onChange={(event, value) =>
+                  this.setState(oldVal => ({ ...oldVal, dateLimite: value }))}
               />
             </div>
             <div className="col-md">
@@ -54,7 +60,8 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
-                onChange={(event, value) => this.setState((oldVal) => ({ ...oldVal, heureDebut: value }))}
+                onChange={(event, value) =>
+                  this.setState(oldVal => ({ ...oldVal, heureDebut: value }))}
               />
             </div>
             <div className="col-md">
@@ -67,7 +74,8 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
-                onChange={(event, value) => this.setState((oldVal) => ({ ...oldVal, heureFin: value }))}
+                onChange={(event, value) =>
+                  this.setState(oldVal => ({ ...oldVal, heureFin: value }))}
               />
             </div>
             <div className="col-md">
@@ -77,10 +85,11 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
                 fullWidth
                 disabled={!dateLimite || !heureDebut || !heureFin}
                 style={{ marginTop: '1.2em' }}
-                onClick={() => addDistrib({
-                  debut: `${moment(dateLimite).format('YYYY-MM-DD')}T${moment(heureDebut).format('HH:mm')}`,
-                  fin: `${moment(dateLimite).format('YYYY-MM-DD')}T${moment(heureFin).format('HH:mm')}`,
-                })}
+                onClick={() =>
+                  addDistrib({
+                    debut: `${format(dateLimite, 'YYYY-MM-DD')}T${format(heureDebut, 'HH:mm')}`,
+                    fin: `${format(dateLimite, 'YYYY-MM-DD')}T${format(heureFin, 'HH:mm')}`,
+                  })}
               />
             </div>
           </div>
@@ -89,7 +98,7 @@ export default class NouvelleCommandeDistribution extends Component {  // eslint
               <ul style={{ listStyleType: 'none' }}>
                 {distributions.map((dist, idx) => (
                   <li key={idx}>
-                    {`Le ${moment(dist.debut).format('dddd DD/MM [de] HH:mm')} à ${moment(dist.fin).format('HH:mm')}`}
+                    {`Le ${format(dist.debut, 'dddd DD/MM [de] HH:mm')} à ${format(dist.fin, 'HH:mm')}`}
                     <IconButton
                       tooltip="Supprimer cette distribution"
                       onClick={() => delDistrib(idx)}
