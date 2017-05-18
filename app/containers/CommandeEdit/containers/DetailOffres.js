@@ -99,8 +99,12 @@ class DetailOffres extends Component {
 
     const { produitId, commandeId } = params;
     const produit = produitsById[produitId];
-
     const estFavoris = auth.produitsFavoris.find(item => item === produitId);
+    const photoUrl = !produit.photo
+      ? '/assets/pas_de_photo.png'
+      : produit.photo.search('http') !== -1
+          ? produit.photo
+          : `https://proxiweb.fr/${produit.photo}`;
     return (
       <div className={styles.offreso}>
         <Paper>
@@ -146,11 +150,7 @@ class DetailOffres extends Component {
                 <div className="col-md-6">
                   {viewOffre &&
                     <img
-                      src={
-                        produit.photo.search('http') !== -1
-                          ? produit.photo
-                          : `https://proxiweb.fr/${produit.photo}`
-                      }
+                      src={photoUrl}
                       alt={produit.nom}
                       style={constStyles.imageStyle}
                     />}

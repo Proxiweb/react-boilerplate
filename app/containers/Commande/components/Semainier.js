@@ -2,32 +2,39 @@ import React, { PropTypes } from 'react';
 import CommandePanel from './CommandePanel';
 import Panel from 'components/Panel';
 
-const Semainier = (
-  {
-    commandesIds,
-    commandes,
-    relaiId,
-    titreCol,
-    getCommandeInfos,
-    pushState,
-    commandeUtilisateurExiste,
-    utilisateurId,
-    pending,
-    buttonClicked,
-    withLink,
-  }
-) => (
+const Semainier = ({
+  commandesIds,
+  commandes,
+  relaiId,
+  titreCol,
+  getCommandeInfos,
+  pushState,
+  commandeUtilisateurExiste,
+  utilisateurId,
+  pending,
+  buttonClicked,
+  withLink,
+}) => (
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
     <div>
       {commandesIds &&
         commandesIds.map((key, idx) => {
           const infos = getCommandeInfos(key);
+
+          // si aucun typeProduit ( datesLimites passées )
+          // ne rien afficher
+          if (infos && !infos.length) return null;
+
           return (
             <CommandePanel
               nom={infos ? infos.join(', ') : null}
               dateCommande={commandes[key].dateCommande}
-              label={commandeUtilisateurExiste(key) ? 'Modifier ma commande' : 'Commander'}
+              label={
+                commandeUtilisateurExiste(key)
+                  ? 'Modifier ma commande'
+                  : 'Commander'
+              }
               prct={100}
               fav={false}
               key={idx}
@@ -35,9 +42,13 @@ const Semainier = (
               disabled={pending}
               clickHandler={() => {
                 buttonClicked();
-                pushState(`/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`);
+                pushState(
+                  `/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`
+                );
               }}
-              url={withLink ? `/admin/relais/${relaiId}/commandes/${key}` : null}
+              url={
+                withLink ? `/admin/relais/${relaiId}/commandes/${key}` : null
+              }
             />
           );
         })}
