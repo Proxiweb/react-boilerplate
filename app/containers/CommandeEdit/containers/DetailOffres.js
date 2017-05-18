@@ -166,6 +166,10 @@ class DetailOffres extends Component {
                     <p
                       dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
                     />}
+                  {viewOffre &&
+                    produit.tags &&
+                    produit.tags.length > 0 &&
+                    <p>{produit.tags.join(' - ')}</p>}
                   {!viewOffre &&
                     <p
                       dangerouslySetInnerHTML={{
