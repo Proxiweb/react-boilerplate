@@ -1,0 +1,10 @@
+.panel {
+  background-color: white;
+  max-height: calc(100vh - 145px);
+  min-height: calc(100vh - 145px);
+}
+
+.tab {
+  max-height: calc(100vh - 255px);
+  min-height: calc(100vh - 255px);
+}

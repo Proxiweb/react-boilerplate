@@ -1,0 +1,22 @@
+.panel {
+  padding: 0.3em;
+  height: 100%;
+}
+
+.title {
+  text-align: center;
+  padding: 2px;
+  background-color: #d9ffe3;
+  border: solid 1px silver;
+  cursor: move;
+}
+
+.content {
+  height: 93%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.row {
+  padding: 5px;
+}

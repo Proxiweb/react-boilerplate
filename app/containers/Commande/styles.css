@@ -1,3 +1,24 @@
-.commande { /* stylelint-disable */
+.commande, .noCommande { /* stylelint-disable */
+    margin-top: 10;
+}
 
+.noCommande {
+  text-align: center;
+  padding: 2em;
+}
+
+.colCommande {
+  padding: 10px;
+  background-color: #fefefe66;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.2rem;
+  border: solid 1px #aaa4a4;
+}
+
+.loader {
+  background-color: white;
+  height: 150px;
+  width: 500px;
+  margin: auto;
 }

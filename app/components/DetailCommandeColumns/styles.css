@@ -1,0 +1,47 @@
+.bordered,
+.borderedFull {
+  border-left: solid 1px gray;
+  border-right: solid 1px gray;
+  border-top: solid 1px gray;
+  box-shadow: 2px 2px 2px silver;
+  background-color: silver;
+}
+
+.borderedFull {
+  border-bottom: solid 1px gray;
+}
+
+.bigCol {
+  padding-left: 10;
+  width: 55%;
+  padding-right: 10;
+  color: black;
+}
+
+.vbigCol {
+  padding-left: 10;
+  width: 55%;
+  padding-right: 10;
+}
+
+.smallCol,
+.lessSmallCol {
+  width: 10%;
+  padding-left: 10;
+  padding-right: 10;
+  text-align: center;
+}
+
+.lessSmallCol {
+  width: 15%;
+}
+
+.colTotal {
+  width: 150px;
+  text-align: right;
+}
+
+.souligneQte {
+  font-weight: bold;
+  color: blue;
+}

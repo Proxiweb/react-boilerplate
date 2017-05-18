@@ -1,0 +1,15 @@
+.infoForm {
+  padding: 1rem;
+}
+
+.editorClass {
+  height: 150px;
+  border: 1px solid silver;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+.formFooter {
+  margin: 1rem 0 0;
+  text-align: center;
+}

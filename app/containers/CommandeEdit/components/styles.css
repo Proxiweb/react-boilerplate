@@ -1,0 +1,30 @@
+.paiement {
+  padding: 1em;
+  margin-top: 1em;
+}
+
+.message {
+  padding: 1em;
+  margin-top: 1em;
+  background-color: white;
+}
+
+.nonDispo { color: red; }
+
+.accueilLink {
+  text-align: center;
+  margin-top: 1em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: black;
+}
+
+.accueilLink a {
+  text-decoration: none;
+  color: black;
+  text-shadow: 1px;
+}
+
+.accueilLink a:hover {
+  text-decoration: underline;
+}

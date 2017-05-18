@@ -1,0 +1,11 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  min-height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  overflow-y: scroll;
+}
+
+.noScroll {
+  overflow-y: hidden;
+}

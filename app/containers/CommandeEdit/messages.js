@@ -8,6 +8,6 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   header: {
     id: 'app.containers.CommandeEdit.header',
-    defaultMessage: 'This is CommandeEdit container !',
+    defaultMessage: 'Commandes',
   },
 });

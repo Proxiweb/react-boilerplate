@@ -1,0 +1,16 @@
+.panel {
+  max-height: calc(100vh - 105px);
+  min-height: calc(100vh - 105px);
+  overflow-y: auto;
+  position: relative;
+}
+
+.addPdt {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.listePdt {
+  padding-top: 2rem;
+}

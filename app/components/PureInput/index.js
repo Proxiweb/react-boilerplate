@@ -5,8 +5,8 @@ const PureInput = ({ input, label, cols, type, className, placeholder, meta: { t
   return (
     <div className={cols ? `col-sm-${cols}` : null}>
       <div className="form-group">
-        {label && !inLabel && (<label>{label}</label>)}
-        {inLabel && <label><input {...input} placeholder={placeholder} type={type} className={className || 'form-control'} />{label}</label>}
+        {label && !inLabel && (<label htmlFor={label}>{label}</label>)}
+        {inLabel && <label htmlFor={label}><input {...input} placeholder={placeholder} type={type} className={className || 'form-control'} />{label}</label>}
         {!inLabel && <input {...input} placeholder={placeholder} type={type} className={className || 'form-control'} />}
         {touched && error && <div className="text-danger">{error}</div>}
       </div>

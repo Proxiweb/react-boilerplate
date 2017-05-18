@@ -1,0 +1,83 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 105px);
+  min-height: calc(100vh - 105px);
+  overflow-y: scroll;
+}
+
+.loader {
+  width: 100;
+  margin: 0 auto;
+  position: relative;
+}
+
+.pdtInfo,
+.offreInfo {
+  padding-top: 2rem;
+}
+
+.offreInfo {
+  padding-right: 2rem;
+}
+
+.panelTitre {
+  text-align: left;
+  line-height: 36px;
+}
+
+.panelAction {
+  text-align: right;
+}
+
+.photo {
+  text-align: center;
+  min-height: 200px;
+  min-width: 200px;
+}
+
+.editorClass {
+  height: 150px;
+  border: 1px solid silver;
+  padding: 5px;
+  border-radius: 2px;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+.capit {
+  text-transform: capitalize;
+}
+
+.label {
+  line-height: 22px;
+  font-size: 14px;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 5px;
+}
+
+.offre {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.toggleStock {
+  margin-top: 1em;
+}
+
+.aucuneOffre {
+  text-align: center;
+  font-size: 2em;
+  margin: 1em;
+  padding: 1em;
+  background-color: silver;
+}
+
+.listeOffres {
+  padding-top: 1em;
+}
+
+.textLeft { text-align: left;}

@@ -1,25 +1,22 @@
 import { createSelector } from 'reselect';
 
-/**
- * Direct selector to the commandeEdit state domain
- */
-const selectCommandeEditDomain = () => state => state.get('commandeEdit');
+const selectCommandeEditDomain = () => state => state.commande;
+const selectCommandeId = () => (state, props) => props.params.commandeId;
 
-/**
- * Other specific selectors
- */
+export const selectCommande = () =>
+  createSelector(
+    selectCommandeEditDomain(),
+    selectCommandeId(),
+    (substate, commandeId) => substate[commandeId]
+  );
 
+const isCotisationInCommande = () =>
+  createSelector(
+    selectCommande(),
+    commande =>
+      typeof commande.contenus.find(c => c.offreId === '8b330a52-a605-4a67-aee7-3cb3c9274733') !== 'undefined'
+  );
 
-/**
- * Default selector used by CommandeEdit
- */
+export default selectCommande;
 
-const selectCommandeEdit = () => createSelector(
-  selectCommandeEditDomain(),
-  (substate) => substate.toJS()
-);
-
-export default selectCommandeEdit;
-export {
-  selectCommandeEditDomain,
-};
+export { selectCommandeEditDomain, isCotisationInCommande };

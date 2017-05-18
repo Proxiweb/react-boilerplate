@@ -1,0 +1,35 @@
+.pdtSelected {
+  border-left: 4px solid black;
+  text-align: left;
+}
+
+.produits {
+  background-color: white;
+  overflow-y: auto;
+  height: calc(100vh - 210px);
+}
+
+.nonDispo { color: red; }
+
+.offres {
+  padding-bottom: 1em;
+}
+
+.offre {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.fournisseurSwitch {
+  text-align: right;
+}
+
+.produitTitre {
+  text-align: center;
+  font-size: 1.4rem;
+  margin: 10px 0;
+}
+
+.right {
+  text-align: left;
+}

@@ -1,3 +1,11 @@
 .commandeEdit { /* stylelint-disable */
+  height: calc(100vh - 100px);
+}
 
+.active {
+  background-color: red;
+}
+
+.panel {
+  padding: 1rem;
 }

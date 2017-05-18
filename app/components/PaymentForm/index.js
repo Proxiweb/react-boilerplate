@@ -33,13 +33,13 @@ export default class PaymentForm extends Component {
   getContact(contactList = null) {
     const id = this.dest.value;
     const contacts = contactList || this.props.contacts;
-    return contacts.find(contact => contact.acountId === id || contact.fedId === id);
+    return contacts.find((contact) => contact.acountId === id || contact.fedId === id);
   }
 
   handleSubmit(evt) {
     evt.preventDefault();
     const { accountId, secret } = this.props.stellarKeys;
-    const currencyBal = this.props.balances.find(bal => bal.asset_code === this.currency.value || (this.currency.value === 'XLM' && bal.asset_type === 'native'));
+    const currencyBal = this.props.balances.find((bal) => bal.asset_code === this.currency.value || (this.currency.value === 'XLM' && bal.asset_type === 'native'));
     const issuer = this.currency.value === 'XLM' ? undefined : currencyBal.asset_issuer;
     if (parseFloat(currencyBal.balance) > parseFloat(this.amount.value)) {
       this.props.pay(this.dest.value, this.currency.value, issuer, this.amount.value, { accountId, secret });

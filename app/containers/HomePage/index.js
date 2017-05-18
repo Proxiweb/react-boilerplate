@@ -11,61 +11,41 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
-import { loadDatas1Start, loadDatas2Start } from './actions';
-import styles from './styles.css';
-import MessageBox from 'components/MessageBox';
-import LocaleToggle from 'containers/LocaleToggle';
-
-import { selectAsyncDatas1, selectAsyncDatas2 } from './selectors';
-
-class HomePage extends Component { // eslint-disable-line react/prefer-stateless-function
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { loadRelais } from 'containers/Commande/actions';
+import { selectRelais } from 'containers/Commande/selectors';
+// import styles from './styles.css';
+import { createStructuredSelector } from 'reselect';
+import Commandes from 'containers/Commande';
+import HomePageAnon from './containers/HomePageAnon';
+// import Cache from 'containers/Commande/containers/Cache';
+// eslint-disable-next-line react/prefer-stateless-function
+class HomePage extends Component {
   static propTypes = {
-    loadDatas1: PropTypes.func.isRequired,
-    loadDatas2: PropTypes.func.isRequired,
-    asyncDatas1: PropTypes.object.isRequired,
-    asyncDatas2: PropTypes.object.isRequired,
-  }
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    push: PropTypes.func.isRequired,
+    loadRelais: PropTypes.func.isRequired,
+    relais: PropTypes.object
+  };
 
   render() {
-    const { asyncDatas1, asyncDatas2 } = this.props;
-    return (
-      <div className="row text-center">
-        <h1>
-          <FormattedMessage {...messages.header} />
-        </h1>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <MessageBox asyncState={asyncDatas1} />
-          <button onClick={() => this.props.loadDatas1(1)} className="btn btn-primary">Load Datas 1</button>
-        </div>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <button
-            onClick={() => this.props.loadDatas2(1)}
-            className="btn btn-primary"
-          >
-            <span>{ !asyncDatas2.pending && 'Load Datas 2'} { asyncDatas2.pending && 'loading...' }</span>
-          </button>
-        </div>
-        <div className={`col-md-8 col-md-offset-2 ${styles.testNotificationZone}`}>
-          <LocaleToggle />
-        </div>
-      </div>
-    );
+    const { auth, relais } = this.props;
+    if (auth && auth.relaiId) {
+      if (!auth.relaiId) this.props.push('/choixRelais');
+      if (!relais) this.props.loadRelais({ id: auth.relaiId });
+      return <Commandes params={{ relaiId: auth.relaiId }} />;
+    }
+    return <HomePageAnon />;
   }
 }
 
-
-const mapStateToProps = (state) => ({
-  asyncDatas1: selectAsyncDatas1(state),
-  asyncDatas2: selectAsyncDatas2(state),
+const mapStateToProps = createStructuredSelector({
+  auth: selectCompteUtilisateur(),
+  relais: selectRelais()
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  loadDatas1: (id) => dispatch(loadDatas1Start(id)),
-  loadDatas2: (id) => dispatch(loadDatas2Start(id)),
-});
-
+const mapDispatchToProps = dispatch => bindActionCreators({ push, loadRelais }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

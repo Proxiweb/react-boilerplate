@@ -1,0 +1,17 @@
+.form {
+  border: solid 1px silver;
+  padding: 1em;
+}
+
+.form,
+.progress {
+  min-height: 180px;
+}
+
+.submit {
+  margin-top: 1em;
+}
+
+.depot {
+  padding: 1em;
+}

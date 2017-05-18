@@ -14,14 +14,14 @@ import {
   fedLookupError,
 } from './actions';
 
-import api from 'utils/stellarApi';
+import api from '../../utils/stellarApi';
 
-export function* logger() {
-  while (1) { // eslint-disable-line
-    const action = yield take('*');
-    console.log({action, state: select()}); // eslint-disable-line
-  }
-}
+// export function* logger() {
+//   while (1) { // eslint-disable-line
+//     const action = yield take('*');
+//     console.log({action, state: select()}); // eslint-disable-line
+//   }
+// }
 
 export function* loadAccountSaga() {
   while(1) { // eslint-disable-line
@@ -81,7 +81,7 @@ export function* lookupSaga() {
 }
 
 export default [
-  logger,
+  // logger,
   lookupSaga,
   paySaga,
   loadAccountSaga,

@@ -1,0 +1,8 @@
+.message {
+  text-align: left;
+  font-size: 1.3em;
+  padding: 1em;
+  max-height: calc(100vh - 255px);
+  min-height: calc(100vh - 255px);
+  overflow-y: auto;
+}

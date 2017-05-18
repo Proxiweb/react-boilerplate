@@ -1,0 +1,32 @@
+.toggle,
+.fournisseursHebdoSwitch {
+  margin-top: 1em;
+}
+
+.listePdts {
+  max-height: calc(100vh - 240px);
+  min-height: calc(100vh - 240px);
+  overflow-y: auto;
+}
+
+.offre {
+  margin-bottom: 1em;
+}
+
+.fournisseursHebdoSwitch {
+  border: solid 1px silver;
+  padding: 1em;
+  font-size: 1.2em;
+}
+
+.container {
+  padding: 1em 0;
+}
+
+.comToggle {
+  padding-top: 0.5em;
+}
+
+.btn {
+  margin: 1em;
+}

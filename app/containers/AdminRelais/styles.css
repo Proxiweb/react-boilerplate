@@ -1,0 +1,28 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 105px);
+  min-height: calc(100vh - 105px);
+  overflow-y: auto;
+}
+
+.noScroll {
+  overflow-y: auto;
+}
+
+.nouvelleCommande {
+  background-color: transparent;
+}
+
+.toolbar {
+  border: solid 1px gray;
+  background-color: silver;
+}
+
+.container {
+  padding: 0 1em;
+}
+
+.adherents {
+  padding: 1em 0;
+}

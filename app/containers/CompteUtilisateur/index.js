@@ -6,68 +6,84 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import Paper from 'material-ui/Paper';
 import { logout } from '../Login/actions';
-import { selectProfile } from './selectors';
+import { selectPayments, selectBalance, selectRelaiId } from './selectors';
+import { selectRelais } from 'containers/Commande/selectors';
+import { selectLocationState } from 'containers/App/selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
-import styles from './styles.css';
+import NotificationsForm from 'components/NotificationsForm';
 
-export class CompteUtilisateur extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class CompteUtilisateur extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
+
   static propTypes = {
-    children: PropTypes.object,
-    profile: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired,
-    selectProfile: PropTypes.func.isRequired,
-  }
+    locationState: PropTypes.object.isRequired,
+    relaiId: PropTypes.string.isRequired,
+    relais: PropTypes.string,
+    params: PropTypes.object.isRequired,
+    pushState: PropTypes.func.isRequired,
+  };
 
-  constructor(props) {
-    super(props);
-    this.toggleState = ::this.toggleState;
-    this.state = {
-      edit: false,
-    };
-  }
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  };
 
-  toggleState() {
-    this.setState({
-      edit: !this.state.edit,
-    });
-  }
+  handleChange = value => {
+    const { pushState, params } = this.props;
+    pushState(`/users/${params.userId}/profile?tab=${value}`);
+  };
 
   render() {
-    // const { profile } = this.props.profile;
-    const profile = { nom: 'GUYOMARCH', prenom: 'Régis' };
+    const { query } = this.props.locationState.locationBeforeTransitions;
+    const { relais, relaiId } = this.props;
+
     return (
-      <div className={`container ${styles.compteUtilisateur}`}>
-        <div className="row">
-          <div className="col-md-12 text-right withMarginTop">
-            <button
-              className="btn btn-default"
-              onClick={this.props.logout}
-            >
-              <i className="fa fa-sign-out"></i> Se déconnecter
-            </button>
-          </div>
+      <div className="row center-lg">
+        <div className="col-lg-6">
+          <Tabs
+            inkBarStyle={{ height: 7, backgroundColor: this.context.muiTheme.appBar.color, marginTop: -7 }}
+            value={query.tab}
+            onChange={this.handleChange}
+          >
+            <Tab label="Profil" value="profil">
+              <ProfileFormContainer relaiId={this.props.relaiId} afterSubmit={this.toggleState} />
+            </Tab>
+            <Tab label="Notifications" value="notifications">
+              <NotificationsForm />
+            </Tab>
+            {relais &&
+              relais[relaiId] &&
+              <Tab label="Relais" value="relais">
+                <Paper zDepth={2} style={{ padding: '1rem', minHeight: '444px' }}>
+                  <p style={{ textAlign: 'center' }}>
+                    Vous êtes inscrit sur le relais <strong>{relais[relaiId].nom}</strong>
+                  </p>
+                </Paper>
+              </Tab>}
+          </Tabs>
         </div>
-        {this.state.edit && (<div>
-          <button className="btn btn-default" onClick={this.toggleState}>Quitter edition</button>
-          <ProfileFormContainer profile={profile} afterSubmit={this.toggleState} />
-        </div>)}
-        {!this.state.edit && (<div>
-          <button className="btn btn-default" onClick={this.toggleState}>Modifier</button>
-        </div>)}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  profile: selectProfile(state),
+const mapStateToProps = createStructuredSelector({
+  payments: selectPayments(),
+  compte: selectBalance(),
+  locationState: selectLocationState(),
+  relaiId: selectRelaiId(),
+  relais: selectRelais(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    logout: () => dispatch(logout()),  // eslint-disable-line
+    pushState: url => dispatch(push(url)),
+    logout: () => dispatch(logout()), // eslint-disable-line
   };
 }
 

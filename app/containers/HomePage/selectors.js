@@ -3,8 +3,8 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the languageToggle state domain
  */
-const selectDatas1 = state => state.datas.datas1;
-const selectDatas2 = state => state.datas.datas2;
+const selectDatas1 = (state) => state.datas.datas1;
+const selectDatas2 = (state) => state.datas.datas2;
 
 /**
  * Select the language locale

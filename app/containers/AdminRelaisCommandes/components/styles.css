@@ -1,0 +1,103 @@
+.panel {
+  padding: 0;
+  background-color: white;
+  max-height: calc(100vh - 105px);
+  min-height: calc(100vh - 105px);
+}
+
+.noScroll {
+  overflow-y: auto;
+}
+
+.nouvelleCommande {
+  background-color: transparent;
+}
+
+.addButton {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+}
+
+.liste {
+  padding: 0rem;
+  height: calc(100vh - 165px);
+  overflow-y: auto;
+  /*max-height: calc(100vh - 205px);*/
+}
+
+.liste p {
+  text-align: center;
+}
+
+.etatCommandeUtilisateur {
+  margin: 2em 0;
+}
+
+.totalCommande {
+  margin-top: 1em;
+  text-align: right;
+}
+
+.totalDistrib {
+  text-align: center;
+  background-color: silver;
+  padding: 15px;
+  margin-bottom: 5px;
+  line-height: 36px;
+}
+
+.depot {
+  min-height: 36px;
+  text-align: center;
+  font-size: 1.2em;
+  color: green;
+}
+
+.typesProduits {
+  font-size: 0.9em;
+  color: gray;
+  padding-top: 5px;
+}
+
+.listeCommandes {
+  max-height: calc(100vh - 245px);
+  min-height: calc(100vh - 245px);
+  overflow-y: auto;
+}
+
+.detailsParFournisseur,
+.listeAcheteursContainer,
+.detailsParUtilisateur {
+  padding: 0.5em 2em;
+}
+
+.listeAcheteurs {
+  max-height: calc(100vh - 185px);
+  min-height: calc(100vh - 185px);
+  overflow-y: auto;
+  padding-left: 1.5em;
+}
+
+.livraison {
+  margin-top: 2em;
+}
+
+.lessSmallCol {
+  width: 10%;
+  padding-left: 10;
+  padding-right: 10;
+  text-align: center;
+}
+
+.toolbar {
+  margin-bottom: 1em;
+}
+
+.validation {
+  margin-top: 1em;
+}
+
+.mT {
+  margin-top: 1em;
+}

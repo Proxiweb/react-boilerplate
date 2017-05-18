@@ -1,0 +1,21 @@
+.form {
+  padding: 20px;
+}
+
+.formFooter {
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+.capit {
+  text-transform: capitalize;
+}
+
+.editorClass {
+  border: solid 1px silver;
+  min-height: 200px;
+}

@@ -1,0 +1,17 @@
+.panel {
+  padding: 0;
+  background-color: white;
+  max-height: calc(100vh - 105px);
+  min-height: calc(100vh - 105px);
+}
+
+.liste {
+  padding: 0rem;
+  height: calc(100vh - 165px);
+  overflow-y: auto;
+  /*max-height: calc(100vh - 205px);*/
+}
+
+.liste p {
+  text-align: center;
+}

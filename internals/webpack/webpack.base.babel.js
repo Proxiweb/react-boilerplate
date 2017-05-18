@@ -57,6 +57,20 @@ module.exports = (options) => ({
     }],
   },
   plugins: options.plugins.concat([
+    // restrict the extra locales that moment.js can load; en is always builtin
+    new webpack.ContextReplacementPlugin(/^\.\/locale$/, (context) => {
+      // check if the context was created inside the moment package
+      if (!/\/moment\//.test(context.context)) { return; }
+      // context needs to be modified in place
+      Object.assign(context, {
+        // include only french, english variants
+        // all tests are prefixed with './' so this must be part of the regExp
+        // the default regExp includes everything; /^$/ could be used to include nothing
+        regExp: /^\.\/(fr|en)/,
+        // point to the locale data folder relative to moment/src/lib/locale
+        request: '../../locale',
+      });
+    }),
     new webpack.ProvidePlugin({
       // make fetch available
       fetch: 'exports?self.fetch!whatwg-fetch',
@@ -89,15 +103,18 @@ module.exports = (options) => ({
       '.react.js',
     ],
     mainFields: [
-      'main',
+      'browser',
       'jsnext:main',
+      'main',
     ],
   },
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window
-  stats: false, // Don't show stats in the console
   progress: true,
   node: {
     fs: 'empty',
+    dns: 'empty',
+    net: 'empty',
+    tls: 'empry',
   },
 });

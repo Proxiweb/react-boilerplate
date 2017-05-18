@@ -1,0 +1,32 @@
+.panel {
+  background-color: white;
+  padding: 1rem;
+  max-height: calc(100vh - 485px);
+  min-height: calc(100vh - 485px);
+}
+
+.noScroll {
+  overflow-y: auto;
+}
+
+.nouvelleCommande {
+  background-color: transparent;
+}
+
+.paper {
+  padding: '1em';
+}
+
+.img {
+  border: solid 1px gray;
+}
+
+.presentation {
+  padding: 1em;
+  border: solid 1px silver;
+  border-radius: 5px 5px;
+}
+
+.refresh {
+  min-height: 250px;
+}

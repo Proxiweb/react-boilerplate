@@ -1,11 +1,14 @@
 .login {
   margin-bottom: 0;
-  background-color: #B2B2E7;
-  padding: 0 0 15px 0;
+  padding: 0 0 15px;
 }
 
 .formHeader {
   text-align: center;
   background-color: rgba(208, 208, 236, 0.89);
   padding: 5px;
+}
+
+.paddedHoriz {
+  padding: 0 2em;
 }

@@ -6,11 +6,12 @@
  */
 import 'babel-polyfill';
 
-/* eslint-disable import/no-unresolved */
-// Load the manifest.json file and the .htaccess file
+/* eslint-disable import/no-unresolved, import/extensions */
+// Load the favicon, the manifest.json file and the .htaccess file
+import 'file?name=[name].[ext]!./favicon.ico';
 import '!file?name=[name].[ext]!./manifest.json';
 import 'file?name=[name].[ext]!./.htaccess';
-/* eslint-enable import/no-unresolved */
+/* eslint-enable import/no-unresolved, import/extensions */
 
 // Import all the third party stuff
 import React from 'react';
@@ -19,34 +20,72 @@ import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
+import { persistStore } from 'redux-persist';
+import moment from 'moment';
+
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
 import configureStore from './store';
 
-import LanguageProvider from 'containers/LanguageProvider';
+const openSansObserver = new FontFaceObserver('Ubuntu', {});
+import styles from './containers/App/styles.css';
+
+// When Open Sans is loaded, add a font-family using Open Sans to the body
+openSansObserver.load().then(
+  () => {
+    document.body.classList.add(styles.fontLoaded);
+  },
+  () => {
+    document.body.classList.remove(styles.fontLoaded);
+  }
+);
+
+// Import Language Provider
+import LanguageProvider from './containers/LanguageProvider';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import shader from 'shader';
+import {
+  limeA700,
+  orange800,
+  grey900,
+  blue800,
+  red800,
+  grey300,
+  grey600,
+  grey200
+} from 'material-ui/styles/colors';
 
 // Import global saga
-import globalSagas from 'containers/App/sagas';
+import globalSagas from './containers/App/sagas';
+import loginSagas from './containers/Login/sagas';
 
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // When Open Sans is loaded, add a font-family using Open Sans to the body
 // the index.html file and this observer)
-openSansObserver.load().then(() => {
-  document.body.classList.add(styles.fontLoaded);
-}, () => {
-  document.body.classList.remove(styles.fontLoaded);
-});
+openSansObserver.load().then(
+  () => {
+    document.body.classList.add(styles.fontLoaded);
+  },
+  () => {
+    document.body.classList.remove(styles.fontLoaded);
+  }
+);
 
 import styles from 'containers/App/styles.css';
 const openSansObserver = new FontFaceObserver('Open Sans', {});
 
-
 // Import i18n messages
 import { translationMessages } from './i18n';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-// Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
-import 'sanitize.css/sanitize.css';
-import 'bootstrap-css-only/css/bootstrap.min.css';
+// flexboxgrid
+import 'flexboxgrid/css/flexboxgrid.css';
+// react-data-grid
+import 'react-virtualized/styles.css';
+// react-grid-layout
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -55,53 +94,81 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
 
-// If you use Redux devTools extension, since v2.0.1, they added an
-// `updateStore`, so any enhancers that change the store object
-// could be used with the devTools' store.
-// As this boilerplate uses Redux & Redux-Saga, the `updateStore` is needed
-// if you want to `take` actions in your Sagas, dispatched from devTools.
-if (window.devToolsExtension) {
-  window.devToolsExtension.updateStore(store);
-}
+moment.locale('fr');
+
+persistStore(store, {
+  whitelist: ['compteUtilisateur', 'global'], // 'commande'
+  debounce: 1500,
+  keyPrefix: 'pw'
+});
 
 // starting globals sagas
 globalSagas.map(store.runSaga);
+loginSagas.map(store.runSaga);
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState
 // must be provided for resolving how to retrieve the "route" in the state
-import { selectLocationState } from 'containers/App/selectors';
+import { selectLocationState } from './containers/App/selectors';
 const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: selectLocationState(),
+  selectLocationState: selectLocationState()
 });
 
 // Set up the router, wrapping all Routes in the App component
-import App from 'containers/App';
+import App from './containers/App';
 import createRoutes from './routes';
 const rootRoute = {
   component: App,
-  childRoutes: createRoutes(store),
+  childRoutes: createRoutes(store)
 };
 
-const render = (messages) => {
+// cutomize theme
+const muiTheme = getMuiTheme({
+  appBar: {
+    height: 50,
+    color: shader(limeA700, -0.1),
+    textColor: grey900
+  },
+  tabs: {
+    backgroundColor: shader(limeA700, -0.3),
+    selectedTextColor: 'white'
+  },
+  toggle: {
+    thumbOnColor: shader(limeA700, -0.4),
+    thumbOffColor: shader(limeA700, 0.4),
+    trackOnColor: shader(limeA700, 0.2),
+    trackOffColor: shader(limeA700, 0.6)
+  },
+  palette: {
+    primary1Color: blue800,
+    accent1Color: red800,
+    warningColor: orange800,
+    groupColor: grey300,
+    groupColorBorder: grey600,
+    oddColor: grey200,
+    tableHeaderBackgroundColor: shader(limeA700, 0.5)
+  }
+});
+
+const render = messages => {
+  injectTapEventPlugin();
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
+        <MuiThemeProvider muiTheme={muiTheme}>
+          <Router
+            history={history}
+            routes={rootRoute}
+            render={// Scroll to top when going to a new page, imitating default browser
             // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
+            applyRouterMiddleware(useScroll())}
+          />
+        </MuiThemeProvider>
       </LanguageProvider>
     </Provider>,
     document.getElementById('app')
   );
 };
-
 
 // Hot reloadable translation json files
 if (module.hot) {
@@ -114,10 +181,9 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  Promise.all([
-    System.import('intl'),
-    System.import('intl/locale-data/jsonp/en.js'),
-  ]).then(() => render(translationMessages));
+  Promise.all([System.import('intl'), System.import('intl/locale-data/jsonp/en.js')]).then(() =>
+    render(translationMessages)
+  );
 } else {
   render(translationMessages);
 }

@@ -82,7 +82,7 @@ module.exports = (app, options) => {
   });
 
 
-  app.use('/api', proxy2(targetUrl));
+  app.use('/api', proxy2(targetUrl, { limit: '5mb' }));
   app.use('/ws', (req, res) => proxy.web(req, res, { target: `${targetUrl}/ws` }));
 
   if (isProd) {

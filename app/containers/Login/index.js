@@ -6,33 +6,46 @@
 
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import LoginForm from 'components/LoginForm';
-import { login, googleLogin } from './actions';
-import styles from './styles.css';
+import { createStructuredSelector } from 'reselect';
+import LoginForm from '../../components/LoginForm';
+import { login, register, motdepasse } from './actions';
+// import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { selectLocationState, selectPending } from 'containers/App/selectors';
 
 export class Login extends React.Component { // eslint-disable-line react/prefer-stateless-function
-
   static propTypes = {
-    login: PropTypes.func.isRequired,
-    user: PropTypes.object,
+    pending: PropTypes.bool.isRequired,
+    locationState: PropTypes.object.isRequired,
   }
 
   render() {
+    const {
+      locationBeforeTransitions: { query: { action } },
+      pending,
+    } = this.props.locationState;
+
     return (
-      <div className={`container ${styles.login}`}>
-        <LoginForm {...this.props} onSuccessRedirect="/votre-compte" />
-      </div>
+      <LoginForm
+        {...this.props}
+        onSuccessRedirect="/votre-compte"
+        action={action || 'login'}
+        pending={pending}
+      />
     );
   }
 }
 
-const mapStateToProps = (state) => ({ user: state.compteUtilisateur });
+const mapStateToProps = createStructuredSelector({
+  pending: selectPending(),
+  locationState: selectLocationState(),
+});
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    login: (username, password, redirectPathname) => dispatch(login(username, password, redirectPathname)),
-    googleLogin: (googleLoginResponse, redirectPathname) => dispatch(googleLogin(googleLoginResponse, redirectPathname)),
+    login: ({ username, password, redirectPathname }) => dispatch(login({ username, password, redirectPathname })),
+    register: ({ username, password, passwordConfirm, redirectPathname }) => dispatch(register({ username, password, passwordConfirm, redirectPathname })),
+    motdepasse: ({ username, redirectPathname }) => dispatch(motdepasse({ username, redirectPathname })),
   };
 }
 

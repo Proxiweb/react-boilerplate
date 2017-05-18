@@ -1,0 +1,14 @@
+{
+  "apps" : [{
+            "name"        : "next_proxiweb",
+            "script"      : "startup.sh",
+            "autorestart" : true,
+            "cwd"         : "/home/regisg/site/proxiweb_next",
+            "env"         : {
+                PORT: 3322,
+                npm_config_pxport: 3323
+            }
+
+    }]
+}
+

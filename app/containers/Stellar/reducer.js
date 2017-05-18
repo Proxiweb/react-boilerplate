@@ -10,7 +10,7 @@ import {
 } from './constants';
 
 const initialState = {
-  env: 'test', // test | public
+  env: 'public', // test | public
   stellarKeys: {
     accountId: 'GCRN5SVVM72CYTBS3RM4GNDYBJFXR23DW6MRJZKDUQFAFIWNSGJDCAOV',
     secret: 'SAEWX3BJ2SXHWPULBS7SZJ7R5KJ6WDNPORQP5256KA7XD36LOCPRJ2ZD',
@@ -33,7 +33,7 @@ const initialState = {
 
 function syncContact(state, payload) {
   const { accountId, fedId } = payload;
-  if (state.contacts.find(contact => contact.accountId === accountId || (fedId !== null && contact.fedId === fedId))) {
+  if (state.contacts.find((contact) => contact.accountId === accountId || (fedId !== null && contact.fedId === fedId))) {
     return state;
   }
 

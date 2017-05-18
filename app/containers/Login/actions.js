@@ -6,12 +6,15 @@
 
 import {
  loginConst as lc,
- GOOGLE_LOGIN_START,
+ registerConst as rc,
+ mdpConst as mc,
+
  LOGOUT,
  SET_ERR_MSG,
+ ADD_EFFECT,
 } from './constants';
 
-export function login(username, password, redirectPathname = null) {
+export function login({ username, password, redirectPathname = null }) {
   return {
     type: lc.ASYNC_LOGIN_START,
     url: 'login',
@@ -21,13 +24,33 @@ export function login(username, password, redirectPathname = null) {
   };
 }
 
-export function googleLogin(googleLoginResponse, redirectPathname = null) {
+export function register({ username, password, passwordConfirm, redirectPathname = null }) {
   return {
-    type: GOOGLE_LOGIN_START,
-    datas: googleLoginResponse,
+    type: rc.ASYNC_REGISTER_START,
+    url: 'register',
+    method: 'post',
+    datas: { username, password, passwordConfirm },
     redirectPathname,
   };
 }
+
+export function motdepasse({ username, redirectPathname = null }) {
+  return {
+    type: mc.ASYNC_MOTDEPASSE_START,
+    url: 'motdepasse',
+    method: 'post',
+    datas: { username },
+    redirectPathname,
+  };
+}
+
+// export function googleLogin(googleLoginResponse, redirectPathname = null) {
+//   return {
+//     type: GOOGLE_LOGIN_START,
+//     datas: googleLoginResponse,
+//     redirectPathname,
+//   };
+// }
 
 export function logout(redirectPathname = null) {
   return {
@@ -40,6 +63,13 @@ export function setAuthErrorMsg(message) {
   return {
     type: SET_ERR_MSG,
     message,
+  };
+}
+
+export function addEffect(effect) {
+  return {
+    type: ADD_EFFECT,
+    payload: { ...effect },
   };
 }
 
