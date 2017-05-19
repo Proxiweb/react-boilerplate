@@ -154,8 +154,7 @@ export class Commande extends React.Component {
 
   buildTitleAndMeta = () => (
     <Helmet
-      title={`
-        ${this.props.utilisateurId === '39f907f2-8fdc-4358-8bee-6c4aaef1a254' ? `${window.innerHeight}x${window.innerWidth}` : ''} Proxiweb - Commande en cours`}
+      title={'Proxiweb - Commande en cours'}
       meta={[{ name: 'description', content: 'Commandes proxiweb' }]}
     />
   );

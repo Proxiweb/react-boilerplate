@@ -14,14 +14,15 @@ import {
 
 import { selectPending } from 'containers/App/selectors';
 
-class Catalogue extends Component { // eslint-disable-line
+class Catalogue extends Component {
+  // eslint-disable-line
   static propTypes = {
     pending: PropTypes.bool.isRequired,
     typeProduits: PropTypes.array,
     produits: PropTypes.array,
     params: PropTypes.object.isRequired,
     load: PropTypes.func.isRequired,
-  }
+  };
 
   componentDidMount() {
     const { load, params } = this.props;
@@ -35,11 +36,12 @@ class Catalogue extends Component { // eslint-disable-line
     return (
       <div className="row center-md">
         <div className="col-md-4">
-          {!pending && <ProduitSelector
-            produits={produits}
-            typeProduits={typeProduits}
-            params={this.props.params}
-          />}
+          {!pending &&
+            <ProduitSelector
+              produits={produits}
+              typeProduits={typeProduits}
+              params={this.props.params}
+            />}
         </div>
         <div className="col-md-6">
           {produitId && <DetailOffres params={this.props.params} />}
@@ -56,8 +58,12 @@ const mapStateToProps = createStructuredSelector({
   produits: selectProduitsRelaisByTypeProduit(),
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadFournisseurs,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadFournisseurs,
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);
