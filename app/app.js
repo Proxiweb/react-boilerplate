@@ -53,7 +53,7 @@ import {
   red800,
   grey300,
   grey600,
-  grey200
+  grey200,
 } from 'material-ui/styles/colors';
 
 // Import global saga
@@ -71,9 +71,6 @@ openSansObserver.load().then(
     document.body.classList.remove(styles.fontLoaded);
   }
 );
-
-import styles from 'containers/App/styles.css';
-const openSansObserver = new FontFaceObserver('Open Sans', {});
 
 // Import i18n messages
 import { translationMessages } from './i18n';
@@ -99,7 +96,7 @@ moment.locale('fr');
 persistStore(store, {
   whitelist: ['compteUtilisateur', 'global'], // 'commande'
   debounce: 1500,
-  keyPrefix: 'pw'
+  keyPrefix: 'pw',
 });
 
 // starting globals sagas
@@ -111,7 +108,7 @@ loginSagas.map(store.runSaga);
 // must be provided for resolving how to retrieve the "route" in the state
 import { selectLocationState } from './containers/App/selectors';
 const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: selectLocationState()
+  selectLocationState: selectLocationState(),
 });
 
 // Set up the router, wrapping all Routes in the App component
@@ -119,7 +116,7 @@ import App from './containers/App';
 import createRoutes from './routes';
 const rootRoute = {
   component: App,
-  childRoutes: createRoutes(store)
+  childRoutes: createRoutes(store),
 };
 
 // cutomize theme
@@ -127,17 +124,17 @@ const muiTheme = getMuiTheme({
   appBar: {
     height: 50,
     color: shader(limeA700, -0.1),
-    textColor: grey900
+    textColor: grey900,
   },
   tabs: {
     backgroundColor: shader(limeA700, -0.3),
-    selectedTextColor: 'white'
+    selectedTextColor: 'white',
   },
   toggle: {
     thumbOnColor: shader(limeA700, -0.4),
     thumbOffColor: shader(limeA700, 0.4),
     trackOnColor: shader(limeA700, 0.2),
-    trackOffColor: shader(limeA700, 0.6)
+    trackOffColor: shader(limeA700, 0.6),
   },
   palette: {
     primary1Color: blue800,
@@ -146,8 +143,8 @@ const muiTheme = getMuiTheme({
     groupColor: grey300,
     groupColorBorder: grey600,
     oddColor: grey200,
-    tableHeaderBackgroundColor: shader(limeA700, 0.5)
-  }
+    tableHeaderBackgroundColor: shader(limeA700, 0.5),
+  },
 });
 
 const render = messages => {
@@ -181,9 +178,10 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  Promise.all([System.import('intl'), System.import('intl/locale-data/jsonp/en.js')]).then(() =>
-    render(translationMessages)
-  );
+  Promise.all([
+    System.import('intl'),
+    System.import('intl/locale-data/jsonp/en.js'),
+  ]).then(() => render(translationMessages));
 } else {
   render(translationMessages);
 }
