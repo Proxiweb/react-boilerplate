@@ -36,7 +36,7 @@ class ProduitSelector extends React.Component {
         : null;
       if (premierTypeProduit) {
         this.props.pushState(
-          `/catalogue/${params.relaiId}/typeProduits/${premierTypeProduit.id}`,
+          `/catalogue/${params.relaiId}/typeProduits/${premierTypeProduit.id}`
         );
       }
     }
@@ -45,7 +45,7 @@ class ProduitSelector extends React.Component {
   navigateTo = productId => {
     const { typeProduitId, relaiId } = this.props.params;
     this.props.pushState(
-      `/catalogue/${relaiId}/typeProduits/${typeProduitId}/produits/${productId}`,
+      `/catalogue/${relaiId}/typeProduits/${typeProduitId}/produits/${productId}`
     );
   };
 
@@ -65,80 +65,69 @@ class ProduitSelector extends React.Component {
 
     if (produits) {
       typesProduitsSecondaires = produits.find(
-        p => p.typeProduitSecondaire !== null,
+        p => p.typeProduitSecondaire !== null
       )
         ? uniq(produits.map(p => p.typeProduitSecondaire))
         : null;
     }
 
     return (
-      <div className="row">
-        <Paper
-          className={classnames(
-            'col-sm-4 col-lg-12 col-xs-12 col-md-4',
-            styles.panelproduitso,
-          )}
-        >
-          {typeProduits &&
-            Object.keys(typeProduits).length > 1 &&
-            <CustomSelectField
-              value={typeProduitId}
-              onChange={this.handleChange}
-              fullWidth
-            >
-              {typeProduits &&
-                Object.keys(typeProduits)
-                  .map((key, index) => (
-                    <MenuItem
-                      key={index}
-                      value={typeProduits[key].id}
-                      primaryText={typeProduits[key].nom}
-                    />
-                  ))}
-            </CustomSelectField>}
-          {typesProduitsSecondaires &&
-            <CustomSelectField
-              value={typeProduitSecondaire}
-              onChange={(event, index, value) =>
-                this.setState({ typeProduitSecondaire: value })}
-              fullWidth
-            >
-              {typesProduitsSecondaires.map((val, index) => (
-                <MenuItem key={index} value={val} primaryText={val} />
+      <Paper className={styles.panelproduitso}>
+        {typeProduits &&
+          Object.keys(typeProduits).length > 1 &&
+          <CustomSelectField
+            value={typeProduitId}
+            onChange={this.handleChange}
+            fullWidth
+          >
+            {typeProduits &&
+              Object.keys(typeProduits).map((key, index) => (
+                <MenuItem
+                  key={index}
+                  value={typeProduits[key].id}
+                  primaryText={typeProduits[key].nom}
+                />
               ))}
-            </CustomSelectField>}
-          {produits &&
-            <List className={styles.produits}>
-              {produits
-                .filter(
-                  p =>
-                    p.enStock &&
-                      (!typeProduitSecondaire && !typesProduitsSecondaires ||
-                        p.typeProduitSecondaire === typeProduitSecondaire),
-                )
-                .map((pdt, idx) => (
-                  <ListItem
-                    key={idx}
-                    onClick={() => this.navigateTo(pdt.id)}
-                    className={styles.pdtSelected}
-                    style={
-                      produitId && pdt.id === produitId
-                        ? {
-                            borderLeft: `solid 5px ${muiTheme.appBar.color}`,
-                            backgroundColor: shader(
-                              muiTheme.appBar.color,
-                              +0.6,
-                            ),
-                          }
-                        : { borderLeft: 'none' }
-                    }
-                  >
-                    {pdt.nom.toUpperCase()}
-                  </ListItem>
-                ))}
-            </List>}
-        </Paper>
-      </div>
+          </CustomSelectField>}
+        {typesProduitsSecondaires &&
+          <CustomSelectField
+            value={typeProduitSecondaire}
+            onChange={(event, index, value) =>
+              this.setState({ typeProduitSecondaire: value })}
+            fullWidth
+          >
+            {typesProduitsSecondaires.map((val, index) => (
+              <MenuItem key={index} value={val} primaryText={val} />
+            ))}
+          </CustomSelectField>}
+        {produits &&
+          <List className={styles.produits}>
+            {produits
+              .filter(
+                p =>
+                  p.enStock &&
+                  ((!typeProduitSecondaire && !typesProduitsSecondaires) ||
+                    p.typeProduitSecondaire === typeProduitSecondaire)
+              )
+              .map((pdt, idx) => (
+                <ListItem
+                  key={idx}
+                  onClick={() => this.navigateTo(pdt.id)}
+                  className={styles.pdtSelected}
+                  style={
+                    produitId && pdt.id === produitId
+                      ? {
+                        borderLeft: `solid 5px ${muiTheme.appBar.color}`,
+                        backgroundColor: shader(muiTheme.appBar.color, +0.6),
+                      }
+                      : { borderLeft: 'none' }
+                  }
+                >
+                  {pdt.nom.toUpperCase()}
+                </ListItem>
+              ))}
+          </List>}
+      </Paper>
     );
   }
 }
@@ -148,11 +137,12 @@ class ProduitSelector extends React.Component {
 //   produits: selectProduitsRelaisByTypeProduit(),
 // });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    pushState: push,
-  },
-  dispatch,
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      pushState: push,
+    },
+    dispatch
+  );
 
 export default connect(null, mapDispatchToProps)(ProduitSelector);
