@@ -66,7 +66,7 @@ class ListeCommandesUtilisateurContainer extends Component {
         {commandes.map((cde, idx) => (
           <ListItem
             key={idx}
-            primaryText={format(cde.dateCommande).format('DD MMMM')}
+            primaryText={format(cde.dateCommande, 'DD MMMM')}
             value={cde.id}
           />
         ))}

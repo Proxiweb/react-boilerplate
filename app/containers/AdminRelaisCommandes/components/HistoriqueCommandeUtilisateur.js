@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import HistoriqueCommandesUtilisateur from 'components/HistoriqueCommandesUtilisateur';
+import HistoriqueCommandesUtilisateur
+  from 'components/HistoriqueCommandesUtilisateur';
 
 export default class HistoriqueCommandes extends Component {
   static propTypes = {
@@ -10,7 +11,10 @@ export default class HistoriqueCommandes extends Component {
     commandeId: null,
   };
 
-  handleSelect = (event, value) => this.setState({ commandeId: value });
+  handleSelect = (event, value) => {
+    console.log('cdeId', value);
+    this.setState({ commandeId: value });
+  };
 
   render() {
     const { utilisateurId } = this.props;

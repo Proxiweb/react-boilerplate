@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import isWithinRange from 'date-fns/is_within_range';
 import addWeeks from 'date-fns/add_weeks';
 import startOfDay from 'date-fns/start_of_day';
+import isAfter from 'date-fns/is_after';
 import endOfDay from 'date-fns/end_of_day';
 import startOfWeek from 'date-fns/start_of_week';
 import endOfWeek from 'date-fns/end_of_week';
