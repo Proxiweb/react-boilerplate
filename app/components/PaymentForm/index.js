@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import StellarSdk from 'stellar-sdk';
 
 export default class PaymentForm extends Component {

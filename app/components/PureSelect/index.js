@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 
 const PureSelect = ({ input, label, cols, datas, meta: { touched, error } }) => (
   <div className={cols ? `col-sm-${cols}` : null}>

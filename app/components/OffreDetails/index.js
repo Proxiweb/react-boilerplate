@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import round from 'lodash/round';
 import RaisedButton from 'material-ui/RaisedButton';
 import AddShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';

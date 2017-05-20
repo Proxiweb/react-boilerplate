@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import capitalize from 'lodash/capitalize';
 import { bindActionCreators } from 'redux';

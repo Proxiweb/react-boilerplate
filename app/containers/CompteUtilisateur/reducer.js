@@ -26,7 +26,7 @@ import {
   saveAccountConst as s,
 } from './constants';
 
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import moment from 'moment';
 import { REHYDRATE } from 'redux-persist/constants';
 

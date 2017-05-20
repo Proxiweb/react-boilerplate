@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import StripeCheckout from 'react-stripe-checkout';
 import Slider from 'material-ui/Slider';
 import RaisedButton from 'material-ui/RaisedButton';

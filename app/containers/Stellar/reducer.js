@@ -1,4 +1,4 @@
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import {
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,

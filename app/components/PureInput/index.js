@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 
 const PureInput = ({ input, label, cols, type, className, placeholder, meta: { touched, error } }) => {
   const inLabel = type === 'checkbox' || type === 'radio';

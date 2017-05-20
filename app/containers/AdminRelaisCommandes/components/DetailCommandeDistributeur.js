@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import DetailCommandeDistributeurProduit from './DetailCommandeDistributeurProduit';
 import includes from 'lodash/includes';

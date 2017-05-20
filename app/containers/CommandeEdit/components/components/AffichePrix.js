@@ -1,11 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import round from 'lodash/round';
 // import memoize from 'lodash/memoize';
 import styles from './AffichePrix.css';
 
 const redColor = { color: 'red' };
 
-export function trouveTarification(tarifications, totalGlobal = 0, totalCommande = 0) {
+export function trouveTarification(
+  tarifications,
+  totalGlobal = 0,
+  totalCommande = 0
+) {
   const total = totalGlobal + totalCommande;
   return tarifications
     .slice()
@@ -46,8 +51,17 @@ export const formatterPoids = (offre, typeProduit) => {
   return convertisseur(offre.poids);
 };
 
-export const detailPrix = (offre, typeProduit, qteCommande, format = 'component') => {
-  const tarif = trouveTarification(offre.tarifications, offre.quantiteTotal, qteCommande);
+export const detailPrix = (
+  offre,
+  typeProduit,
+  qteCommande,
+  format = 'component'
+) => {
+  const tarif = trouveTarification(
+    offre.tarifications,
+    offre.quantiteTotal,
+    qteCommande
+  );
   if (!tarif) {
     console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre); // eslint-disable-line
     return {
@@ -59,7 +73,9 @@ export const detailPrix = (offre, typeProduit, qteCommande, format = 'component'
   let ancien = null;
   if (tarif.qteMinRelais !== offre.tarifications[0].qteMinRelais) {
     const t = offre.tarifications[0];
-    ancien = <s style={redColor}>{round((t.prix + t.recolteFond) / 100, 2)} €</s>;
+    ancien = (
+      <s style={redColor}>{round((t.prix + t.recolteFond) / 100, 2)} €</s>
+    );
   }
 
   const datas = {
@@ -84,7 +100,9 @@ export const prixAuKg = (offre, typeProduit, format = 'component') => {
   if (!offre.poids) return '';
   const { prix, recolteFond } = offre.tarifications[0];
   const diviseur = typeProduit.quantiteUnite === 'mg' ? 1 : 10;
-  const poids = typeProduit.quantiteUnite === 'ml' ? offre.poids : offre.poids / 100;
+  const poids = typeProduit.quantiteUnite === 'ml'
+    ? offre.poids
+    : offre.poids / 100;
   const datas = {
     prixAuKg: round((prix + recolteFond) * 100 / poids / diviseur, 2),
     unite: typeProduit.quantiteUnite,
@@ -107,7 +125,9 @@ const OffreDetail = props => {
   if (!deuxLignes) {
     return (
       <div className={`row ${styles.offreUneLigne}`}>
-        <div className={`col-md ${styles.offreDesignation}`}>{detailPrix(offre, qteCommande)}</div>
+        <div className={`col-md ${styles.offreDesignation}`}>
+          {detailPrix(offre, qteCommande)}
+        </div>
         <div className={`col-md ${styles.offrePrix}`}>
           <div>{offre.poids && prixAuKg(offre, typeProduit)}</div>
         </div>
@@ -118,16 +138,18 @@ const OffreDetail = props => {
   return (
     <div>
       <div>{detailPrix(offre, qteCommande)}</div>
-      {offre.poids && typeProduit.quantiteUnite !== 'u' && prixAuKg(offre, typeProduit)}
+      {offre.poids &&
+        typeProduit.quantiteUnite !== 'u' &&
+        prixAuKg(offre, typeProduit)}
     </div>
   );
 };
 
 OffreDetail.propTypes = {
-  offre: React.PropTypes.object.isRequired,
-  qteCommande: React.PropTypes.number.isRequired,
-  typeProduit: React.PropTypes.object.isRequired,
-  deuxLignes: React.PropTypes.bool,
+  offre: PropTypes.object.isRequired,
+  qteCommande: PropTypes.number.isRequired,
+  typeProduit: PropTypes.object.isRequired,
+  deuxLignes: PropTypes.bool,
 };
 
 export default OffreDetail;

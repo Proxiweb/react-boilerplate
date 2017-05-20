@@ -30,11 +30,14 @@ const openSansObserver = new FontFaceObserver('Ubuntu', {});
 import styles from './containers/App/styles.css';
 
 // When Open Sans is loaded, add a font-family using Open Sans to the body
-openSansObserver.load().then(() => {
-  document.body.classList.add(styles.fontLoaded);
-}, () => {
-  document.body.classList.remove(styles.fontLoaded);
-});
+openSansObserver.load().then(
+  () => {
+    document.body.classList.add(styles.fontLoaded);
+  },
+  () => {
+    document.body.classList.remove(styles.fontLoaded);
+  }
+);
 
 // Import Language Provider
 import LanguageProvider from './containers/LanguageProvider';
@@ -62,8 +65,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // flexboxgrid
 import 'flexboxgrid/css/flexboxgrid.css';
-// react-data-grid
-import 'react-virtualized/styles.css';
 // react-grid-layout
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -147,7 +148,7 @@ const render = messages => {
         </MuiThemeProvider>
       </LanguageProvider>
     </Provider>,
-    document.getElementById('app'),
+    document.getElementById('app')
   );
 };
 
@@ -162,8 +163,10 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  Promise.all([System.import('intl'), System.import('intl/locale-data/jsonp/en.js')])
-    .then(() => render(translationMessages));
+  Promise.all([
+    System.import('intl'),
+    System.import('intl/locale-data/jsonp/en.js'),
+  ]).then(() => render(translationMessages));
 } else {
   render(translationMessages);
 }

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react'; import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 const SelectableList = makeSelectable(List);

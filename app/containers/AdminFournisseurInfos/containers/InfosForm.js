@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import { TextField, Toggle } from 'redux-form-material-ui';
 import RaisedButton from 'material-ui/RaisedButton';

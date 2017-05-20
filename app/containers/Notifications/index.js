@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom'; // eslint-disable-line
 import { connect } from 'react-redux';
 import { removeMessage } from 'containers/App/actions';

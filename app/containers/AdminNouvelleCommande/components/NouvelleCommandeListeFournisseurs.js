@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CommunicationFormContainer from './containers/CommunicationFormContainer';
 import CommunicationsHistorique from './containers/CommunicationsHistorique';

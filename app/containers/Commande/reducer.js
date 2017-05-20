@@ -3,7 +3,7 @@
  * Commande reducer
  *
  */
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import c from './constants';
 import cF from 'containers/AdminFournisseur/constants';
 // import cE from 'containers/CommandeEdit/constants';

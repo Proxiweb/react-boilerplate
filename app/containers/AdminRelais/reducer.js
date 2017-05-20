@@ -1,5 +1,5 @@
 import c from './constants';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 const initialState = {
   datas: [],
