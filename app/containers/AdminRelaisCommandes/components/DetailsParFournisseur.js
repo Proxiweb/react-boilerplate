@@ -154,7 +154,7 @@ class DetailsParFournisseur extends Component {
                 pdt => pdt.fournisseurId === fournisseur.id
               );
               return (
-                <div className="col-md-12">
+                <div className="col-md-12" style={{ marginTop: '1em' }}>
                   <CommandeFournisseur
                     key={idx}
                     fournisseur={fournisseur}

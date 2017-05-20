@@ -4,6 +4,7 @@ import uuid from 'node-uuid';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
 import groupBy from 'lodash/groupBy';
 import FlatButton from 'material-ui/FlatButton';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
@@ -131,28 +132,33 @@ class CommandeFournisseur extends Component {
       commandeId,
     });
     return (
-      <div className="row" key={key}>
-        <div className="col-md-8" style={{ margin: '3em 0 0.5em' }}>
-          <div>
-            {fournisseur.nom.toUpperCase()}
-            {fournisseur.telPortable &&
-              <FlatButton
-                icon={<MessageIcon />}
-                onClick={this.handleSendMessageFournisseur}
-              />}
-          </div>
-        </div>
-        <div
-          className="col-md-4"
-          style={{ textAlign: 'right', margin: '3em 0 0.5em' }}
-        >
-          <RaisedButton
-            secondary
-            label="Retirer"
-            onClick={this.handleSupprCommandeContenusFourn}
-          />
-        </div>
-        <div className="col-md-12">
+      <Card style={{ marginBottom: '1em' }}>
+        <CardHeader
+          title={fournisseur.nom.toUpperCase()}
+          actAsExpander
+          showExpandableButton
+        />
+        <CardText expandable>
+          <CardActions expandable>
+            <div className="row center-md">
+              {fournisseur.telPortable &&
+                <div className="col-md-4">
+                  <FlatButton
+                    icon={<MessageIcon />}
+                    onClick={this.handleSendMessageFournisseur}
+                    fullWidth
+                  />
+                </div>}
+              <div className="col-md-4">
+                <RaisedButton
+                  secondary
+                  label="Retirer"
+                  onClick={this.handleSupprCommandeContenusFourn}
+                  fullWidth
+                />
+              </div>
+            </div>
+          </CardActions>
           <DetailCommande
             contenusFiltered={contenusFournisseur}
             commandeContenus={Object.keys(commandeContenus).map(
@@ -163,8 +169,8 @@ class CommandeFournisseur extends Component {
             offres={offres}
           />
           <DetailCommandeTotal totaux={totaux} />
-        </div>
-      </div>
+        </CardText>
+      </Card>
     );
   }
 }

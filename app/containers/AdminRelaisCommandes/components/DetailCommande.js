@@ -2,7 +2,13 @@ import React, { PropTypes, Component } from 'react';
 import groupBy from 'lodash/groupBy';
 import DetailCommandeProduit from './DetailCommandeProduit';
 import includes from 'lodash/includes';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+} from 'material-ui/Table';
 
 // eslint-disable-next-line
 export default class DetailsCommande extends Component {
@@ -47,8 +53,9 @@ export default class DetailsCommande extends Component {
           quantite: m.quantite + c.quantite,
           qteRegul: m.qteRegul + c.qteRegul,
         }),
-        { offreId, quantite: 0, qteRegul: 0 },
-      ));
+        { offreId, quantite: 0, qteRegul: 0 }
+      )
+    );
 
     const { muiTheme } = this.context;
     const isAdmin = includes(roles, 'ADMIN');
@@ -58,7 +65,6 @@ export default class DetailsCommande extends Component {
         selectable={selectable}
         multiSelectable={selectable}
         onCellHover={this.handleRowSelection}
-        height={contenusAgg.length > 4 ? '300' : null}
       >
         <TableHeader
           displaySelectAll={selectable}
@@ -90,9 +96,11 @@ export default class DetailsCommande extends Component {
             contenusAgg
               // .filter(pdt => contenusFiltered.find(c => c.offre.produitId === pdt.id))
               .map((contenu, key) => {
-                const contenuComplet = contenusFiltered.find(c => c.offreId === contenu.offreId);
+                const contenuComplet = contenusFiltered.find(
+                  c => c.offreId === contenu.offreId
+                );
                 const produit = produits.find(
-                  pdt => pdt.id === offres[contenuComplet.offreId].produitId,
+                  pdt => pdt.id === offres[contenuComplet.offreId].produitId
                 );
                 if (!produit) return null;
                 return (
@@ -103,14 +111,20 @@ export default class DetailsCommande extends Component {
                     contenu={contenusFiltered
                       .filter(c => c.offreId === contenu.offreId)
                       .reduce(
-                        (m, c) => ({ ...c, quantite: c.qteRegul + c.quantite + m.quantite }),
+                        (m, c) => ({
+                          ...c,
+                          quantite: c.qteRegul + c.quantite + m.quantite,
+                        }),
                       {
                         quantite: 0,
-                      },
+                      }
                       )}
                     qteTotalOffre={commandeContenus
                       .filter(c => c.offreId === contenu.offreId)
-                      .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)}
+                      .reduce(
+                        (memo, item) => memo + item.quantite + item.qteRegul,
+                        0
+                      )}
                     offre={offres[contenuComplet.offreId]}
                     commandeId={commandeId}
                     readOnly={!isAdmin}
