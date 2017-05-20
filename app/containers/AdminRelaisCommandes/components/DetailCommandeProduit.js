@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import round from 'lodash/round';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
-import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import {
+  trouveTarification,
+} from 'containers/CommandeEdit/components/components/AffichePrix';
 import buildCommandeRow from 'components/DetailCommandeColumns';
 
 import {
@@ -39,7 +41,10 @@ class CommnandeParProduitFournisseur extends Component {
 
   handleChangeQte = () => {
     const { contenu, offre } = this.props;
-    const poidsG = parseInt(offre.poids * (contenu.qteRegul + contenu.quantite) / 1000, 10);
+    const poidsG = parseInt(
+      offre.poids * (contenu.qteRegul + contenu.quantite) / 1000,
+      10
+    );
     const nouveauPoids = parseInt(prompt('Poids réel (g) ?', poidsG), 10); // eslint-disable-line
     if (nouveauPoids && nouveauPoids !== poidsG) {
       const qteTotal = round(nouveauPoids * contenu.quantite / poidsG, 5);
@@ -52,7 +57,19 @@ class CommnandeParProduitFournisseur extends Component {
   };
 
   handleResetQuantite = () => {
-    this.props.modifierCommandeContenu({ ...this.props.contenu, qteRegul: 0, quantiteAjustee: false });
+    this.props.modifierCommandeContenu({
+      ...this.props.contenu,
+      qteRegul: 0,
+      quantiteAjustee: false,
+    });
+  };
+
+  handleClick = () => {
+    const { dansPrepaPanier } = this.props.contenu;
+    this.props.modifierCommandeContenu({
+      ...this.props.contenu,
+      dansPrepaPanier: !dansPrepaPanier,
+    });
   };
 
   render() {
@@ -68,6 +85,7 @@ class CommnandeParProduitFournisseur extends Component {
 
     const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
     const tarifEnBaisse = offre.tarifications[0].prix > tarif.prix;
+
     const rows = buildCommandeRow({
       contenu,
       idx,
@@ -76,15 +94,25 @@ class CommnandeParProduitFournisseur extends Component {
       colorTrendingDown: 'green',
       tarif,
       produit,
-      handleChangeQte: !readOnly && offre.quantiteAjustable && !contenu.quantiteAjustee
+      handleChangeQte: !readOnly &&
+        offre.quantiteAjustable &&
+        !contenu.quantiteAjustee
         ? this.handleChangeQte
         : undefined,
-      handleResetQuantite: !readOnly && contenu.quantiteAjustee ? this.handleResetQuantite : undefined,
+      handleResetQuantite: !readOnly && contenu.quantiteAjustee
+        ? this.handleResetQuantite
+        : undefined,
       souligneQte,
     });
 
     return (
-      <TableRow key={idx}>
+      <TableRow
+        key={idx}
+        onClick={this.handleClick}
+        style={{
+          backgroundColor: contenu.dansPrepaPanier ? 'silver' : 'white',
+        }}
+      >
         {rows}
         {!readOnly &&
           <TableRowColumn className={styles.lessSmallCol}>
@@ -107,4 +135,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(null, mapDispatchToProps)(CommnandeParProduitFournisseur);
+export default connect(null, mapDispatchToProps)(
+  CommnandeParProduitFournisseur
+);
