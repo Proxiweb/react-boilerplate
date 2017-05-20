@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import moment from 'moment';
+import compareDesc from 'date-fns/compare_desc';
+import { format } from 'utils/dates';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
@@ -93,17 +94,11 @@ class FacturesDistributeur extends Component {
               {Object.keys(commandes)
                 .slice()
                 .filter(id => commandes[id].dateCommande)
-                .sort(
-                  (a, b) =>
-                    moment(a.dateCommande).unix() <
-                    moment(b.dateCommande).unix()
-                )
+                .sort(compareDesc)
                 .map((id, idx) => (
                   <ListItem
                     key={idx}
-                    primaryText={moment(commandes[id].dateCommande).format(
-                      'LL'
-                    )}
+                    primaryText={format(commandes[id].dateCommande, 'DD MM')}
                     value={id}
                   />
                 ))}

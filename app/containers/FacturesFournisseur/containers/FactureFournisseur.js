@@ -2,7 +2,7 @@ import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import round from 'lodash/round';
 import classnames from 'classnames';
 
@@ -67,7 +67,7 @@ class FactureFournisseur extends Component {
     const utilisateursIds = commandeUtilisateurs
       .filter(
         cu =>
-          !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId),
+          !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId)
       ) // ne pas charger ceux déjà chargés
       .map(cu => cu.utilisateurId);
 
@@ -87,7 +87,7 @@ class FactureFournisseur extends Component {
       cC =>
         cC.utilisateurId === utilisateurId &&
         produits[offres[cC.offreId].produitId].fournisseurId ===
-          params.fournisseurId,
+          params.fournisseurId
     );
 
     if (!contenus.length) return null;
@@ -107,7 +107,7 @@ class FactureFournisseur extends Component {
 
       const tarif = trouveTarification(
         offres[contenu.offreId].tarifications,
-        qteTotalOffre,
+        qteTotalOffre
         // contenu.quantite
       );
 
@@ -136,7 +136,7 @@ class FactureFournisseur extends Component {
         <td className={styles.right}>
           Total: {parseFloat(totaux.prix).toFixed(2)} €
         </td>
-      </tr>,
+      </tr>
     );
 
     return rows;
@@ -174,7 +174,7 @@ class FactureFournisseur extends Component {
         {commandeUtilisateurs.map((cu, idx) => {
           const contenusCommande = this.buildProducts(
             cu.utilisateurId,
-            fournisseur.autoEntrepreneur,
+            fournisseur.autoEntrepreneur
           );
           if (!contenusCommande) return null;
           cpt += 1;
@@ -211,7 +211,7 @@ class FactureFournisseur extends Component {
                         }}
                       >
                         <h3 className="factureTitle">
-                          {moment(commande.dateCommande).format('LL')}
+                          {format(commande.dateCommande, 'DD MM')}
                         </h3>
                       </td>
                     </tr>
@@ -285,7 +285,7 @@ const mapDispatchToProps = dispatch =>
       loadU: fetchUtilisateurs,
       loadF: loadFournisseurs,
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureFournisseur);

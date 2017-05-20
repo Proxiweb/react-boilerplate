@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { buildHoursRanges } from './DistributionSelector';
 
@@ -7,7 +8,7 @@ import {
   selectCommande,
 } from 'containers/Commande/selectors';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
+import { format } from 'utils/dates';
 
 class DistributionSelected extends Component {
   // eslint-disable-line
@@ -19,18 +20,15 @@ class DistributionSelected extends Component {
   };
 
   render() {
-    const { commande, noPlageHoraire, relais, livraisonId } = this.props;
-    const distribution = commande.distributions.find(d => d.id === livraisonId);
-
-    if (!distribution) return <p>Livraison manquante</p>;
-
-    const { debut, fin } = distribution;
-    const ranges = buildHoursRanges(debut, fin, relais.rangeDistribMinutes)[
-      noPlageHoraire
-    ];
+    const { livraison, noPlageHoraire, relais } = this.props;
+    const ranges = buildHoursRanges(
+      livraison.debut,
+      livraison.fin,
+      relais.rangeDistribMinutes
+    )[noPlageHoraire];
     return (
       <div>
-        {moment(debut).format('[ Distribution le ] dddd Do MMMM [de] ')}
+        {format(livraison.debut, '[ Distribution le ] dddd Do MMMM [de] ')}
         {ranges.join(' à ')}
       </div>
     );

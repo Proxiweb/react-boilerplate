@@ -7,7 +7,9 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import { selectPending } from 'containers/App/selectors';
 
-import moment from 'moment';
+import { format } from 'utils/dates';
+import addMonths from 'date-fns/add_months';
+import subMonths from 'date-fns/sub_months';
 import classnames from 'classnames';
 
 import {
@@ -73,8 +75,8 @@ class AdminRelaisCommandes extends Component {
     this.props.loadCommandes({
       relaiId,
       periode: 'precise',
-      debut: moment().subtract(1, 'months').toISOString(),
-      fin: moment().add(1, 'months').toISOString(),
+      debut: format(subMonths(new Date(), 1)),
+      fin: format(addMonths(new Date(), 1)),
     });
 
     this.props.loadFournisseurs({ relaiId });

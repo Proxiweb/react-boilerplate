@@ -1,8 +1,12 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { List, makeSelectable } from 'material-ui/List';
-import moment from 'moment';
+import { format } from 'utils/dates';
+import compareDesc from 'date-fns/compare_desc';
+import addMinutes from 'date-fns/add_minutes';
+import getTime from 'date-fns/get_time';
 import groupBy from 'lodash/groupBy';
 import RaisedButton from 'material-ui/RaisedButton';
 import Subheader from 'material-ui/Subheader';
@@ -80,23 +84,26 @@ class ListeAcheteurs extends Component {
     // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const acheteurs = commandeUtilisateurs
       .filter(cu => cu.commandeId === commandeId)
-      .map(cu => {
-        const distribution = distributions.find(d => d.id === cu.livraisonId);
-        return {
-          ...cu,
-          utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
-          debutLivraisonISO: distribution
-            ? moment(distribution.debut)
-                .add(distribution.plageHoraire, 'minutes')
-                .toISOString()
-            : null,
-          debutLivraisonUnix: distribution
-            ? moment(distribution.debut)
-                .add(distribution.plageHoraire, 'minutes')
-                .unix()
-            : 0,
-        };
-      })
+      .map(cu => ({
+        ...cu,
+        utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
+        debutLivraisonISO: livraisons[cu.livraisonId]
+          ? format(
+              addMinutes(
+                livraisons[cu.livraisonId].debut,
+                livraisons[cu.livraisonId].plageHoraire
+              )
+            )
+          : null,
+        debutLivraisonUnix: livraisons[cu.livraisonId]
+          ? getTime(
+              addMinutes(
+                livraisons[cu.livraisonId].debut,
+                livraisons[cu.livraisonId].plageHoraire
+              )
+            )
+          : 0,
+      }))
       .slice()
       .sort(
         (cu1, cu2) =>
@@ -146,7 +153,7 @@ class ListeAcheteurs extends Component {
           <SelectableList value={utilisateurId}>
             {Object.keys(acheteursGrp).map(key => (
               <div key={key}>
-                <Subheader>{moment(key).format('LL HH:mm')}</Subheader>
+                <Subheader>{format(key, 'LL HH:mm')}</Subheader>
                 {acheteursGrp[key].map((cu, idx2) => (
                   <ListeAcheteursItem
                     key={idx2}

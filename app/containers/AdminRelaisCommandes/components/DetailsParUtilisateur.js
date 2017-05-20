@@ -20,8 +20,9 @@ import {
   selectUtilisateurStellarAdresse,
 } from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
-import moment from 'moment';
-const format = 'DD/MM/YY à HH:mm';
+import isAfter from 'date-fns/is_after';
+import { format } from 'utils/dates';
+const formatPattern = 'DD/MM/YY à HH:mm';
 import styles from './styles.css';
 import DetailCommande from './DetailCommande';
 import DetailCommandeTotal from './DetailCommandeTotal';
@@ -121,19 +122,19 @@ class DetailsParUtilisateur extends Component {
                   <strong>
                     {identite}
                     {commandeUtilisateur.createdAt &&
-                      ` passée le ${moment(commandeUtilisateur.createdAt).format(format)}`}
+                      ` passée le ${format(commandeUtilisateur.createdAt, formatPattern)}`}
                   </strong>
                 </div>
                 <div className="col-md">
                   <div className="row arround-md">
                     <div className="col-md">
                       {commandeUtilisateur.datePaiement
-                        ? `Payée le ${moment(commandeUtilisateur.datePaiement).format(format)}`
+                        ? `Payée le ${format(commandeUtilisateur.datePaiement, formatPattern)}`
                         : 'Non payée'}
                     </div>
                     <div className="col-md">
                       {commandeUtilisateur.dateLivraison
-                        ? `Livrée le ${moment(commandeUtilisateur.dateLivraison).format(format)}`
+                        ? `Livrée le ${format(commandeUtilisateur.dateLivraison, formatPattern)}`
                         : 'Non livrée'}
                     </div>
                   </div>
@@ -163,7 +164,7 @@ class DetailsParUtilisateur extends Component {
               paiementOk &&
               <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />}
             {!commandeUtilisateur.datePaiement &&
-              moment(commande.dateCommande).isAfter(moment()) &&
+              isAfter(commande.dateCommande, new Date()) &&
               <div className="col-md-12" style={{ marginTop: '1em' }}>
                 <div className="row center-md">
                   <div className="col-md-4">

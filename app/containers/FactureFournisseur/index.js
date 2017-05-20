@@ -13,22 +13,22 @@ import {
   selectFournisseurs,
   selectProduits,
   selectCommande,
-  selectUtilisateurs,
+  selectUtilisateurs
 } from 'containers/Commande/selectors';
 
 import {
   loadFournisseurs,
-  fetchUtilisateurs,
+  fetchUtilisateurs
 } from 'containers/Commande/actions';
 
 import { selectPending } from 'containers/App/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import {
-  trouveTarification,
+  trouveTarification
 } from 'containers/CommandeEdit/components/components/AffichePrix';
 import Adresse from './components/Adresse';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import classnames from 'classnames';
 
 import styles from './styles.css';
@@ -46,7 +46,7 @@ class FactureFournisseur extends Component {
     utilisateurs: PropTypes.array.isRequired,
     fournisseurs: PropTypes.object.isRequired,
     loadU: PropTypes.func.isRequired,
-    loadF: PropTypes.func.isRequired,
+    loadF: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -56,7 +56,7 @@ class FactureFournisseur extends Component {
       fournisseurs,
       loadU,
       loadF,
-      params,
+      params
     } = this.props;
     const { fournisseurId } = params;
     const utilisateursIds = commandeUtilisateurs
@@ -76,18 +76,18 @@ class FactureFournisseur extends Component {
       contenus: c,
       offres,
       produits,
-      params,
+      params
     } = this.props;
     const commandeContenus = cc.map(id => c[id]);
     const contenus = commandeContenus.filter(
-      cC => cC.utilisateurId === utilisateurId,
+      cC => cC.utilisateurId === utilisateurId
     );
     const { commandeId } = params;
     const totaux = calculeTotauxCommande({
       commandeContenus,
       offres,
       commandeId,
-      filter: cc => cc.utilisateurId === utilisateurId,
+      filter: cc => cc.utilisateurId === utilisateurId
     });
     if (!contenus.length) return null;
 
@@ -114,7 +114,7 @@ class FactureFournisseur extends Component {
                 {' '}
                 <s>
                   {parseFloat(
-                    round(offre.tarifications[0].prix / 100 / 1.055, 2),
+                    round(offre.tarifications[0].prix / 100 / 1.055, 2)
                   ).toFixed(2)}
                 </s>
               </span>}
@@ -134,7 +134,7 @@ class FactureFournisseur extends Component {
         <td className={styles.right}>
           Total: {parseFloat(totaux.prix).toFixed(2)} €
         </td>
-      </tr>,
+      </tr>
     );
 
     return rows;
@@ -146,7 +146,7 @@ class FactureFournisseur extends Component {
       commande,
       utilisateurs,
       fournisseurs,
-      params,
+      params
     } = this.props;
 
     const fournisseur = fournisseurs.find(f => f.id === params.fournisseurId);
@@ -172,7 +172,7 @@ class FactureFournisseur extends Component {
                       </td>
 
                       <td className={styles.title}>
-                        <h3>{moment(commande.dateCommande).format('LL')}</h3>
+                        <h3>{format(commande.dateCommande, 'DD MM')}</h3>
                       </td>
                     </tr>
                   </table>
@@ -230,16 +230,16 @@ const mapStateToProps = createStructuredSelector({
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   utilisateurs: selectUtilisateurs(),
   fournisseurs: selectFournisseurs(),
-  offres: selectOffres(),
+  offres: selectOffres()
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadU: fetchUtilisateurs,
-      loadF: loadFournisseurs,
+      loadF: loadFournisseurs
     },
-    dispatch,
+    dispatch
   );
 
 export default connect(mapStateToProps, mapDispatchToProps)(FactureFournisseur);

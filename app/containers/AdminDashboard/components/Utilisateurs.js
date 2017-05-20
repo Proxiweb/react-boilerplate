@@ -2,12 +2,18 @@ import React from 'react'; import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 const SelectableList = makeSelectable(List);
-import moment from 'moment';
+import isDate from 'date-fns/is_date';
+import compareDesc from 'date-fns/compare_desc';
+import { distanceInWords } from 'utils/dates';
 import Panel from './Panel';
 
-const Utilisateurs = (
-  { relais, utilisateurs, onClick, limit = 20, utilisateurId },
-) => (
+const Utilisateurs = ({
+  relais,
+  utilisateurs,
+  onClick,
+  limit = 20,
+  utilisateurId,
+}) => (
   <Panel title={`Les ${limit} dernières connexions`}>
     <SelectableList value={utilisateurId} onChange={onClick}>
       {Object.keys(utilisateurs)
@@ -15,14 +21,10 @@ const Utilisateurs = (
           id =>
             utilisateurs[id].nom &&
             utilisateurs[id].prenom &&
-            moment(utilisateurs[id].lastLogin).isValid(),
+            isDate(utilisateurs[id].lastLogin)
         )
         .slice(0, limit - 1)
-        .sort(
-          (u1, u2) =>
-            moment(utilisateurs[u1].lastLogin).unix() <
-            moment(utilisateurs[u2].lastLogin).unix(),
-        )
+        .sort(compareDesc)
         .map(id => (
           <ListItem
             value={id}
@@ -35,11 +37,7 @@ const Utilisateurs = (
                   relais[utilisateurs[id].relaiId].nom}
               </div>
               <div className="col-md-10">
-                {
-                  `${utilisateurs[id].nom.toUpperCase()} ${capitalize(
-                    utilisateurs[id].prenom,
-                  )} (${moment(utilisateurs[id].lastLogin).fromNow()})`
-                }
+                {`${utilisateurs[id].nom.toUpperCase()} ${capitalize(utilisateurs[id].prenom)} (${distanceInWords(utilisateurs[id].lastLogin, new Date())})`}
               </div>
             </div>
           </ListItem>

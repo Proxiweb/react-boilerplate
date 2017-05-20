@@ -2,7 +2,7 @@ import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
+import { format } from 'utils/dates';
 import capitalize from 'lodash/capitalize';
 import round from 'lodash/round';
 import classnames from 'classnames';
@@ -157,7 +157,7 @@ class FactureDistributeur extends Component {
                       }}
                     >
                       <h3 className="factureTitle">
-                        {moment(commande.dateCommande).format('LL')}
+                        {format(commande.dateCommande, 'DD MM')}
                       </h3>
                     </td>
                   </tr>

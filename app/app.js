@@ -21,7 +21,6 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import { persistStore } from 'redux-persist';
-import moment from 'moment';
 
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
@@ -39,6 +38,8 @@ openSansObserver.load().then(
     document.body.classList.remove(styles.fontLoaded);
   }
 );
+
+window.__localeId__ = 'fr';
 
 // Import Language Provider
 import LanguageProvider from './containers/LanguageProvider';
@@ -88,9 +89,6 @@ import 'react-resizable/css/styles.css';
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
-
-moment.locale('fr');
-
 persistStore(store, {
   whitelist: ['compteUtilisateur', 'global'], // 'commande'
   debounce: 1500,
