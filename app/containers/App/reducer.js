@@ -3,7 +3,7 @@
  * App reducer
  *
  */
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import uuid from 'node-uuid';
 import { LOCATION_CHANGE } from 'react-router-redux';
 

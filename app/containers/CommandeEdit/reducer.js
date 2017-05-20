@@ -3,7 +3,7 @@
  * CommandeEdit reducer
  *
  */
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import assign from 'lodash/assign';
 import findIndex from 'lodash/findIndex';
 import c from './constants';

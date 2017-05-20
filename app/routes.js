@@ -7,10 +7,9 @@ const errorLoading = err => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
 };
 
-const loadModule = cb =>
-  componentModule => {
-    cb(null, componentModule.default);
-  };
+const loadModule = cb => componentModule => {
+  cb(null, componentModule.default);
+};
 
 export default function createRoutes(store) {
   // Create reusable async injectors using getAsyncInjectors factory
@@ -42,7 +41,9 @@ export default function createRoutes(store) {
       path: '/support',
       name: 'support',
       getComponent(nextState, cb) {
-        const importModules = Promise.all([System.import('containers/Support')]);
+        const importModules = Promise.all([
+          System.import('containers/Support'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -57,7 +58,9 @@ export default function createRoutes(store) {
       path: '/proxiweb/parametrage',
       name: 'parametrageProxiweb',
       getComponent(nextState, cb) {
-        const importModules = Promise.all([System.import('containers/AdminProxiweb')]);
+        const importModules = Promise.all([
+          System.import('containers/AdminProxiweb'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -71,25 +74,33 @@ export default function createRoutes(store) {
     {
       path: '/accueil/:relaiId',
       getComponent(location, cb) {
-        System.import('containers/AccueilAdherent').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/AccueilAdherent')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
       path: '/messages/:messageId',
       getComponent(location, cb) {
-        System.import('containers/Messages').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/Messages')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
       path: '/users/:userId/profile',
       getComponent(location, cb) {
-        System.import('containers/CompteUtilisateur').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/CompteUtilisateur')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
       path: '/factures/:commandeId/fournisseurs/:fournisseurId',
       getComponent(location, cb) {
-        System.import('containers/FactureFournisseur').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/FactureFournisseur')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
@@ -117,27 +128,35 @@ export default function createRoutes(store) {
     {
       path: '/relais',
       getComponent(location, cb) {
-        System.import('containers/AdminRelais').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/AdminRelais')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
       path: '/catalogue/:relaiId',
       getComponent(location, cb) {
-        System.import('containers/Catalogue').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/Catalogue')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
       childRoutes: [
         {
           path: 'typeProduits/:typeProduitId',
           name: 'catalogueTypeProduits',
           getComponent(nextState, cb) {
-            System.import('containers/Catalogue').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/Catalogue')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
           childRoutes: [
             {
               path: 'produits/:produitId',
               name: 'catalogueProduits',
               getComponent(nextState, cb) {
-                System.import('containers/Catalogue').then(loadModule(cb)).catch(errorLoading);
+                System.import('containers/Catalogue')
+                  .then(loadModule(cb))
+                  .catch(errorLoading);
               },
             },
           ],
@@ -147,26 +166,34 @@ export default function createRoutes(store) {
     {
       path: '/relais/:relaiId',
       getComponent(location, cb) {
-        System.import('containers/AdminRelais').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/AdminRelais')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
       path: '/users/:userId/porte-monnaie',
       getComponent(location, cb) {
-        System.import('containers/PorteMonnaie').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/PorteMonnaie')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
     {
       path: '/users/:userId/commandes',
       getComponent(location, cb) {
-        System.import('containers/HistoriqueCommandes').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/HistoriqueCommandes')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
       childRoutes: [
         {
           path: ':commandeId',
           name: 'utilisateurCommande',
           getComponent(nextState, cb) {
-            System.import('containers/HistoriqueCommandes').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/HistoriqueCommandes')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
         },
       ],
@@ -174,7 +201,9 @@ export default function createRoutes(store) {
     {
       path: '/login',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/Login/index')]);
+        const importModules = Promise.all([
+          System.import('containers/Login/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -208,7 +237,9 @@ export default function createRoutes(store) {
       path: '/relais/:relaiId/commandes/:commandeId',
       name: 'commande',
       getComponent(nextState, cb) {
-        System.import('containers/CommandeEdit').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/CommandeEdit')
+          .then(loadModule(cb))
+          .catch(errorLoading);
 
         // const importModules = Promise.all([
         //   // System.import('containers/CommandeEdit/reducer'),
@@ -232,14 +263,18 @@ export default function createRoutes(store) {
           path: 'typeProduits/:typeProduitId',
           name: 'typeProduits',
           getComponent(nextState, cb) {
-            System.import('containers/CommandeEdit').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/CommandeEdit')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
           childRoutes: [
             {
               path: 'produits/:produitId',
               name: 'produits',
               getComponent(nextState, cb) {
-                System.import('containers/CommandeEdit').then(loadModule(cb)).catch(errorLoading);
+                System.import('containers/CommandeEdit')
+                  .then(loadModule(cb))
+                  .catch(errorLoading);
               },
             },
           ],
@@ -266,42 +301,46 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     },
-    {
-      path: '/depots',
-      getComponent(location, cb) {
-        const importModules = Promise.all([
-          System.import('containers/AdminDepot/sagas'),
-          System.import('containers/AdminDepot/index'),
-        ]);
-
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([sagas, component]) => {
-          injectSagas(sagas.default);
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    },
-    {
-      path: '/utilisateurs',
-      getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/AdminUtilisateurs/index')]);
-
-        const renderRoute = loadModule(cb);
-
-        importModules.then(([component]) => {
-          renderRoute(component);
-        });
-
-        importModules.catch(errorLoading);
-      },
-    },
+    // {
+    //   path: '/depots',
+    //   getComponent(location, cb) {
+    //     const importModules = Promise.all([
+    //       System.import('containers/AdminDepot/sagas'),
+    //       System.import('containers/AdminDepot/index'),
+    //     ]);
+    //
+    //     const renderRoute = loadModule(cb);
+    //
+    //     importModules.then(([sagas, component]) => {
+    //       injectSagas(sagas.default);
+    //       renderRoute(component);
+    //     });
+    //
+    //     importModules.catch(errorLoading);
+    //   },
+    // },
+    // {
+    //   path: '/utilisateurs',
+    //   getComponent(location, cb) {
+    //     const importModules = Promise.all([
+    //       System.import('containers/AdminUtilisateurs/index'),
+    //     ]);
+    //
+    //     const renderRoute = loadModule(cb);
+    //
+    //     importModules.then(([component]) => {
+    //       renderRoute(component);
+    //     });
+    //
+    //     importModules.catch(errorLoading);
+    //   },
+    // },
     {
       path: '/choixrelais',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/ChoixRelais/index')]);
+        const importModules = Promise.all([
+          System.import('containers/ChoixRelais/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -315,7 +354,9 @@ export default function createRoutes(store) {
     {
       path: '/admin/relais/:relaiId/commandes',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/AdminRelaisCommandes/index')]);
+        const importModules = Promise.all([
+          System.import('containers/AdminRelaisCommandes/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -330,42 +371,54 @@ export default function createRoutes(store) {
           path: 'nouvelle',
           name: 'NouvelleCommande',
           getComponent(nextState, cb) {
-            System.import('containers/AdminNouvelleCommande').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/AdminNouvelleCommande')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
         },
         {
           path: ':commandeId/paiements',
           name: 'PaiementCommande',
           getComponent(nextState, cb) {
-            System.import('containers/AdminPaiementsCommande').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/AdminPaiementsCommande')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
         },
         {
           path: ':commandeId/utilisateurs',
           name: 'UtilisateurCommande',
           getComponent(nextState, cb) {
-            System.import('containers/AdminCommandeUtilisateur').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/AdminCommandeUtilisateur')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
         },
         {
           path: ':commandeId/finalisation',
           name: 'FinalisationCommande',
           getComponent(nextState, cb) {
-            System.import('containers/AdminFinalisationCommande').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/AdminFinalisationCommande')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
         },
         {
           path: ':commandeId/edit',
           name: 'ModifCommande',
           getComponent(nextState, cb) {
-            System.import('containers/AdminNouvelleCommande').then(loadModule(cb)).catch(errorLoading);
+            System.import('containers/AdminNouvelleCommande')
+              .then(loadModule(cb))
+              .catch(errorLoading);
           },
         },
         {
           path: ':commandeId',
           name: 'utilisateursCommande',
           getComponent(nextState, cb) {
-            System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+            System.import(
+              'containers/AdminRelaisCommandes/components/AdminDetailsCommande'
+            )
               .then(loadModule(cb))
               .catch(errorLoading);
           },
@@ -374,7 +427,9 @@ export default function createRoutes(store) {
               path: 'utilisateurs/:utilisateurId',
               name: 'utilisateurCommande',
               getComponent(nextState, cb) {
-                System.import('containers/AdminRelaisCommandes/components/AdminDetailsCommande')
+                System.import(
+                  'containers/AdminRelaisCommandes/components/AdminDetailsCommande'
+                )
                   .then(loadModule(cb))
                   .catch(errorLoading);
               },
@@ -386,7 +441,9 @@ export default function createRoutes(store) {
     {
       path: 'fournisseurs/:fournisseurId/factures',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/FacturesFournisseur/index')]);
+        const importModules = Promise.all([
+          System.import('containers/FacturesFournisseur/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -401,7 +458,9 @@ export default function createRoutes(store) {
           path: ':commandeId',
           name: 'FactureCommande',
           getComponent(nextState, cb) {
-            System.import('containers/FacturesFournisseur/containers/FactureFournisseur')
+            System.import(
+              'containers/FacturesFournisseur/containers/FactureFournisseur'
+            )
               .then(loadModule(cb))
               .catch(errorLoading);
           },
@@ -411,7 +470,9 @@ export default function createRoutes(store) {
     {
       path: 'fournisseurs/:fournisseurId/infos',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/AdminFournisseurInfos/index')]);
+        const importModules = Promise.all([
+          System.import('containers/AdminFournisseurInfos/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -425,7 +486,9 @@ export default function createRoutes(store) {
     {
       path: 'distributeurs/:relaiId/factures',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/FacturesDistributeur/index')]);
+        const importModules = Promise.all([
+          System.import('containers/FacturesDistributeur/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -440,7 +503,9 @@ export default function createRoutes(store) {
           path: ':commandeId',
           name: 'FactureCommande',
           getComponent(nextState, cb) {
-            System.import('containers/FacturesDistributeur/containers/FactureDistributeur')
+            System.import(
+              'containers/FacturesDistributeur/containers/FactureDistributeur'
+            )
               .then(loadModule(cb))
               .catch(errorLoading);
           },
@@ -451,7 +516,9 @@ export default function createRoutes(store) {
       path: 'fournisseurs/:fournisseurId/commandes',
       name: 'CommandesFournisseur',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/CommandesFournisseur/index')]);
+        const importModules = Promise.all([
+          System.import('containers/CommandesFournisseur/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -466,7 +533,9 @@ export default function createRoutes(store) {
           path: ':commandeId',
           name: 'CommandeFournisseur',
           getComponent(nextState, cb) {
-            System.import('containers/CommandesFournisseur/containers/CommandeFournisseur')
+            System.import(
+              'containers/CommandesFournisseur/containers/CommandeFournisseur'
+            )
               .then(loadModule(cb))
               .catch(errorLoading);
           },
@@ -476,7 +545,9 @@ export default function createRoutes(store) {
     {
       path: 'fournisseurs/:fournisseurId/catalogue',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/AdminFournisseur/index')]);
+        const importModules = Promise.all([
+          System.import('containers/AdminFournisseur/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -501,7 +572,9 @@ export default function createRoutes(store) {
     {
       path: '/communications/:communicationId',
       getComponent(location, cb) {
-        const importModules = Promise.all([System.import('containers/AdminCommunication/index')]);
+        const importModules = Promise.all([
+          System.import('containers/AdminCommunication/index'),
+        ]);
 
         const renderRoute = loadModule(cb);
 
@@ -516,7 +589,9 @@ export default function createRoutes(store) {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {
-        System.import('containers/NotFoundPage').then(loadModule(cb)).catch(errorLoading);
+        System.import('containers/NotFoundPage')
+          .then(loadModule(cb))
+          .catch(errorLoading);
       },
     },
   ];

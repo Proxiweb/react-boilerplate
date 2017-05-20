@@ -1,16 +1,16 @@
 /* eslint-disable */
 import React from 'react';
+import PropTypes from 'prop-types';
 import matchMedia from 'matchmedia';
 import hyphenate from 'hyphenate-style-name';
 import mediaQuery from './mediaQuery';
 import toQuery from './toQuery';
 
-
 const defaultTypes = {
-  component: React.PropTypes.node,
-  query: React.PropTypes.string,
-  values: React.PropTypes.shape(mediaQuery.matchers),
-  children: React.PropTypes.oneOfType([React.PropTypes.node, React.PropTypes.func]),
+  component: PropTypes.node,
+  query: PropTypes.string,
+  values: PropTypes.shape(mediaQuery.matchers),
+  children: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
 };
 const mediaKeys = Object.keys(mediaQuery.all);
 const excludedQueryKeys = Object.keys(defaultTypes);
@@ -18,17 +18,17 @@ const excludedPropKeys = excludedQueryKeys.concat(mediaKeys);
 
 function omit(object, keys) {
   const newObject = { ...object };
-  keys.forEach((key) => delete newObject[key]);
+  keys.forEach(key => delete newObject[key]);
   return newObject;
 }
 
 export default class MediaQuery extends React.Component {
-  static displayName = 'MediaQuery'
+  static displayName = 'MediaQuery';
   static defaultProps = {
-    values: {},
-  }
+    values: {}
+  };
 
-  state = { matches: false }
+  state = { matches: false };
 
   componentWillMount() {
     this.updateQuery(this.props);
@@ -51,11 +51,10 @@ export default class MediaQuery extends React.Component {
     }
 
     if (props.values) {
-      values = Object.keys(props.values)
-        .reduce((result, key) => {
-          result[hyphenate(key)] = props.values[key];
-          return result;
-        }, {});
+      values = Object.keys(props.values).reduce((result, key) => {
+        result[hyphenate(key)] = props.values[key];
+        return result;
+      }, {});
     }
 
     if (this._mql) {
@@ -67,7 +66,6 @@ export default class MediaQuery extends React.Component {
     this.updateMatches();
   }
 
-
   componentWillUnmount() {
     this._mql.removeListener(this.updateMatches);
   }
@@ -77,9 +75,9 @@ export default class MediaQuery extends React.Component {
       return;
     }
     this.setState({
-      matches: this._mql.matches,
+      matches: this._mql.matches
     });
-  }
+  };
 
   render() {
     if (typeof this.props.children === 'function') {
@@ -92,10 +90,11 @@ export default class MediaQuery extends React.Component {
     const props = omit(this.props, excludedPropKeys);
     const hasMergeProps = Object.keys(props).length > 0;
     const childrenCount = React.Children.count(this.props.children);
-    const wrapChildren = this.props.component ||
+    const wrapChildren =
+      this.props.component ||
       childrenCount > 1 ||
       typeof this.props.children === 'string' ||
-      Array.isArray(this.props.children) && childrenCount == 1 ||
+      (Array.isArray(this.props.children) && childrenCount == 1) ||
       this.props.children === undefined;
     if (wrapChildren) {
       return React.createElement(
@@ -104,14 +103,10 @@ export default class MediaQuery extends React.Component {
         this.props.children
       );
     } else if (hasMergeProps) {
-      return React.cloneElement(
-        this.props.children,
-        props
-      );
+      return React.cloneElement(this.props.children, props);
     } else if (childrenCount) {
       return this.props.children;
-    }
-    else {
+    } else {
       return null;
     }
   }

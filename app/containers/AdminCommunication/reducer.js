@@ -1,5 +1,5 @@
 import c, { SET_MESSAGE, ADD_DESTINATAIRE, REMOVE_DESTINATAIRE } from './constants';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import findIndex from 'lodash/findIndex';
 import assign from 'lodash/assign';
 

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import CustomSelectField from 'components/CustomSelectField';

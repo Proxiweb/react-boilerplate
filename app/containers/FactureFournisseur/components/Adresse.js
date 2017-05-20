@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 
 export default class Adresse extends Component { // eslint-disable-line

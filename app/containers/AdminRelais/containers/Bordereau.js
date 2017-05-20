@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
 import round from 'lodash/round';
 import {

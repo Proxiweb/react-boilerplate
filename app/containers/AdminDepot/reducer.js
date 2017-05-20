@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 import adminUtilisateursReducer from 'containers/AdminUtilisateurs/reducer';
 import adminRelaisReducer from 'containers/AdminRelais/reducer';
 import AdminCommunicationReducer from 'containers/AdminCommunication/reducer';

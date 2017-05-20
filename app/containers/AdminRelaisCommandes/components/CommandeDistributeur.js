@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import DetailCommandeDistributeur from './DetailCommandeDistributeur';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import DetailCommandeTotal from './DetailCommandeTotal';
