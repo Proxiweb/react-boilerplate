@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import Dialog from 'material-ui/Dialog';
@@ -15,7 +16,6 @@ class DateLimiteDialog extends Component {
 
   render() {
     const { open, dateLimite, changeDateLimite, handleClose } = this.props;
-    console.log(dateLimite);
     return (
       <Dialog
         title="Modifier la date limite"

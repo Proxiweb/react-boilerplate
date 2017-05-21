@@ -84,26 +84,20 @@ class ListeAcheteurs extends Component {
     // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
     const acheteurs = commandeUtilisateurs
       .filter(cu => cu.commandeId === commandeId)
-      .map(cu => ({
-        ...cu,
-        utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
-        debutLivraisonISO: livraisons[cu.livraisonId]
-          ? format(
-              addMinutes(
-                livraisons[cu.livraisonId].debut,
-                livraisons[cu.livraisonId].plageHoraire
-              )
-            )
-          : null,
-        debutLivraisonUnix: livraisons[cu.livraisonId]
-          ? getTime(
-              addMinutes(
-                livraisons[cu.livraisonId].debut,
-                livraisons[cu.livraisonId].plageHoraire
-              )
-            )
-          : 0,
-      }))
+      .map(cu => {
+        const distribution = distributions.find(d => d.id === cu.livraisonId);
+
+        return {
+          ...cu,
+          utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
+          debutLivraisonISO: distribution
+            ? format(addMinutes(distribution.debut, distribution.plageHoraire))
+            : null,
+          debutLivraisonUnix: distribution
+            ? getTime(addMinutes(distribution.debut, distribution.plageHoraire))
+            : 0,
+        };
+      })
       .slice()
       .sort(
         (cu1, cu2) =>

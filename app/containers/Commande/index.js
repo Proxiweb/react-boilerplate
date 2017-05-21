@@ -8,6 +8,7 @@ import startOfDay from 'date-fns/start_of_day';
 import endOfDay from 'date-fns/end_of_day';
 import startOfWeek from 'date-fns/start_of_week';
 import endOfWeek from 'date-fns/end_of_week';
+import isAfter from 'date-fns/is_after';
 import flatten from 'lodash/flatten';
 import uniq from 'lodash/uniq';
 import includes from 'lodash/includes';
@@ -92,19 +93,22 @@ export class Commande extends React.Component {
     const commande = commandes[id];
     return uniq(
       flatten(
-        commande.fournisseurs
-          .filter(frnId => fournisseurs.find(frn => frn.id === frnId))
-          .map(
-            frnId =>
-              Object.keys(produits)
-                .filter(
-                  pdtId =>
-                    produits[pdtId].visible &&
-                    produits[pdtId].fournisseurId === frnId
-                )
-                .map(pdtId => produits[pdtId].typeProduitId)
-                .map(typePdtId => typesProduits[typePdtId].nom)
-            // .find(pdtId => produits[pdtId].fournisseurId === frnId)
+        commande.datesLimites
+          .filter(
+            dL =>
+              fournisseurs[dL.fournisseurId] &&
+              fournisseurs[dL.fournisseurId].visible &&
+              (!dL.dateLimite || isAfter(dL.dateLimite, this.state.lastUpdated))
+          )
+          .map(dL =>
+            Object.keys(produits)
+              .filter(
+                pdtId =>
+                  produits[pdtId].visible &&
+                  produits[pdtId].fournisseurId === dL.fournisseurId
+              )
+              .map(pdtId => produits[pdtId].typeProduitId)
+              .map(typePdtId => typesProduits[typePdtId].nom)
           )
       )
     );
@@ -175,7 +179,6 @@ export class Commande extends React.Component {
     const { buttonClicked, lastUpdated } = this.state;
 
     const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
-
     if (
       !buttonClicked &&
       commandes &&

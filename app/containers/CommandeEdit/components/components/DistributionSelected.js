@@ -20,15 +20,17 @@ class DistributionSelected extends Component {
   };
 
   render() {
-    const { livraison, noPlageHoraire, relais } = this.props;
+    const { commande, noPlageHoraire, relais, livraisonId } = this.props;
+
+    const distribution = commande.distributions.find(d => d.id === livraisonId);
     const ranges = buildHoursRanges(
-      livraison.debut,
-      livraison.fin,
+      distribution.debut,
+      distribution.fin,
       relais.rangeDistribMinutes
     )[noPlageHoraire];
     return (
       <div>
-        {format(livraison.debut, '[ Distribution le ] dddd Do MMMM [de] ')}
+        {format(distribution.debut, '[ Distribution le ] dddd Do MMMM [de] ')}
         {ranges.join(' à ')}
       </div>
     );

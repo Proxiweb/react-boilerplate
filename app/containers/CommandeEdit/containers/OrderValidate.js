@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { bindActionCreators } from 'redux';
@@ -9,6 +10,7 @@ import isBefore from 'date-fns/is_before';
 import { format } from 'utils/dates';
 import isAfter from 'date-fns/is_after';
 import addYears from 'date-fns/add_years';
+import addMinutes from 'date-fns/add_minutes';
 import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
 import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
 import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';

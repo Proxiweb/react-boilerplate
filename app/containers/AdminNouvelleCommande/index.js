@@ -228,7 +228,6 @@ class NouvelleCommande extends Component {
       qteMin,
       qteMinRelai,
     } = parametres;
-    console.log(datesLimites);
     const { commandeId, relaiId } = this.props.params;
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {

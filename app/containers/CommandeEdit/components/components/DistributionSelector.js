@@ -72,18 +72,18 @@ class DistributionSelector extends Component {
           {commande.distributions.map((dist, idx1) => (
             <List key={idx1}>
               <Subheader className={styles.subHeader}>
-                {format(livr.debut, 'dddd Do MMMM')}
+                {format(dist.debut, 'dddd Do MMMM')}
               </Subheader>
               {buildHoursRanges(
-                livr.debut,
-                livr.fin,
+                dist.debut,
+                dist.fin,
                 range
               ).map((data, idx) => (
                 <ListItem
                   onClick={() => selectionnePlageHoraire(idx, dist.id)}
                   key={idx}
                   style={
-                    idx === plageHoraire && livraisonId === livr.id
+                    idx === plageHoraire && livraisonId === dist.id
                       ? comptutedStyles.selected
                       : {}
                   }
