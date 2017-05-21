@@ -22,6 +22,7 @@ import DistributionSelector
 import DistributionSelected
   from 'containers/CommandeEdit/components/components/DistributionSelected';
 import Paiement from 'containers/CommandeEdit/components/Paiement';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
 
 import {
   ajouter,
@@ -126,12 +127,13 @@ class OrderValidate extends Component {
   showValidate = () => {
     const {
       commande,
-      params,
+      params: { commandeId },
       utilisateurId,
       pending,
       commandeContenus,
+      offres,
     } = this.props;
-    const { commandeId } = params;
+
     const { palette } = this.context.muiTheme;
     let label = null;
     let textButtonColor = null;
@@ -145,6 +147,14 @@ class OrderValidate extends Component {
       label = pending ? 'Validation de la commande...' : 'Valider la commande';
       textButtonColor = 'white';
     }
+
+    const { prix, recolteFond } = calculeTotauxCommande({
+      commandeContenus,
+      offres,
+      commandeId,
+      filter: cc => cc.utilisateurId === utilisateurId,
+    });
+
     return (
       <div className={styles.validation}>
         <RaisedButton
@@ -161,6 +171,8 @@ class OrderValidate extends Component {
               assign(commande, {
                 commandeId,
                 utilisateurId,
+                montant: prix,
+                recolteFond,
                 contenus: commande.contenus.map(id => ({
                   ...commandeContenus[id],
                   id,
@@ -293,6 +305,7 @@ class OrderValidate extends Component {
       offreCotisation,
       utilisateurId,
       cotisationId,
+      autreUtilisateur,
     } = this.props;
 
     const cotisationDansCommande = Object.keys(commandeContenus).find(
