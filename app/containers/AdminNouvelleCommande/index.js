@@ -8,6 +8,8 @@ import setISODay from 'date-fns/set_iso_day';
 import addHours from 'date-fns/add_hours';
 import addMinutes from 'date-fns/add_minutes';
 import isAfter from 'date-fns/is_after';
+import startOfWeek from 'date-fns/start_of_week';
+import startOfDay from 'date-fns/start_of_day';
 import { format } from 'utils/dates';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -115,13 +117,15 @@ class NouvelleCommande extends Component {
     if (infosRelai && infosRelai.limiteCommande) {
       const { jourSemaine, heure } = infosRelai.limiteCommande;
       const [heures, minutes] = infosRelai.limiteCommande.heure.split(':');
-      dateLimiteFournisseur = moment(dateLimite)
-        .startOf('week')
-        .startOf('day')
-        .add(jourSemaine, 'days')
-        .add(parseInt(heures, 10), 'hours')
-        .add(parseInt(minutes, 10), 'minutes')
-        .toISOString();
+      dateLimiteFournisseur = format(
+        addHours(
+          addMinutes(
+            addDays(startOfDay(startOfWeek(dateLimite)), jourSemaine),
+            parseInt(minutes, 10)
+          ),
+          parseInt(heures, 10)
+        )
+      );
     }
 
     this.setState({
@@ -149,7 +153,7 @@ class NouvelleCommande extends Component {
         dL =>
           dL.fournisseurId !== fournisseurId
             ? { ...dL }
-            : { ...dL, dateLimite: moment(date).toISOString() }
+            : { ...dL, dateLimite: format(date) }
       ),
     });
 
@@ -238,7 +242,11 @@ class NouvelleCommande extends Component {
       montantMinRelai,
       qteMin,
       qteMinRelai,
-      distributions: distributions.map(d => ({ ...d, relaiId, id: uuid.v4() })),
+      distributions: distributions.map(d => ({
+        ...d,
+        relaiId,
+        id: d.id ? d.id : uuid.v4(),
+      })),
       datesLimites,
     };
 

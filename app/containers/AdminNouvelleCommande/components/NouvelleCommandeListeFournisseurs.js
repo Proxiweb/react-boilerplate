@@ -1,12 +1,13 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
+import { format } from 'utils/dates';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
-
+import parse from 'date-fns/parse';
 import DateLimiteDialog from './DateLimiteDialog';
-import moment from 'moment';
 const SelectableList = makeSelectable(List);
 import styles from './styles.css';
 
@@ -32,21 +33,22 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
   handleClose = () => this.setState({ fournisseurSelectedId: null });
 
   handleModifDate = (scope, value) => {
-    const dateLimite = moment(this.getDateLimite())
-      .format('YYYY-MM-DD HH:mm:ss')
-      .split(' ');
+    const dateLimite = format(
+      this.getDateLimite(),
+      'YYYY-MM-DD HH:mm:ss'
+    ).split(' ');
     let heure = null;
     let date = null;
     if (scope === 'dateLimite') {
       heure = dateLimite[1];
-      date = moment(value).format('YYYY-MM-DD');
+      date = format(value, 'YYYY-MM-DD');
     } else {
       date = dateLimite[0];
-      heure = moment(value).format('HH:mm:ss');
+      heure = format(value, 'HH:mm:ss');
     }
     this.props.onModifDateLimiteFourn(
       this.state.fournisseurSelectedId,
-      moment(`${date} ${heure}`, 'YYYY-MM-DD HH:mm:ss').toISOString()
+      format(parse(`${date}T${heure}`))
     );
   };
 
@@ -56,6 +58,7 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
           f => f.fournisseurId === this.state.fournisseurSelectedId
         ).dateLimite
       : null;
+
   render() {
     const { fournisseurs, datesLimites, delFourn } = this.props;
     const { fournisseurSelectedId } = this.state;
@@ -111,7 +114,9 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
                       .nom.toUpperCase()}
                     value={`${dL.fournisseurId}`}
                     secondaryText={
-                      dL.dateLimite ? moment(dL.dateLimite).format('LLL') : null
+                      dL.dateLimite
+                        ? format(dL.dateLimite, 'dddd DD MMMM HH:mm ')
+                        : null
                     }
                     rightIconButton={
                       <IconMenu
