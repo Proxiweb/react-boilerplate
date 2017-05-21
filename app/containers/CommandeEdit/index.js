@@ -4,7 +4,8 @@
  *
  */
 
-import React from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { push } from 'react-router-redux';
@@ -156,8 +157,9 @@ export class CommandeEdit extends React.Component {
         prod => prod.typeProduitId === premierTypeProduit.id && prod.enStock
       );
       if (pdts && pdts.length) {
-        this.props
-          .pushState(`/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`);
+        this.props.pushState(
+          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`
+        );
       }
     }
   }
@@ -335,6 +337,7 @@ export class CommandeEdit extends React.Component {
                 panierExpanded={false}
                 balance={balance}
                 commande={commande}
+                autreUtilisateur={autreUtilisateur !== null}
               />}
           </div>
         </MediaQuery>

@@ -89,6 +89,7 @@ class OrderValidate extends Component {
     commandeProxiweb: PropTypes.object.isRequired,
     balance: PropTypes.number,
     panierExpanded: PropTypes.bool.isRequired,
+    autreUtilisateur: PropTypes.bool.isRequired,
 
     sauvegarder: PropTypes.func.isRequired,
     annuler: PropTypes.func.isRequired,
@@ -332,6 +333,8 @@ class OrderValidate extends Component {
           (!commande.createdAt || !commande.updatedAt) &&
           this.showValidate()}
         {view === 'panier' &&
+          /* si passage de commande, pas de gestion cotisation */
+          !autreUtilisateur &&
           !cotisationAJour &&
           offreCotisation &&
           !cotisationDansCommande &&
