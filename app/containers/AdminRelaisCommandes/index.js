@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -91,7 +92,7 @@ class AdminRelaisCommandes extends Component {
 
     return (
       <div className="row">
-        <div className={classnames('col-md-3', styles.panel)}>
+        <div className={classnames('col-md-2', styles.panel)}>
           {!children &&
             <NewCommandeButton
               commandeId={commandeId}

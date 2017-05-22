@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import { bindActionCreators } from 'redux';
@@ -102,7 +103,7 @@ class AdminDetailsCommande extends Component {
     return (
       <div className="row">
         <Helmet title={`Commande ${commande.id}`} />
-        <div className={`col-md-4 col-lg-3 ${styles.listeAcheteursContainer}`}>
+        <div className={`col-md-4 ${styles.listeAcheteursContainer}`}>
           {commandeUtilisateurs &&
             contenus &&
             utils &&
@@ -121,7 +122,7 @@ class AdminDetailsCommande extends Component {
               onChange={this.handleChangeList}
             />}
         </div>
-        <div className="col-md-8 col-lg-9">
+        <div className="col-md-8">
           {!children &&
             commandeUtilisateurs &&
             contenus &&

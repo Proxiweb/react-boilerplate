@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
@@ -20,7 +21,7 @@ class DetailCommandeWrapper extends Component {
     return (
       <div
         className={classnames(
-          'col-md-9',
+          'col-md-10',
           styles.panel,
           { [styles.nouvelleCommande]: !commandeId },
           {

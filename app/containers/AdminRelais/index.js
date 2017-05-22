@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import includes from 'lodash/includes';
@@ -30,7 +31,10 @@ import { loadRelais } from './actions';
 import { loadUtilisateurs } from 'containers/Commande/actions';
 import { selectUtilisateurs } from 'containers/Commande/selectors';
 
-import { selectRoles, selectRelaiId } from 'containers/CompteUtilisateur/selectors';
+import {
+  selectRoles,
+  selectRelaiId,
+} from 'containers/CompteUtilisateur/selectors';
 
 const SelectableList = makeSelectable(List);
 import StellarAccount from 'components/StellarAccount';
@@ -65,7 +69,9 @@ class AdminRelais extends Component {
       this.setState({ viewSelected: null });
       if (
         !utilisateurs ||
-        !Object.keys(utilisateurs).filter(k => utilisateurs[k].relaiId === nextProps.params.relaiId).length
+        !Object.keys(utilisateurs).filter(
+          k => utilisateurs[k].relaiId === nextProps.params.relaiId
+        ).length
       ) {
         loadUtil({ relaiId: nextProps.params.relaiId });
       }
@@ -96,7 +102,13 @@ class AdminRelais extends Component {
             <SelectableList value={relaiId} onChange={this.handleChangeList}>
               {relais
                 .filter(r => admin || r.id === authRelaiId)
-                .map((rel, idx) => <ListItem key={idx} primaryText={rel.nom.toUpperCase()} value={rel.id} />)}
+                .map((rel, idx) => (
+                  <ListItem
+                    key={idx}
+                    primaryText={rel.nom.toUpperCase()}
+                    value={rel.id}
+                  />
+                ))}
             </SelectableList>
           </div>}
         <div
@@ -114,7 +126,8 @@ class AdminRelais extends Component {
                 <FlatButton
                   label="Commandes en cours"
                   icon={<ShoppingCartIcon />}
-                  onClick={() => pushState(`/relais/${relaiId}/commandes`)}
+                  onClick={() =>
+                    pushState(`/admin/relais/${relaiId}/commandes`)}
                 />}
               {relaisSelected && [
                 <FlatButton
@@ -130,7 +143,8 @@ class AdminRelais extends Component {
                 <FlatButton
                   label="Fournisseurs"
                   icon={<FournisseursIcon />}
-                  onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
+                  onClick={() =>
+                    this.setState({ viewSelected: 'fournisseurs' })}
                 />,
                 <FlatButton
                   label="Infos"
@@ -143,14 +157,18 @@ class AdminRelais extends Component {
           {viewSelected === 'depot' &&
             utilisateurs &&
             <DepotsRelais relaiId={relaiId} utilisateurs={utilisateurs} />}
-          {viewSelected === 'fournisseurs' && <FournisseursRelais relaiId={relaiId} params={params} />}
-          {viewSelected === 'infos' && <InfosRelais relais={relaisSelected} params={params} test="5" />}
-          {(viewSelected === 'adherents' || viewSelected === 'nouvel_adherent') &&
+          {viewSelected === 'fournisseurs' &&
+            <FournisseursRelais relaiId={relaiId} params={params} />}
+          {viewSelected === 'infos' &&
+            <InfosRelais relais={relaisSelected} params={params} test="5" />}
+          {(viewSelected === 'adherents' ||
+            viewSelected === 'nouvel_adherent') &&
             <div className={`row ${styles.adherents}`}>
               <div className="col-md-4">
                 <ListeUtilisateurs
                   relaiId={relaiId}
-                  onChangeList={(event, value) => this.setState({ ...this.state, utilisateurId: value })}
+                  onChangeList={(event, value) =>
+                    this.setState({ ...this.state, utilisateurId: value })}
                 />
               </div>
               <div className="col-md-8">
@@ -160,13 +178,16 @@ class AdminRelais extends Component {
                 {utilisateur && <Utilisateur utilisateur={utilisateur} />}
                 {utilisateur &&
                   utilisateur.stellarKeys &&
-                  <StellarAccount stellarAdr={utilisateur.stellarKeys.adresse} />}
+                  <StellarAccount
+                    stellarAdr={utilisateur.stellarKeys.adresse}
+                  />}
                 {!utilisateur &&
                   viewSelected === 'adherents' &&
                   <ActionsDiverses
                     utilisateurs={utilisateurs}
                     relaiId={relaiId}
-                    setView={viewName => this.setState({ ...this.state, viewSelected: viewName })}
+                    setView={viewName =>
+                      this.setState({ ...this.state, viewSelected: viewName })}
                   />}
               </div>
             </div>}

@@ -1,10 +1,10 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import HistoryIcon from 'material-ui/svg-icons/action/history';
-import SearchIcon from 'material-ui/svg-icons/action/search';
 import DoneIcon from 'material-ui/svg-icons/action/done';
 
 import getTime from 'date-fns/get_time';
@@ -97,9 +97,10 @@ class ListeCommandes extends Component {
           <SelectableList
             value={commandeId}
             style={{
-              minHeight: 'calc(100vh - 180px)',
-              maxHeight: 'calc(100vh - 180px)',
+              minHeight: 'calc(100vh - 185px)',
+              maxHeight: 'calc(100vh - 185px)',
               overflowY: 'auto',
+              marginTop: '5px',
             }}
           >
             {commandesFiltredIds
@@ -136,11 +137,6 @@ class ListeCommandes extends Component {
                 label="Récentes"
                 icon={<HistoryIcon />}
                 onTouchTap={() => this.handleChangeFiltre(1)}
-              />
-              <BottomNavigationItem
-                label="Chercher"
-                icon={<SearchIcon />}
-                onTouchTap={() => this.handleChangeFiltre(2)}
               />
             </BottomNavigation>
           </div>

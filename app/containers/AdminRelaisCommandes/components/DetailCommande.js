@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import groupBy from 'lodash/groupBy';
 import DetailCommandeProduit from './DetailCommandeProduit';
 import includes from 'lodash/includes';
@@ -58,7 +59,7 @@ export default class DetailsCommande extends Component {
     );
 
     const { muiTheme } = this.context;
-    const isAdmin = includes(roles, 'ADMIN');
+    const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
 
     return (
       <Table

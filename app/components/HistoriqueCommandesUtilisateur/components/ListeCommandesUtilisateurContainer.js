@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
@@ -66,7 +67,7 @@ class ListeCommandesUtilisateurContainer extends Component {
         {commandes.map((cde, idx) => (
           <ListItem
             key={idx}
-            primaryText={format(cde.dateCommande).format('DD MMMM')}
+            primaryText={format(cde.dateCommande, 'DD MMMM')}
             value={cde.id}
           />
         ))}

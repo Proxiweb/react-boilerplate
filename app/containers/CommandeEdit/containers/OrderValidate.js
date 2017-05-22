@@ -371,10 +371,7 @@ class OrderValidate extends Component {
             balance={balance}
             offres={offres}
             pending={pending}
-            dateLimite={format(
-              commandeProxiweb.dateCommande,
-              'DDDD DD MM YYYY'
-            )}
+            dateLimite={format(commandeProxiweb.dateCommande, 'dddd DD MMMM ')}
           />}
       </div>
     );

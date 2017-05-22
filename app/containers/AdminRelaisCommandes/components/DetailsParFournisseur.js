@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
@@ -124,11 +125,11 @@ class DetailsParFournisseur extends Component {
             contacterAcheteurs={this.handleContacterAcheteurs}
           />}
         <div className={`col-md-4 ${styles.totalDistrib}`}>
-          Total Commande:{' '}
+          Total Cde:{' '}
           <strong>{parseFloat(totaux.prix).toFixed(2)} €</strong>
         </div>
         <div className={`col-md-4 ${styles.totalDistrib}`}>
-          Total Distributeur:{' '}
+          Total Dist:{' '}
           <strong>{parseFloat(totaux.recolteFond).toFixed(2)} €</strong>
         </div>
         <div className={`col-md-4 ${styles.totalDistrib}`}>

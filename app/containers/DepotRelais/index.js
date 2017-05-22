@@ -1,4 +1,5 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import includes from 'lodash/includes';
@@ -130,7 +131,8 @@ class DepotRelais extends Component {
         title={`Déposer des fonds ( max ${max} €)`}
         actions={[
           <FlatButton label="Annuler" primary onTouchTap={onRequestClose} />,
-          includes(roles, 'ADMIN') && stellarKeys
+          (includes(roles, 'ADMIN') || includes(roles, 'DEPOT_DIRECT')) &&
+            stellarKeys
             ? <RaisedButton
               label="Depot express"
               primary
