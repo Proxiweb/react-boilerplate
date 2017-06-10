@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import DetailCommandeDistributeur from "./DetailCommandeDistributeur";
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import DetailCommandeTotal from "./DetailCommandeTotal";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import DetailCommandeDistributeur from './DetailCommandeDistributeur';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import DetailCommandeTotal from './DetailCommandeTotal';
 
 class CommandeFournisseur extends Component {
   // eslint-disable-line
@@ -14,7 +14,7 @@ class CommandeFournisseur extends Component {
     produits: PropTypes.array.isRequired,
     commandeId: PropTypes.string.isRequired,
     supprimeCommandeContenusFournisseur: PropTypes.func.isRequired,
-    key: PropTypes.string.isRequired
+    key: PropTypes.string.isRequired,
   };
 
   render() {
@@ -25,7 +25,7 @@ class CommandeFournisseur extends Component {
       contenus,
       offres,
       commandeContenus,
-      commandeId
+      commandeId,
     });
 
     return (

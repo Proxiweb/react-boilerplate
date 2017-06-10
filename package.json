@@ -48,7 +48,7 @@
     "test:safari": "npm run test -- --browsers Safari",
     "test:ie": "npm run test -- --browsers IE",
     "coveralls": "cat ./coverage/lcov/lcov.info | coveralls",
-    "prettier": "prettier --print-width 110"
+    "prettier": "prettier --print-width 110 --single-quote --trailing-comma es5"
   },
   "lint-staged": {
     "*.js": "lint:eslint",

@@ -1,16 +1,16 @@
-import c, { SET_MESSAGE, ADD_DESTINATAIRE, REMOVE_DESTINATAIRE } from "./constants";
-import update from "immutability-helper";
-import findIndex from "lodash/findIndex";
-import assign from "lodash/assign";
+import c, { SET_MESSAGE, ADD_DESTINATAIRE, REMOVE_DESTINATAIRE } from './constants';
+import update from 'immutability-helper';
+import findIndex from 'lodash/findIndex';
+import assign from 'lodash/assign';
 
 const initialState = {
   datas: [],
   message: {
-    sms: "",
-    objet: "",
-    html: "<p>test</p>"
+    sms: '',
+    objet: '',
+    html: '<p>test</p>',
   },
-  destinataires: []
+  destinataires: [],
 };
 
 const addDest = (state, action) => {
@@ -20,7 +20,7 @@ const addDest = (state, action) => {
     return update(state, { destinataires: { $push: [action] } });
   }
 
-  const dest = assign(state.destinataires[idx], { etat: "attente" });
+  const dest = assign(state.destinataires[idx], { etat: 'attente' });
   if (action.telPortable) dest.telPortable = action.telPortable;
   if (action.email) dest.email = action.email;
 
@@ -35,8 +35,8 @@ const removeDest = (state, action) => {
   if (!dest.email && !dest.telPortable) {
     return update(state, {
       destinataires: {
-        $set: state.destinataires.filter(d => d.id !== dest.id)
-      }
+        $set: state.destinataires.filter(d => d.id !== dest.id),
+      },
     });
   }
 
@@ -48,7 +48,7 @@ const changeDest = (state, destinataire) => {
     if (com.id !== destinataire.communicationId) return com;
     return {
       ...com,
-      destinataires: com.destinataires.map(d => (d.id === destinataire.id ? destinataire : d))
+      destinataires: com.destinataires.map(d => (d.id === destinataire.id ? destinataire : d)),
     };
   });
 
@@ -69,7 +69,7 @@ const adminCommunicationsReducer = (state = initialState, action) => {
       return addDest(state, action.payload);
     case REMOVE_DESTINATAIRE:
       return removeDest(state, action.payload);
-    case "WS/COMMUNICATION_CHANGE":
+    case 'WS/COMMUNICATION_CHANGE':
       return changeDest(state, action.datas);
     default:
       return state;

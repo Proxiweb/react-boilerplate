@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   Table,
   TableHeader,
   TableBody,
   TableRow,
   TableRowColumn,
-  TableHeaderColumn
-} from "material-ui/Table";
-import { format } from "utils/dates";
-import round from "lodash/round";
-import api from "utils/stellarApi";
-import RefreshIndicator from "material-ui/RefreshIndicator";
+  TableHeaderColumn,
+} from 'material-ui/Table';
+import { format } from 'utils/dates';
+import round from 'lodash/round';
+import api from 'utils/stellarApi';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 const mergeEffectInfos = effect =>
   new Promise((resolve, reject) =>
@@ -30,7 +30,7 @@ const mergeEffectInfos = effect =>
               type,
               memo,
               created_at,
-              source_account_sequence
+              source_account_sequence,
             });
           })
           .catch(err => reject(err));
@@ -42,11 +42,11 @@ export default class ListeEffetsCompteStellar extends Component {
   // eslint-disable-line
   static propTypes = {
     stellarAddress: PropTypes.string.isRequired,
-    limit: PropTypes.number
+    limit: PropTypes.number,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -78,7 +78,7 @@ export default class ListeEffetsCompteStellar extends Component {
           left={120}
           top={200}
           status="loading"
-          style={{ display: "inline-block", position: "relative" }}
+          style={{ display: 'inline-block', position: 'relative' }}
         />
       );
     }
@@ -86,10 +86,10 @@ export default class ListeEffetsCompteStellar extends Component {
     const { effects } = this.state;
     const { palette } = this.context.muiTheme;
     const headeStyle = {
-      textAlign: "center",
+      textAlign: 'center',
       backgroundColor: palette.tableHeaderBackgroundColor,
-      color: "black",
-      fontSize: "16px"
+      color: 'black',
+      fontSize: '16px',
     };
     return (
       <Table selectable={false} multiSelectable={false} className={styles.bordered}>
@@ -115,17 +115,17 @@ export default class ListeEffetsCompteStellar extends Component {
                 selectable={false}
                 displayBorder
                 style={{
-                  borderBottom: "solid 1px silver",
-                  backgroundColor: idx % 2 === 0 ? "white" : palette.oddColor
+                  borderBottom: 'solid 1px silver',
+                  backgroundColor: idx % 2 === 0 ? 'white' : palette.oddColor,
                 }}
               >
                 <TableRowColumn>
-                  {format(effect.created_at, "DD/MM/YYYY HH:mm")}
+                  {format(effect.created_at, 'DD/MM/YYYY HH:mm')}
                 </TableRowColumn>
-                <TableRowColumn width="45" style={{ textAlign: "center" }}>
-                  {`${type === "account_credited" ? "+" : "-"} ${round(parseFloat(amount), 2).toFixed(2)}`}
+                <TableRowColumn width="45" style={{ textAlign: 'center' }}>
+                  {`${type === 'account_credited' ? '+' : '-'} ${round(parseFloat(amount), 2).toFixed(2)}`}
                 </TableRowColumn>
-                <TableRowColumn width="240" style={{ textAlign: "center" }}>
+                <TableRowColumn width="240" style={{ textAlign: 'center' }}>
                   {memo}
                 </TableRowColumn>
               </TableRow>

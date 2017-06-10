@@ -1,32 +1,32 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import IconButton from "material-ui/IconButton";
-import TextField from "material-ui/TextField";
-import Paper from "material-ui/Paper";
-import MenuItem from "material-ui/MenuItem";
-import CustomSelectField from "components/CustomSelectField";
-import EmailIcon from "material-ui/svg-icons/communication/mail-outline";
-import MessageIcon from "material-ui/svg-icons/communication/message";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+import MenuItem from 'material-ui/MenuItem';
+import CustomSelectField from 'components/CustomSelectField';
+import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
+import MessageIcon from 'material-ui/svg-icons/communication/message';
 
-import { Column, Table } from "react-virtualized";
-import shallowCompare from "react-addons-shallow-compare";
-import isBefore from "date-fns/is_before";
-import isAfter from "date-fns/is_after";
-import isValid from "date-fns/is_valid";
-import addYears from "date-fns/add_years";
-import { format } from "utils/dates";
-import capitalize from "lodash/capitalize";
-import { loadUtilisateurs } from "./actions";
-import { addDestinataire } from "containers/AdminCommunication/actions";
-import SortIndicator from "components/SortIndicator";
-import styles from "./styles.css";
+import { Column, Table } from 'react-virtualized';
+import shallowCompare from 'react-addons-shallow-compare';
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+import isValid from 'date-fns/is_valid';
+import addYears from 'date-fns/add_years';
+import { format } from 'utils/dates';
+import capitalize from 'lodash/capitalize';
+import { loadUtilisateurs } from './actions';
+import { addDestinataire } from 'containers/AdminCommunication/actions';
+import SortIndicator from 'components/SortIndicator';
+import styles from './styles.css';
 
 const buildDest = (rowData, moyen) => ({
   id: rowData.id,
   [moyen]: rowData[moyen],
-  identite: `${rowData.nom.toUpperCase()} ${capitalize(rowData.prenom)}`
+  identite: `${rowData.nom.toUpperCase()} ${capitalize(rowData.prenom)}`,
 });
 
 class AdminUtilisateurs extends Component {
@@ -35,11 +35,11 @@ class AdminUtilisateurs extends Component {
     utilisateurs: PropTypes.array.isRequired,
     relais: PropTypes.array.isRequired,
     loadUtilisateursDatas: PropTypes.func.isRequired,
-    addDest: PropTypes.func.isRequired
+    addDest: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -48,18 +48,18 @@ class AdminUtilisateurs extends Component {
       datas: this.props.utilisateurs,
       filtre: {
         relais: null,
-        cotisation: "cotisation_all"
+        cotisation: 'cotisation_all',
       },
       height: window.innerHeight - 238,
       width: window.innerWidth - 125,
-      sortBy: "nom",
-      sortDirection: "ASC"
+      sortBy: 'nom',
+      sortDirection: 'ASC',
     };
     this.state = this.initialState;
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.handleResize);
+    window.addEventListener('resize', this.handleResize);
     const { utilisateurs, loadUtilisateursDatas } = this.props;
 
     if (!utilisateurs.length) {
@@ -77,7 +77,7 @@ class AdminUtilisateurs extends Component {
 
   componentWillUnmount() {
     // eslint-disable-line
-    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener('resize', this.handleResize);
   }
 
   getFiltredDatas = () => {
@@ -85,21 +85,21 @@ class AdminUtilisateurs extends Component {
     return filtre.relais || filtre.cotisation
       ? datas.filter(d => {
           let convient = false;
-          if (!filtre.relais || filtre.relais === "indifferent") {
+          if (!filtre.relais || filtre.relais === 'indifferent') {
             convient = true;
           }
-          if (filtre.relais && filtre.relais === "pas_de_relais" && !d.relaiId) {
+          if (filtre.relais && filtre.relais === 'pas_de_relais' && !d.relaiId) {
             convient = true;
           }
           if (filtre.relais && d.relaiId === filtre.relais) convient = true;
           if (convient) {
             switch (filtre.cotisation) { // eslint-disable-line
-              case "cotisation_null":
+              case 'cotisation_null':
                 if (d.datePaiementCotisation) {
                   convient = false;
                 }
                 break;
-              case "cotisation_ok":
+              case 'cotisation_ok':
                 if (!d.datePaiementCotisation) {
                   convient = false;
                   break;
@@ -108,7 +108,7 @@ class AdminUtilisateurs extends Component {
                   convient = false;
                 }
                 break;
-              case "cotisation_ko":
+              case 'cotisation_ko':
                 if (!d.datePaiementCotisation) {
                   convient = false;
                   break;
@@ -128,14 +128,14 @@ class AdminUtilisateurs extends Component {
     if (!event.target.value) {
       this.setState({
         datas: this.props.utilisateurs,
-        filtre: { relais: null, cotisation: "cotisation_all" }
+        filtre: { relais: null, cotisation: 'cotisation_all' },
       });
     } else {
       this.setState({
         datas: this.props.utilisateurs.filter(
           u => u.nom && u.nom.toLowerCase().indexOf(event.target.value) !== -1
         ),
-        filtre: { relais: null, cotisation: "cotisation_all" }
+        filtre: { relais: null, cotisation: 'cotisation_all' },
       });
     }
   };
@@ -150,7 +150,7 @@ class AdminUtilisateurs extends Component {
     this.setState({
       ...this.state,
       height: window.innerHeight - 238,
-      width: window.innerWidth - 30
+      width: window.innerWidth - 30,
     });
 
   handleSort = ({ sortBy, sortDirection }) => this.setState({ ...this.state, sortBy, sortDirection });
@@ -161,7 +161,7 @@ class AdminUtilisateurs extends Component {
   handleCotisationChange = (event, idx, cotisation) =>
     this.setState({
       ...this.state,
-      filtre: { ...this.state.filtre, cotisation }
+      filtre: { ...this.state.filtre, cotisation },
     });
 
   render() {
@@ -170,9 +170,9 @@ class AdminUtilisateurs extends Component {
     const palette = this.context.muiTheme.palette;
 
     const datas = this.getFiltredDatas().slice().sort((a, b) => {
-      if (sortBy === "nom") {
+      if (sortBy === 'nom') {
         if (!a.nom || !a.prenom) return false;
-        return sortDirection === "ASC" ? a.nom > b.nom : a.nom < b.nom;
+        return sortDirection === 'ASC' ? a.nom > b.nom : a.nom < b.nom;
       }
       return false;
     });
@@ -212,8 +212,8 @@ class AdminUtilisateurs extends Component {
               rowCount={datas.length}
               rowGetter={({ index }) => datas[index]}
               rowStyle={obj => ({
-                borderBottom: "solid 1px silver",
-                backgroundColor: obj.index % 2 === 0 || obj.index === -1 ? "white" : palette.oddColor
+                borderBottom: 'solid 1px silver',
+                backgroundColor: obj.index % 2 === 0 || obj.index === -1 ? 'white' : palette.oddColor,
               })}
               sort={this.handleSort}
               sortBy={sortBy}
@@ -225,13 +225,13 @@ class AdminUtilisateurs extends Component {
                 width="300"
                 headerRenderer={this.headerRenderer}
                 cellDataGetter={({ rowData }) =>
-                  `${rowData.nom ? rowData.nom.toUpperCase() : ""} ${capitalize(rowData.prenom)}`}
+                  `${rowData.nom ? rowData.nom.toUpperCase() : ''} ${capitalize(rowData.prenom)}`}
                 disableSort={false}
               />
               <Column
                 label="Date création"
                 dataKey="createdAt"
-                cellDataGetter={({ rowData }) => format(rowData.createdAt, "DD/MM/YYYY")}
+                cellDataGetter={({ rowData }) => format(rowData.createdAt, 'DD/MM/YYYY')}
                 width="200"
                 disableSort={false}
               />
@@ -241,15 +241,15 @@ class AdminUtilisateurs extends Component {
                 width="200"
                 cellDataGetter={({ rowData }) =>
                   isValid(rowData.datePaiementCotisation)
-                    ? format(rowData.datePaiementCotisation, "DD/MM/YYYY")
-                    : "---"}
+                    ? format(rowData.datePaiementCotisation, 'DD/MM/YYYY')
+                    : '---'}
               />
               <Column
                 label="Relai"
                 dataKey="relaiId"
                 width="200"
                 cellDataGetter={({ rowData }) => {
-                  if (!rowData.relaiId) return "";
+                  if (!rowData.relaiId) return '';
                   const relai = relais.find(r => r.id === rowData.relaiId);
                   return relai ? relai.nom : rowData.relaiId;
                 }}
@@ -262,14 +262,14 @@ class AdminUtilisateurs extends Component {
                     <IconButton
                       tooltip="Envoyer email"
                       disabled={!rowData.email}
-                      onClick={() => addDest(buildDest(rowData, "email"))}
+                      onClick={() => addDest(buildDest(rowData, 'email'))}
                     >
                       <EmailIcon />
                     </IconButton>
                     <IconButton
                       tooltip="Envoyer sms"
                       disabled={!rowData.telPortable}
-                      onClick={() => addDest(buildDest(rowData, "telPortable"))}
+                      onClick={() => addDest(buildDest(rowData, 'telPortable'))}
                     >
                       <MessageIcon />
                     </IconButton>
@@ -285,14 +285,14 @@ class AdminUtilisateurs extends Component {
 
 const mapStateToProps = state => ({
   utilisateurs: state.admin.utilisateurs.datas,
-  relais: state.admin.relais.datas
+  relais: state.admin.relais.datas,
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadUtilisateursDatas: loadUtilisateurs,
-      addDest: addDestinataire
+      addDest: addDestinataire,
     },
     dispatch
   );

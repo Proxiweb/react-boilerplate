@@ -3,21 +3,21 @@
  *
  * List all the features
  */
-import React from "react";
-import { connect } from "react-redux";
-import { push } from "react-router-redux";
-import Helmet from "react-helmet";
+import React from 'react';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import Helmet from 'react-helmet';
 
-import messages from "./messages";
-import { FormattedMessage } from "react-intl";
-import Button from "components/Button";
-import H1 from "components/H1";
+import messages from './messages';
+import { FormattedMessage } from 'react-intl';
+import Button from 'components/Button';
+import H1 from 'components/H1';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 export class FeaturePage extends React.Component {
   openHomePage = () => {
-    this.props.dispatch(push("/"));
+    this.props.dispatch(push('/'));
   };
 
   render() {
@@ -25,7 +25,7 @@ export class FeaturePage extends React.Component {
       <div>
         <Helmet
           title="Feature Page"
-          meta={[{ name: "description", content: "Feature page of React.js Boilerplate application" }]}
+          meta={[{ name: 'description', content: 'Feature page of React.js Boilerplate application' }]}
         />
         <H1>
           <FormattedMessage {...messages.header} />
@@ -85,7 +85,7 @@ export class FeaturePage extends React.Component {
 }
 
 FeaturePage.propTypes = {
-  dispatch: React.PropTypes.func
+  dispatch: React.PropTypes.func,
 };
 
 export default connect()(FeaturePage);

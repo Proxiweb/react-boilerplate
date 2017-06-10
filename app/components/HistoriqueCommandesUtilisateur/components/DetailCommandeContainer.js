@@ -1,21 +1,21 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
 
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import RaisedButton from "material-ui/RaisedButton";
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import DetailCommande from "components/DetailCommande";
-import { loadCommandes } from "containers/Commande/actions";
+import DetailCommande from 'components/DetailCommande';
+import { loadCommandes } from 'containers/Commande/actions';
 
 import {
   selectProduits,
   selectOffres,
   selectCommandesUtilisateurs,
-  selectCommandeContenus
-} from "containers/Commande/selectors";
+  selectCommandeContenus,
+} from 'containers/Commande/selectors';
 
 class DetailCommandeContainer extends Component {
   static propTypes = {
@@ -28,7 +28,7 @@ class DetailCommandeContainer extends Component {
     commandesUtilisateurs: PropTypes.object,
     contenus: PropTypes.object,
 
-    loadCommandeById: PropTypes.func.isRequired
+    loadCommandeById: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -74,7 +74,7 @@ class DetailCommandeContainer extends Component {
       offres,
       commandesUtilisateurs,
       contenus,
-      pending
+      pending,
     } = this.props;
 
     if (pending) {
@@ -84,7 +84,7 @@ class DetailCommandeContainer extends Component {
           left={0}
           top={10}
           status="loading"
-          style={{ display: "inline-block", position: "relative" }}
+          style={{ display: 'inline-block', position: 'relative' }}
         />
       );
     }
@@ -131,13 +131,13 @@ const mapStateToProps = createStructuredSelector({
   produits: selectProduits(),
   offres: selectOffres(),
   contenus: selectCommandeContenus(),
-  commandesUtilisateurs: selectCommandesUtilisateurs()
+  commandesUtilisateurs: selectCommandesUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadCommandeById: loadCommandes
+      loadCommandeById: loadCommandes,
     },
     dispatch
   );

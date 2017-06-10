@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
-import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
-import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import styles from "./styles.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import styles from './styles.css';
 
 const options = {
-  options: ["inline", "list", "textAlign", "link", "remove", "history"],
+  options: ['inline', 'list', 'textAlign', 'link', 'remove', 'history'],
   inline: {
     inDropdown: false,
     className: undefined,
-    options: ["bold", "italic", "underline", "strikethrough"]
-  }
+    options: ['bold', 'italic', 'underline', 'strikethrough'],
+  },
 };
 
 class CommunicationForm extends Component {
@@ -24,7 +24,7 @@ class CommunicationForm extends Component {
     setMessage: PropTypes.func.isRequired,
     message: PropTypes.object.isRequired,
     nbreDest: PropTypes.number.isRequired,
-    smsOk: PropTypes.bool
+    smsOk: PropTypes.bool,
   };
 
   constructor(props) {
@@ -96,7 +96,7 @@ class CommunicationForm extends Component {
         </div>
         <div className="col-md-12">
           <div className="row center-md">
-            <div className="col-md" style={{ marginTop: "2rem" }}>
+            <div className="col-md" style={{ marginTop: '2rem' }}>
               <RaisedButton
                 label="envoyer"
                 disabled={!this.isValid()}

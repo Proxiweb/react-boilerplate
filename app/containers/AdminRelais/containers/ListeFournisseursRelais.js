@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import CustomSelectField from "components/CustomSelectField";
-import MenuItem from "material-ui/MenuItem";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import CustomSelectField from 'components/CustomSelectField';
+import MenuItem from 'material-ui/MenuItem';
 
-import { createStructuredSelector } from "reselect";
-import { loadFournisseurs } from "containers/Commande/actions";
+import { createStructuredSelector } from 'reselect';
+import { loadFournisseurs } from 'containers/Commande/actions';
 
-import { selectFournisseurs } from "containers/Commande/selectors";
+import { selectFournisseurs } from 'containers/Commande/selectors';
 
 class ListeFournisseursRelais extends Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class ListeFournisseursRelais extends Component {
     fournisseurId: PropTypes.string,
     relaiId: PropTypes.string.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -42,13 +42,13 @@ class ListeFournisseursRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseurs()
+  fournisseurs: selectFournisseurs(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadFournisseurs
+      loadFournisseurs,
     },
     dispatch
   );

@@ -1,32 +1,32 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import { List, ListItem, makeSelectable } from "material-ui/List";
-import HistoryIcon from "material-ui/svg-icons/action/history";
-import DoneIcon from "material-ui/svg-icons/action/done";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+import HistoryIcon from 'material-ui/svg-icons/action/history';
+import DoneIcon from 'material-ui/svg-icons/action/done';
 
-import getTime from "date-fns/get_time";
-import subMonths from "date-fns/sub_months";
-import isBefore from "date-fns/is_before";
-import isAfter from "date-fns/is_after";
-import { format } from "utils/dates";
-import { BottomNavigation, BottomNavigationItem } from "material-ui/BottomNavigation";
+import getTime from 'date-fns/get_time';
+import subMonths from 'date-fns/sub_months';
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+import { format } from 'utils/dates';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 
-import { selectCommandeId } from "containers/Commande/selectors";
-import { loadCommandes } from "containers/Commande/actions";
-import ListeCommandeItem from "./ListeCommandeItem";
+import { selectCommandeId } from 'containers/Commande/selectors';
+import { loadCommandes } from 'containers/Commande/actions';
+import ListeCommandeItem from './ListeCommandeItem';
 
-import styles from "./styles.css";
-import classnames from "classnames";
+import styles from './styles.css';
+import classnames from 'classnames';
 const SelectableList = makeSelectable(List);
 
 class ListeCommandes extends Component {
   static propTypes = {
     commandes: PropTypes.object.isRequired,
     commandeId: PropTypes.string,
-    loadCommandes: PropTypes.func.isRequired
+    loadCommandes: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -34,7 +34,7 @@ class ListeCommandes extends Component {
     this.state = {
       typeCommandeListees: 0,
       rechercheLoaded: false,
-      offsetRecentes: 3 // 3 mois en arrière
+      offsetRecentes: 3, // 3 mois en arrière
     };
   }
 
@@ -43,16 +43,16 @@ class ListeCommandes extends Component {
     if (typeCommandeListees === 1) {
       this.props.loadCommandes({
         relaiId: this.props.params.relaiId,
-        periode: "precise",
+        periode: 'precise',
         debut: format(subMonths(new Date(), offsetRecentes)),
-        fin: format(subMonths(new Date(), offsetRecentes - 3))
+        fin: format(subMonths(new Date(), offsetRecentes - 3)),
       });
     }
 
     this.setState({
       ...this.state,
       typeCommandeListees,
-      offsetRecentes: offsetRecentes + 3
+      offsetRecentes: offsetRecentes + 3,
     });
   };
 
@@ -84,15 +84,15 @@ class ListeCommandes extends Component {
           <SelectableList
             value={commandeId}
             style={{
-              minHeight: "calc(100vh - 185px)",
-              maxHeight: "calc(100vh - 185px)",
-              overflowY: "auto",
-              marginTop: "5px"
+              minHeight: 'calc(100vh - 185px)',
+              maxHeight: 'calc(100vh - 185px)',
+              overflowY: 'auto',
+              marginTop: '5px',
             }}
           >
             {commandesFiltredIds
               .filter(
-                id => typeof commandes[id].distributions.find(d => d.relaiId === relaiId) !== "undefined"
+                id => typeof commandes[id].distributions.find(d => d.relaiId === relaiId) !== 'undefined'
               )
               .sort(
                 (key1, key2) =>
@@ -128,13 +128,13 @@ class ListeCommandes extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadCommandes
+      loadCommandes,
     },
     dispatch
   );
 
 const mapStateToProps = createStructuredSelector({
-  commandeId: selectCommandeId()
+  commandeId: selectCommandeId(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListeCommandes);

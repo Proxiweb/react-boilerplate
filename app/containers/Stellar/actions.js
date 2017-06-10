@@ -11,82 +11,82 @@ import {
   PAY_ERROR,
   FEDERATION,
   FEDERATION_SUCCESS,
-  FEDERATION_ERROR
-} from "./constants";
+  FEDERATION_ERROR,
+} from './constants';
 
 export const loadAccount = accountId => ({
   type: LOAD_ACCOUNT,
   payload: {
-    accountId
-  }
+    accountId,
+  },
 });
 
 export const loadAccountError = err => ({
   type: LOAD_ACCOUNT_ERROR,
   payload: {
-    err
-  }
+    err,
+  },
 });
 
 export const accountLoaded = account => ({
   type: LOAD_ACCOUNT_SUCCESS,
   payload: {
-    account
-  }
+    account,
+  },
 });
 
 export const paymentsLoaded = payments => ({
   type: LOAD_PAYMENTS_SUCCESS,
   payload: {
-    payments
-  }
+    payments,
+  },
 });
 
 export const trust = (currencyCode, maxTrust, issuer, stellarKeys) => ({
   type: TRUST,
-  payload: { currencyCode, maxTrust, issuer, stellarKeys }
+  payload: { currencyCode, maxTrust, issuer, stellarKeys },
 });
 
 export const trustError = err => ({
   type: TRUST_ERROR,
   payload: {
-    err
-  }
+    err,
+  },
 });
 
 export const trusted = res => ({
   type: TRUST_SUCCESS,
-  payload: { res }
+  payload: { res },
 });
 
 export const pay = (destination, currency, currencyIssuer, amount, stellarKeys) => ({
   type: PAY,
-  payload: { destination, currency, currencyIssuer, amount, stellarKeys }
+  payload: { destination, currency, currencyIssuer, amount, stellarKeys },
 });
 
 export const payError = err => ({
   type: PAY_ERROR,
   payload: {
-    err
-  }
+    err,
+  },
 });
 
 export const paid = res => ({
   type: PAY_SUCCESS,
-  payload: { res }
+  payload: { res },
 });
 
 export const fedLookup = fedId => ({
   type: FEDERATION,
-  payload: { fedId }
+  payload: { fedId },
 });
 
 export const fedLookupSuccess = (accountId, fedId) => ({
   type: FEDERATION_SUCCESS,
-  payload: { accountId, fedId }
+  payload: { accountId, fedId },
 });
 
 export const fedLookupError = err => ({
   type: FEDERATION_ERROR,
-  payload: { err }
+  payload: { err },
 });

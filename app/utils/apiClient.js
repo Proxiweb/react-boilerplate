@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export function get(url, options = { headers: {}, query: {} }) {
   return new Promise((resolve, reject) =>
@@ -145,5 +145,5 @@ export default {
   get,
   put,
   patch,
-  del
+  del,
 };

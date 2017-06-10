@@ -1,31 +1,31 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import Paper from "material-ui/Paper";
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import { selectOffresDuProduit, selectTypesProduitsByIds } from "containers/Commande/selectors";
-import { selectPending } from "containers/App/selectors";
-import Offre from "./Offre";
-import OffreFormContainer from "./OffreFormContainer";
-import OffresTopBar from "./OffresTopBar";
-import styles from "./styles.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import Paper from 'material-ui/Paper';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { selectOffresDuProduit, selectTypesProduitsByIds } from 'containers/Commande/selectors';
+import { selectPending } from 'containers/App/selectors';
+import Offre from './Offre';
+import OffreFormContainer from './OffreFormContainer';
+import OffresTopBar from './OffresTopBar';
+import styles from './styles.css';
 
-const aucuneOffreCss = { backgroundColor: "#1565c0", color: "white" };
+const aucuneOffreCss = { backgroundColor: '#1565c0', color: 'white' };
 
 class Offres extends Component {
   static propTypes = {
     offres: PropTypes.array.isRequired,
     typesProduits: PropTypes.object.isRequired,
     produit: PropTypes.object.isRequired,
-    pending: PropTypes.bool.isRequired
+    pending: PropTypes.bool.isRequired,
   };
 
   state = {
     editMode: false,
     new: false,
-    type: "actives",
-    itemEditIndex: null
+    type: 'actives',
+    itemEditIndex: null,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -39,7 +39,7 @@ class Offres extends Component {
       ...this.state,
       editMode: !this.state.editMode,
       itemEditIndex,
-      nouvelle: false
+      nouvelle: false,
     });
 
   createOffre = () => this.setState({ ...this.state, editMode: true, nouvelle: true });
@@ -62,7 +62,7 @@ class Offres extends Component {
                 left={10}
                 top={10}
                 status="loading"
-                style={{ display: "inline-block", position: "absolute" }}
+                style={{ display: 'inline-block', position: 'absolute' }}
               />
             </div>
           </div>}
@@ -96,7 +96,7 @@ class Offres extends Component {
         {editMode &&
           !nouvelle &&
           !pending &&
-          <div style={{ padding: "2em" }} className="col-md-12">
+          <div style={{ padding: '2em' }} className="col-md-12">
             <OffreFormContainer
               offre={offres.filter(o => !o.relaiId)[itemEditIndex]}
               tva={produit.tva}
@@ -107,7 +107,7 @@ class Offres extends Component {
         {editMode &&
           nouvelle &&
           !pending &&
-          <div style={{ padding: "2em" }} className="col-md-12">
+          <div style={{ padding: '2em' }} className="col-md-12">
             <OffreFormContainer
               offre={{
                 produitId: produit.id,
@@ -116,10 +116,10 @@ class Offres extends Component {
                 tarifications: [
                   {
                     qteMinRelais: 0,
-                    prix: 100
-                  }
+                    prix: 100,
+                  },
                 ],
-                poids: 1000000
+                poids: 1000000,
               }}
               tva={produit.tva}
               handleToggeState={this.toggleState}
@@ -134,7 +134,7 @@ class Offres extends Component {
 const mapStateToProps = createStructuredSelector({
   offres: selectOffresDuProduit(),
   typesProduits: selectTypesProduitsByIds(),
-  pending: selectPending()
+  pending: selectPending(),
 });
 
 export default connect(mapStateToProps)(Offres);

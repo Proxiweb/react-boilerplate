@@ -1,4 +1,4 @@
-import update from "immutability-helper";
+import update from 'immutability-helper';
 import {
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
@@ -6,14 +6,14 @@ import {
   LOAD_PAYMENTS_SUCCESS,
   PAY,
   TRUST,
-  FEDERATION_SUCCESS
-} from "./constants";
+  FEDERATION_SUCCESS,
+} from './constants';
 
 const initialState = {
-  env: "public", // test | public
+  env: 'public', // test | public
   stellarKeys: {
-    accountId: "GCRN5SVVM72CYTBS3RM4GNDYBJFXR23DW6MRJZKDUQFAFIWNSGJDCAOV",
-    secret: "SAEWX3BJ2SXHWPULBS7SZJ7R5KJ6WDNPORQP5256KA7XD36LOCPRJ2ZD"
+    accountId: 'GCRN5SVVM72CYTBS3RM4GNDYBJFXR23DW6MRJZKDUQFAFIWNSGJDCAOV',
+    secret: 'SAEWX3BJ2SXHWPULBS7SZJ7R5KJ6WDNPORQP5256KA7XD36LOCPRJ2ZD',
   },
   balances: null,
   sequence: null,
@@ -23,12 +23,12 @@ const initialState = {
   error: null,
   contacts: [
     {
-      nom: "Anchor",
+      nom: 'Anchor',
       fedId: null,
-      accountId: "GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI", // SA4JGSESB3WXT2XCAWUORNXYZVHE6IQCLWGJBUMVHDWGFPM47556BJCV
-      currencies: ["PROXI"]
-    }
-  ]
+      accountId: 'GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI', // SA4JGSESB3WXT2XCAWUORNXYZVHE6IQCLWGJBUMVHDWGFPM47556BJCV
+      currencies: ['PROXI'],
+    },
+  ],
 };
 
 function syncContact(state, payload) {

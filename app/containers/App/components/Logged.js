@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import IconMenu from "material-ui/IconMenu";
-import { ToolbarGroup } from "material-ui/Toolbar";
-import MenuItem from "material-ui/MenuItem";
-import CommunicationChatBubble from "material-ui/svg-icons/communication/chat-bubble";
-import FlatButton from "material-ui/FlatButton";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import IconMenu from 'material-ui/IconMenu';
+import { ToolbarGroup } from 'material-ui/Toolbar';
+import MenuItem from 'material-ui/MenuItem';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import FlatButton from 'material-ui/FlatButton';
 
 export default class Logged extends Component {
   static propTypes = {
     destinataires: PropTypes.array.isRequired,
     messages: PropTypes.array,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
   };
 
-  static muiName = "IconMenu";
+  static muiName = 'IconMenu';
 
   render() {
     const { destinataires, pushState, messages } = this.props;
@@ -23,7 +23,7 @@ export default class Logged extends Component {
       elements.push(
         <FlatButton
           key={1}
-          onClick={() => pushState("/communications/courante")}
+          onClick={() => pushState('/communications/courante')}
           label={`Communication en cours (${destinataires.length})`}
           style={{ marginTop: 5 }}
         />
@@ -37,9 +37,9 @@ export default class Logged extends Component {
           label="Nouveau message"
           iconButtonElement={
             <FlatButton
-              label={`${messages.length} Message${messages.length > 1 ? "s" : ""} non lu${messages.length > 1
-                ? "s"
-                : ""}`}
+              label={`${messages.length} Message${messages.length > 1 ? 's' : ''} non lu${messages.length > 1
+                ? 's'
+                : ''}`}
               icon={<CommunicationChatBubble />}
               style={{ marginTop: 5 }}
             />

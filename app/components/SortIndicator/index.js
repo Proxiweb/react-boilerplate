@@ -1,15 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import cn from "classnames";
-import SortDirection from "components/SortDirection";
+import React from 'react';
+import PropTypes from 'prop-types';
+import cn from 'classnames';
+import SortDirection from 'components/SortDirection';
 
 /**
  * Displayed beside a header to indicate that a Table is currently sorted by this column.
  */
 export default function SortIndicator({ sortDirection }) {
-  const classNames = cn("ReactVirtualized__Table__sortableHeaderIcon", {
-    "ReactVirtualized__Table__sortableHeaderIcon--ASC": sortDirection === SortDirection.ASC,
-    "ReactVirtualized__Table__sortableHeaderIcon--DESC": sortDirection === SortDirection.DESC
+  const classNames = cn('ReactVirtualized__Table__sortableHeaderIcon', {
+    'ReactVirtualized__Table__sortableHeaderIcon--ASC': sortDirection === SortDirection.ASC,
+    'ReactVirtualized__Table__sortableHeaderIcon--DESC': sortDirection === SortDirection.DESC,
   });
 
   return (
@@ -21,5 +21,5 @@ export default function SortIndicator({ sortDirection }) {
 }
 
 SortIndicator.propTypes = {
-  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC])
+  sortDirection: PropTypes.oneOf([SortDirection.ASC, SortDirection.DESC]),
 };

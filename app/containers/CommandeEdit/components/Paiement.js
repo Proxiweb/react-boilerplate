@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import round from "lodash/round";
-import { Link } from "react-router";
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import FondsOkMessage from "./FondsOkMessage";
-import FondsWarningMessage from "./FondsWarningMessage";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import round from 'lodash/round';
+import { Link } from 'react-router';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import FondsOkMessage from './FondsOkMessage';
+import FondsWarningMessage from './FondsWarningMessage';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 export default class Paiement extends Component {
   // eslint-disable-line
@@ -16,11 +16,11 @@ export default class Paiement extends Component {
     commandeContenus: PropTypes.object.isRequired,
     commandeId: PropTypes.string,
     dateLimite: PropTypes.string.isRequired,
-    balance: PropTypes.number.isRequired
+    balance: PropTypes.number.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   render() {
@@ -31,7 +31,7 @@ export default class Paiement extends Component {
       commandeContenus,
       offres,
       commandeId,
-      filter: cc => cc.utilisateurId === utilisateurId
+      filter: cc => cc.utilisateurId === utilisateurId,
     });
     const montant = round(prix + recolteFond, 2).toFixed(2);
 
@@ -46,7 +46,7 @@ export default class Paiement extends Component {
               dateLimite={dateLimite}
             />}
         <div className={styles.accueilLink}>
-          <span>{"<< "}<Link to="/">{"Retour à l'accueil"}</Link> {" <<"}</span>
+          <span>{'<< '}<Link to="/">{"Retour à l'accueil"}</Link> {' <<'}</span>
         </div>
       </div>
     );

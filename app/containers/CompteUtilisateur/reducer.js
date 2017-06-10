@@ -4,16 +4,16 @@
  *
  */
 
-import round from "lodash/round";
-import omit from "lodash/omit";
+import round from 'lodash/round';
+import omit from 'lodash/omit';
 
 import {
   loginConst as c,
   registerConst as cR,
   LOGOUT,
   SET_ERR_MSG,
-  ADD_EFFECT
-} from "containers/Login/constants";
+  ADD_EFFECT,
+} from 'containers/Login/constants';
 
 import {
   LOAD_ACCOUNT_ERROR,
@@ -23,13 +23,13 @@ import {
   loadVirConst,
   supprVirConst,
   refreshConst as ref,
-  saveAccountConst as s
-} from "./constants";
+  saveAccountConst as s,
+} from './constants';
 
-import update from "immutability-helper";
-import getTime from "date-fns/get_time";
+import update from 'immutability-helper';
+import getTime from 'date-fns/get_time';
 
-import { REHYDRATE } from "redux-persist/constants";
+import { REHYDRATE } from 'redux-persist/constants';
 
 const initialState = {
   auth: false,
@@ -38,10 +38,10 @@ const initialState = {
   token: null,
   payments: {
     datas: [],
-    pagingToken: null
+    pagingToken: null,
   },
   balances: [],
-  virements: null
+  virements: null,
 };
 
 // const sessionStorageKey = 'user';
@@ -56,14 +56,14 @@ const majComptes = (state, datas) => {
   // }
 
   // if (type !== 'payment' || asset_type === 'native') return state; // eslint-disable-line
-  const typeOp = source_account === state.auth.stellarKeys.adresse ? "debit" : "credit"; // eslint-disable-line
+  const typeOp = source_account === state.auth.stellarKeys.adresse ? 'debit' : 'credit'; // eslint-disable-line
   const payment = {
     id,
     type: typeOp,
     montant: round(parseFloat(op.amount), 2),
     date: trx.created_at,
     dateUnix: getTime(trx.created_at),
-    memo: trx.memo_type === "text" ? trx.memo : null
+    memo: trx.memo_type === 'text' ? trx.memo : null,
   };
 
   // memo greatest paging_token
@@ -75,8 +75,8 @@ const majComptes = (state, datas) => {
   return update(state, {
     payments: {
       datas: { $set: [payment].concat(state.payments.datas) },
-      pagingToken: { $set: pagingToken }
-    }
+      pagingToken: { $set: pagingToken },
+    },
   });
 };
 
@@ -87,7 +87,7 @@ function compteUtilisateurReducer(state = initialState, action) {
     case c.ASYNC_LOGIN_ERROR:
       return update(state, {
         error: { $set: action.msgError },
-        loading: { $set: false }
+        loading: { $set: false },
       });
     case cR.ASYNC_REGISTER_SUCCESS:
     case c.ASYNC_LOGIN_SUCCESS:
@@ -95,9 +95,9 @@ function compteUtilisateurReducer(state = initialState, action) {
         error: { $set: false },
         loading: { $set: false },
         auth: {
-          $set: omit(action.datas.user, ["commandeContenus", "commandes"])
+          $set: omit(action.datas.user, ['commandeContenus', 'commandes']),
         },
-        token: { $set: action.datas.token }
+        token: { $set: action.datas.token },
       });
     case s.ASYNC_SAVE_ACCOUNT_SUCCESS:
       return update(state, { auth: { $set: action.datas } });
@@ -107,7 +107,7 @@ function compteUtilisateurReducer(state = initialState, action) {
       return update(state, { virements: { $set: action.datas.depots } });
     case supprVirConst.ASYNC_ANNULER_VIREMENT_SUCCESS:
       return update(state, {
-        virements: { $set: state.virements.filter(v => v.id !== action.req.id) }
+        virements: { $set: state.virements.filter(v => v.id !== action.req.id) },
       });
     case LOGOUT:
       return { ...initialState };

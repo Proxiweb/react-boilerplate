@@ -3,8 +3,8 @@
  *
  * This contains all the text for the LanguageToggle component.
  */
-import { defineMessages } from "react-intl";
-import { appLocales } from "../../i18n";
+import { defineMessages } from 'react-intl';
+import { appLocales } from '../../i18n';
 
 const getLocaleMessages = locales =>
   locales.reduce(
@@ -12,8 +12,8 @@ const getLocaleMessages = locales =>
       ...messages,
       [locale]: {
         id: `app.components.LocaleToggle.${locale}`,
-        defaultMessage: `${locale}`
-      }
+        defaultMessage: `${locale}`,
+      },
     }),
     {}
   );

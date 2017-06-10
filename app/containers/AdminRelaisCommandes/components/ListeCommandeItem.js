@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { push } from "react-router-redux";
-import { format } from "utils/dates";
-import { ListItem } from "material-ui/List";
-import { bindActionCreators } from "redux";
-import { deleteCommande } from "containers/Commande/actions";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import { format } from 'utils/dates';
+import { ListItem } from 'material-ui/List';
+import { bindActionCreators } from 'redux';
+import { deleteCommande } from 'containers/Commande/actions';
 
-import IconMenu from "material-ui/IconMenu";
-import IconButton from "material-ui/IconButton";
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-import MenuItem from "material-ui/MenuItem";
-import CommandeListeTypesProduits from "./CommandeListeTypesProduits";
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuItem from 'material-ui/MenuItem';
+import CommandeListeTypesProduits from './CommandeListeTypesProduits';
 
 const iconButtonElement = (
   <IconButton touch tooltip="Plus..." tooltipPosition="bottom-left">
@@ -23,11 +23,11 @@ class ListeCommandeItem extends Component {
   static propTypes = {
     relaiId: PropTypes.string.isRequired,
     commande: PropTypes.object.isRequired,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
   };
 
   handleRemoveCommande = id => {
-    if (confirm("Supprimer cette commande")) {
+    if (confirm('Supprimer cette commande')) {
       this.props.deleteCommande(id);
     }
   };
@@ -71,13 +71,13 @@ class ListeCommandeItem extends Component {
     return (
       <ListItem
         primaryText={
-          commande.dateCommande ? format(commande.dateCommande, "DD MMMM HH:mm") : "date indéfinie"
+          commande.dateCommande ? format(commande.dateCommande, 'DD MMMM HH:mm') : 'date indéfinie'
         }
         secondaryText={<CommandeListeTypesProduits commande={commande} />}
         value={commande.id}
         rightIconButton={this.buildRightIcon(relaiId, commande)}
         onTouchTap={() => this.handleClick(commandeId)}
-        style={{ backgroundColor: paiementsOk ? "#a2f9a2" : "white" }}
+        style={{ backgroundColor: paiementsOk ? '#a2f9a2' : 'white' }}
       />
     );
   }
@@ -87,7 +87,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       deleteCommande,
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

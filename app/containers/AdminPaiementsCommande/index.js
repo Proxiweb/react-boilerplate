@@ -1,33 +1,33 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import { List, ListItem, makeSelectable } from "material-ui/List";
-import PastilleIcon from "material-ui/svg-icons/image/brightness-1";
-import WalletIcon from "material-ui/svg-icons/action/account-balance-wallet";
-import api from "utils/stellarApi";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
+import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
+import api from 'utils/stellarApi';
 
 import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectOffres,
-  selectCommandeCommandeUtilisateurs
-} from "containers/Commande/selectors";
+  selectCommandeCommandeUtilisateurs,
+} from 'containers/Commande/selectors';
 
-import { selectUtilisateurs } from "containers/AdminUtilisateurs/selectors";
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import round from "lodash/round";
-import styles from "./styles.css";
-import classnames from "classnames";
-import capitalize from "lodash/capitalize";
+import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import round from 'lodash/round';
+import styles from './styles.css';
+import classnames from 'classnames';
+import capitalize from 'lodash/capitalize';
 
 const SelectableList = makeSelectable(List);
 
-import DepotRelais from "containers/DepotRelais";
-import { selectDepots } from "containers/AdminDepot/selectors";
-import { loadDepotsRelais } from "containers/AdminDepot/actions";
-import ValidationCommande from "./components/ValidationCommande";
+import DepotRelais from 'containers/DepotRelais';
+import { selectDepots } from 'containers/AdminDepot/selectors';
+import { loadDepotsRelais } from 'containers/AdminDepot/actions';
+import ValidationCommande from './components/ValidationCommande';
 
 class PaiementsCommande extends Component {
   static propTypes = {
@@ -38,14 +38,14 @@ class PaiementsCommande extends Component {
     offres: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
-    load: PropTypes.func.isRequired
+    load: PropTypes.func.isRequired,
   };
 
   state = {
     paiements: {},
     totaux: {},
     utilisateurSelected: null,
-    error: false
+    error: false,
   };
 
   componentDidMount() {
@@ -66,23 +66,23 @@ class PaiementsCommande extends Component {
     api
       .loadAccount(accountId)
       .then(res => {
-        const bal = res.balances.find(b => b.asset_code === "PROXI");
+        const bal = res.balances.find(b => b.asset_code === 'PROXI');
         const totaux = calculeTotauxCommande({
           utilisateurId: c.utilisateurId,
           offres,
           commandeContenus,
-          commandeId
+          commandeId,
         });
         this.setState({
           ...this.state,
           paiements: {
             ...this.state.paiements,
-            [id]: bal
+            [id]: bal,
           },
           totaux: {
             ...this.state.totaux,
-            [id]: round(totaux.prix + totaux.recolteFond, 2)
-          }
+            [id]: round(totaux.prix + totaux.recolteFond, 2),
+          },
         });
       })
       .catch(() => {
@@ -93,7 +93,7 @@ class PaiementsCommande extends Component {
   handleChangeList = (event, value) =>
     this.setState({
       ...this.state,
-      utilisateurSelected: value
+      utilisateurSelected: value,
     });
 
   render() {
@@ -109,7 +109,7 @@ class PaiementsCommande extends Component {
       );
     }
     return (
-      <div className={classnames("col-md-12", styles.panel)}>
+      <div className={classnames('col-md-12', styles.panel)}>
         {depots &&
           Object.keys(paiements).length === commandeUtilisateurs.length &&
           <div className="row">
@@ -129,22 +129,22 @@ class PaiementsCommande extends Component {
                     d =>
                       d.utilisateurId === cu.utilisateurId &&
                       !d.transfertEffectue &&
-                      d.type === "depot_relais"
+                      d.type === 'depot_relais'
                   );
                   // si un dépot a été fait, en tenir compte
                   const totalAvecDepot = dep && dep.montant
                     ? round(parseFloat(dep.montant) + parseFloat(paiements[ut.id].balance), 2)
                     : round(parseFloat(paiements[ut.id].balance), 2);
 
-                  let iconColor = "silver";
+                  let iconColor = 'silver';
                   if (paiements[ut.id]) {
-                    iconColor = totaux[ut.id] <= totalAvecDepot ? "green" : "orange";
+                    iconColor = totaux[ut.id] <= totalAvecDepot ? 'green' : 'orange';
                   }
                   return (
                     <ListItem
                       key={idx}
                       primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}
-                           ${totaux[ut.id] ? ` - ${totaux[ut.id].toFixed(2)} €` : ""}
+                           ${totaux[ut.id] ? ` - ${totaux[ut.id].toFixed(2)} €` : ''}
                           `}
                       value={ut.id}
                       leftIcon={cu.datePaiement ? null : <PastilleIcon color={iconColor} />}
@@ -165,7 +165,7 @@ class PaiementsCommande extends Component {
                     d =>
                       d.utilisateurId === utilisateurSelected &&
                       !d.transfertEffectue &&
-                      d.type === "depot_relais"
+                      d.type === 'depot_relais'
                   )}
                 />}
             </div>
@@ -181,13 +181,13 @@ const mapStateToProps = createStructuredSelector({
   contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),
   offres: selectOffres(),
-  depots: selectDepots()
+  depots: selectDepots(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      load: loadDepotsRelais
+      load: loadDepotsRelais,
     },
     dispatch
   );

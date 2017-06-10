@@ -1,16 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { createStructuredSelector } from "reselect";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { isPristine } from "redux-form";
-import round from "lodash/round";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { isPristine } from 'redux-form';
+import round from 'lodash/round';
 
-import { saveOffre } from "containers/Commande/actions";
-import { selectPending } from "containers/App/selectors";
-import OffreForm from "./OffreForm";
+import { saveOffre } from 'containers/Commande/actions';
+import { selectPending } from 'containers/App/selectors';
+import OffreForm from './OffreForm';
 
-const isProfilePristine = () => state => isPristine("offre")(state);
+const isProfilePristine = () => state => isPristine('offre')(state);
 const selectValeurs = () => state => state.form;
 
 // import submit from './submit';
@@ -23,7 +23,7 @@ class OffreFormContainer extends React.Component {
     valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
     handleToggeState: PropTypes.func.isRequired,
-    save: PropTypes.func.isRequired
+    save: PropTypes.func.isRequired,
   };
 
   handleSubmit = values => {
@@ -31,12 +31,12 @@ class OffreFormContainer extends React.Component {
     const tarifications = values.tarifications.map(t => ({
       ...t,
       prix: parseInt(t.prix * 100, 10),
-      recolteFond: parseInt(t.recolteFond * 100, 10)
+      recolteFond: parseInt(t.recolteFond * 100, 10),
     }));
     save({
       ...offre,
       tarifications,
-      poids: values.poids ? parseInt(values.poids, 10) : null
+      poids: values.poids ? parseInt(values.poids, 10) : null,
     });
   };
 
@@ -46,7 +46,7 @@ class OffreFormContainer extends React.Component {
     const tarifications = offre.tarifications.map(t => ({
       ...t,
       prix: round(t.prix / 100, 2),
-      recolteFond: round(t.recolteFond / 1000, 2)
+      recolteFond: round(t.recolteFond / 1000, 2),
     }));
 
     return (
@@ -66,13 +66,13 @@ class OffreFormContainer extends React.Component {
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
   pristine: isProfilePristine(),
-  valeurs: selectValeurs()
+  valeurs: selectValeurs(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      save: saveOffre
+      save: saveOffre,
     },
     dispatch
   );

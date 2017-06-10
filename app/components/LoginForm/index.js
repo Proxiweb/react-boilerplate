@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import styles from "./styles.css";
-import RaisedButton from "material-ui/RaisedButton";
-import Paper from "material-ui/Paper";
-import FlatButton from "material-ui/FlatButton";
-import TextField from "material-ui/TextField";
-import PersonAddIcon from "material-ui/svg-icons/social/person-add";
-import PersonIcon from "material-ui/svg-icons/social/person";
-import MailIcon from "material-ui/svg-icons/communication/mail-outline";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import styles from './styles.css';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+import PersonAddIcon from 'material-ui/svg-icons/social/person-add';
+import PersonIcon from 'material-ui/svg-icons/social/person';
+import MailIcon from 'material-ui/svg-icons/communication/mail-outline';
 
 export default class LoginForm extends Component {
   static propTypes = {
     action: PropTypes.string,
     pending: PropTypes.bool.isRequired,
-    onSuccessRedirect: PropTypes.string
+    onSuccessRedirect: PropTypes.string,
   };
 
   static defaultProps = {
-    action: "login"
+    action: 'login',
   };
   constructor(props) {
     super(props);
@@ -41,7 +41,7 @@ export default class LoginForm extends Component {
       username: this.username.getValue(),
       password: this.password ? this.password.getValue() : null,
       passwordConfirm: this.passwordConfirm ? this.passwordConfirm.getValue() : null,
-      redirectPathname: this.props.onSuccessRedirect
+      redirectPathname: this.props.onSuccessRedirect,
     });
   };
 
@@ -52,16 +52,16 @@ export default class LoginForm extends Component {
     let icon;
 
     switch (view) {
-      case "login":
-        label = pending ? "Connexion..." : "Se connecter";
+      case 'login':
+        label = pending ? 'Connexion...' : 'Se connecter';
         icon = <PersonIcon />;
         break;
-      case "register":
-        label = pending ? "Creaction du compte..." : "S'inscrire";
+      case 'register':
+        label = pending ? 'Creaction du compte...' : "S'inscrire";
         icon = <PersonAddIcon />;
         break;
       default:
-        label = pending ? "envoi..." : "envoyer";
+        label = pending ? 'envoi...' : 'envoyer';
         icon = <MailIcon />;
     }
 
@@ -74,20 +74,20 @@ export default class LoginForm extends Component {
       <div className={`row center-md ${styles.login}`}>
         <Paper className={`col-md-6 ${styles.paddedHoriz}`}>
           <h3 className={styles.formHeader}>
-            {view === "login" && "Déjà inscrit ?"}
-            {view === "register" && "S'inscrire à ProxiWeb"}
-            {view === "motdepasse" && "Obtenir un nouveau mot de passe"}
+            {view === 'login' && 'Déjà inscrit ?'}
+            {view === 'register' && "S'inscrire à ProxiWeb"}
+            {view === 'motdepasse' && 'Obtenir un nouveau mot de passe'}
           </h3>
           <div className="row center-md">
             <form className="form form-inline" onSubmit={this.handleFormSubmit}>
               <div className="col-md-10 text-center">
                 <TextField
-                  floatingLabelText={`Email ${view !== "motdepasse" ? " ou pseudo" : ""}`}
+                  floatingLabelText={`Email ${view !== 'motdepasse' ? ' ou pseudo' : ''}`}
                   ref={node => (this.username = node)}
                   type="text"
                 />
               </div>
-              {view !== "motdepasse" &&
+              {view !== 'motdepasse' &&
                 <div className="col-md-10 text-center">
                   <TextField
                     floatingLabelText="Mot de passe"
@@ -95,7 +95,7 @@ export default class LoginForm extends Component {
                     type="password"
                   />
                 </div>}
-              {view === "register" &&
+              {view === 'register' &&
                 <div className="col-md-10text-center">
                   <TextField
                     floatingLabelText="Mot de passe (confirmation)"
@@ -110,38 +110,38 @@ export default class LoginForm extends Component {
           </div>
           <div className="row with-margin-top">
             <div className="col-md-6">
-              {view === "login" &&
+              {view === 'login' &&
                 <FlatButton
                   label="Créer un compte"
                   onClick={() =>
                     this.setState(oldState => ({
                       ...oldState,
-                      view: "register"
+                      view: 'register',
                     }))}
                 />}
-              {view !== "login" &&
+              {view !== 'login' &&
                 <FlatButton
                   label="Se connecter"
-                  onClick={() => this.setState(oldState => ({ ...oldState, view: "login" }))}
+                  onClick={() => this.setState(oldState => ({ ...oldState, view: 'login' }))}
                 />}
             </div>
             <div className="col-md-6">
-              {view !== "motdepasse" &&
+              {view !== 'motdepasse' &&
                 <FlatButton
                   label="Mot de passe oublié"
                   onClick={() =>
                     this.setState(oldState => ({
                       ...oldState,
-                      view: "motdepasse"
+                      view: 'motdepasse',
                     }))}
                 />}
-              {view === "motdepasse" &&
+              {view === 'motdepasse' &&
                 <FlatButton
                   label="Créer un compte"
                   onClick={() =>
                     this.setState(oldState => ({
                       ...oldState,
-                      view: "register"
+                      view: 'register',
                     }))}
                 />}
             </div>

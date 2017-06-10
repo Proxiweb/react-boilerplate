@@ -1,26 +1,26 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import { createStructuredSelector } from "reselect";
-import { List, ListItem, makeSelectable } from "material-ui/List";
-import compareDesc from "date-fns/compare_desc";
-import { format } from "utils/dates";
-import classnames from "classnames";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+import compareDesc from 'date-fns/compare_desc';
+import { format } from 'utils/dates';
+import classnames from 'classnames';
 
-import { loadFournisseur } from "containers/AdminFournisseur/actions";
-import { selectLocationState } from "containers/App/selectors";
+import { loadFournisseur } from 'containers/AdminFournisseur/actions';
+import { selectLocationState } from 'containers/App/selectors';
 
-import { loadCommandes } from "containers/Commande/actions";
+import { loadCommandes } from 'containers/Commande/actions';
 import {
   selectCommandeCommandeUtilisateurs,
   selectCommandeCommandeContenus,
   selectCommandeContenus,
-  selectCommandesRelais
-} from "containers/Commande/selectors";
+  selectCommandesRelais,
+} from 'containers/Commande/selectors';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 const SelectableList = makeSelectable(List);
 
@@ -33,7 +33,7 @@ class FacturesDistributeur extends Component {
     children: PropTypes.node,
     commandes: PropTypes.array,
     commandeUtilisateurs: PropTypes.array,
-    commandeContenus: PropTypes.array
+    commandeContenus: PropTypes.array,
   };
 
   componentDidMount() {
@@ -70,7 +70,7 @@ class FacturesDistributeur extends Component {
               commande: commandes[params.commandeId],
               params,
               commandeUtilisateurs,
-              commandeContenus
+              commandeContenus,
             })}
         </div>
       );
@@ -79,18 +79,18 @@ class FacturesDistributeur extends Component {
     return (
       <div className="row">
         {!print &&
-          <div className={classnames("col-md-3", styles.panel)}>
+          <div className={classnames('col-md-3', styles.panel)}>
             <SelectableList value={params.commandeId} onChange={this.handleChangeList}>
               {Object.keys(commandes)
                 .slice()
                 .filter(id => commandes[id].dateCommande)
                 .sort(compareDesc)
                 .map((id, idx) =>
-                  <ListItem key={idx} primaryText={format(commandes[id].dateCommande, "DD MM")} value={id} />
+                  <ListItem key={idx} primaryText={format(commandes[id].dateCommande, 'DD MM')} value={id} />
                 )}
             </SelectableList>
           </div>}
-        <div className={classnames(print ? "col-md-12" : "col-md-9", styles.panel)}>
+        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
           {this.props.children &&
             commandeUtilisateurs &&
             commandeContenus &&
@@ -98,7 +98,7 @@ class FacturesDistributeur extends Component {
               commande: commandes[params.commandeId],
               params,
               commandeUtilisateurs,
-              commandeContenus
+              commandeContenus,
             })}
         </div>
       </div>
@@ -110,14 +110,14 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeContenus(),
   // contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  locationState: selectLocationState()
+  locationState: selectLocationState(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadCde: loadCommandes,
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

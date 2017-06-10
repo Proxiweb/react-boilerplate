@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { createStructuredSelector } from "reselect";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-import Paper from "material-ui/Paper";
-import TextField from "material-ui/TextField";
-import RaisedButton from "material-ui/RaisedButton";
+import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import { selectStellarKeys } from "containers/App/selectors";
-import { setStellarKeys } from "containers/App/actions";
+import { selectStellarKeys } from 'containers/App/selectors';
+import { setStellarKeys } from 'containers/App/actions';
 
 class ProxiwebConfig extends Component {
   static propTypes = {
-    stellarKeys: PropTypes.object.isRequired
+    stellarKeys: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -28,7 +28,7 @@ class ProxiwebConfig extends Component {
     return (
       <div className="row center-md">
         <div className="col-md-6">
-          <Paper style={{ padding: "1em" }}>
+          <Paper style={{ padding: '1em' }}>
             <div className="row center-md">
               <div className="col-md-10">
                 <TextField
@@ -46,7 +46,7 @@ class ProxiwebConfig extends Component {
                   value={this.state.secret}
                 />
               </div>
-              <div className="col-md-6" style={{ marginTop: "1em" }}>
+              <div className="col-md-6" style={{ marginTop: '1em' }}>
                 <RaisedButton primary label="valider" fullWidth onClick={this.handleValidation} />
               </div>
             </div>
@@ -58,13 +58,13 @@ class ProxiwebConfig extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  stellarKeys: selectStellarKeys()
+  stellarKeys: selectStellarKeys(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      set: setStellarKeys
+      set: setStellarKeys,
     },
     dispatch
   );

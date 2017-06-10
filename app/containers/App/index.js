@@ -11,41 +11,41 @@
 * the linting exception.
 */
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { push } from "react-router-redux";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import runtime from "offline-plugin/runtime";
-import styles from "./styles.css";
-import Notifications from "containers/Notifications";
-import CircularProgress from "material-ui/CircularProgress";
-import MenuItem from "material-ui/MenuItem";
-import Close from "material-ui/svg-icons/navigation/close";
-import IconButton from "material-ui/IconButton";
-import NavigationMenuIcon from "material-ui/svg-icons/navigation/menu";
-import FlatButton from "material-ui/FlatButton";
-import { Toolbar, ToolbarGroup } from "material-ui/Toolbar";
-import AppMainDrawer from "containers/AppMainDrawer";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import runtime from 'offline-plugin/runtime';
+import styles from './styles.css';
+import Notifications from 'containers/Notifications';
+import CircularProgress from 'material-ui/CircularProgress';
+import MenuItem from 'material-ui/MenuItem';
+import Close from 'material-ui/svg-icons/navigation/close';
+import IconButton from 'material-ui/IconButton';
+import NavigationMenuIcon from 'material-ui/svg-icons/navigation/menu';
+import FlatButton from 'material-ui/FlatButton';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import AppMainDrawer from 'containers/AppMainDrawer';
 
-import { selectBalance, selectCompteUtilisateur } from "containers/CompteUtilisateur/selectors";
+import { selectBalance, selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import {
   selectPending,
   selectMessagesUtilisateurLoaded,
   selectMessagesUtilisateur,
   selectRelaiId,
-  selectLocationState
-} from "./selectors";
+  selectLocationState,
+} from './selectors';
 
-import { loadMessages } from "./actions";
+import { loadMessages } from './actions';
 
-import { logout } from "containers/Login/actions";
-import { refresh } from "containers/CompteUtilisateur/actions";
-import Logged from "./components/Logged";
-import Login from "./components/Login";
-import MessageMaj from "./components/MessageMaj";
+import { logout } from 'containers/Login/actions';
+import { refresh } from 'containers/CompteUtilisateur/actions';
+import Logged from './components/Logged';
+import Login from './components/Login';
+import MessageMaj from './components/MessageMaj';
 
 const getDrawerHeaderStyle = context => {
   const { appBar } = context.muiTheme;
@@ -55,7 +55,7 @@ const getDrawerHeaderStyle = context => {
     height: appBar.height + 6,
     fontSize: 24,
     paddingTop: 0,
-    lineHeight: `${appBar.height}px`
+    lineHeight: `${appBar.height}px`,
   };
 };
 
@@ -74,17 +74,17 @@ class App extends Component {
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     pending: PropTypes.bool.isRequired,
     loadM: PropTypes.func.isRequired,
-    refresh: PropTypes.func.isRequired
+    refresh: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   state = {
     drawerOpen: false,
     maj: false,
-    logged: false
+    logged: false,
   };
 
   componentDidMount = () => {
@@ -99,23 +99,23 @@ class App extends Component {
 
     runtime.install({
       onUpdating: () => {
-        console.log("SW Event:", "onUpdating");
+        console.log('SW Event:', 'onUpdating');
       },
       onUpdateReady: () => {
-        console.log("SW Event:", "onUpdateReady");
+        console.log('SW Event:', 'onUpdateReady');
         // Update is applied here
         runtime.applyUpdate();
       },
       onUpdated: () => {
-        console.log("SW Event:", "onUpdated");
+        console.log('SW Event:', 'onUpdated');
         // Force reload happens here
         this.setState({ maj: true });
         setTimeout(window.location.reload(true), 5000);
       },
 
       onUpdateFailed: () => {
-        console.log("SW Event:", "onUpdateFailed");
-      }
+        console.log('SW Event:', 'onUpdateFailed');
+      },
     });
   };
 
@@ -126,7 +126,7 @@ class App extends Component {
   handleChangeList = (event, value) => {
     event.preventDefault();
 
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       this.props.pushState(value);
     } else if (value.url) {
       window.location = value.url;
@@ -137,7 +137,7 @@ class App extends Component {
 
   handleChangeRequestNavDrawer = open => {
     this.setState({
-      drawerOpen: open
+      drawerOpen: open,
     });
   };
 
@@ -150,7 +150,7 @@ class App extends Component {
       compte,
       messages,
       anonRelaiId,
-      locationState
+      locationState,
     } = this.props;
 
     const { muiTheme } = this.context;
@@ -172,8 +172,8 @@ class App extends Component {
         <Toolbar
           className={`${styles.noPrint} ${styles.toolbar}`}
           style={{
-            backgroundColor: process.env.NODE_ENV === "development" ? "#438DED" : muiTheme.appBar.color,
-            height: "50px"
+            backgroundColor: process.env.NODE_ENV === 'development' ? '#438DED' : muiTheme.appBar.color,
+            height: '50px',
           }}
         >
           <ToolbarGroup firstChild>
@@ -182,21 +182,21 @@ class App extends Component {
             </IconButton>
             <FlatButton
               label="Relais ProxiWeb"
-              style={{ color: "black", marginLeft: 0, marginTop: 5 }}
-              onClick={() => pushState("/")}
+              style={{ color: 'black', marginLeft: 0, marginTop: 5 }}
+              onClick={() => pushState('/')}
             />
             {pending &&
-              <div style={{ position: "relative" }}>
+              <div style={{ position: 'relative' }}>
                 <CircularProgress
                   size={20}
                   color="white"
                   status="loading"
                   style={{
-                    display: "inline-block",
-                    position: "absolute",
+                    display: 'inline-block',
+                    position: 'absolute',
                     zIndex: 1200,
                     top: 19,
-                    left: -35
+                    left: -35,
                   }}
                 />
               </div>}
@@ -248,7 +248,7 @@ const mapStateToProps = createStructuredSelector({
   messages: selectMessagesUtilisateur(),
   compte: selectBalance(),
   anonRelaiId: selectRelaiId(),
-  locationState: selectLocationState()
+  locationState: selectLocationState(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -257,7 +257,7 @@ const mapDispatchToProps = dispatch =>
       pushState: push,
       logout,
       refresh,
-      loadM: loadMessages
+      loadM: loadMessages,
     },
     dispatch
   );

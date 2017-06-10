@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { createStructuredSelector } from "reselect";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
 
-import { selectCommandeId } from "containers/Commande/selectors";
+import { selectCommandeId } from 'containers/Commande/selectors';
 
-import styles from "./styles.css";
-import classnames from "classnames";
+import styles from './styles.css';
+import classnames from 'classnames';
 
 class DetailCommandeWrapper extends Component {
   static propTypes = {
     commandeId: PropTypes.string.isRequired,
     relais: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
-    commandes: PropTypes.array.isRequired
+    commandes: PropTypes.array.isRequired,
   };
 
   render() {
@@ -21,11 +21,11 @@ class DetailCommandeWrapper extends Component {
     return (
       <div
         className={classnames(
-          "col-md-10",
+          'col-md-10',
           styles.panel,
           { [styles.nouvelleCommande]: !commandeId },
           {
-            [styles.noScroll]: !commandeId
+            [styles.noScroll]: !commandeId,
           }
         )}
       >
@@ -33,7 +33,7 @@ class DetailCommandeWrapper extends Component {
           commandes,
           commandeId,
           params,
-          relais
+          relais,
         })}
       </div>
     );
@@ -41,7 +41,7 @@ class DetailCommandeWrapper extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeId: selectCommandeId()
+  commandeId: selectCommandeId(),
 });
 
 export default connect(mapStateToProps)(DetailCommandeWrapper);

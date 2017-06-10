@@ -1,28 +1,28 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import StripeCheckout from "react-stripe-checkout";
-import Slider from "material-ui/Slider";
-import RaisedButton from "material-ui/RaisedButton";
-import CreditCardIcon from "material-ui/svg-icons/action/credit-card";
-import round from "lodash/round";
-import styles from "./styles.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import StripeCheckout from 'react-stripe-checkout';
+import Slider from 'material-ui/Slider';
+import RaisedButton from 'material-ui/RaisedButton';
+import CreditCardIcon from 'material-ui/svg-icons/action/credit-card';
+import round from 'lodash/round';
+import styles from './styles.css';
 
 export default class CarteBleue extends Component {
   static propTypes = {
     max: PropTypes.number.isRequired,
     email: PropTypes.string.isRequired,
-    deposerCB: PropTypes.func.isRequired
+    deposerCB: PropTypes.func.isRequired,
   };
 
   state = {
-    montant: 10
+    montant: 10,
   };
 
   onToken = token => {
     const { deposerCB } = this.props;
     deposerCB({
       token: token.id,
-      montant: parseFloat(this.state.montant) * 100
+      montant: parseFloat(this.state.montant) * 100,
     });
   };
 
@@ -33,7 +33,7 @@ export default class CarteBleue extends Component {
     const restant = round(montant - frais, 2);
     return (
       <div className="col-md-8">
-        <p style={{ minHeight: "18px" }}>
+        <p style={{ minHeight: '18px' }}>
           {montant !== null && montant > 0 && <span>Montant du depot CB : <strong>{montant} €</strong></span>}
         </p>
         <Slider

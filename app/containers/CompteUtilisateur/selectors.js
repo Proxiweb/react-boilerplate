@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector } from 'reselect';
 
 /**
  * Direct selector to the compteUtilisateur state domain
@@ -42,7 +42,7 @@ export const selectAuthApiKey = () =>
 
 export const selectBalance = () =>
   createSelector(selectCompteUtilisateurDomain(), substate =>
-    substate.balances.find(bal => bal.asset_code === "PROXI")
+    substate.balances.find(bal => bal.asset_code === 'PROXI')
   );
 
 export const selectMontantBalance = () =>
@@ -58,6 +58,6 @@ export const selectVirements = () =>
     selectCompteUtilisateurDomain(),
     substate =>
       substate.virements
-        ? substate.virements.filter(dep => dep.type === "virement" && !dep.transfertEffectue)
+        ? substate.virements.filter(dep => dep.type === 'virement' && !dep.transfertEffectue)
         : null
   );

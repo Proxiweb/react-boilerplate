@@ -4,12 +4,12 @@
 *
 */
 
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 // import { FormattedMessage } from 'react-intl';
-import styles from "./styles.css";
-import ToggleOption from "../ToggleOption";
+import styles from './styles.css';
+import ToggleOption from '../ToggleOption';
 
 function Toggle(props) {
   // eslint-disable-line react/prefer-stateless-function
@@ -32,7 +32,7 @@ function Toggle(props) {
 Toggle.propTypes = {
   onToggle: PropTypes.func,
   values: PropTypes.array,
-  messages: PropTypes.object
+  messages: PropTypes.object,
 };
 
 export default Toggle;

@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Paper from "material-ui/Paper";
-import styles from "./styles.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Paper from 'material-ui/Paper';
+import styles from './styles.css';
 
 const Panel = ({ title, children }) =>
   <Paper className={styles.panel}>
@@ -15,7 +15,7 @@ const Panel = ({ title, children }) =>
 
 Panel.propTypes = {
   title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default Panel;

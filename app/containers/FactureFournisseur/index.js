@@ -1,10 +1,10 @@
 /* eslint-disable */
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import round from "lodash/round";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import round from 'lodash/round';
 
 import {
   selectCommandeCommandeUtilisateurs,
@@ -14,20 +14,20 @@ import {
   selectFournisseurs,
   selectProduits,
   selectCommande,
-  selectUtilisateurs
-} from "containers/Commande/selectors";
+  selectUtilisateurs,
+} from 'containers/Commande/selectors';
 
-import { loadFournisseurs, fetchUtilisateurs } from "containers/Commande/actions";
+import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
 
-import { selectPending } from "containers/App/selectors";
+import { selectPending } from 'containers/App/selectors';
 
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import { trouveTarification } from "containers/CommandeEdit/components/components/AffichePrix";
-import Adresse from "./components/Adresse";
-import { format } from "utils/dates";
-import classnames from "classnames";
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import Adresse from './components/Adresse';
+import { format } from 'utils/dates';
+import classnames from 'classnames';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 class FactureFournisseur extends Component {
   // eslint-disable-line
@@ -42,7 +42,7 @@ class FactureFournisseur extends Component {
     utilisateurs: PropTypes.array.isRequired,
     fournisseurs: PropTypes.object.isRequired,
     loadU: PropTypes.func.isRequired,
-    loadF: PropTypes.func.isRequired
+    loadF: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -68,7 +68,7 @@ class FactureFournisseur extends Component {
       commandeContenus,
       offres,
       commandeId,
-      filter: cc => cc.utilisateurId === utilisateurId
+      filter: cc => cc.utilisateurId === utilisateurId,
     });
     if (!contenus.length) return null;
 
@@ -90,8 +90,8 @@ class FactureFournisseur extends Component {
           <td className={styles.center}>
             {parseFloat(round(tarif.prix / 100 / 1.055, 2)).toFixed(2)}
             {tarifEnBaisse &&
-              <span style={{ color: "red" }}>
-                {" "}
+              <span style={{ color: 'red' }}>
+                {' '}
                 <s>
                   {parseFloat(round(offre.tarifications[0].prix / 100 / 1.055, 2)).toFixed(2)}
                 </s>
@@ -142,7 +142,7 @@ class FactureFournisseur extends Component {
                       </td>
 
                       <td className={styles.title}>
-                        <h3>{format(commande.dateCommande, "DD MM")}</h3>
+                        <h3>{format(commande.dateCommande, 'DD MM')}</h3>
                       </td>
                     </tr>
                   </table>
@@ -196,14 +196,14 @@ const mapStateToProps = createStructuredSelector({
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   utilisateurs: selectUtilisateurs(),
   fournisseurs: selectFournisseurs(),
-  offres: selectOffres()
+  offres: selectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadU: fetchUtilisateurs,
-      loadF: loadFournisseurs
+      loadF: loadFournisseurs,
     },
     dispatch
   );

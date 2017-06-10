@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import ProduitSelector from "./containers/ProduitSelector";
-import DetailOffres from "./containers/DetailOffres";
-import TexteCatalogue from "./containers/TexteCatalogue";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import ProduitSelector from './containers/ProduitSelector';
+import DetailOffres from './containers/DetailOffres';
+import TexteCatalogue from './containers/TexteCatalogue';
 
-import { loadFournisseurs } from "containers/Commande/actions";
+import { loadFournisseurs } from 'containers/Commande/actions';
 
-import { selectProduitsRelaisByTypeProduit, selectTypesProduitsRelais } from "containers/Commande/selectors";
+import { selectProduitsRelaisByTypeProduit, selectTypesProduitsRelais } from 'containers/Commande/selectors';
 
-import { selectPending } from "containers/App/selectors";
+import { selectPending } from 'containers/App/selectors';
 
 class Catalogue extends Component {
   // eslint-disable-line
@@ -20,7 +20,7 @@ class Catalogue extends Component {
     typeProduits: PropTypes.array,
     produits: PropTypes.array,
     params: PropTypes.object.isRequired,
-    load: PropTypes.func.isRequired
+    load: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -50,13 +50,13 @@ class Catalogue extends Component {
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
   typeProduits: selectTypesProduitsRelais(),
-  produits: selectProduitsRelaisByTypeProduit()
+  produits: selectProduitsRelaisByTypeProduit(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      load: loadFournisseurs
+      load: loadFournisseurs,
     },
     dispatch
   );

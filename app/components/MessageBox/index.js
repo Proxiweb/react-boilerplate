@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class MessageBox extends Component {
   // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    asyncState: PropTypes.object.isRequired
+    asyncState: PropTypes.object.isRequired,
   };
 
   render() {

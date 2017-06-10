@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import { List, makeSelectable } from "material-ui/List";
-import { format } from "utils/dates";
-import compareDesc from "date-fns/compare_desc";
-import addMinutes from "date-fns/add_minutes";
-import getTime from "date-fns/get_time";
-import groupBy from "lodash/groupBy";
-import RaisedButton from "material-ui/RaisedButton";
-import Subheader from "material-ui/Subheader";
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import DepotRelais from "containers/DepotRelais";
-import { selectStellarKeys } from "containers/App/selectors";
-import ListeAcheteursItem from "./ListeAcheteursItem";
-import styles from "./styles.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { List, makeSelectable } from 'material-ui/List';
+import { format } from 'utils/dates';
+import compareDesc from 'date-fns/compare_desc';
+import addMinutes from 'date-fns/add_minutes';
+import getTime from 'date-fns/get_time';
+import groupBy from 'lodash/groupBy';
+import RaisedButton from 'material-ui/RaisedButton';
+import Subheader from 'material-ui/Subheader';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import DepotRelais from 'containers/DepotRelais';
+import { selectStellarKeys } from 'containers/App/selectors';
+import ListeAcheteursItem from './ListeAcheteursItem';
+import styles from './styles.css';
 const SelectableList = makeSelectable(List);
 
 class ListeAcheteurs extends Component {
@@ -29,7 +29,7 @@ class ListeAcheteurs extends Component {
     distributions: PropTypes.array.isRequired,
     depots: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
   };
 
   state = {
@@ -37,7 +37,7 @@ class ListeAcheteurs extends Component {
     utilisateurDepot: null,
     utilisateurTotalCommande: null,
     utilisateurBalance: null,
-    depot: false
+    depot: false,
   };
 
   handleClose = () => this.setState({ ...this.state, depot: false });
@@ -52,7 +52,7 @@ class ListeAcheteurs extends Component {
       utilisateurSelected,
       utilisateurDepot,
       utilisateurTotalCommande,
-      utilisateurBalance
+      utilisateurBalance,
     });
     this.props.onChange(utilisateurSelected);
   };
@@ -66,7 +66,7 @@ class ListeAcheteurs extends Component {
       stellarKeys,
       offres,
       commandeContenus,
-      depots
+      depots,
     } = this.props;
 
     const { utilisateurDepot, utilisateurTotalCommande, utilisateurBalance } = this.state;
@@ -86,7 +86,7 @@ class ListeAcheteurs extends Component {
             : null,
           debutLivraisonUnix: distribution
             ? getTime(addMinutes(distribution.debut, distribution.plageHoraire))
-            : 0
+            : 0,
         };
       })
       .slice()
@@ -95,7 +95,7 @@ class ListeAcheteurs extends Component {
           cu1.debutLivraisonUnix > cu2.debutLivraisonUnix && cu1.utilisateur.nom > cu2.utilisateur.nom
       );
 
-    const acheteursGrp = groupBy(acheteurs, "debutLivraisonISO");
+    const acheteursGrp = groupBy(acheteurs, 'debutLivraisonISO');
 
     return (
       <div className="row">
@@ -131,7 +131,7 @@ class ListeAcheteurs extends Component {
           <SelectableList value={utilisateurId}>
             {Object.keys(acheteursGrp).map(key =>
               <div key={key}>
-                <Subheader>{format(key, "LL HH:mm")}</Subheader>
+                <Subheader>{format(key, 'LL HH:mm')}</Subheader>
                 {acheteursGrp[key].map((cu, idx2) =>
                   <ListeAcheteursItem
                     key={idx2}
@@ -144,7 +144,7 @@ class ListeAcheteurs extends Component {
                       filter: cc => cc.utilisateurId === cu.utilisateurId,
                       offres,
                       commandeContenus,
-                      commandeId
+                      commandeId,
                     })}
                   />
                 )}
@@ -158,7 +158,7 @@ class ListeAcheteurs extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  stellarKeys: selectStellarKeys()
+  stellarKeys: selectStellarKeys(),
 });
 
 export default connect(mapStateToProps)(ListeAcheteurs);

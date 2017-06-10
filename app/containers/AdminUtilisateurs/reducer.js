@@ -1,7 +1,7 @@
-import c from "./constants";
-import merge from "lodash/merge";
+import c from './constants';
+import merge from 'lodash/merge';
 const initialState = {
-  datas: []
+  datas: [],
 };
 
 const adminUtilisateursReducer = (state = initialState, action) => {

@@ -1,14 +1,14 @@
-import c from "./constants";
-import update from "immutability-helper";
+import c from './constants';
+import update from 'immutability-helper';
 
 const initialState = {
-  datas: []
+  datas: [],
 };
 
 const majRelais = (state, relais) => {
   const arr = [...state.datas];
   return update(state, {
-    datas: { $set: arr.map(a => (a.id === relais.id ? relais : a)) }
+    datas: { $set: arr.map(a => (a.id === relais.id ? relais : a)) },
   });
 };
 

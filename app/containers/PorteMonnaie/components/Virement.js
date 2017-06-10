@@ -1,40 +1,40 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Paper from "material-ui/Paper";
-import RaisedButton from "material-ui/RaisedButton";
-import TrashIcon from "material-ui/svg-icons/action/delete-forever";
-import { distanceInWords } from "utils/dates";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
+import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
+import { distanceInWords } from 'utils/dates';
 
 export default class Virement extends Component {
   // eslint-disable-line
   static propTypes = {
     virement: PropTypes.object.isRequired,
-    annulerVirement: PropTypes.func.isRequired
+    annulerVirement: PropTypes.func.isRequired,
   };
   render() {
     const { virement, annulerVirement } = this.props;
     return (
-      <Paper style={{ padding: "0.5em" }}>
+      <Paper style={{ padding: '0.5em' }}>
         <div>
           Virement de
-          {" "}
+          {' '}
           <strong>{virement.montant} €</strong>
           , programmé
-          {" "}
+          {' '}
           {distanceInWords(new Date(), virement.createdAt)}
           <br />
           <br />
           Effectuez votre virement comme suit :<br />
-          <ul style={{ listStyleType: "none" }}>
+          <ul style={{ listStyleType: 'none' }}>
             <li>
               {"L'IBAN de notre compte : "}
               <br />
-              <strong>{"FR76 3000 3008 7300 0372 6302 382"}</strong>
+              <strong>{'FR76 3000 3008 7300 0372 6302 382'}</strong>
               <br />
               <br />
             </li>
             <li>
-              {"Comme motif du virement, indiquez "}
+              {'Comme motif du virement, indiquez '}
               <br />
               <strong>{virement.infosSupplement.ref}</strong>
             </li>

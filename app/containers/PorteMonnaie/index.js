@@ -4,35 +4,35 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import { Tabs, Tab } from "material-ui/Tabs";
-import round from "lodash/round";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import round from 'lodash/round';
 
 import {
   selectPayments,
   selectBalance,
   selectVirements,
-  selectCompteUtilisateur
-} from "containers/CompteUtilisateur/selectors";
+  selectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 
 import {
   programmerVirement,
   loadVirements,
   annulerVirement,
-  deposerCB
-} from "containers/CompteUtilisateur/actions";
+  deposerCB,
+} from 'containers/CompteUtilisateur/actions';
 
-import { selectParams } from "containers/App/selectors";
+import { selectParams } from 'containers/App/selectors';
 
-import Virements from "./components/Virements";
-import CarteBleue from "./components/CarteBleue";
-import ListeEffetsCompteStellar from "components/ListeEffetsCompteStellar/ListeEffetsCompteStellar";
+import Virements from './components/Virements';
+import CarteBleue from './components/CarteBleue';
+import ListeEffetsCompteStellar from 'components/ListeEffetsCompteStellar/ListeEffetsCompteStellar';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 export class PorteMonnaie extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -44,11 +44,11 @@ export class PorteMonnaie extends React.Component {
     loadVir: PropTypes.func.isRequired,
     progVir: PropTypes.func.isRequired,
     annulVir: PropTypes.func.isRequired,
-    depCb: PropTypes.func.isRequired
+    depCb: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   componentDidMount = () => {
@@ -71,7 +71,7 @@ export class PorteMonnaie extends React.Component {
             <ListeEffetsCompteStellar stellarAddress={auth.stellarKeys.adresse} limit="10" />}
         </div>
         <div className={`col-md-6 ${styles.panel}`}>
-          <div className={`${styles.porteMonnaie}`} style={{ textAlign: "center" }}>
+          <div className={`${styles.porteMonnaie}`} style={{ textAlign: 'center' }}>
             Approvisionner le porte-monnaie
           </div>
           <Tabs inkBarStyle={{ height: 7, backgroundColor: muiTheme.appBar.color, marginTop: -7 }}>
@@ -108,7 +108,7 @@ const mapStateToProps = createStructuredSelector({
   compte: selectBalance(),
   virements: selectVirements(),
   params: selectParams(),
-  auth: selectCompteUtilisateur()
+  auth: selectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -117,7 +117,7 @@ const mapDispatchToProps = dispatch =>
       progVir: programmerVirement,
       loadVir: loadVirements,
       annulVir: annulerVirement,
-      depCb: deposerCB
+      depCb: deposerCB,
     },
     dispatch
   );

@@ -1,6 +1,6 @@
-import "whatwg-fetch";
-import checkStatus from "./checkStatus";
-import parseJSON from "./parse";
+import 'whatwg-fetch';
+import checkStatus from './checkStatus';
+import parseJSON from './parse';
 
 /**
  * Requests a URL, returning a promise

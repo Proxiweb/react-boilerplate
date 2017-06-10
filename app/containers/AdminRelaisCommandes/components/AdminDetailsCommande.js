@@ -1,34 +1,34 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import Helmet from "react-helmet";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import { createStructuredSelector } from "reselect";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
 import {
   selectCommandeCommandeUtilisateurs,
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectOffres,
   selectCommandeId,
-  selectUtilisateurs
-} from "containers/Commande/selectors";
+  selectUtilisateurs,
+} from 'containers/Commande/selectors';
 
-import { fetchUtilisateurs } from "containers/Commande/actions";
+import { fetchUtilisateurs } from 'containers/Commande/actions';
 
-import { selectDepots } from "containers/AdminDepot/selectors";
-import { loadDepotsRelais } from "containers/AdminDepot/actions";
+import { selectDepots } from 'containers/AdminDepot/selectors';
+import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 
-import { selectRoles } from "containers/CompteUtilisateur/selectors";
+import { selectRoles } from 'containers/CompteUtilisateur/selectors';
 
-import DetailsParFournisseur from "./DetailsParFournisseur";
-import ListeAcheteurs from "./ListeAcheteurs";
-import { selectPending, selectCommandes } from "containers/App/selectors";
-import DetailsParUtilisateur from "./DetailsParUtilisateur";
-import ValidationCommandesAdherents from "./ValidationCommandesAdherents";
-import FinalisationCommande from "./FinalisationCommande";
+import DetailsParFournisseur from './DetailsParFournisseur';
+import ListeAcheteurs from './ListeAcheteurs';
+import { selectPending, selectCommandes } from 'containers/App/selectors';
+import DetailsParUtilisateur from './DetailsParUtilisateur';
+import ValidationCommandesAdherents from './ValidationCommandesAdherents';
+import FinalisationCommande from './FinalisationCommande';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 class AdminDetailsCommande extends Component {
   static propTypes = {
@@ -46,11 +46,11 @@ class AdminDetailsCommande extends Component {
     depots: PropTypes.array,
     utilisateurs: PropTypes.array.isRequired,
     loadUtilisateurs: PropTypes.func.isRequired,
-    loadDepots: PropTypes.func.isRequired
+    loadDepots: PropTypes.func.isRequired,
   };
 
   state = {
-    view: "fournisseurs" // ou validation
+    view: 'fournisseurs', // ou validation
   };
 
   componentDidMount() {
@@ -91,7 +91,7 @@ class AdminDetailsCommande extends Component {
       params,
       utilisateurs,
       roles,
-      children
+      children,
     } = this.props;
     const commande = commandes[commandeId];
     const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
@@ -123,13 +123,13 @@ class AdminDetailsCommande extends Component {
             commandeUtilisateurs &&
             contenus &&
             utils &&
-            view === "fournisseurs" &&
+            view === 'fournisseurs' &&
             <DetailsParFournisseur
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
               utilisateurs={utils}
               commandeContenus={contenus}
-              handleValidate={() => this.setState({ view: "validation" })}
+              handleValidate={() => this.setState({ view: 'validation' })}
               finalisation={commande.finalisation}
             />}
           {!children &&
@@ -137,7 +137,7 @@ class AdminDetailsCommande extends Component {
             commandeUtilisateurs.filter(cu => cu.datePaiement).length < commandeUtilisateurs.length &&
             contenus &&
             !commande.validation &&
-            view === "validation" &&
+            view === 'validation' &&
             <ValidationCommandesAdherents
               params={params}
               commandeUtilisateurs={commandeUtilisateurs}
@@ -149,7 +149,7 @@ class AdminDetailsCommande extends Component {
             commandeUtilisateurs &&
             commandeUtilisateurs.filter(cu => cu.datePaiement).length === commandeUtilisateurs.length &&
             contenus &&
-            view === "validation" &&
+            view === 'validation' &&
             !commande.finalisation &&
             <FinalisationCommande params={params} contenus={contenus} commandeContenus={commandeContenus} />}
           {children &&
@@ -177,7 +177,7 @@ const mapStateToProps = createStructuredSelector({
   commandeId: selectCommandeId(),
   depots: selectDepots(),
   roles: selectRoles(),
-  offres: selectOffres()
+  offres: selectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -185,7 +185,7 @@ const mapDispatchToProps = dispatch =>
     {
       loadUtilisateurs: fetchUtilisateurs,
       loadDepots: loadDepotsRelais,
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

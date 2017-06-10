@@ -1,9 +1,9 @@
-import { createSelector } from "reselect";
-import isAfter from "date-fns/is_after";
-import uniq from "lodash/uniq";
-import flatten from "lodash/flatten";
+import { createSelector } from 'reselect';
+import isAfter from 'date-fns/is_after';
+import uniq from 'lodash/uniq';
+import flatten from 'lodash/flatten';
 
-import { selectAuthUtilisateurId, selectUserId } from "containers/CompteUtilisateur/selectors";
+import { selectAuthUtilisateurId, selectUserId } from 'containers/CompteUtilisateur/selectors';
 /**
  * Direct selector to the commande state domain
  */
@@ -28,19 +28,19 @@ const getModel = (substate, name) => {
 };
 
 export const selectCommandes = () =>
-  createSelector([selectCommandeDomain()], substate => getModel(substate, "commandes"));
+  createSelector([selectCommandeDomain()], substate => getModel(substate, 'commandes'));
 
 export const selectCommandesUtilisateurs = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "commandeUtilisateurs"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'commandeUtilisateurs'));
 
 export const selectCommandeContenus = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "commandeContenus"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'commandeContenus'));
 
 export const selectFournisseursIds = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "fournisseurs"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'fournisseurs'));
 
 export const selectTypesProduitsByIds = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "typesProduits"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'typesProduits'));
 
 export const selectFournisseurs = () =>
   createSelector(
@@ -52,19 +52,19 @@ export const selectFournisseurs = () =>
   );
 
 export const selectProduits = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "produits"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'produits'));
 
 export const selectTypesProduits = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "typesProduits"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'typesProduits'));
 
 export const selectOffres = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "offres"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'offres'));
 
 export const selectRelais = () =>
-  createSelector(selectCommandeDomain(), substate => getModel(substate, "relais"));
+  createSelector(selectCommandeDomain(), substate => getModel(substate, 'relais'));
 
 export const selectUtilisateurs = () =>
-  createSelector([selectCommandeDomain()], substate => getModel(substate, "utilisateurs"));
+  createSelector([selectCommandeDomain()], substate => getModel(substate, 'utilisateurs'));
 
 export const selectRelaisSelected = () =>
   createSelector(selectRelaisId(), selectRelais(), (relaisId, relais) => {
@@ -82,7 +82,7 @@ export const selectOffreCotisation = () =>
   createSelector(
     selectOffres(),
     offres =>
-      offres["8b330a52-a605-4a67-aee7-3cb3c9274733"] ? offres["8b330a52-a605-4a67-aee7-3cb3c9274733"] : null
+      offres['8b330a52-a605-4a67-aee7-3cb3c9274733'] ? offres['8b330a52-a605-4a67-aee7-3cb3c9274733'] : null
   );
 
 export const selectFournisseursRelais = () =>
@@ -106,7 +106,7 @@ export const selectUserIdCommandes = () =>
 
 export const selectCommandesRelais = () =>
   createSelector(selectCommandes(), selectRelaisId(), (commandes, relaiId) => {
-    if (typeof commandes !== "object") {
+    if (typeof commandes !== 'object') {
       return null;
     }
     return Object.keys(commandes).reduce(
@@ -350,7 +350,7 @@ export const selectOffresProduitAvecTotalAchats = () =>
               .map(key => commandeContenus[key])
               .filter(contenu => contenu && contenu.offreId === offre.id)
               .reduce((memo, contenu) => memo + contenu.quantite, 0)
-          : 0
+          : 0,
       }));
     }
   );
@@ -398,7 +398,7 @@ export const selectNombreAcheteurs = () =>
           if (!cont) return {};
           return cont.utilisateurId;
         }),
-        "utilisateurId"
+        'utilisateurId'
       ).length;
     }
   );
@@ -409,7 +409,7 @@ export const computeNombreCommandeContenus = () =>
 export const selectAsyncState = () =>
   createSelector(selectCommandeDomain(), substate => ({
     pending: substate.pending,
-    error: substate.error
+    error: substate.error,
   }));
 
 export default selectCommandes;

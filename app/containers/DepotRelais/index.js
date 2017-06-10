@@ -1,21 +1,21 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import includes from "lodash/includes";
-import { createStructuredSelector } from "reselect";
-import api from "utils/stellarApi";
-import round from "lodash/round";
-import TextField from "material-ui/TextField";
-import CustomSelectField from "components/CustomSelectField";
-import MenuItem from "material-ui/MenuItem";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import LinearProgress from "material-ui/LinearProgress";
-import RaisedButton from "material-ui/RaisedButton";
-import { ajouterDepot } from "containers/AdminDepot/actions";
-import { selectRoles } from "containers/CompteUtilisateur/selectors";
-import styles from "./styles.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import includes from 'lodash/includes';
+import { createStructuredSelector } from 'reselect';
+import api from 'utils/stellarApi';
+import round from 'lodash/round';
+import TextField from 'material-ui/TextField';
+import CustomSelectField from 'components/CustomSelectField';
+import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import LinearProgress from 'material-ui/LinearProgress';
+import RaisedButton from 'material-ui/RaisedButton';
+import { ajouterDepot } from 'containers/AdminDepot/actions';
+import { selectRoles } from 'containers/CompteUtilisateur/selectors';
+import styles from './styles.css';
 
 class DepotRelais extends Component {
   // eslint-disable-line
@@ -31,7 +31,7 @@ class DepotRelais extends Component {
     roles: PropTypes.array.isRequired,
     open: PropTypes.bool.isRequired,
     onRequestClose: PropTypes.func.isRequired,
-    onDepotDirectSuccess: PropTypes.func.isRequired
+    onDepotDirectSuccess: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -39,11 +39,11 @@ class DepotRelais extends Component {
 
     this.state = {
       ...this.state,
-      type: includes(props.roles, "RELAI_ADMIN") ? "especes" : null,
+      type: includes(props.roles, 'RELAI_ADMIN') ? 'especes' : null,
       montant: null,
       info: null,
       depotEnCours: false,
-      depotOk: false
+      depotOk: false,
     };
   }
 
@@ -52,7 +52,7 @@ class DepotRelais extends Component {
       this.setState({
         ...this.state,
         montant: null,
-        info: null
+        info: null,
       });
     }
   };
@@ -60,7 +60,7 @@ class DepotRelais extends Component {
   handleDeposer = () => {
     const { deposer, utilisateur, relaiId, commandeId } = this.props;
     const { montant } = this.state;
-    const type = "depot_relais";
+    const type = 'depot_relais';
     const infosSupplement = { relaiId };
     if (commandeId) {
       infosSupplement.commandeId = commandeId;
@@ -69,7 +69,7 @@ class DepotRelais extends Component {
       utilisateurId: utilisateur.id,
       infosSupplement,
       montant,
-      type
+      type,
     };
 
     deposer(depot);
@@ -84,24 +84,24 @@ class DepotRelais extends Component {
       api
         .pay({
           destination: utilisateur.stellarKeys.adresse,
-          currency: "PROXI",
+          currency: 'PROXI',
           currencyIssuer: stellarKeys.adresse,
           amount: montant,
-          stellarKeys
+          stellarKeys,
         })
         .then(transactionHash => {
           this.setState({ ...this.state, depotEnCours: false, depotOk: true });
           deposer({
             utilisateurId: utilisateur.id,
             montant,
-            type: "depot_direct",
+            type: 'depot_direct',
             infosSupplement: {
               ...info,
               type,
               transactionHash: transactionHash.hash,
-              relaiId: utilisateur.relaiId
+              relaiId: utilisateur.relaiId,
             },
-            transfertEffectue: true
+            transfertEffectue: true,
           });
           this.props.onRequestClose();
         });
@@ -114,7 +114,7 @@ class DepotRelais extends Component {
     const { montant, type, depotEnCours } = this.state;
     const manque = round(parseFloat(balance.balance) - totalCommande, 2);
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
-    const manqueStr = manque > 0 ? "" : `( manque ${(manque * -1).toFixed(2)} €)`;
+    const manqueStr = manque > 0 ? '' : `( manque ${(manque * -1).toFixed(2)} €)`;
     const invalid = montant === null || type === null || depotEnCours;
 
     return (
@@ -122,7 +122,7 @@ class DepotRelais extends Component {
         title={`Déposer des fonds ( max ${max} €)`}
         actions={[
           <FlatButton label="Annuler" primary onTouchTap={onRequestClose} />,
-          (includes(roles, "ADMIN") || includes(roles, "DEPOT_DIRECT")) && stellarKeys
+          (includes(roles, 'ADMIN') || includes(roles, 'DEPOT_DIRECT')) && stellarKeys
             ? <RaisedButton
                 label="Depot express"
                 primary
@@ -136,7 +136,7 @@ class DepotRelais extends Component {
                 primary
                 onTouchTap={() => this.handleDeposer()}
                 disabled={invalid}
-              />
+              />,
         ]}
         modal={false}
         open={this.props.open}
@@ -165,18 +165,18 @@ class DepotRelais extends Component {
                   floatingLabelText="Type de dépot"
                   label="Type de dépot"
                   onChange={(event, typeId) => {
-                    const values = ["cb", "cheque", "especes"];
+                    const values = ['cb', 'cheque', 'especes'];
                     this.setState({ ...this.state, type: values[typeId] });
                   }}
                   value={type}
-                  disabled={includes(roles, "RELAI_ADMIN")}
+                  disabled={includes(roles, 'RELAI_ADMIN')}
                 >
-                  <MenuItem value={"cb"} primaryText="cb" />
-                  <MenuItem value={"cheque"} primaryText="cheque" />
-                  <MenuItem value={"especes"} primaryText="especes" />
+                  <MenuItem value={'cb'} primaryText="cb" />
+                  <MenuItem value={'cheque'} primaryText="cheque" />
+                  <MenuItem value={'especes'} primaryText="especes" />
                 </CustomSelectField>
               </div>
-              {!includes(roles, "RELAI_ADMIN") &&
+              {!includes(roles, 'RELAI_ADMIN') &&
                 <div className="col-md-12">
                   <TextField
                     type="text"
@@ -194,13 +194,13 @@ class DepotRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  roles: selectRoles()
+  roles: selectRoles(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      deposer: ajouterDepot
+      deposer: ajouterDepot,
     },
     dispatch
   );

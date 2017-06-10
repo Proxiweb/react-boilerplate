@@ -1,29 +1,29 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { List, ListItem, makeSelectable } from "material-ui/List";
-import RaisedButton from "material-ui/RaisedButton";
-import PastilleIcon from "material-ui/svg-icons/image/brightness-1";
-import IconButton from "material-ui/IconButton";
-import Toggle from "material-ui/Toggle";
-import { createStructuredSelector } from "reselect";
-import { loadFournisseur } from "containers/AdminFournisseur/actions";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+import RaisedButton from 'material-ui/RaisedButton';
+import PastilleIcon from 'material-ui/svg-icons/image/brightness-1';
+import IconButton from 'material-ui/IconButton';
+import Toggle from 'material-ui/Toggle';
+import { createStructuredSelector } from 'reselect';
+import { loadFournisseur } from 'containers/AdminFournisseur/actions';
 import {
   selectFournisseurs,
   selectProduits,
   selectOffres,
-  selectTypesProduitsByIds
-} from "containers/Commande/selectors";
+  selectTypesProduitsByIds,
+} from 'containers/Commande/selectors';
 
-import { loadFournisseurs, loadTypesProduits, importeOffres, saveOffre } from "containers/Commande/actions";
+import { loadFournisseurs, loadTypesProduits, importeOffres, saveOffre } from 'containers/Commande/actions';
 
-import ArchiveIcon from "material-ui/svg-icons/action/assignment-returned";
-import styles from "./styles.css";
+import ArchiveIcon from 'material-ui/svg-icons/action/assignment-returned';
+import styles from './styles.css';
 
-import OffreProduit from "./OffreProduit";
-import FournisseurHebdoSwitch from "./FournisseurHebdoSwitch";
-import ListeFournisseursRelais from "./ListeFournisseursRelais";
+import OffreProduit from './OffreProduit';
+import FournisseurHebdoSwitch from './FournisseurHebdoSwitch';
+import ListeFournisseursRelais from './ListeFournisseursRelais';
 
 const SelectableList = makeSelectable(List);
 
@@ -38,12 +38,12 @@ class FournisseursRelais extends Component {
     produits: PropTypes.object,
     params: PropTypes.object.isRequired,
     typesProduits: PropTypes.object,
-    offres: PropTypes.object
+    offres: PropTypes.object,
   };
 
   state = {
     fournisseurSelected: null,
-    produitSelected: null
+    produitSelected: null,
   };
 
   componentDidMount = () => {
@@ -56,7 +56,7 @@ class FournisseursRelais extends Component {
     if (nextProps.relaiId !== this.props.relaiId) {
       this.setState({
         fournisseurSelected: null,
-        produitSelected: null
+        produitSelected: null,
       });
       this.props.load(nextProps.relaiId);
     }
@@ -70,19 +70,19 @@ class FournisseursRelais extends Component {
   handleSelectProduit = (event, value) =>
     this.setState({
       ...this.state,
-      produitSelected: value
+      produitSelected: value,
     });
 
   handleImporterOffres = () => {
     const { produitSelected, fournisseurSelected } = this.state;
     const { relaiId: relaiDestinationId } = this.props.params;
-    const msgSuccess = `Offre${!produitSelected ? "s" : ""} importée${!produitSelected ? "s" : ""}`;
+    const msgSuccess = `Offre${!produitSelected ? 's' : ''} importée${!produitSelected ? 's' : ''}`;
     this.props.importeOffres(fournisseurSelected, produitSelected || null, relaiDestinationId, msgSuccess);
   };
 
   handleStore = offre => {
-    if (confirm("Archiver définitivement ?")) {
-      this.props.saveOffre({ ...offre, archive: true }, "Offre archivée");
+    if (confirm('Archiver définitivement ?')) {
+      this.props.saveOffre({ ...offre, archive: true }, 'Offre archivée');
     }
   };
 
@@ -121,8 +121,8 @@ class FournisseursRelais extends Component {
                     <PastilleIcon
                       color={
                         offres.find(o => o.produitId === pdt.id && o.active && o.relaiId === params.relaiId)
-                          ? "green"
-                          : "silver"
+                          ? 'green'
+                          : 'silver'
                       }
                     />
                   }
@@ -130,30 +130,30 @@ class FournisseursRelais extends Component {
               )}
             </SelectableList>}
         </div>
-        <div className="col-md-8" style={{ marginTop: "2em" }}>
+        <div className="col-md-8" style={{ marginTop: '2em' }}>
           {produits &&
             produits[produitSelected] &&
             <div className="row">
               <div className="col-md-4">
                 <img
                   src={
-                    produits[produitSelected].photo.search("http") !== -1
+                    produits[produitSelected].photo.search('http') !== -1
                       ? produits[produitSelected].photo
                       : `https://proxiweb.fr/${produits[produitSelected].photo}`
                   }
                   alt={produits[produitSelected].nom}
                   style={{
-                    width: "100%",
-                    height: "auto",
+                    width: '100%',
+                    height: 'auto',
                     maxWidth: 200,
-                    border: "solid 1px gray"
+                    border: 'solid 1px gray',
                   }}
                 />
               </div>
               <div className="col-md-8">
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: produits[produitSelected].description
+                    __html: produits[produitSelected].description,
                   }} // eslint-disable-line
                 />
               </div>
@@ -194,7 +194,7 @@ class FournisseursRelais extends Component {
             fournisseurSelected &&
             offresProduit.length === 0 &&
             // offresProduit.filter(o => o.active).length === 0 &&
-            <div className="row center-md" style={{ marginTop: "1em" }}>
+            <div className="row center-md" style={{ marginTop: '1em' }}>
               <div className="col-md-6">
                 <RaisedButton
                   primary
@@ -214,7 +214,7 @@ const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseurs(),
   produits: selectProduits(),
   typesProduits: selectTypesProduitsByIds(),
-  offres: selectOffres()
+  offres: selectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -224,7 +224,7 @@ const mapDispatchToProps = dispatch =>
       loadF: loadFournisseur,
       loadT: loadTypesProduits,
       importeOffres,
-      saveOffre: (offre, msg) => saveOffre(offre, msg)
+      saveOffre: (offre, msg) => saveOffre(offre, msg),
     },
     dispatch
   );

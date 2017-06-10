@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import includes from "lodash/includes";
-import Drawer from "material-ui/Drawer";
-import { List, ListItem, makeSelectable } from "material-ui/List";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import includes from 'lodash/includes';
+import Drawer from 'material-ui/Drawer';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
 // import Divider from 'material-ui/Divider';
-import PersonIcon from "material-ui/svg-icons/social/person";
-import TestIcon from "material-ui/svg-icons/action/settings";
-import MailIcon from "material-ui/svg-icons/communication/mail-outline";
-import ShoppingCartIcon from "material-ui/svg-icons/action/shopping-cart";
-import ListIcon from "material-ui/svg-icons/action/list";
-import ExitIcon from "material-ui/svg-icons/action/exit-to-app";
+import PersonIcon from 'material-ui/svg-icons/social/person';
+import TestIcon from 'material-ui/svg-icons/action/settings';
+import MailIcon from 'material-ui/svg-icons/communication/mail-outline';
+import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
+import ListIcon from 'material-ui/svg-icons/action/list';
+import ExitIcon from 'material-ui/svg-icons/action/exit-to-app';
 // import HelpIcon from 'material-ui/svg-icons/action/help';
 const SelectableList = makeSelectable(List);
 
@@ -23,7 +23,7 @@ export default class AppMainDrawer extends Component {
     showPorteMonnaie: PropTypes.bool.isRequired,
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     logout: PropTypes.func.isRequired,
-    anonRelaiId: PropTypes.string
+    anonRelaiId: PropTypes.string,
   };
 
   shouldComponentUpdate = nextProps =>
@@ -35,14 +35,14 @@ export default class AppMainDrawer extends Component {
       <Drawer open={open} docked={false} onRequestChange={onRequestChange}>
         {header}
         <SelectableList value={location.pathname} onChange={onChangeList}>
-          {user && <ListItem leftIcon={<ShoppingCartIcon />} primaryText="Commandes" value={"/"} />}
+          {user && <ListItem leftIcon={<ShoppingCartIcon />} primaryText="Commandes" value={'/'} />}
           {anonRelaiId &&
             !user &&
             <ListItem
               leftIcon={<ListIcon />}
               primaryText="Catalogue"
               value={{
-                url: `/catalogue/${anonRelaiId}` // url dans obj provoque rechargement page
+                url: `/catalogue/${anonRelaiId}`, // url dans obj provoque rechargement page
               }}
             />}
           {user &&
@@ -50,7 +50,7 @@ export default class AppMainDrawer extends Component {
               leftIcon={<ListIcon />}
               primaryText="Catalogue"
               value={{
-                url: `/catalogue/${user.relaiId}` // url dans obj provoque rechargement page
+                url: `/catalogue/${user.relaiId}`, // url dans obj provoque rechargement page
               }}
             />}
           {user &&
@@ -64,9 +64,9 @@ export default class AppMainDrawer extends Component {
                   <ListItem
                     primaryText="Historique"
                     value={{
-                      url: `/users/${user.id}/commandes`
+                      url: `/users/${user.id}/commandes`,
                     }}
-                  />
+                  />,
                 ],
                 showPorteMonnaie
                   ? [<ListItem primaryText="Porte monnaie" value={`/users/${user.id}/porte-monnaie`} />]
@@ -75,7 +75,7 @@ export default class AppMainDrawer extends Component {
             />}
           {user &&
             user.roles &&
-            includes(user.roles, "ADMIN") &&
+            includes(user.roles, 'ADMIN') &&
             <ListItem
               primaryText="Admin Proxiweb"
               primaryTogglesNestedList
@@ -94,14 +94,14 @@ export default class AppMainDrawer extends Component {
                   primaryTogglesNestedList
                   nestedItems={[
                     <ListItem primaryText="Passées" value="/communications/passees" />,
-                    <ListItem primaryText="Courante" value="/communications/courante" />
+                    <ListItem primaryText="Courante" value="/communications/courante" />,
                   ]}
-                />
+                />,
               ]}
             />}
           {user &&
             user.roles &&
-            includes(user.roles, "RELAI_ADMIN") &&
+            includes(user.roles, 'RELAI_ADMIN') &&
             user.relaiId &&
             <ListItem
               primaryText="Relai Admin"
@@ -109,7 +109,7 @@ export default class AppMainDrawer extends Component {
               leftIcon={<TestIcon />}
               nestedItems={[
                 <ListItem primaryText="Commandes" value={`/admin/relais/${user.relaiId}/commandes`} />,
-                <ListItem primaryText="Relais" value={`/relais/${user.relaiId}`} />
+                <ListItem primaryText="Relais" value={`/relais/${user.relaiId}`} />,
               ]}
             />}
           {user.fournisseurId &&
@@ -122,13 +122,13 @@ export default class AppMainDrawer extends Component {
                 <ListItem
                   primaryText="Commandes"
                   value={{
-                    url: `/fournisseurs/${user.fournisseurId}/commandes`
+                    url: `/fournisseurs/${user.fournisseurId}/commandes`,
                   }}
                 />,
-                <ListItem primaryText="Infos" value={`/fournisseurs/${user.fournisseurId}/infos`} />
+                <ListItem primaryText="Infos" value={`/fournisseurs/${user.fournisseurId}/infos`} />,
               ]}
             />}
-          {user && <ListItem leftIcon={<MailIcon />} primaryText="Nous contacter" value={"/support"} />}
+          {user && <ListItem leftIcon={<MailIcon />} primaryText="Nous contacter" value={'/support'} />}
           {!user && <ListItem primaryText="Connexion" value="/login" />}
           {user &&
             <ListItem

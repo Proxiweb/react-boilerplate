@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import { createStructuredSelector } from "reselect";
-import classnames from "classnames";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { createStructuredSelector } from 'reselect';
+import classnames from 'classnames';
 
-import { selectCommandes } from "containers/Commande/selectors";
-import { loadUserCommandes, loadCommandes } from "containers/Commande/actions";
-import { selectPending } from "containers/App/selectors";
-import styles from "./styles.css";
+import { selectCommandes } from 'containers/Commande/selectors';
+import { loadUserCommandes, loadCommandes } from 'containers/Commande/actions';
+import { selectPending } from 'containers/App/selectors';
+import styles from './styles.css';
 
-import DetailCommandeContainer from "./components/DetailCommandeContainer";
-import ListeCommandesUtilisateurContainer from "./components/ListeCommandesUtilisateurContainer";
+import DetailCommandeContainer from './components/DetailCommandeContainer';
+import ListeCommandesUtilisateurContainer from './components/ListeCommandesUtilisateurContainer';
 
 // eslint-disable-next-line
 class HistoriqueCommandesUtilisateur extends Component {
@@ -23,7 +23,7 @@ class HistoriqueCommandesUtilisateur extends Component {
     commandes: PropTypes.object,
     commandeUtilisateurs: PropTypes.object,
     pending: PropTypes.bool.isRequired,
-    onSelectCommande: PropTypes.func.isRequired
+    onSelectCommande: PropTypes.func.isRequired,
   };
 
   render() {
@@ -31,14 +31,14 @@ class HistoriqueCommandesUtilisateur extends Component {
 
     return (
       <div className="row">
-        <div className={classnames("col-md-3", styles.panel)}>
+        <div className={classnames('col-md-3', styles.panel)}>
           <ListeCommandesUtilisateurContainer
             utilisateurId={utilisateurId}
             onSelectCommande={onSelectCommande}
             pending={pending}
           />
         </div>
-        <div className={classnames("col-md-9", styles.panel, styles.noScroll)}>
+        <div className={classnames('col-md-9', styles.panel, styles.noScroll)}>
           {pending &&
             <div className="row center-md">
               <div className="col-md-4">
@@ -47,7 +47,7 @@ class HistoriqueCommandesUtilisateur extends Component {
                   left={0}
                   top={20}
                   status="loading"
-                  style={{ display: "inline-block", position: "relative" }}
+                  style={{ display: 'inline-block', position: 'relative' }}
                 />
               </div>
             </div>}
@@ -66,7 +66,7 @@ class HistoriqueCommandesUtilisateur extends Component {
 
 const mapStateToProps = createStructuredSelector({
   commandes: selectCommandes(),
-  pending: selectPending()
+  pending: selectPending(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -74,7 +74,7 @@ const mapDispatchToProps = dispatch =>
     {
       loadCommandesUtilisateur: loadUserCommandes,
       loadCommande: loadCommandes,
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

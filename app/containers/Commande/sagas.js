@@ -1,15 +1,15 @@
-import { take, put, call, select } from "redux-saga/effects";
-import { push } from "react-router-redux";
-import c from "containers/Commande/constants";
-import { catalogueUpdated } from "containers/Commande/actions";
-import { get } from "utils/apiClient";
+import { take, put, call, select } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
+import c from 'containers/Commande/constants';
+import { catalogueUpdated } from 'containers/Commande/actions';
+import { get } from 'utils/apiClient';
 
 // Individual exports for testing
 export function* redirectOnCommandeCreated() {
   while (1) {
     // eslint-disable-line
     yield take(c.ASYNC_CREATE_COMMANDE_SUCCESS);
-    window.location = "/";
+    window.location = '/';
   }
 }
 
@@ -27,7 +27,7 @@ export function* redirectOnAnnuler() {
     // eslint-disable-line
     try {
       yield take(c.ASYNC_ANNULER_SUCCESS);
-      window.location = "/";
+      window.location = '/';
     } catch (e) {
       console.log(e);
     }

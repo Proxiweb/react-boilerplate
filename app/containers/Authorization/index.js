@@ -1,12 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import includes from "lodash/includes";
-import { createStructuredSelector } from "reselect";
-import { selectRoles } from "containers/CompteUtilisateur/selectors";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import includes from 'lodash/includes';
+import { createStructuredSelector } from 'reselect';
+import { selectRoles } from 'containers/CompteUtilisateur/selectors';
 
 const mapStateToProps = createStructuredSelector({
-  roles: selectRoles()
+  roles: selectRoles(),
 });
 
 const Authorization = (WrappedComponent, allowedRoles) =>
@@ -14,7 +14,7 @@ const Authorization = (WrappedComponent, allowedRoles) =>
     class withAuthorization extends Component {
       // eslint-disable-line
       static propTypes = {
-        roles: PropTypes.array.isRequired
+        roles: PropTypes.array.isRequired,
       };
       render() {
         const { roles } = this.props;

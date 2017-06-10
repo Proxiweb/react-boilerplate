@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import Helmet from "react-helmet";
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import { createStructuredSelector } from "reselect";
-import RaisedButton from "material-ui/RaisedButton";
-import Paper from "material-ui/Paper";
-import { selectRelais } from "containers/AdminRelais/selectors";
-import { loadRelais } from "containers/AdminRelais/actions";
-import legumes from "./legumes.jpg";
-import styles from "./styles.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import Helmet from 'react-helmet';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { createStructuredSelector } from 'reselect';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import { selectRelais } from 'containers/AdminRelais/selectors';
+import { loadRelais } from 'containers/AdminRelais/actions';
+import legumes from './legumes.jpg';
+import styles from './styles.css';
 
 const constStyles = {
   refresh: {
-    display: "inline-block",
-    position: "relative"
-  }
+    display: 'inline-block',
+    position: 'relative',
+  },
 };
 
 class AccueilAdherent extends Component {
@@ -25,7 +25,7 @@ class AccueilAdherent extends Component {
     relais: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     load: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -43,7 +43,7 @@ class AccueilAdherent extends Component {
       <div className="row center-md">
         <Helmet
           title="Proxiweb - Bienvenue sur ce relais"
-          meta={[{ name: "description", content: "Message de bienvenue" }]}
+          meta={[{ name: 'description', content: 'Message de bienvenue' }]}
         />
         <div className="col-md-8">
           {ceRelais &&
@@ -62,7 +62,7 @@ class AccueilAdherent extends Component {
                   <RaisedButton
                     label="Consulter les commandes en cours"
                     primary
-                    onClick={() => pushState("/")}
+                    onClick={() => pushState('/')}
                   />
                 </div>
                 <div className="col-md-6" />
@@ -79,14 +79,14 @@ class AccueilAdherent extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais()
+  relais: selectRelais(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       load: loadRelais,
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

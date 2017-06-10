@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import { loadAccount, trust as trustAction, pay, fedLookup } from "./actions";
-import TrustForm from "../../components/TrustForm";
-import PaymentForm from "../../components/PaymentForm";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { loadAccount, trust as trustAction, pay, fedLookup } from './actions';
+import TrustForm from '../../components/TrustForm';
+import PaymentForm from '../../components/PaymentForm';
 
-import { selectContacts, default as selectStellarDomain } from "./selectors";
+import { selectContacts, default as selectStellarDomain } from './selectors';
 
 class StellarMain extends Component {
   // eslint-disable-line
@@ -16,7 +16,7 @@ class StellarMain extends Component {
     loadAccount: PropTypes.func.isRequired,
     trust: PropTypes.func.isRequired,
     // pay: PropTypes.func.isRequired,
-    lookup: PropTypes.func.isRequired
+    lookup: PropTypes.func.isRequired,
     // contacts: PropTypes.array.isRequired,
   };
 
@@ -24,7 +24,7 @@ class StellarMain extends Component {
     super(props);
     this.handleChangeAction = this.handleChangeAction.bind(this);
     this.state = {
-      action: "show_balance"
+      action: 'show_balance',
     };
   }
 
@@ -66,14 +66,14 @@ class StellarMain extends Component {
           <div className="alert alert-info text-center">
             <ul className="list-unstyled">
               {account.balances.map(bal =>
-                <li key={bal.asset_type === "native" ? "XLM" : bal.asset_code}>
-                  {parseFloat(bal.balance)} {bal.asset_type === "native" ? "XLM" : bal.asset_code}
+                <li key={bal.asset_type === 'native' ? 'XLM' : bal.asset_code}>
+                  {parseFloat(bal.balance)} {bal.asset_type === 'native' ? 'XLM' : bal.asset_code}
                 </li>
               )}
             </ul>
           </div>}
-        {this.state.action === "show_trust" && <TrustForm stellarKeys={stellarKeys} trust={trust} />}
-        {this.state.action === "show_payment" &&
+        {this.state.action === 'show_trust' && <TrustForm stellarKeys={stellarKeys} trust={trust} />}
+        {this.state.action === 'show_payment' &&
           <PaymentForm
             stellarKeys={this.props.account.stellarKeys}
             pay={pay}
@@ -92,14 +92,14 @@ const mapDispatchToProps = dispatch =>
       loadAccount,
       trust: trustAction,
       pay,
-      lookup: fedLookup
+      lookup: fedLookup,
     },
     dispatch
   );
 
 const mapStateToProps = createStructuredSelector({
   account: selectStellarDomain(),
-  contacts: selectContacts()
+  contacts: selectContacts(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StellarMain);

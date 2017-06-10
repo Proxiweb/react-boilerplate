@@ -8,28 +8,28 @@ import {
   LOAD_ACCOUNT,
   LOAD_ACCOUNT_ERROR,
   LOAD_ACCOUNT_SUCCESS,
-  STORE_STELLAR_KEYS
-} from "./constants";
+  STORE_STELLAR_KEYS,
+} from './constants';
 
 export const loadAccount = accountId => ({
   type: LOAD_ACCOUNT,
   payload: {
-    accountId
-  }
+    accountId,
+  },
 });
 
 export const loadAccountError = err => ({
   type: LOAD_ACCOUNT_ERROR,
   payload: {
-    err
-  }
+    err,
+  },
 });
 
 export const accountLoaded = account => ({
   type: LOAD_ACCOUNT_SUCCESS,
   payload: {
-    account
-  }
+    account,
+  },
 });
 
 export const saveAccount = (
@@ -47,14 +47,14 @@ export const saveAccount = (
     email,
     pseudo,
     notifications,
-    relaiId
+    relaiId,
   },
-  msgSuccess = "Profile sauvegardé",
+  msgSuccess = 'Profile sauvegardé',
   redirectSuccess = null
 ) => ({
   type: saveAccountConst.ASYNC_SAVE_ACCOUNT_START,
   url: `utilisateurs/${utilisateurId}`,
-  method: "put",
+  method: 'put',
   datas: {
     nom,
     produitsFavoris,
@@ -68,46 +68,46 @@ export const saveAccount = (
     email,
     pseudo,
     notifications,
-    relaiId
+    relaiId,
   },
   msgSuccess,
-  redirectSuccess
+  redirectSuccess,
 });
 
-export const programmerVirement = ({ utilisateurId, montant, type = "virement" }) => ({
+export const programmerVirement = ({ utilisateurId, montant, type = 'virement' }) => ({
   type: progVirConst.ASYNC_PROGRAM_VIREMENT_START,
-  url: "depots",
-  method: "post",
-  datas: { utilisateurId, montant, type }
+  url: 'depots',
+  method: 'post',
+  datas: { utilisateurId, montant, type },
 });
 
 export const loadVirements = utilisateurId => ({
   type: loadVirConst.ASYNC_LOAD_VIREMENTS_START,
-  url: "depots",
-  query: { utilisateurId }
+  url: 'depots',
+  query: { utilisateurId },
 });
 
 export const annulerVirement = id => ({
   type: supprVirConst.ASYNC_ANNULER_VIREMENT_START,
   url: `depots/${id}`,
-  method: "del",
-  id
+  method: 'del',
+  id,
 });
 
 export const deposerCB = datas => ({
   type: depotCbConst.ASYNC_DEPOT_CB_START,
-  url: "charges",
-  method: "post",
-  datas
+  url: 'charges',
+  method: 'post',
+  datas,
 });
 
 export const storeStellarKeys = stellarKeys => ({
   type: STORE_STELLAR_KEYS,
-  payload: { stellarKeys }
+  payload: { stellarKeys },
 });
 
 export const refresh = id => ({
   type: refreshConst.ASYNC_REFRESH_START,
   url: `refresh/${id}`,
-  method: "post"
+  method: 'post',
 });

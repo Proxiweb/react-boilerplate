@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { TableRow, TableRowColumn } from "material-ui/Table";
-import { trouveTarification } from "containers/CommandeEdit/components/components/AffichePrix";
-import buildCommandeRow from "components/DetailCommandeColumns";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import buildCommandeRow from 'components/DetailCommandeColumns';
 
-import { supprimerCommandeContenu, diminuerCommandeContenu } from "containers/Commande/actions";
+import { supprimerCommandeContenu, diminuerCommandeContenu } from 'containers/Commande/actions';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 // eslint-disable-next-line
 class CommnandeParProduitFournisseur extends Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class CommnandeParProduitFournisseur extends Component {
     produit: PropTypes.object.isRequired,
     qteTotalOffre: PropTypes.number.isRequired,
     offre: PropTypes.object.isRequired,
-    idx: PropTypes.number.isRequired
+    idx: PropTypes.number.isRequired,
   };
 
   handleDiminuer = () => {
@@ -24,7 +24,7 @@ class CommnandeParProduitFournisseur extends Component {
     if (contenu.quantite === 1) {
       supprimer(contenu);
     } else {
-      alert("Diminution non implémmentée"); // eslint-disable-line
+      alert('Diminution non implémmentée'); // eslint-disable-line
     }
   };
 
@@ -39,7 +39,7 @@ class CommnandeParProduitFournisseur extends Component {
       colorTrendingDown: null,
       tarif,
       produit,
-      vueDistributeur: true // vue distributeur
+      vueDistributeur: true, // vue distributeur
     });
 
     return (
@@ -54,7 +54,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       diminuer: diminuerCommandeContenu,
-      supprimer: supprimerCommandeContenu
+      supprimer: supprimerCommandeContenu,
     },
     dispatch
   );

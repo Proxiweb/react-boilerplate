@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import round from "lodash/round";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import round from 'lodash/round';
 
-import api from "utils/stellarApi";
+import api from 'utils/stellarApi';
 export default class CommandePaiementsUtilisateur extends Component {
   static propTypes = {
     adresseStellarCommande: PropTypes.string.isRequired,
-    adresseStellarUtilisateur: PropTypes.string.isRequired
+    adresseStellarUtilisateur: PropTypes.string.isRequired,
   };
 
   state = {
     paiements: [],
-    soldeCompte: null
+    soldeCompte: null,
   };
 
   componentDidMount = () => {
@@ -29,7 +29,7 @@ export default class CommandePaiementsUtilisateur extends Component {
     api.loadPayments(this.props.adresseStellarCommande, 100).then(res => {
       this.setState({
         ...this.state,
-        paiements: res
+        paiements: res,
       });
     });
   };
@@ -38,7 +38,7 @@ export default class CommandePaiementsUtilisateur extends Component {
     api.loadAccount(this.props.adresseStellarUtilisateur, 100).then(res => {
       this.setState({
         ...this.state,
-        soldeCompte: res.balances
+        soldeCompte: res.balances,
       });
     });
   };

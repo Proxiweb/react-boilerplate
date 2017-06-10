@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import Chip from "material-ui/Chip";
-import Avatar from "material-ui/Avatar";
-import Paper from "material-ui/Paper";
-import EmailIcon from "material-ui/svg-icons/communication/mail-outline";
-import MessageIcon from "material-ui/svg-icons/communication/message";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
+import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
+import MessageIcon from 'material-ui/svg-icons/communication/message';
 
-import CommunicationForm from "components/CommunicationForm";
-import { sendCommunication, removeDestinataire, setMessage } from "containers/AdminCommunication/actions";
-import { selectCommunicationDomain } from "containers/AdminCommunication/selectors";
-import { selectAuthApiKey } from "containers/CompteUtilisateur/selectors";
-import { get } from "utils/apiClient";
-import styles from "./styles.css";
+import CommunicationForm from 'components/CommunicationForm';
+import { sendCommunication, removeDestinataire, setMessage } from 'containers/AdminCommunication/actions';
+import { selectCommunicationDomain } from 'containers/AdminCommunication/selectors';
+import { selectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
+import { get } from 'utils/apiClient';
+import styles from './styles.css';
 
 class CommunicationFormContainer extends Component {
   // eslint-disable-line
@@ -23,16 +23,16 @@ class CommunicationFormContainer extends Component {
     apiKey: PropTypes.string.isRequired,
     sendMessage: PropTypes.func.isRequired,
     setMessage: PropTypes.func.isRequired,
-    removeDest: PropTypes.func.isRequired
+    removeDest: PropTypes.func.isRequired,
   };
 
   state = {
-    smsOk: null
+    smsOk: null,
   };
 
   componentDidMount = () => {
-    get("https://communication.proxiweb.fr/api/status", {
-      headers: { "Content-Type": "application/json" }
+    get('https://communication.proxiweb.fr/api/status', {
+      headers: { 'Content-Type': 'application/json' },
     })
       .then(res => {
         const { Send } = res.datas;
@@ -43,7 +43,7 @@ class CommunicationFormContainer extends Component {
 
   handleSubmit = ({ message, objet, sms }) => {
     const communication = {
-      siteExpediteur: "proxiweb",
+      siteExpediteur: 'proxiweb',
       messageCourt: sms,
       messageLong: message,
       objet,
@@ -51,9 +51,9 @@ class CommunicationFormContainer extends Component {
       destinataires: this.props.communication.destinataires.map(d => ({
         email: d.email,
         telPortable: d.telPortable,
-        etat: "attente",
-        identite: d.identite
-      }))
+        etat: 'attente',
+        identite: d.identite,
+      })),
     };
     this.props.sendMessage(this.props.apiKey, communication);
   };
@@ -74,7 +74,7 @@ class CommunicationFormContainer extends Component {
                   {dest.email &&
                     <Chip
                       style={{ margin: 4 }}
-                      onRequestDelete={() => this.props.removeDest(dest.id, "email")}
+                      onRequestDelete={() => this.props.removeDest(dest.id, 'email')}
                     >
                       <Avatar color="#444" icon={<EmailIcon />} />
                       {dest.identite}
@@ -84,7 +84,7 @@ class CommunicationFormContainer extends Component {
                   {dest.telPortable &&
                     <Chip
                       style={{ margin: 4 }}
-                      onRequestDelete={() => this.props.removeDest(dest.id, "telPortable")}
+                      onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
                     >
                       <Avatar color="#444" icon={<MessageIcon />} />
                       {dest.identite}
@@ -110,7 +110,7 @@ class CommunicationFormContainer extends Component {
 
 const mapStateToProps = createStructuredSelector({
   communication: selectCommunicationDomain(),
-  apiKey: selectAuthApiKey()
+  apiKey: selectAuthApiKey(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -118,7 +118,7 @@ const mapDispatchToProps = dispatch =>
     {
       sendMessage: sendCommunication,
       setMessage,
-      removeDest: removeDestinataire
+      removeDest: removeDestinataire,
     },
     dispatch
   );

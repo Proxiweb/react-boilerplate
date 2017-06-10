@@ -3,17 +3,17 @@
  * If we were to do this in store.js, reducers wouldn't be hot reloadable.
  */
 
-import { combineReducers } from "redux";
-import { LOCATION_CHANGE } from "react-router-redux";
-import update from "immutability-helper";
-import languageProviderReducer from "containers/LanguageProvider/reducer";
+import { combineReducers } from 'redux';
+import { LOCATION_CHANGE } from 'react-router-redux';
+import update from 'immutability-helper';
+import languageProviderReducer from 'containers/LanguageProvider/reducer';
 
-import compteUtilisateur from "containers/CompteUtilisateur/reducer";
-import commandes from "containers/Commande/reducer";
-import admin from "containers/AdminDepot/reducer";
-import global from "containers/App/reducer";
+import compteUtilisateur from 'containers/CompteUtilisateur/reducer';
+import commandes from 'containers/Commande/reducer';
+import admin from 'containers/AdminDepot/reducer';
+import global from 'containers/App/reducer';
 
-import { reducer as form } from "redux-form";
+import { reducer as form } from 'redux-form';
 
 /*
  * routeReducer
@@ -25,7 +25,7 @@ import { reducer as form } from "redux-form";
 
 // Initial routing state
 const routeInitialState = {
-  locationBeforeTransitions: null
+  locationBeforeTransitions: null,
 };
 
 /**
@@ -53,6 +53,6 @@ export default function createReducer(asyncReducers) {
     compteUtilisateur,
     commandes,
     form,
-    admin
+    admin,
   });
 }

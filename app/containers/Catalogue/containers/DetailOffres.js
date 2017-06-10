@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import Paper from "material-ui/Paper";
-import FlatButton from "material-ui/FlatButton";
-import { createStructuredSelector } from "reselect";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
+import { createStructuredSelector } from 'reselect';
 
 import {
   selectOffresDuProduit,
   selectTypesProduitsRelais,
   selectFournisseursRelais,
-  selectProduitsRelaisByTypeProduit
-} from "containers/Commande/selectors";
+  selectProduitsRelaisByTypeProduit,
+} from 'containers/Commande/selectors';
 
-import OffreDetails from "components/OffreDetails";
-import styles from "./styles.css";
+import OffreDetails from 'components/OffreDetails';
+import styles from './styles.css';
 
 class DetailOffres extends Component {
   static propTypes = {
@@ -21,17 +21,17 @@ class DetailOffres extends Component {
     produits: PropTypes.array.isRequired,
     typeProduits: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
-    fournisseurs: PropTypes.array
+    fournisseurs: PropTypes.array,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      viewOffre: true
+      viewOffre: true,
     };
   }
 
@@ -44,7 +44,7 @@ class DetailOffres extends Component {
     const produit = produits.find(pdt => pdt.id === produitId);
 
     if (!produit) {
-      return <h1>{"Produit non trouvé"}</h1>;
+      return <h1>{'Produit non trouvé'}</h1>;
     }
 
     const fournisseur = fournisseurs.find(f => f.id === produit.fournisseurId);
@@ -55,7 +55,7 @@ class DetailOffres extends Component {
             <FlatButton
               onClick={() => this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
               primary
-              label={viewOffre ? fournisseur.nom : "Afficher les offres"}
+              label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
             />
           </div>
           {viewOffre &&
@@ -68,18 +68,18 @@ class DetailOffres extends Component {
                 {viewOffre &&
                   <img
                     src={
-                      produit.photo.search("http") !== -1
+                      produit.photo.search('http') !== -1
                         ? produit.photo
                         : `https://proxiweb.fr/${produit.photo}`
                     }
                     alt={produit.nom}
-                    style={{ width: "100%", height: "auto", maxWidth: 200 }}
+                    style={{ width: '100%', height: 'auto', maxWidth: 200 }}
                   />}
                 {!viewOffre &&
                   <img
                     src={`https://proxiweb.fr/${fournisseur.illustration}`}
                     alt={fournisseur.nom}
-                    style={{ width: "100%", height: "auto", maxWidth: 200 }}
+                    style={{ width: '100%', height: 'auto', maxWidth: 200 }}
                   />}
               </div>
               <div className="col-md-6">
@@ -88,14 +88,14 @@ class DetailOffres extends Component {
                 {!viewOffre &&
                   <p
                     dangerouslySetInnerHTML={{
-                      __html: fournisseur.presentation
+                      __html: fournisseur.presentation,
                     }}
                   />}
               </div>
             </div>
           </div>
         </div>
-        <div style={{ padding: "1em" }}>
+        <div style={{ padding: '1em' }}>
           {viewOffre &&
             offres.filter(o => o.active && o.relaiId === relaiId && !o.archive).map((offre, idx) => {
               const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
@@ -107,7 +107,7 @@ class DetailOffres extends Component {
                   offre={offre}
                   subTitle="Tarif dégressif (cliquez pour plus de détails)"
                   expandable={tR}
-                  style={{ marginBottom: "10px" }}
+                  style={{ marginBottom: '10px' }}
                 />
               );
             })}
@@ -121,7 +121,7 @@ const mapStateToProps = createStructuredSelector({
   typeProduits: selectTypesProduitsRelais(),
   offres: selectOffresDuProduit(),
   fournisseurs: selectFournisseursRelais(),
-  produits: selectProduitsRelaisByTypeProduit()
+  produits: selectProduitsRelaisByTypeProduit(),
 });
 
 export default connect(mapStateToProps)(DetailOffres);

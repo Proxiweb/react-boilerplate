@@ -1,48 +1,48 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import FlatButton from "material-ui/FlatButton";
-import Paper from "material-ui/Paper";
-import includes from "lodash/includes";
-import shader from "shader";
-import MediaQuery from "components/MediaQuery";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
+import includes from 'lodash/includes';
+import shader from 'shader';
+import MediaQuery from 'components/MediaQuery';
 
-import StarIcon from "material-ui/svg-icons/toggle/star";
-import { createStructuredSelector } from "reselect";
+import StarIcon from 'material-ui/svg-icons/toggle/star';
+import { createStructuredSelector } from 'reselect';
 import {
   selectOffresProduitAvecTotalAchats,
   selectCommandeTypesProduits,
   selectCommandeContenus,
   selectFournisseurProduit,
-  selectProduits
-} from "containers/Commande/selectors";
+  selectProduits,
+} from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from "containers/CompteUtilisateur/selectors";
-import { saveAccount } from "containers/CompteUtilisateur/actions";
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { saveAccount } from 'containers/CompteUtilisateur/actions';
 
-import { ajouterOffre } from "containers/Commande/actions";
-import OffreDetails from "components/OffreDetails";
-import styles from "./styles.css";
+import { ajouterOffre } from 'containers/Commande/actions';
+import OffreDetails from 'components/OffreDetails';
+import styles from './styles.css';
 
 const constStyles = {
   star: {
-    height: "36px",
-    width: "36px"
+    height: '36px',
+    width: '36px',
   },
   margin: {
-    margin: 10
+    margin: 10,
   },
   starButton: {
-    height: "48px",
-    width: "48px",
-    minWidth: "none"
+    height: '48px',
+    width: '48px',
+    minWidth: 'none',
   },
   imageStyle: {
-    width: "100%",
-    height: "auto",
-    maxWidth: 200
-  }
+    width: '100%',
+    height: 'auto',
+    maxWidth: 200,
+  },
 };
 
 class DetailOffres extends Component {
@@ -56,17 +56,17 @@ class DetailOffres extends Component {
     params: PropTypes.object.isRequired,
     fournisseur: PropTypes.object,
     ajouterOffre: PropTypes.func.isRequired,
-    saveFavoris: PropTypes.func.isRequired
+    saveFavoris: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      viewOffre: true
+      viewOffre: true,
     };
   }
 
@@ -91,7 +91,7 @@ class DetailOffres extends Component {
       utilisateurId,
       commandeContenus,
       params,
-      auth
+      auth,
     } = this.props;
 
     if (!offres || !typeProduits) return null;
@@ -100,8 +100,8 @@ class DetailOffres extends Component {
     const produit = produitsById[produitId];
     const estFavoris = auth.produitsFavoris.find(item => item === produitId);
     const photoUrl = !produit.photo
-      ? "/assets/pas_de_photo.png"
-      : produit.photo.search("http") !== -1 ? produit.photo : `https://proxiweb.fr/${produit.photo}`;
+      ? '/assets/pas_de_photo.png'
+      : produit.photo.search('http') !== -1 ? produit.photo : `https://proxiweb.fr/${produit.photo}`;
     return (
       <div className={styles.offreso}>
         <Paper>
@@ -109,24 +109,24 @@ class DetailOffres extends Component {
             <div className={`col-md-2 ${styles.favoris}`}>
               {viewOffre &&
                 <FlatButton
-                  tooltip={`${estFavoris ? "Retirer des " : "Ajouter aux "}produits favoris`}
+                  tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
                   onClick={() => this.toggleFav(produitId)}
                   style={constStyles.starButton}
                   hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                   title="Ajouter aux favoris"
-                  icon={<StarIcon color={estFavoris ? "#ffd203" : "silver"} style={constStyles.star} />}
+                  icon={<StarIcon color={estFavoris ? '#ffd203' : 'silver'} style={constStyles.star} />}
                 />}
             </div>
             <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
               <FlatButton
                 onClick={() =>
                   this.setState(oldState => ({
-                    viewOffre: !oldState.viewOffre
+                    viewOffre: !oldState.viewOffre,
                   }))}
                 primary
                 hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
-                label={viewOffre ? fournisseur.nom : "Afficher les offres"}
-                title={viewOffre ? "Afficher les infos fournisseur" : "Afficher les produits"}
+                label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
+                title={viewOffre ? 'Afficher les infos fournisseur' : 'Afficher les produits'}
               />
             </div>
             {viewOffre &&
@@ -149,11 +149,11 @@ class DetailOffres extends Component {
                     <p
                       dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
                     />}
-                  {viewOffre && produit.tags && produit.tags.length > 0 && <p>{produit.tags.join(" - ")}</p>}
+                  {viewOffre && produit.tags && produit.tags.length > 0 && <p>{produit.tags.join(' - ')}</p>}
                   {!viewOffre &&
                     <p
                       dangerouslySetInnerHTML={{
-                        __html: fournisseur.presentation
+                        __html: fournisseur.presentation,
                       }} // eslint-disable-line
                     />}
                 </div>
@@ -184,7 +184,7 @@ class DetailOffres extends Component {
                             offreId: offre.id,
                             quantite: 1,
                             commandeId,
-                            utilisateurId
+                            utilisateurId,
                           })}
                         stock={produit.stock}
                         expandable={tR}
@@ -201,7 +201,7 @@ class DetailOffres extends Component {
                             offreId: offre.id,
                             quantite: 1,
                             commandeId,
-                            utilisateurId
+                            utilisateurId,
                           })}
                         expandable={tR}
                         stock={produit.stock}
@@ -223,14 +223,14 @@ const mapStateToProps = createStructuredSelector({
   fournisseur: selectFournisseurProduit(),
   produitsById: selectProduits(),
   commandeContenus: selectCommandeContenus(),
-  auth: selectCompteUtilisateur()
+  auth: selectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       ajouterOffre,
-      saveFavoris: saveAccount
+      saveFavoris: saveAccount,
     },
     dispatch
   );

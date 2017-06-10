@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import IconButton from "material-ui/IconButton";
-import EmailIcon from "material-ui/svg-icons/communication/mail-outline";
-import MessageIcon from "material-ui/svg-icons/communication/message";
-import Toggle from "material-ui/Toggle";
-import capitalize from "lodash/capitalize";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import IconButton from 'material-ui/IconButton';
+import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
+import MessageIcon from 'material-ui/svg-icons/communication/message';
+import Toggle from 'material-ui/Toggle';
+import capitalize from 'lodash/capitalize';
 
-import { addDestinataire } from "containers/AdminCommunication/actions";
-import { saveUtilisateur } from "containers/Commande/actions";
-import ProfilAdherentContainer from "./ProfilAdherentContainer";
+import { addDestinataire } from 'containers/AdminCommunication/actions';
+import { saveUtilisateur } from 'containers/Commande/actions';
+import ProfilAdherentContainer from './ProfilAdherentContainer';
 
-import Panel from "components/Panel";
-import styles from "./styles.css";
+import Panel from 'components/Panel';
+import styles from './styles.css';
 
 class Utilisateur extends Component {
   // eslint-disable-line
@@ -21,7 +21,7 @@ class Utilisateur extends Component {
     utilisateur: PropTypes.object.isRequired,
     relaiId: PropTypes.string.isRequired,
     addDest: PropTypes.func.isRequired,
-    saveUtilisateur: PropTypes.func.isRequired
+    saveUtilisateur: PropTypes.func.isRequired,
   };
 
   handleToggle = (event, isChecked) => {
@@ -30,8 +30,8 @@ class Utilisateur extends Component {
       ...utilisateur,
       notifications: {
         ...utilisateur.notifications,
-        [event.target.name]: isChecked
-      }
+        [event.target.name]: isChecked,
+      },
     });
   };
 
@@ -46,9 +46,9 @@ class Utilisateur extends Component {
             <div className="col-md-4">
               <div
                 style={{
-                  lineHeight: "48px",
-                  textAlign: "left",
-                  padding: "0 1em"
+                  lineHeight: '48px',
+                  textAlign: 'left',
+                  padding: '0 1em',
                 }}
               >
                 {identite}
@@ -80,7 +80,7 @@ class Utilisateur extends Component {
                     addDest({
                       id: utilisateur.id,
                       email: utilisateur.email,
-                      identite
+                      identite,
                     })}
                 >
                   <EmailIcon />
@@ -92,7 +92,7 @@ class Utilisateur extends Component {
                     addDest({
                       id: utilisateur.id,
                       telPortable: utilisateur.telPortable,
-                      identite
+                      identite,
                     })}
                 >
                   <MessageIcon />
@@ -110,7 +110,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addDest: addDestinataire,
-      saveUtilisateur
+      saveUtilisateur,
     },
     dispatch
   );

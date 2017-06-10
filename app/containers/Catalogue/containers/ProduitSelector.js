@@ -1,31 +1,31 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import uniq from "lodash/uniq";
-import { List, ListItem } from "material-ui/List";
-import CustomSelectField from "components/CustomSelectField";
-import Paper from "material-ui/Paper";
-import MenuItem from "material-ui/MenuItem";
-import classnames from "classnames";
-import shader from "shader";
-import styles from "./styles.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import uniq from 'lodash/uniq';
+import { List, ListItem } from 'material-ui/List';
+import CustomSelectField from 'components/CustomSelectField';
+import Paper from 'material-ui/Paper';
+import MenuItem from 'material-ui/MenuItem';
+import classnames from 'classnames';
+import shader from 'shader';
+import styles from './styles.css';
 
 class ProduitSelector extends React.Component {
   static propTypes = {
     pushState: PropTypes.func.isRequired,
     typeProduits: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
-    params: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   state = {
-    typeProduitSecondaire: null
+    typeProduitSecondaire: null,
   };
 
   componentWillReceiveProps = nextProps => {
@@ -102,9 +102,9 @@ class ProduitSelector extends React.Component {
                     produitId && pdt.id === produitId
                       ? {
                           borderLeft: `solid 5px ${muiTheme.appBar.color}`,
-                          backgroundColor: shader(muiTheme.appBar.color, +0.6)
+                          backgroundColor: shader(muiTheme.appBar.color, +0.6),
                         }
-                      : { borderLeft: "none" }
+                      : { borderLeft: 'none' }
                   }
                 >
                   {pdt.nom.toUpperCase()}
@@ -124,7 +124,7 @@ class ProduitSelector extends React.Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

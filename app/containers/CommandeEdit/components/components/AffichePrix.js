@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import round from "lodash/round";
+import React from 'react';
+import PropTypes from 'prop-types';
+import round from 'lodash/round';
 // import memoize from 'lodash/memoize';
-import styles from "./AffichePrix.css";
+import styles from './AffichePrix.css';
 
-const redColor = { color: "red" };
+const redColor = { color: 'red' };
 
 export function trouveTarification(tarifications, totalGlobal = 0, totalCommande = 0) {
   const total = totalGlobal + totalCommande;
@@ -19,44 +19,44 @@ export function trouveTarification(tarifications, totalGlobal = 0, totalCommande
 
 const convertisseurs = {
   mg: poids => {
-    const unite = poids / 1000000 < 1 ? "g" : " Kg";
-    const poidsFormat = unite === "g" ? poids / 1000 : poids / 1000000;
+    const unite = poids / 1000000 < 1 ? 'g' : ' Kg';
+    const poidsFormat = unite === 'g' ? poids / 1000 : poids / 1000000;
     return `${round(poidsFormat, 2)}${unite}`;
   },
   ml: poids => {
     let unite;
     let poidsFormat;
     if (poids < 100) {
-      unite = "ml";
+      unite = 'ml';
       poidsFormat = poids;
       // } else if (poids > 100 && poids < 10000) {
       //   unite = 'cl';
       //   poidsFormat = poids / 10;
     } else {
-      unite = "L";
+      unite = 'L';
       poidsFormat = poids / 1000;
     }
     return `${round(poidsFormat, 2)}${unite}`;
-  }
+  },
 };
 
 export const formatterPoids = (offre, typeProduit) => {
-  if (!offre.poids) return "";
+  if (!offre.poids) return '';
   const convertisseur = convertisseurs[typeProduit.quantiteUnite];
 
   return convertisseur(offre.poids);
 };
 
-export const detailPrix = (offre, typeProduit, qteCommande, format = "component") => {
+export const detailPrix = (offre, typeProduit, qteCommande, format = 'component') => {
   const tarif = trouveTarification(offre.tarifications, offre.quantiteTotal, qteCommande);
   if (!tarif) {
     console.log(`Tarif non trouvé pour ${qteCommande} achats`, offre); // eslint-disable-line
     return {
       descriptionPdt: `${formatterPoids(offre, typeProduit)}${offre.description
         ? ` ${offre.description} `
-        : " "}`,
+        : ' '}`,
       prix: 0,
-      ancienTarif: null
+      ancienTarif: null,
     };
   }
   let ancien = null;
@@ -68,34 +68,34 @@ export const detailPrix = (offre, typeProduit, qteCommande, format = "component"
   const datas = {
     descriptionPdt: `${formatterPoids(offre, typeProduit)}${offre.description
       ? ` ${offre.description} `
-      : " "}`,
+      : ' '}`,
     prix: round((tarif.prix + tarif.recolteFond) / 100, 2),
-    ancienTarif: ancien
+    ancienTarif: ancien,
   };
 
-  if (format === "json") return datas;
+  if (format === 'json') return datas;
 
   const { descriptionPdt, prix, ancienTarif } = datas;
   return (
     <span>
-      {descriptionPdt}{" : "}<strong>{prix} €</strong>
-      {ancienTarif && " "}
+      {descriptionPdt}{' : '}<strong>{prix} €</strong>
+      {ancienTarif && ' '}
       {ancienTarif && <s style={redColor}>{ancienTarif}</s>}
     </span>
   );
 };
 
-export const prixAuKg = (offre, typeProduit, format = "component") => {
-  if (!offre.poids) return "";
+export const prixAuKg = (offre, typeProduit, format = 'component') => {
+  if (!offre.poids) return '';
   const { prix, recolteFond } = offre.tarifications[0];
-  const diviseur = typeProduit.quantiteUnite === "mg" ? 1 : 10;
-  const poids = typeProduit.quantiteUnite === "ml" ? offre.poids : offre.poids / 100;
+  const diviseur = typeProduit.quantiteUnite === 'mg' ? 1 : 10;
+  const poids = typeProduit.quantiteUnite === 'ml' ? offre.poids : offre.poids / 100;
   const datas = {
     prixAuKg: round((prix + recolteFond) * 100 / poids / diviseur, 2),
-    unite: typeProduit.quantiteUnite
+    unite: typeProduit.quantiteUnite,
   };
 
-  if (format === "json") {
+  if (format === 'json') {
     return datas;
   }
 
@@ -125,7 +125,7 @@ const OffreDetail = props => {
   return (
     <div>
       <div>{detailPrix(offre, qteCommande)}</div>
-      {offre.poids && typeProduit.quantiteUnite !== "u" && prixAuKg(offre, typeProduit)}
+      {offre.poids && typeProduit.quantiteUnite !== 'u' && prixAuKg(offre, typeProduit)}
     </div>
   );
 };
@@ -134,7 +134,7 @@ OffreDetail.propTypes = {
   offre: PropTypes.object.isRequired,
   qteCommande: PropTypes.number.isRequired,
   typeProduit: PropTypes.object.isRequired,
-  deuxLignes: PropTypes.bool
+  deuxLignes: PropTypes.bool,
 };
 
 export default OffreDetail;

@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { reduxForm, Field } from "redux-form";
-import Paper from "material-ui/Paper";
-import { TextField } from "redux-form-material-ui";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm, Field } from 'redux-form';
+import Paper from 'material-ui/Paper';
+import { TextField } from 'redux-form-material-ui';
 
-import styles from "./styles.css";
-import RaisedButton from "material-ui/RaisedButton";
+import styles from './styles.css';
+import RaisedButton from 'material-ui/RaisedButton';
 // import send from 'utils/send';
 
 // const asyncValidate = (values) => new Promise((resolve, reject) => {
@@ -26,7 +26,7 @@ class ProfileForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    pristine: PropTypes.bool.isRequired
+    pristine: PropTypes.bool.isRequired,
   };
 
   componentDidMount = () => {
@@ -37,12 +37,12 @@ class ProfileForm extends Component {
     const { handleSubmit, pending, pristine } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-        <Paper zDepth={2} style={{ padding: "1rem" }}>
+        <Paper zDepth={2} style={{ padding: '1rem' }}>
           <div className="row center-md">
             <div className="col-md-6">
               <Field
                 cols="6"
-                inputStyle={{ textTransform: "uppercase" }}
+                inputStyle={{ textTransform: 'uppercase' }}
                 floatingLabelText="Nom"
                 name="nom"
                 component={TextField}
@@ -52,7 +52,7 @@ class ProfileForm extends Component {
             <div className="col-md-6">
               <Field
                 cols="6"
-                inputStyle={{ textTransform: "capitalize" }}
+                inputStyle={{ textTransform: 'capitalize' }}
                 floatingLabelText="Prénom"
                 name="prenom"
                 component={TextField}
@@ -76,7 +76,7 @@ class ProfileForm extends Component {
             <div className="col-md-6">
               <Field
                 cols="6"
-                inputStyle={{ textTransform: "uppercase" }}
+                inputStyle={{ textTransform: 'uppercase' }}
                 floatingLabelText="Ville"
                 name="ville"
                 component={TextField}
@@ -120,7 +120,7 @@ class ProfileForm extends Component {
 }
 
 const profileForm = reduxForm({
-  form: "profile"
+  form: 'profile',
 })(ProfileForm);
 
 export default profileForm;

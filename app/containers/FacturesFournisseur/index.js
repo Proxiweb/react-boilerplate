@@ -1,26 +1,26 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import { createStructuredSelector } from "reselect";
-import { List, ListItem, makeSelectable } from "material-ui/List";
-import compareDesc from "date-fns/compare_desc";
-import { format } from "utils/dates";
-import classnames from "classnames";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+import compareDesc from 'date-fns/compare_desc';
+import { format } from 'utils/dates';
+import classnames from 'classnames';
 
-import { loadFournisseur } from "containers/AdminFournisseur/actions";
-import { selectLocationState } from "containers/App/selectors";
+import { loadFournisseur } from 'containers/AdminFournisseur/actions';
+import { selectLocationState } from 'containers/App/selectors';
 
-import { loadCommandes } from "containers/Commande/actions";
+import { loadCommandes } from 'containers/Commande/actions';
 import {
   selectCommandeCommandeUtilisateurs,
   selectCommandeCommandeContenus,
   selectCommandeContenus,
-  selectFournisseurCommandes
-} from "containers/Commande/selectors";
+  selectFournisseurCommandes,
+} from 'containers/Commande/selectors';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 const SelectableList = makeSelectable(List);
 
@@ -35,7 +35,7 @@ class FacturesFournisseur extends Component {
     commandes: PropTypes.array,
     commandeUtilisateurs: PropTypes.array,
     commandeContenus: PropTypes.array,
-    contenus: PropTypes.object
+    contenus: PropTypes.object,
   };
 
   componentDidMount() {
@@ -75,7 +75,7 @@ class FacturesFournisseur extends Component {
               params,
               commandeUtilisateurs,
               contenus,
-              commandeContenus
+              commandeContenus,
             })}
         </div>
       );
@@ -84,18 +84,18 @@ class FacturesFournisseur extends Component {
     return (
       <div className="row">
         {!print &&
-          <div className={classnames("col-md-3", styles.panel)}>
+          <div className={classnames('col-md-3', styles.panel)}>
             <SelectableList value={params.commandeId} onChange={this.handleChangeList}>
               {commandes
                 .slice()
                 .filter(cde => cde.dateCommande)
                 .sort(compareDesc)
                 .map((cde, idx) =>
-                  <ListItem key={idx} primaryText={format(cde.dateCommande, "DD MMMM")} value={cde.id} />
+                  <ListItem key={idx} primaryText={format(cde.dateCommande, 'DD MMMM')} value={cde.id} />
                 )}
             </SelectableList>
           </div>}
-        <div className={classnames(print ? "col-md-12" : "col-md-9", styles.panel)}>
+        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
           {this.props.children &&
             commandeUtilisateurs &&
             contenus &&
@@ -105,7 +105,7 @@ class FacturesFournisseur extends Component {
               params,
               commandeUtilisateurs,
               contenus,
-              commandeContenus
+              commandeContenus,
             })}
         </div>
       </div>
@@ -117,7 +117,7 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
   contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  locationState: selectLocationState()
+  locationState: selectLocationState(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -125,7 +125,7 @@ const mapDispatchToProps = dispatch =>
     {
       load: loadFournisseur,
       loadCde: loadCommandes,
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

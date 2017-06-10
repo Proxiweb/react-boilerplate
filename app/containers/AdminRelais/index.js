@@ -1,40 +1,40 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import includes from "lodash/includes";
-import { List, ListItem, makeSelectable } from "material-ui/List";
-import FlatButton from "material-ui/FlatButton";
-import ShoppingCartIcon from "material-ui/svg-icons/action/shopping-cart";
-import EuroIcon from "material-ui/svg-icons/action/euro-symbol";
-import InfoIcon from "material-ui/svg-icons/action/info";
-import PeopleIcon from "material-ui/svg-icons/social/person";
-import FournisseursIcon from "material-ui/svg-icons/maps/local-shipping";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import includes from 'lodash/includes';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
+import FlatButton from 'material-ui/FlatButton';
+import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
+import EuroIcon from 'material-ui/svg-icons/action/euro-symbol';
+import InfoIcon from 'material-ui/svg-icons/action/info';
+import PeopleIcon from 'material-ui/svg-icons/social/person';
+import FournisseursIcon from 'material-ui/svg-icons/maps/local-shipping';
 // import assign from 'lodash/assign';
 
-import styles from "./styles.css";
-import classnames from "classnames";
-import { createStructuredSelector } from "reselect";
-import { selectRelais } from "containers/AdminDepot/selectors";
+import styles from './styles.css';
+import classnames from 'classnames';
+import { createStructuredSelector } from 'reselect';
+import { selectRelais } from 'containers/AdminDepot/selectors';
 
-import DepotsRelais from "./containers/DepotsRelais";
-import Utilisateur from "./containers/Utilisateur";
-import FournisseursRelais from "./containers/FournisseursRelais";
-import ListeUtilisateurs from "containers/ListeUtilisateurs";
-import ActionsDiverses from "./components/ActionsDiverses";
-import ProfilAdherentContainer from "./containers/ProfilAdherentContainer";
-import InfosRelais from "./containers/InfosRelais";
+import DepotsRelais from './containers/DepotsRelais';
+import Utilisateur from './containers/Utilisateur';
+import FournisseursRelais from './containers/FournisseursRelais';
+import ListeUtilisateurs from 'containers/ListeUtilisateurs';
+import ActionsDiverses from './components/ActionsDiverses';
+import ProfilAdherentContainer from './containers/ProfilAdherentContainer';
+import InfosRelais from './containers/InfosRelais';
 // import { loadDepotsRelais } from 'containers/AdminDepot/actions';
-import { push } from "react-router-redux";
-import { loadRelais } from "./actions";
+import { push } from 'react-router-redux';
+import { loadRelais } from './actions';
 
-import { loadUtilisateurs } from "containers/Commande/actions";
-import { selectUtilisateurs } from "containers/Commande/selectors";
+import { loadUtilisateurs } from 'containers/Commande/actions';
+import { selectUtilisateurs } from 'containers/Commande/selectors';
 
-import { selectRoles, selectRelaiId } from "containers/CompteUtilisateur/selectors";
+import { selectRoles, selectRelaiId } from 'containers/CompteUtilisateur/selectors';
 
 const SelectableList = makeSelectable(List);
-import StellarAccount from "components/StellarAccount";
+import StellarAccount from 'components/StellarAccount';
 
 class AdminRelais extends Component {
   static propTypes = {
@@ -45,12 +45,12 @@ class AdminRelais extends Component {
     roles: PropTypes.array.isRequired,
     load: PropTypes.func.isRequired,
     loadUtil: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
   };
 
   state = {
     viewSelected: null,
-    utilisateurId: null
+    utilisateurId: null,
   };
 
   componentDidMount() {
@@ -80,13 +80,13 @@ class AdminRelais extends Component {
     const { relaiId } = params;
     const { viewSelected, utilisateurId } = this.state;
     const relaisSelected = relais.find(r => r.id === relaiId);
-    const admin = includes(roles, "ADMIN");
+    const admin = includes(roles, 'ADMIN');
     const utilisateur = utilisateurId ? utilisateurs[utilisateurId] : null;
 
     return (
       <div className="row">
-        {includes(roles, "ADMIN") &&
-          <div className={classnames("col-md-2", styles.panel)}>
+        {includes(roles, 'ADMIN') &&
+          <div className={classnames('col-md-2', styles.panel)}>
             <SelectableList value={relaiId} onChange={this.handleChangeList}>
               {relais
                 .filter(r => admin || r.id === authRelaiId)
@@ -96,8 +96,8 @@ class AdminRelais extends Component {
         <div
           className={classnames(
             {
-              "col-md-10": includes(roles, "ADMIN"),
-              "col-md-12": !includes(roles, "ADMIN")
+              'col-md-10': includes(roles, 'ADMIN'),
+              'col-md-12': !includes(roles, 'ADMIN'),
             },
             styles.panel
           )}
@@ -114,32 +114,32 @@ class AdminRelais extends Component {
                 <FlatButton
                   label="Depots"
                   icon={<EuroIcon />}
-                  onClick={() => this.setState({ viewSelected: "depot" })}
+                  onClick={() => this.setState({ viewSelected: 'depot' })}
                 />,
                 <FlatButton
                   label="Adhérents"
                   icon={<PeopleIcon />}
-                  onClick={() => this.setState({ viewSelected: "adherents" })}
+                  onClick={() => this.setState({ viewSelected: 'adherents' })}
                 />,
                 <FlatButton
                   label="Fournisseurs"
                   icon={<FournisseursIcon />}
-                  onClick={() => this.setState({ viewSelected: "fournisseurs" })}
+                  onClick={() => this.setState({ viewSelected: 'fournisseurs' })}
                 />,
                 <FlatButton
                   label="Infos"
                   icon={<InfoIcon />}
-                  onClick={() => this.setState({ viewSelected: "infos" })}
-                />
+                  onClick={() => this.setState({ viewSelected: 'infos' })}
+                />,
               ]}
             </div>
           </div>
-          {viewSelected === "depot" &&
+          {viewSelected === 'depot' &&
             utilisateurs &&
             <DepotsRelais relaiId={relaiId} utilisateurs={utilisateurs} />}
-          {viewSelected === "fournisseurs" && <FournisseursRelais relaiId={relaiId} params={params} />}
-          {viewSelected === "infos" && <InfosRelais relais={relaisSelected} params={params} test="5" />}
-          {(viewSelected === "adherents" || viewSelected === "nouvel_adherent") &&
+          {viewSelected === 'fournisseurs' && <FournisseursRelais relaiId={relaiId} params={params} />}
+          {viewSelected === 'infos' && <InfosRelais relais={relaisSelected} params={params} test="5" />}
+          {(viewSelected === 'adherents' || viewSelected === 'nouvel_adherent') &&
             <div className={`row ${styles.adherents}`}>
               <div className="col-md-4">
                 <ListeUtilisateurs
@@ -148,7 +148,7 @@ class AdminRelais extends Component {
                 />
               </div>
               <div className="col-md-8">
-                {viewSelected === "nouvel_adherent" &&
+                {viewSelected === 'nouvel_adherent' &&
                   !utilisateur &&
                   <ProfilAdherentContainer relaiId={relaiId} />}
                 {utilisateur && <Utilisateur utilisateur={utilisateur} />}
@@ -156,7 +156,7 @@ class AdminRelais extends Component {
                   utilisateur.stellarKeys &&
                   <StellarAccount stellarAdr={utilisateur.stellarKeys.adresse} />}
                 {!utilisateur &&
-                  viewSelected === "adherents" &&
+                  viewSelected === 'adherents' &&
                   <ActionsDiverses
                     utilisateurs={utilisateurs}
                     relaiId={relaiId}
@@ -174,7 +174,7 @@ const mapStateToProps = createStructuredSelector({
   relais: selectRelais(),
   roles: selectRoles(),
   authRelaiId: selectRelaiId(),
-  utilisateurs: selectUtilisateurs()
+  utilisateurs: selectUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -183,7 +183,7 @@ const mapDispatchToProps = dispatch =>
       load: loadRelais,
       loadUtil: loadUtilisateurs,
       // loadDepots: (relaisId) => dispatch(loadDepotsRelais(relaisId)),
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

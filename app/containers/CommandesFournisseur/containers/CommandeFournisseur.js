@@ -1,27 +1,27 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import { format } from "utils/dates";
-import round from "lodash/round";
-import classnames from "classnames";
-import groupBy from "lodash/groupBy";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { format } from 'utils/dates';
+import round from 'lodash/round';
+import classnames from 'classnames';
+import groupBy from 'lodash/groupBy';
 
 import {
   selectOffres,
   selectFournisseurs,
   selectProduits,
   selectCommande,
-  selectUtilisateurs
-} from "containers/Commande/selectors";
+  selectUtilisateurs,
+} from 'containers/Commande/selectors';
 
-import { loadFournisseurs, fetchUtilisateurs } from "containers/Commande/actions";
+import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
 
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import { trouveTarification } from "containers/CommandeEdit/components/components/AffichePrix";
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 class CommandeFournisseur extends Component {
   // eslint-disable-line
@@ -37,7 +37,7 @@ class CommandeFournisseur extends Component {
     utilisateurs: PropTypes.object,
     fournisseurs: PropTypes.array.isRequired,
     loadU: PropTypes.func.isRequired,
-    loadF: PropTypes.func.isRequired
+    loadF: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -85,14 +85,14 @@ class CommandeFournisseur extends Component {
         </td>
         <td className={styles.totaux}>
           {// eslint-disable-next-line
-          parseFloat(round(tarif.prix / 100 * qteTotal, 2)).toFixed(2)}{" "}
+          parseFloat(round(tarif.prix / 100 * qteTotal, 2)).toFixed(2)}{' '}
           €
         </td>
       </tr>
     );
   };
 
-  split = str => str.split("-")[0];
+  split = str => str.split('-')[0];
 
   render() {
     const {
@@ -105,11 +105,11 @@ class CommandeFournisseur extends Component {
       fournisseurs,
       produits,
       offres,
-      params: { fournisseurId, commandeId }
+      params: { fournisseurId, commandeId },
     } = this.props;
 
     if (pending) {
-      return <p>{"Chargements..."}</p>;
+      return <p>{'Chargements...'}</p>;
     }
 
     if (
@@ -141,7 +141,7 @@ class CommandeFournisseur extends Component {
           commandeContenus: contenus,
           offres,
           commandeId,
-          filter: cc => produits[offres[cc.offreId].produitId].fournisseurId === fournisseurId
+          filter: cc => produits[offres[cc.offreId].produitId].fournisseurId === fournisseurId,
         })
       : null;
 
@@ -157,7 +157,7 @@ class CommandeFournisseur extends Component {
                       <h3>Commande Proxiweb <small>{commandeId}</small></h3>
                     </td>
                     <td className={styles.title}>
-                      <h3>{format(commande.dateCommande, "DD MM")}</h3>
+                      <h3>{format(commande.dateCommande, 'DD MM')}</h3>
                     </td>
                   </tr>
                 </table>
@@ -182,11 +182,11 @@ class CommandeFournisseur extends Component {
             )}
           </tbody>
         </table>
-        <div style={{ textAlign: "right", fontSize: "1.2em", marginTop: "1em" }}>
+        <div style={{ textAlign: 'right', fontSize: '1.2em', marginTop: '1em' }}>
           {commandeUtilisateurs.length}
-          {" "}
+          {' '}
           acheteur(s) - Total:
-          {" "}
+          {' '}
           <strong>{round(totaux.prix, 2)} €</strong>
         </div>
       </div>
@@ -199,14 +199,14 @@ const mapStateToProps = createStructuredSelector({
   produits: selectProduits(),
   utilisateurs: selectUtilisateurs(),
   fournisseurs: selectFournisseurs(),
-  offres: selectOffres()
+  offres: selectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadU: fetchUtilisateurs,
-      loadF: loadFournisseurs
+      loadF: loadFournisseurs,
     },
     dispatch
   );

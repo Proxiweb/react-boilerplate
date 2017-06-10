@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import { isPristine, change } from "redux-form";
-import RelaisForm from "containers/AdminRelais/components/RelaisForm";
-import { selectPending } from "containers/App/selectors";
-import { saveRelais } from "containers/AdminRelais/actions";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { isPristine, change } from 'redux-form';
+import RelaisForm from 'containers/AdminRelais/components/RelaisForm';
+import { selectPending } from 'containers/App/selectors';
+import { saveRelais } from 'containers/AdminRelais/actions';
 
-const isProfilePristine = () => state => isPristine("profile")(state);
+const isProfilePristine = () => state => isPristine('profile')(state);
 
 class InfosRelais extends Component {
   // eslint-disable-line
@@ -17,7 +17,7 @@ class InfosRelais extends Component {
     relais: PropTypes.object.isRequired,
     pristine: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
-    save: PropTypes.func.isRequired
+    save: PropTypes.func.isRequired,
   };
 
   handleSubmit = values => {
@@ -29,7 +29,7 @@ class InfosRelais extends Component {
     return (
       <div className="row">
         <RelaisForm
-          changePresentation={val => changeValue("relais", "presentation", val)}
+          changePresentation={val => changeValue('relais', 'presentation', val)}
           initialValues={relais}
           onSubmit={this.handleSubmit}
           pending={pending}
@@ -42,14 +42,14 @@ class InfosRelais extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
-  pristine: isProfilePristine()
+  pristine: isProfilePristine(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       changeValue: change,
-      save: saveRelais
+      save: saveRelais,
     },
     dispatch
   );

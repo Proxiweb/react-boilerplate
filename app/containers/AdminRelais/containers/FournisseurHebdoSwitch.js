@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import Toggle from "material-ui/Toggle";
-import includes from "lodash/includes";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import Toggle from 'material-ui/Toggle';
+import includes from 'lodash/includes';
 
-import { selectRelais } from "containers/AdminRelais/selectors";
-import { saveRelais } from "containers/AdminRelais/actions";
-import styles from "./styles.css";
+import { selectRelais } from 'containers/AdminRelais/selectors';
+import { saveRelais } from 'containers/AdminRelais/actions';
+import styles from './styles.css';
 
 class FournisseurHebdoSwitch extends Component {
   // eslint-disable-line
@@ -17,7 +17,7 @@ class FournisseurHebdoSwitch extends Component {
     fournisseur: PropTypes.string.isRequired,
     relais: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
-    saveR: PropTypes.func.isRequired
+    saveR: PropTypes.func.isRequired,
   };
 
   handleToggle = () => {
@@ -48,7 +48,7 @@ class FournisseurHebdoSwitch extends Component {
             </div>
             <div className="col-md-4">
               <Toggle
-                label={this.fournisseurInclus() ? "Activée" : "Désactivée"}
+                label={this.fournisseurInclus() ? 'Activée' : 'Désactivée'}
                 toggled={this.fournisseurInclus()}
                 onToggle={this.handleToggle}
               />
@@ -61,13 +61,13 @@ class FournisseurHebdoSwitch extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais()
+  relais: selectRelais(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      saveR: saveRelais
+      saveR: saveRelais,
     },
     dispatch
   );

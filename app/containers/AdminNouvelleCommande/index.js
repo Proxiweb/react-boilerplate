@@ -1,31 +1,31 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import setISODay from "date-fns/set_iso_day";
-import addHours from "date-fns/add_hours";
-import addMinutes from "date-fns/add_minutes";
-import addDays from "date-fns/add_days";
-import isAfter from "date-fns/is_after";
-import startOfWeek from "date-fns/start_of_week";
-import startOfDay from "date-fns/start_of_day";
-import { format } from "utils/dates";
-import { Tabs, Tab } from "material-ui/Tabs";
-import RaisedButton from "material-ui/RaisedButton";
-import Paper from "material-ui/Paper";
-import uuid from "node-uuid";
-import { loadFournisseurs, createCommande, loadRelais } from "containers/Commande/actions";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import setISODay from 'date-fns/set_iso_day';
+import addHours from 'date-fns/add_hours';
+import addMinutes from 'date-fns/add_minutes';
+import addDays from 'date-fns/add_days';
+import isAfter from 'date-fns/is_after';
+import startOfWeek from 'date-fns/start_of_week';
+import startOfDay from 'date-fns/start_of_day';
+import { format } from 'utils/dates';
+import { Tabs, Tab } from 'material-ui/Tabs';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import uuid from 'node-uuid';
+import { loadFournisseurs, createCommande, loadRelais } from 'containers/Commande/actions';
 import {
   selectFournisseursRelais,
   selectFournisseursCommande,
-  selectCommandeCommandeUtilisateurs
-} from "containers/Commande/selectors";
-import { selectToken } from "containers/CompteUtilisateur/selectors";
-import NouvelleCommandeListeFournisseurs from "./components/NouvelleCommandeListeFournisseurs";
-import NouvelleCommandeParametres from "./components/NouvelleCommandeParametres";
-import NouvelleCommandeDistribution from "./components/NouvelleCommandeDistribution";
-import styles from "./styles.css";
+  selectCommandeCommandeUtilisateurs,
+} from 'containers/Commande/selectors';
+import { selectToken } from 'containers/CompteUtilisateur/selectors';
+import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
+import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
+import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
+import styles from './styles.css';
 
 class NouvelleCommande extends Component {
   // eslint-disable-line
@@ -36,17 +36,17 @@ class NouvelleCommande extends Component {
     relais: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
-    create: PropTypes.func.isRequired
+    create: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
   };
 
   state = {
     parametres: {},
     distributions: [],
-    datesLimites: []
+    datesLimites: [],
   };
 
   componentDidMount() {
@@ -65,24 +65,24 @@ class NouvelleCommande extends Component {
         montantMin,
         montantMinRelai,
         qteMin,
-        qteMinRelai
+        qteMinRelai,
       },
       distributions,
-      datesLimites
+      datesLimites,
     });
   };
 
   addDistrib = value => {
     this.setState({
       ...this.state,
-      distributions: [...this.state.distributions, value]
+      distributions: [...this.state.distributions, value],
     });
   };
 
   delDistrib = index => {
     this.setState({
       ...this.state,
-      distributions: this.state.distributions.filter((dist, idx) => idx !== index)
+      distributions: this.state.distributions.filter((dist, idx) => idx !== index),
     });
   };
 
@@ -96,7 +96,7 @@ class NouvelleCommande extends Component {
 
     if (infosRelai && infosRelai.limiteCommande) {
       const { jourSemaine, heure } = infosRelai.limiteCommande;
-      const [heures, minutes] = infosRelai.limiteCommande.heure.split(":");
+      const [heures, minutes] = infosRelai.limiteCommande.heure.split(':');
       dateLimiteFournisseur = format(
         addHours(
           addMinutes(addDays(startOfDay(startOfWeek(dateLimite)), jourSemaine), parseInt(minutes, 10)),
@@ -109,15 +109,15 @@ class NouvelleCommande extends Component {
       ...this.state,
       datesLimites: this.state.datesLimites.concat({
         fournisseurId: value,
-        dateLimite: dateLimiteFournisseur
-      })
+        dateLimite: dateLimiteFournisseur,
+      }),
     });
   };
 
   delFourn = value => {
     this.setState({
       ...this.state,
-      datesLimites: this.state.datesLimites.filter(dL => dL.fournisseurId !== value)
+      datesLimites: this.state.datesLimites.filter(dL => dL.fournisseurId !== value),
     });
   };
 
@@ -126,7 +126,7 @@ class NouvelleCommande extends Component {
       ...this.state,
       datesLimites: this.state.datesLimites.map(
         dL => (dL.fournisseurId !== fournisseurId ? { ...dL } : { ...dL, dateLimite: format(date) })
-      )
+      ),
     });
 
   changeParam = (key, value) => {
@@ -143,18 +143,18 @@ class NouvelleCommande extends Component {
 
       const livraisons = relais.distributionJours.map(livr => {
         const dateDebut = setMinutes(
-          setHours(setISODay(dateCommande, livr.jour - 1), livr.heureDebut.split(":")[0]),
-          livr.heureDebut.split(":")[1]
+          setHours(setISODay(dateCommande, livr.jour - 1), livr.heureDebut.split(':')[0]),
+          livr.heureDebut.split(':')[1]
         );
 
         const dateFin = setMinutes(
-          setHours(setISODay(dateCommande, livr.jour - 1), livr.heureFin.split(":")[0]),
-          livr.heureFin.split(":")[1]
+          setHours(setISODay(dateCommande, livr.jour - 1), livr.heureFin.split(':')[0]),
+          livr.heureFin.split(':')[1]
         );
 
         return {
           debut: format(dateDebut),
-          fin: format(dateFin)
+          fin: format(dateFin),
         };
       });
       distributions = livraisons.filter(livr => isAfter(livr.debut, dateCommande));
@@ -162,7 +162,7 @@ class NouvelleCommande extends Component {
     this.setState({
       ...this.state,
       distributions,
-      parametres
+      parametres,
     });
   };
 
@@ -177,8 +177,8 @@ class NouvelleCommande extends Component {
 
   calculeDateCommande = (dateLimite, heureLimite) => {
     if (!dateLimite || !heureLimite) return null;
-    const hLim = parseInt(format(heureLimite, "HH"), 10);
-    const mLim = parseInt(format(heureLimite, "mm"), 10);
+    const hLim = parseInt(format(heureLimite, 'HH'), 10);
+    const mLim = parseInt(format(heureLimite, 'mm'), 10);
     return addMinutes(addHours(dateLimite, hLim), mLim);
   };
 
@@ -188,7 +188,7 @@ class NouvelleCommande extends Component {
     const { commandeId, relaiId } = this.props.params;
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
-      id: commandeId !== "nouvelle" ? commandeId : undefined,
+      id: commandeId !== 'nouvelle' ? commandeId : undefined,
       dateCommande: dateCommande ? format(dateCommande) : null,
       resume,
       montantMin,
@@ -198,9 +198,9 @@ class NouvelleCommande extends Component {
       distributions: distributions.map(d => ({
         ...d,
         relaiId,
-        id: d.id ? d.id : uuid.v4()
+        id: d.id ? d.id : uuid.v4(),
       })),
-      datesLimites
+      datesLimites,
     };
 
     this.props.create(commande);
@@ -220,7 +220,7 @@ class NouvelleCommande extends Component {
               inkBarStyle={{
                 height: 7,
                 backgroundColor: muiTheme.appBar.color,
-                marginTop: -7
+                marginTop: -7,
               }}
               contentContainerClassName={styles.tab}
             >
@@ -249,7 +249,7 @@ class NouvelleCommande extends Component {
               <div className="col-md-6">
                 <RaisedButton
                   primary
-                  label={`${commandeId ? "Modifier" : "Créer"} cette commande`}
+                  label={`${commandeId ? 'Modifier' : 'Créer'} cette commande`}
                   onClick={() => this.create()}
                   fullWidth
                   disabled={!this.validate()}
@@ -267,7 +267,7 @@ const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseursRelais(),
   fournisseursCommande: selectFournisseursCommande(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  token: selectToken()
+  token: selectToken(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -275,7 +275,7 @@ const mapDispatchToProps = dispatch =>
     {
       load: loadFournisseurs,
       loadR: loadRelais,
-      create: createCommande
+      create: createCommande,
     },
     dispatch
   );

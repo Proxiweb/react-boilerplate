@@ -1,6 +1,6 @@
 // selectLocationState expects a plain JS object for the routing state
-import isEqual from "lodash/isEqual";
-import { createSelector } from "reselect";
+import isEqual from 'lodash/isEqual';
+import { createSelector } from 'reselect';
 
 export const selectPending = () => state => state.global.pending;
 export const selectParams = () => (state, props) => props.params;
@@ -37,7 +37,7 @@ const selectLocationState = () => {
 };
 
 export {
-  selectLocationState
+  selectLocationState,
   // selectMessagesUtilisateurLoaded,
   // selectMessagesUtilisateur,
 };

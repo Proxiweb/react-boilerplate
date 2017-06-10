@@ -1,13 +1,13 @@
 /* eslint-disable */
-import { PropTypes } from "react";
+import { PropTypes } from 'react';
 
 const stringOrNumber = PropTypes.oneOfType([PropTypes.string, PropTypes.number]);
 
 // properties that match media queries
 const matchers = {
-  orientation: PropTypes.oneOf(["portrait", "landscape"]),
+  orientation: PropTypes.oneOf(['portrait', 'landscape']),
 
-  scan: PropTypes.oneOf(["progressive", "interlace"]),
+  scan: PropTypes.oneOf(['progressive', 'interlace']),
 
   aspectRatio: PropTypes.string,
   deviceAspectRatio: PropTypes.string,
@@ -23,7 +23,7 @@ const matchers = {
   colorIndex: PropTypes.bool,
 
   monochrome: PropTypes.bool,
-  resolution: stringOrNumber
+  resolution: stringOrNumber,
 };
 
 // media features
@@ -55,7 +55,7 @@ const features = {
   minResolution: stringOrNumber,
   maxResolution: stringOrNumber,
 
-  ...matchers
+  ...matchers,
 };
 
 // media types
@@ -70,7 +70,7 @@ const types = {
   screen: PropTypes.bool,
   tty: PropTypes.bool,
   tv: PropTypes.bool,
-  embossed: PropTypes.bool
+  embossed: PropTypes.bool,
 };
 
 const all = { ...types, ...features };
@@ -82,7 +82,7 @@ export default {
   all: all,
   types: types,
   matchers: matchers,
-  features: features
+  features: features,
 };
 
 /* eslint-enable */

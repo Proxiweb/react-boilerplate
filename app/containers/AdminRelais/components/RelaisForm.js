@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { reduxForm, Field, FieldArray } from "redux-form";
-import { Editor } from "react-draft-wysiwyg";
-import { TextField } from "redux-form-material-ui";
-import CustomSelectField from "components/CustomSelectField";
-import MenuItem from "material-ui/MenuItem";
-import draftToHtml from "draftjs-to-html";
-import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import styles from "./styles.css";
-import RaisedButton from "material-ui/RaisedButton";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm, Field, FieldArray } from 'redux-form';
+import { Editor } from 'react-draft-wysiwyg';
+import { TextField } from 'redux-form-material-ui';
+import CustomSelectField from 'components/CustomSelectField';
+import MenuItem from 'material-ui/MenuItem';
+import draftToHtml from 'draftjs-to-html';
+import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import styles from './styles.css';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const renderJours = (
   { input, label, meta: { touched, error }, ...custom } // eslint-disable-line
@@ -34,7 +34,7 @@ const renderDistributionJours = (
   { fields, meta: { error } } // eslint-disable-line
 ) =>
   <div className="row">
-    <div className="col-md-12" style={{ textAlign: "right", marginBottom: "1em", marginTop: "2em" }}>
+    <div className="col-md-12" style={{ textAlign: 'right', marginBottom: '1em', marginTop: '2em' }}>
       <RaisedButton primary label=" + Nouvelle distribution" onTouchTap={() => fields.push()} />
     </div>
     <div className="col-md-12">
@@ -42,7 +42,7 @@ const renderDistributionJours = (
         <div
           className="row"
           key={index}
-          style={{ marginBottom: "0.5em", padding: "0 1em 0.5em 1em 1em", border: "solid 1px silver" }}
+          style={{ marginBottom: '0.5em', padding: '0 1em 0.5em 1em 1em', border: 'solid 1px silver' }}
         >
           <div className="col-md-3">
             <Field
@@ -51,7 +51,7 @@ const renderDistributionJours = (
               component={renderJours}
               fullWidth
               disabled={false}
-              style={{ lineHeight: "30px", fontSize: 14 }}
+              style={{ lineHeight: '30px', fontSize: 14 }}
             />
           </div>
           <div className="col-md-3">
@@ -61,7 +61,7 @@ const renderDistributionJours = (
               component={TextField}
               fullWidth
               disabled={false}
-              style={{ lineHeight: "30px", fontSize: 14 }}
+              style={{ lineHeight: '30px', fontSize: 14 }}
             />
           </div>
           <div className="col-md-3">
@@ -71,15 +71,15 @@ const renderDistributionJours = (
               component={TextField}
               fullWidth
               disabled={false}
-              style={{ lineHeight: "30px", fontSize: 14 }}
+              style={{ lineHeight: '30px', fontSize: 14 }}
             />
           </div>
-          <div className="col-md-3" style={{ marginTop: "1em" }}>
+          <div className="col-md-3" style={{ marginTop: '1em' }}>
             <RaisedButton
               label="supprimer"
               onTouchTap={() => fields.remove(index)}
               backgroundColor="red"
-              labelStyle={{ color: "white" }}
+              labelStyle={{ color: 'white' }}
             />
           </div>
         </div>
@@ -88,17 +88,17 @@ const renderDistributionJours = (
   </div>;
 
 const options = {
-  options: ["inline", "textAlign", "link", "history"],
+  options: ['inline', 'textAlign', 'link', 'history'],
   inline: {
     inDropdown: false,
     className: undefined,
-    options: ["bold", "italic", "underline"]
+    options: ['bold', 'italic', 'underline'],
   },
   list: {
     inDropdown: false,
     className: undefined,
-    options: ["unordered", "ordered"]
-  }
+    options: ['unordered', 'ordered'],
+  },
 };
 
 class RelaisForm extends Component {
@@ -107,7 +107,7 @@ class RelaisForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
-    changePresentation: PropTypes.func.isRequired
+    changePresentation: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -115,12 +115,12 @@ class RelaisForm extends Component {
     const { presentation } = this.props.initialValues; // eslint-disable-line
 
     this.state = {
-      rawHtml: this.getInitialHTML(presentation)
+      rawHtml: this.getInitialHTML(presentation),
     };
   }
 
   state = {
-    rawHtml: null
+    rawHtml: null,
   };
 
   componentDidMount = () => {
@@ -142,7 +142,7 @@ class RelaisForm extends Component {
   render() {
     const { handleSubmit, pending, pristine } = this.props;
     return (
-      <form onSubmit={handleSubmit} style={{ padding: "1rem" }}>
+      <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
         <div className="row">
           <div className="col-md-6">
             <Editor
@@ -158,7 +158,7 @@ class RelaisForm extends Component {
               <div className="col-md-12">
                 <Field
                   cols="6"
-                  inputStyle={{ textTransform: "uppercase" }}
+                  inputStyle={{ textTransform: 'uppercase' }}
                   floatingLabelText="Nom du relais"
                   name="nom"
                   fullWidth
@@ -183,7 +183,7 @@ class RelaisForm extends Component {
               <div className="col-md-6">
                 <Field
                   cols="6"
-                  inputStyle={{ textTransform: "uppercase" }}
+                  inputStyle={{ textTransform: 'uppercase' }}
                   floatingLabelText="Ville"
                   name="ville"
                   component={TextField}
@@ -229,7 +229,7 @@ class RelaisForm extends Component {
 }
 
 const relaisForm = reduxForm({
-  form: "relais"
+  form: 'relais',
 })(RelaisForm);
 
 export default relaisForm;

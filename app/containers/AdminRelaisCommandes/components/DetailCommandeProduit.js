@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import round from "lodash/round";
-import { TableRow, TableRowColumn } from "material-ui/Table";
-import { trouveTarification } from "containers/CommandeEdit/components/components/AffichePrix";
-import buildCommandeRow from "components/DetailCommandeColumns";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import round from 'lodash/round';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
+import buildCommandeRow from 'components/DetailCommandeColumns';
 
 import {
   supprimerCommandeContenu,
   diminuerCommandeContenu,
-  modifierCommandeContenu
-} from "containers/Commande/actions";
+  modifierCommandeContenu,
+} from 'containers/Commande/actions';
 
-import styles from "./styles.css";
+import styles from './styles.css';
 // eslint-disable-next-line
 class CommnandeParProduitFournisseur extends Component {
   static propTypes = {
@@ -26,7 +26,7 @@ class CommnandeParProduitFournisseur extends Component {
     idx: PropTypes.number.isRequired,
     // diminuer: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
-    modifierCommandeContenu: PropTypes.func.isRequired
+    modifierCommandeContenu: PropTypes.func.isRequired,
   };
 
   handleDiminuer = () => {
@@ -34,20 +34,20 @@ class CommnandeParProduitFournisseur extends Component {
     if (contenu.quantite === 1) {
       supprimer(contenu);
     } else {
-      alert("Diminution non implémmentée"); // eslint-disable-line
+      alert('Diminution non implémmentée'); // eslint-disable-line
     }
   };
 
   handleChangeQte = () => {
     const { contenu, offre } = this.props;
     const poidsG = parseInt(offre.poids * (contenu.qteRegul + contenu.quantite) / 1000, 10);
-    const nouveauPoids = parseInt(prompt("Poids réel (g) ?", poidsG), 10); // eslint-disable-line
+    const nouveauPoids = parseInt(prompt('Poids réel (g) ?', poidsG), 10); // eslint-disable-line
     if (nouveauPoids && nouveauPoids !== poidsG) {
       const qteTotal = round(nouveauPoids * contenu.quantite / poidsG, 5);
       this.props.modifierCommandeContenu({
         ...contenu,
         qteRegul: round(qteTotal - contenu.quantite, 5),
-        quantiteAjustee: true
+        quantiteAjustee: true,
       });
     }
   };
@@ -56,7 +56,7 @@ class CommnandeParProduitFournisseur extends Component {
     this.props.modifierCommandeContenu({
       ...this.props.contenu,
       qteRegul: 0,
-      quantiteAjustee: false
+      quantiteAjustee: false,
     });
   };
 
@@ -64,7 +64,7 @@ class CommnandeParProduitFournisseur extends Component {
     const { dansPrepaPanier } = this.props.contenu;
     this.props.modifierCommandeContenu({
       ...this.props.contenu,
-      dansPrepaPanier: !dansPrepaPanier
+      dansPrepaPanier: !dansPrepaPanier,
     });
   };
 
@@ -79,14 +79,14 @@ class CommnandeParProduitFournisseur extends Component {
       idx,
       offre,
       tarifEnBaisse,
-      colorTrendingDown: "green",
+      colorTrendingDown: 'green',
       tarif,
       produit,
       handleChangeQte: !readOnly && offre.quantiteAjustable && !contenu.quantiteAjustee
         ? this.handleChangeQte
         : undefined,
       handleResetQuantite: !readOnly && contenu.quantiteAjustee ? this.handleResetQuantite : undefined,
-      souligneQte
+      souligneQte,
     });
 
     return (
@@ -94,7 +94,7 @@ class CommnandeParProduitFournisseur extends Component {
         key={idx}
         onClick={this.handleClick}
         style={{
-          backgroundColor: contenu.dansPrepaPanier ? "silver" : "white"
+          backgroundColor: contenu.dansPrepaPanier ? 'silver' : 'white',
         }}
       >
         {rows}
@@ -114,7 +114,7 @@ const mapDispatchToProps = dispatch =>
     {
       diminuer: diminuerCommandeContenu,
       supprimer: supprimerCommandeContenu,
-      modifierCommandeContenu
+      modifierCommandeContenu,
     },
     dispatch
   );

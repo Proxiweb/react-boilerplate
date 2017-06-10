@@ -1,21 +1,21 @@
 /* eslint-disable */
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import api from "utils/stellarApi";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import api from 'utils/stellarApi';
 
 import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectOffres,
-  selectCommandeCommandeUtilisateurs
-} from "containers/Commande/selectors";
+  selectCommandeCommandeUtilisateurs,
+} from 'containers/Commande/selectors';
 
-import { selectUtilisateurs } from "containers/AdminUtilisateurs/selectors";
-import round from "lodash/round";
-import classnames from "classnames";
-import capitalize from "lodash/capitalize";
+import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import round from 'lodash/round';
+import classnames from 'classnames';
+import capitalize from 'lodash/capitalize';
 
 class AdminFinalisationCommande extends Component {
   static propTypes = {
@@ -25,13 +25,13 @@ class AdminFinalisationCommande extends Component {
     depots: PropTypes.array,
     offres: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array.isRequired,
-    params: PropTypes.object.isRequired
+    params: PropTypes.object.isRequired,
   };
 
   state = {
     paiements: {},
     totaux: {},
-    utilisateurSelected: null
+    utilisateurSelected: null,
   };
 
   render() {
@@ -39,7 +39,7 @@ class AdminFinalisationCommande extends Component {
 
     return (
       <div className="row">
-        <div className={classnames("col-md-8 col-md-2", styles.panel)} />
+        <div className={classnames('col-md-8 col-md-2', styles.panel)} />
       </div>
     );
   }
@@ -50,7 +50,7 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
   contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),
-  offres: selectOffres()
+  offres: selectOffres(),
 });
 
 export default connect(mapStateToProps)(AdminFinalisationCommande);

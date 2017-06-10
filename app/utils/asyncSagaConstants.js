@@ -5,7 +5,7 @@
 **/
 export default function generateConstants(domain, scope) {
   const constants = {};
-  const states = ["START", "SUCCESS", "ERROR"];
+  const states = ['START', 'SUCCESS', 'ERROR'];
   states.forEach(state => {
     constants[`ASYNC_${scope.toUpperCase()}_${state}`] = `${domain}/ASYNC_${scope.toUpperCase()}_${state}`;
   });

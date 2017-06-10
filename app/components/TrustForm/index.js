@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 export default class TrustForm extends Component {
   static propTypes = {
     trust: PropTypes.func.isRequired,
-    stellarKeys: PropTypes.object.isRequired
+    stellarKeys: PropTypes.object.isRequired,
   };
 
   constructor(props) {

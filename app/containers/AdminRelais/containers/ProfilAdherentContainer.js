@@ -1,16 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import capitalize from "lodash/capitalize";
-import { isPristine } from "redux-form";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import capitalize from 'lodash/capitalize';
+import { isPristine } from 'redux-form';
 
-import { saveUtilisateur } from "containers/Commande/actions";
-import { selectPending } from "containers/App/selectors";
-import ProfileForm from "containers/ProfileFormContainer/components/ProfileForm";
+import { saveUtilisateur } from 'containers/Commande/actions';
+import { selectPending } from 'containers/App/selectors';
+import ProfileForm from 'containers/ProfileFormContainer/components/ProfileForm';
 
-const isProfilePristine = () => state => isPristine("profile")(state);
+const isProfilePristine = () => state => isPristine('profile')(state);
 
 class ProfileAdherentContainer extends React.Component {
   static propTypes = {
@@ -18,7 +18,7 @@ class ProfileAdherentContainer extends React.Component {
     relaiId: PropTypes.string.isRequired,
     pristine: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
-    saveUtilisateur: PropTypes.func.isRequired
+    saveUtilisateur: PropTypes.func.isRequired,
   };
 
   handleSubmit = values => {
@@ -26,7 +26,7 @@ class ProfileAdherentContainer extends React.Component {
       ...values,
       nom: values.nom.toUpperCase(),
       prenom: capitalize(values.prenom),
-      relaiId: this.props.relaiId
+      relaiId: this.props.relaiId,
     });
   };
 
@@ -49,13 +49,13 @@ class ProfileAdherentContainer extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
-  pristine: isProfilePristine()
+  pristine: isProfilePristine(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      saveUtilisateur
+      saveUtilisateur,
     },
     dispatch
   );

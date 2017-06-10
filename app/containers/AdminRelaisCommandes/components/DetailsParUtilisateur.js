@@ -1,36 +1,36 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { push } from "react-router-redux";
-import { createStructuredSelector } from "reselect";
-import Helmet from "react-helmet";
-import round from "lodash/round";
-import RaisedButton from "material-ui/RaisedButton";
-import { Tabs, Tab } from "material-ui/Tabs";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import { createStructuredSelector } from 'reselect';
+import Helmet from 'react-helmet';
+import round from 'lodash/round';
+import RaisedButton from 'material-ui/RaisedButton';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import {
   selectCommandeCommandeContenus,
   selectCommandeContenus,
   selectFournisseursCommande,
   selectCommandeProduits,
   selectCommandeStellarAdresse,
-  selectOffres
-} from "containers/Commande/selectors";
+  selectOffres,
+} from 'containers/Commande/selectors';
 
-import { selectUtilisateurStellarAdresse } from "containers/AdminUtilisateurs/selectors";
-import capitalize from "lodash/capitalize";
-import isAfter from "date-fns/is_after";
-import { format } from "utils/dates";
-const formatPattern = "DD/MM/YY à HH:mm";
-import styles from "./styles.css";
-import DetailCommande from "./DetailCommande";
-import DetailCommandeTotal from "./DetailCommandeTotal";
-import CommandePaiementsUtilisateur from "./CommandePaiementsUtilisateur";
-import LivraisonCommande from "./LivraisonCommande";
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import StellarAccount from "components/StellarAccount";
-import HistoriqueCommandeUtilisateur from "./HistoriqueCommandeUtilisateur";
-import ListeEffetsCompteStellar from "components/ListeEffetsCompteStellar/ListeEffetsCompteStellar";
+import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
+import capitalize from 'lodash/capitalize';
+import isAfter from 'date-fns/is_after';
+import { format } from 'utils/dates';
+const formatPattern = 'DD/MM/YY à HH:mm';
+import styles from './styles.css';
+import DetailCommande from './DetailCommande';
+import DetailCommandeTotal from './DetailCommandeTotal';
+import CommandePaiementsUtilisateur from './CommandePaiementsUtilisateur';
+import LivraisonCommande from './LivraisonCommande';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import StellarAccount from 'components/StellarAccount';
+import HistoriqueCommandeUtilisateur from './HistoriqueCommandeUtilisateur';
+import ListeEffetsCompteStellar from 'components/ListeEffetsCompteStellar/ListeEffetsCompteStellar';
 
 // eslint-disable-next-line
 class DetailsParUtilisateur extends Component {
@@ -47,14 +47,14 @@ class DetailsParUtilisateur extends Component {
     commandeStellarAdresse: PropTypes.string.isRequired,
     utilisateurStellarAdresse: PropTypes.string.isRequired,
     depots: PropTypes.array.isRequired,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       account: null,
-      view: 0
+      view: 0,
     };
   }
 
@@ -76,7 +76,7 @@ class DetailsParUtilisateur extends Component {
       utilisateurStellarAdresse,
       commandeStellarAdresse,
       pushState,
-      depots
+      depots,
     } = this.props;
 
     const { commandeId, relaiId, utilisateurId } = params;
@@ -86,7 +86,7 @@ class DetailsParUtilisateur extends Component {
       .filter(c => c.utilisateurId === utilisateur.id && c.commandeId === commandeId);
 
     const depot = depots.find(
-      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === "depot_relais"
+      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais'
     );
 
     const totaux = calculeTotauxCommande({
@@ -94,7 +94,7 @@ class DetailsParUtilisateur extends Component {
       filter: cc => cc.utilisateurId === utilisateurId,
       offres,
       commandeContenus,
-      commandeId: params.commandeId
+      commandeId: params.commandeId,
     });
     const credit =
       parseFloat(this.state.account ? this.state.account.balance : 0) + (depot ? depot.montant : 0);
@@ -122,12 +122,12 @@ class DetailsParUtilisateur extends Component {
                     <div className="col-md">
                       {commandeUtilisateur.datePaiement
                         ? `Payée le ${format(commandeUtilisateur.datePaiement, formatPattern)}`
-                        : "Non payée"}
+                        : 'Non payée'}
                     </div>
                     <div className="col-md">
                       {commandeUtilisateur.dateLivraison
                         ? `Livrée le ${format(commandeUtilisateur.dateLivraison, formatPattern)}`
-                        : "Non livrée"}
+                        : 'Non livrée'}
                     </div>
                   </div>
                 </div>
@@ -155,7 +155,7 @@ class DetailsParUtilisateur extends Component {
               <LivraisonCommande commandeUtilisateur={commandeUtilisateur} />}
             {!commandeUtilisateur.datePaiement &&
               isAfter(commande.dateCommande, new Date()) &&
-              <div className="col-md-12" style={{ marginTop: "1em" }}>
+              <div className="col-md-12" style={{ marginTop: '1em' }}>
                 <div className="row center-md">
                   <div className="col-md-4">
                     <RaisedButton
@@ -181,7 +181,7 @@ class DetailsParUtilisateur extends Component {
                   </div>
                 </div>
               </div>}
-            <div className="col-md-6" style={{ marginTop: "1em" }}>
+            <div className="col-md-6" style={{ marginTop: '1em' }}>
               {utilisateur.stellarKeys &&
                 <StellarAccount
                   stellarAdr={utilisateur.stellarKeys.adresse}
@@ -189,7 +189,7 @@ class DetailsParUtilisateur extends Component {
                 />}
               {!utilisateur.stellarKeys && <h3>Pas de compte</h3>}
             </div>
-            <div className="col-md-6" style={{ marginTop: "1em" }}>
+            <div className="col-md-6" style={{ marginTop: '1em' }}>
               <h3>
                 {this.state.account && !paiementOk && <p>Manque {round(totalCommande - credit, 2)} €</p>}
                 {this.state.account && paiementOk && <p>Restera {round(credit - totalCommande, 2)} €</p>}
@@ -217,13 +217,13 @@ const mapStateToProps = createStructuredSelector({
   fournisseurs: selectFournisseursCommande(),
   produits: selectCommandeProduits(),
   utilisateurStellarAdresse: selectUtilisateurStellarAdresse(),
-  commandeStellarAdresse: selectCommandeStellarAdresse()
+  commandeStellarAdresse: selectCommandeStellarAdresse(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      pushState: push
+      pushState: push,
     },
     dispatch
   );

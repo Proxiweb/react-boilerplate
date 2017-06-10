@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import uuid from "node-uuid";
-import { bindActionCreators } from "redux";
-import RaisedButton from "material-ui/RaisedButton";
-import { Card, CardActions, CardHeader, CardText } from "material-ui/Card";
-import groupBy from "lodash/groupBy";
-import FlatButton from "material-ui/FlatButton";
-import MessageIcon from "material-ui/svg-icons/communication/message";
-import DetailCommande from "./DetailCommande";
-import { calculeTotauxCommande } from "containers/Commande/utils";
-import { supprimerCommandeContenusFournisseur } from "containers/Commande/actions";
-import { setMessage, addDestinataire } from "containers/AdminCommunication/actions";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import uuid from 'node-uuid';
+import { bindActionCreators } from 'redux';
+import RaisedButton from 'material-ui/RaisedButton';
+import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
+import groupBy from 'lodash/groupBy';
+import FlatButton from 'material-ui/FlatButton';
+import MessageIcon from 'material-ui/svg-icons/communication/message';
+import DetailCommande from './DetailCommande';
+import { calculeTotauxCommande } from 'containers/Commande/utils';
+import { supprimerCommandeContenusFournisseur } from 'containers/Commande/actions';
+import { setMessage, addDestinataire } from 'containers/AdminCommunication/actions';
 
-import DetailCommandeTotal from "./DetailCommandeTotal";
+import DetailCommandeTotal from './DetailCommandeTotal';
 
 class CommandeFournisseur extends Component {
   // eslint-disable-line
@@ -25,7 +25,7 @@ class CommandeFournisseur extends Component {
     commandeId: PropTypes.string.isRequired,
     supprimeCommandeContenusFournisseur: PropTypes.func.isRequired,
     addDestinataire: PropTypes.func.isRequired,
-    setMessage: PropTypes.func.isRequired
+    setMessage: PropTypes.func.isRequired,
   };
 
   handleSupprCommandeContenusFourn = event => {
@@ -33,7 +33,7 @@ class CommandeFournisseur extends Component {
     event.preventDefault();
     supprimeCommandeContenusFournisseur({
       fournisseurId: fournisseur.id,
-      commandeId
+      commandeId,
     });
   };
 
@@ -46,14 +46,14 @@ class CommandeFournisseur extends Component {
           c.commandeId === commandeId &&
           produits.find(pdt => pdt.id === offres[c.offreId].produitId && pdt.fournisseurId === fournisseur.id)
       );
-    const grouped = groupBy(contenusFiltered, "offreId");
+    const grouped = groupBy(contenusFiltered, 'offreId');
     const sms = Object.keys(grouped)
       .map(offreId =>
         grouped[offreId].reduce(
           (m, c) => ({
             offreId,
             quantite: m.quantite + c.quantite,
-            qteRegul: m.qteRegul + c.qteRegul
+            qteRegul: m.qteRegul + c.qteRegul,
           }),
           { offreId, quantite: 0, qteRegul: 0 }
         )
@@ -61,17 +61,17 @@ class CommandeFournisseur extends Component {
       .reduce((m, cagg) => {
         const pdt = produits.find(prod => prod.id === offres[cagg.offreId].produitId);
         return `${m}${pdt.ref || pdt.nom} x ${cagg.quantite} + `;
-      }, "");
+      }, '');
 
     this.props.setMessage({
       sms: `Bonjour, commande Proxiweb : ${sms} Merci.`,
-      objet: "cde fourn",
-      html: "cdefourn"
+      objet: 'cde fourn',
+      html: 'cdefourn',
     });
     this.props.addDestinataire({
       identite: fournisseur.nom,
       telPortable: fournisseur.telPortable,
-      id: uuid.v4()
+      id: uuid.v4(),
     });
   };
 
@@ -91,10 +91,10 @@ class CommandeFournisseur extends Component {
         produits.find(pdt => pdt.id === offres[cc.offreId].produitId && pdt.fournisseurId === fournisseur.id),
       offres,
       commandeContenus,
-      commandeId
+      commandeId,
     });
     return (
-      <Card style={{ marginBottom: "1em" }}>
+      <Card style={{ marginBottom: '1em' }}>
         <CardHeader title={fournisseur.nom.toUpperCase()} actAsExpander showExpandableButton />
         <CardText expandable>
           <CardActions expandable>
@@ -132,7 +132,7 @@ const mapDispatchToProps = dispatch =>
     {
       supprimeCommandeContenusFournisseur: supprimerCommandeContenusFournisseur,
       setMessage,
-      addDestinataire
+      addDestinataire,
     },
     dispatch
   );

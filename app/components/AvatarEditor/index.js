@@ -1,53 +1,53 @@
 /* eslint-disable */
-import React from "react";
-import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
+import React from 'react';
+import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 
 const isTouchDevice = !!(
-  typeof window !== "undefined" &&
-  typeof navigator !== "undefined" &&
-  ("ontouchstart" in window || navigator.msMaxTouchPoints > 0)
+  typeof window !== 'undefined' &&
+  typeof navigator !== 'undefined' &&
+  ('ontouchstart' in window || navigator.msMaxTouchPoints > 0)
 );
 
 const draggableEvents = {
   touch: {
     react: {
-      down: "onTouchStart",
-      mouseDown: "onMouseDown",
-      drag: "onTouchMove",
-      drop: "onTouchEnd",
-      move: "onTouchMove",
-      mouseMove: "onMouseMove",
-      up: "onTouchEnd",
-      mouseUp: "onMouseUp"
+      down: 'onTouchStart',
+      mouseDown: 'onMouseDown',
+      drag: 'onTouchMove',
+      drop: 'onTouchEnd',
+      move: 'onTouchMove',
+      mouseMove: 'onMouseMove',
+      up: 'onTouchEnd',
+      mouseUp: 'onMouseUp',
     },
     native: {
-      down: "touchstart",
-      mouseDown: "mousedown",
-      drag: "touchmove",
-      drop: "touchend",
-      move: "touchmove",
-      mouseMove: "mousemove",
-      up: "touchend",
-      mouseUp: "mouseup"
-    }
+      down: 'touchstart',
+      mouseDown: 'mousedown',
+      drag: 'touchmove',
+      drop: 'touchend',
+      move: 'touchmove',
+      mouseMove: 'mousemove',
+      up: 'touchend',
+      mouseUp: 'mouseup',
+    },
   },
   desktop: {
     react: {
-      down: "onMouseDown",
-      drag: "onDragOver",
-      drop: "onDrop",
-      move: "onMouseMove",
-      up: "onMouseUp"
+      down: 'onMouseDown',
+      drag: 'onDragOver',
+      drop: 'onDrop',
+      move: 'onMouseMove',
+      up: 'onMouseUp',
     },
     native: {
-      down: "mousedown",
-      drag: "dragStart",
-      drop: "drop",
-      move: "mousemove",
-      up: "mouseup"
-    }
-  }
+      down: 'mousedown',
+      drag: 'dragStart',
+      drop: 'drop',
+      move: 'mousemove',
+      up: 'mouseup',
+    },
+  },
 };
 const deviceEvents = isTouchDevice ? draggableEvents.touch : draggableEvents.desktop;
 
@@ -83,11 +83,11 @@ class AvatarEditor extends React.Component {
     height: PropTypes.number,
     position: PropTypes.shape({
       x: PropTypes.number,
-      y: PropTypes.number
+      y: PropTypes.number,
     }),
     color: PropTypes.arrayOf(PropTypes.number),
     style: PropTypes.object,
-    crossOrigin: PropTypes.oneOf(["", "anonymous", "use-credentials"]),
+    crossOrigin: PropTypes.oneOf(['', 'anonymous', 'use-credentials']),
 
     onDropFile: PropTypes.func,
     onLoadFailure: PropTypes.func,
@@ -96,7 +96,7 @@ class AvatarEditor extends React.Component {
     onImageChange: PropTypes.func,
     onMouseUp: PropTypes.func,
     onMouseMove: PropTypes.func,
-    onPositionChange: PropTypes.func
+    onPositionChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -108,7 +108,7 @@ class AvatarEditor extends React.Component {
     height: 200,
     color: [0, 0, 0, 0.5],
     style: {},
-    crossOrigin: "anonymous",
+    crossOrigin: 'anonymous',
     onDropFile() {},
     onLoadFailure() {},
     onLoadSuccess() {},
@@ -116,7 +116,7 @@ class AvatarEditor extends React.Component {
     onImageChange() {},
     onMouseUp() {},
     onMouseMove() {},
-    onPositionChange() {}
+    onPositionChange() {},
   };
 
   constructor(props) {
@@ -136,8 +136,8 @@ class AvatarEditor extends React.Component {
     mx: null,
     image: {
       x: 0.5,
-      y: 0.5
-    }
+      y: 0.5,
+    },
   };
 
   isVertical() {
@@ -165,7 +165,7 @@ class AvatarEditor extends React.Component {
       rotate,
       width,
       height,
-      border
+      border,
     };
   }
 
@@ -181,7 +181,7 @@ class AvatarEditor extends React.Component {
     cropRect.height *= image.resource.height;
 
     // create a canvas with the correct dimensions
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
 
     if (this.isVertical()) {
       canvas.width = cropRect.height;
@@ -193,7 +193,7 @@ class AvatarEditor extends React.Component {
 
     // draw the full-size image at the correct position,
     // the image gets truncated to the size of the canvas.
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext('2d');
 
     context.translate(canvas.width / 2, canvas.height / 2);
     context.rotate(this.props.rotate * Math.PI / 180);
@@ -215,7 +215,7 @@ class AvatarEditor extends React.Component {
   getImageScaledToCanvas() {
     const { width, height } = this.getDimensions();
 
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
 
     if (this.isVertical()) {
       canvas.width = height;
@@ -226,7 +226,7 @@ class AvatarEditor extends React.Component {
     }
 
     // don't paint a border here, as it is the resulting image
-    this.paintImage(canvas.getContext("2d"), this.state.image, 0);
+    this.paintImage(canvas.getContext('2d'), this.state.image, 0);
 
     return canvas;
   }
@@ -248,7 +248,7 @@ class AvatarEditor extends React.Component {
   getCroppingRect() {
     let position = this.props.position || {
       x: this.state.image.x,
-      y: this.state.image.y
+      y: this.state.image.y,
     },
       width = 1 / this.props.scale * this.getXScale(),
       height = 1 / this.props.scale * this.getYScale();
@@ -257,7 +257,7 @@ class AvatarEditor extends React.Component {
       x: position.x - width / 2,
       y: position.y - height / 2,
       width,
-      height
+      height,
     };
 
     let xMin = 0,
@@ -280,7 +280,7 @@ class AvatarEditor extends React.Component {
     return {
       ...croppingRect,
       x: Math.max(xMin, Math.min(croppingRect.x, xMax)),
-      y: Math.max(yMin, Math.min(croppingRect.y, yMax))
+      y: Math.max(yMin, Math.min(croppingRect.y, yMax)),
     };
   }
 
@@ -301,7 +301,7 @@ class AvatarEditor extends React.Component {
   }
 
   componentDidMount() {
-    const context = ReactDOM.findDOMNode(this.canvas).getContext("2d");
+    const context = ReactDOM.findDOMNode(this.canvas).getContext('2d');
     if (this.props.image) {
       this.loadImage(this.props.image);
     }
@@ -330,7 +330,7 @@ class AvatarEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const context = ReactDOM.findDOMNode(this.canvas).getContext("2d");
+    const context = ReactDOM.findDOMNode(this.canvas).getContext('2d');
     context.clearRect(0, 0, this.getDimensions().canvas.width, this.getDimensions().canvas.height);
     this.paint(context);
     this.paintImage(context, this.state.image, this.props.border);
@@ -378,7 +378,7 @@ class AvatarEditor extends React.Component {
 
     return {
       height: newHeight,
-      width: newWidth
+      width: newWidth,
     };
   }
 
@@ -409,7 +409,7 @@ class AvatarEditor extends React.Component {
         );
       }
 
-      context.globalCompositeOperation = "destination-over";
+      context.globalCompositeOperation = 'destination-over';
       context.drawImage(image.resource, position.x, position.y, position.width, position.height);
 
       context.restore();
@@ -431,14 +431,14 @@ class AvatarEditor extends React.Component {
       x,
       y,
       height,
-      width
+      width,
     };
   }
 
   paint(context) {
     context.save();
     context.translate(0, 0);
-    context.fillStyle = "rgba(" + this.props.color.slice(0, 4).join(",") + ")";
+    context.fillStyle = 'rgba(' + this.props.color.slice(0, 4).join(',') + ')';
 
     let borderRadius = this.props.borderRadius;
     const dimensions = this.getDimensions();
@@ -461,7 +461,7 @@ class AvatarEditor extends React.Component {
       borderRadius
     );
     context.rect(width, 0, -width, height); // outer rect, drawn "counterclockwise"
-    context.fill("evenodd");
+    context.fill('evenodd');
 
     context.restore();
   }
@@ -475,7 +475,7 @@ class AvatarEditor extends React.Component {
     this.setState({
       drag: true,
       mx: null,
-      my: null
+      my: null,
     });
   }
   handleMouseUp() {
@@ -496,7 +496,7 @@ class AvatarEditor extends React.Component {
 
     const newState = {
       mx: mousePositionX,
-      my: mousePositionY
+      my: mousePositionY,
     };
 
     let rotate = this.props.rotate;
@@ -548,14 +548,14 @@ class AvatarEditor extends React.Component {
 
       const position = {
         x: x / width + relativeWidth / 2,
-        y: y / height + relativeHeight / 2
+        y: y / height + relativeHeight / 2,
       };
 
       this.props.onPositionChange(position);
 
       newState.image = {
         ...this.state.image,
-        ...position
+        ...position,
       };
     }
 
@@ -589,7 +589,7 @@ class AvatarEditor extends React.Component {
 
   render() {
     const defaultStyle = {
-      cursor: this.state.drag ? "grabbing" : "grab"
+      cursor: this.state.drag ? 'grabbing' : 'grab',
     };
 
     const attributes = {
@@ -597,8 +597,8 @@ class AvatarEditor extends React.Component {
       height: this.getDimensions().canvas.height,
       style: {
         ...defaultStyle,
-        ...this.props.style
-      }
+        ...this.props.style,
+      },
     };
 
     attributes[deviceEvents.react.down] = this.handleMouseDown;

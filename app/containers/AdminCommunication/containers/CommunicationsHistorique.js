@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { List, ListItem } from "material-ui/List";
-import RaisedButton from "material-ui/RaisedButton";
-import Paper from "material-ui/Paper";
-import TrashIcon from "material-ui/svg-icons/action/delete-forever";
-import DoneIcon from "material-ui/svg-icons/action/done";
-import WaitIcon from "material-ui/svg-icons/action/query-builder";
-import TouchIcon from "material-ui/svg-icons/action/touch-app";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { List, ListItem } from 'material-ui/List';
+import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
+import DoneIcon from 'material-ui/svg-icons/action/done';
+import WaitIcon from 'material-ui/svg-icons/action/query-builder';
+import TouchIcon from 'material-ui/svg-icons/action/touch-app';
 
-import EyeIcon from "material-ui/svg-icons/action/visibility";
-import FailIcon from "material-ui/svg-icons/action/report-problem";
-import EmailIcon from "material-ui/svg-icons/communication/mail-outline";
-import MessageIcon from "material-ui/svg-icons/communication/message";
-import classnames from "classnames";
+import EyeIcon from 'material-ui/svg-icons/action/visibility';
+import FailIcon from 'material-ui/svg-icons/action/report-problem';
+import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
+import MessageIcon from 'material-ui/svg-icons/communication/message';
+import classnames from 'classnames';
 
-import { loadCommunications, deleteCommunication } from "containers/AdminCommunication/actions";
-import Panel from "components/Panel";
-import styles from "./styles.css";
+import { loadCommunications, deleteCommunication } from 'containers/AdminCommunication/actions';
+import Panel from 'components/Panel';
+import styles from './styles.css';
 const bigIcon = { height: 100, width: 100 };
 
 const etatIcons = {
@@ -26,18 +26,18 @@ const etatIcons = {
   succes: () => <DoneIcon />,
   echec: () => <FailIcon />,
   open: () => <EyeIcon />,
-  click: () => <TouchIcon />
+  click: () => <TouchIcon />,
 };
 
 class CommunicationHistorique extends Component {
   static propTypes = {
     communications: PropTypes.array.isRequired,
     load: PropTypes.func.isRequired,
-    del: PropTypes.func.isRequired
+    del: PropTypes.func.isRequired,
   };
 
   state = {
-    idSelected: null
+    idSelected: null,
   };
 
   componentDidMount() {
@@ -48,7 +48,7 @@ class CommunicationHistorique extends Component {
   }
 
   handleSuppression = id => {
-    if (confirm("Supprimer cette communication ?")) {
+    if (confirm('Supprimer cette communication ?')) {
       this.props.del(id);
     }
   };
@@ -72,8 +72,8 @@ class CommunicationHistorique extends Component {
               )}
             </List>
           </div>
-          <div className={classnames("col-md-4", styles.scroll)}>
-            {!idSelected && <p style={{ textAlign: "center" }}>Sélectionnez une communication</p>}
+          <div className={classnames('col-md-4', styles.scroll)}>
+            {!idSelected && <p style={{ textAlign: 'center' }}>Sélectionnez une communication</p>}
             {idSelected &&
               communication &&
               <List>
@@ -87,7 +87,7 @@ class CommunicationHistorique extends Component {
                 )}
               </List>}
           </div>
-          <div className={classnames("col-md-6", "textCenter")}>
+          <div className={classnames('col-md-6', 'textCenter')}>
             {idSelected && communication && <h1>{communication.objet}</h1>}
             {idSelected &&
               communication &&
@@ -136,14 +136,14 @@ class CommunicationHistorique extends Component {
 }
 
 const mapStateToProps = state => ({
-  communications: state.admin ? state.admin.communication.datas : []
+  communications: state.admin ? state.admin.communication.datas : [],
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       load: loadCommunications,
-      del: deleteCommunication
+      del: deleteCommunication,
     },
     dispatch
   );

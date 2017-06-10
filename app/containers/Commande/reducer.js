@@ -3,18 +3,18 @@
  * Commande reducer
  *
  */
-import update from "immutability-helper";
-import c from "./constants";
-import cF from "containers/AdminFournisseur/constants";
+import update from 'immutability-helper';
+import c from './constants';
+import cF from 'containers/AdminFournisseur/constants';
 // import cE from 'containers/CommandeEdit/constants';
-import { normalize, arrayOf } from "normalizr";
-import { schemas } from "./schemas";
-import merge from "lodash/merge";
-import omit from "lodash/omit";
-import assign from "lodash/assign";
-import includes from "lodash/includes";
-import uniq from "lodash/uniq";
-import uuid from "node-uuid";
+import { normalize, arrayOf } from 'normalizr';
+import { schemas } from './schemas';
+import merge from 'lodash/merge';
+import omit from 'lodash/omit';
+import assign from 'lodash/assign';
+import includes from 'lodash/includes';
+import uniq from 'lodash/uniq';
+import uuid from 'node-uuid';
 
 const nCommande = {
   dateLivraison: null,
@@ -26,7 +26,7 @@ const nCommande = {
   recolteFond: 0,
   createdAt: null,
   updatedAt: null,
-  contenus: []
+  contenus: [],
   // commandeId: "eee9a49f-f3b7-493e-8c27-28956d8cd0a0"
   // utilisateurId: "3c3fff89-9604-4729-b794-69dd60005dfe"
 };
@@ -35,17 +35,17 @@ const nCommandeContenu = {
   createdAt: null,
   updatedAt: null,
   qteRegul: 0,
-  quantite: 0
+  quantite: 0,
 };
 
 const initialState = {
   pending: false,
   datas: {
     entities: {},
-    result: []
+    result: [],
   },
   error: null,
-  cotisationId: "8b330a52-a605-4a67-aee7-3cb3c9274733"
+  cotisationId: '8b330a52-a605-4a67-aee7-3cb3c9274733',
 };
 
 const ajouter = (state, action) => {
@@ -56,11 +56,11 @@ const ajouter = (state, action) => {
       entities: {
         commandeContenu: {
           [action.contenuId]: {
-            quantite: { $set: contenu.quantite + action.quantite }
-          }
-        }
-      }
-    }
+            quantite: { $set: contenu.quantite + action.quantite },
+          },
+        },
+      },
+    },
   });
 };
 
@@ -87,12 +87,12 @@ const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
         commandes: {
           [cdeId]: {
             commandeUtilisateurs: {
-              $set: commandeCommandeUtilisateursRestants
-            }
-          }
-        }
-      }
-    }
+              $set: commandeCommandeUtilisateursRestants,
+            },
+          },
+        },
+      },
+    },
   });
 };
 
@@ -115,8 +115,8 @@ const supprimeCommandeContenusFournisseur = (state, fournisseurId, commandeId) =
         ...commandeUtilisateurs[cuId],
         contenus: commandeUtilisateurs[cuId].contenus.filter(
           id => !includes(commandeContenusASupprimerIds, id)
-        )
-      }
+        ),
+      },
     }),
     {}
   );
@@ -126,7 +126,7 @@ const supprimeCommandeContenusFournisseur = (state, fournisseurId, commandeId) =
     .reduce(
       (memo, id) => ({
         ...memo,
-        [id]: commandeContenus[id]
+        [id]: commandeContenus[id],
       }),
       {}
     );
@@ -135,13 +135,13 @@ const supprimeCommandeContenusFournisseur = (state, fournisseurId, commandeId) =
     datas: {
       entities: {
         commandeContenus: {
-          $set: { ...commandeContenus, ...commandeContenusModifiee }
+          $set: { ...commandeContenus, ...commandeContenusModifiee },
         },
         commandeUtilisateurs: {
-          $set: { ...commandeUtilisateurs, ...commandeUtilisateursModifiee }
-        }
-      }
-    }
+          $set: { ...commandeUtilisateurs, ...commandeUtilisateursModifiee },
+        },
+      },
+    },
   });
 };
 
@@ -159,12 +159,12 @@ const supprimeContenu = (state, contenu) => {
       entities: {
         commandeUtilisateurs: {
           [contenu.commandeUtilisateurId]: {
-            contenus: { $set: contenusRestants }
+            contenus: { $set: contenusRestants },
           },
-          commandeContenus: { $set: commandeContenusRestants }
-        }
-      }
-    }
+          commandeContenus: { $set: commandeContenusRestants },
+        },
+      },
+    },
   });
 };
 
@@ -175,9 +175,9 @@ function commandeReducer(state = initialState, action) {
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
-          result: { $push: datas.result }
+          result: { $push: datas.result },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
     case c.ASYNC_LOAD_OFFRES_SUCCESS: {
@@ -185,9 +185,9 @@ function commandeReducer(state = initialState, action) {
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
-          result: { $push: datas.result }
+          result: { $push: datas.result },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
     case c.ASYNC_LOAD_USER_COMMANDES_SUCCESS:
@@ -197,16 +197,16 @@ function commandeReducer(state = initialState, action) {
         commandes: {},
         commandeContenus: {},
         commandeUtilisateurs: {},
-        fournisseurs: {}
+        fournisseurs: {},
       };
       return update(state, {
         datas: {
           entities: {
-            $set: merge(state.datas.entities, assign(defaults, datas.entities))
+            $set: merge(state.datas.entities, assign(defaults, datas.entities)),
           },
-          result: { $push: datas.result }
+          result: { $push: datas.result },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
     // case cE.ASYNC_SAUVEGARDER_SUCCESS: {
@@ -231,9 +231,9 @@ function commandeReducer(state = initialState, action) {
       return update(state, {
         datas: {
           entities: { $set: merge(state.datas.entities, datas.entities) },
-          result: { $push: [datas.result] }
+          result: { $push: [datas.result] },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -246,7 +246,7 @@ function commandeReducer(state = initialState, action) {
       );
 
       return update(state, {
-        datas: { entities: { commandes: { $set: commandesRestantes } } }
+        datas: { entities: { commandes: { $set: commandesRestantes } } },
       });
     }
 
@@ -254,9 +254,9 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas.relais, arrayOf(schemas.RELAIS));
       return update(state, {
         datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) }
+          entities: { $set: merge(state.datas.entities, datas.entities) },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -268,12 +268,12 @@ function commandeReducer(state = initialState, action) {
           entities: {
             produits: {
               [action.datas.id]: {
-                $set: datas.entities.produits[action.datas.id]
-              }
+                $set: datas.entities.produits[action.datas.id],
+              },
             },
-            pending: { $set: false }
-          }
-        }
+            pending: { $set: false },
+          },
+        },
       });
     }
 
@@ -284,12 +284,12 @@ function commandeReducer(state = initialState, action) {
           entities: {
             offres: {
               [action.datas.id]: {
-                $set: datas.entities.offres[action.datas.id]
-              }
+                $set: datas.entities.offres[action.datas.id],
+              },
             },
-            pending: { $set: false }
-          }
-        }
+            pending: { $set: false },
+          },
+        },
       });
     }
 
@@ -302,11 +302,11 @@ function commandeReducer(state = initialState, action) {
                 (m, id) =>
                   id !== action.req.id ? { ...m, [id]: state.datas.entities.offres[id] } : { ...m },
                 {}
-              )
+              ),
             },
-            pending: { $set: false }
-          }
-        }
+            pending: { $set: false },
+          },
+        },
       });
     }
 
@@ -314,9 +314,9 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas.offres, schemas.OFFRES);
       return update(state, {
         datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) }
+          entities: { $set: merge(state.datas.entities, datas.entities) },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -324,9 +324,9 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas.type_produits, arrayOf(schemas.TYPES_PRODUITS));
       return update(state, {
         datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) }
+          entities: { $set: merge(state.datas.entities, datas.entities) },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -335,9 +335,9 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas, schemas.FOURNISSEURS);
       return update(state, {
         datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) }
+          entities: { $set: merge(state.datas.entities, datas.entities) },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -348,11 +348,11 @@ function commandeReducer(state = initialState, action) {
           entities: {
             commandeContenus: {
               [action.datas.id]: {
-                $set: datas.entities.commandeContenus[action.datas.id]
-              }
-            }
-          }
-        }
+                $set: datas.entities.commandeContenus[action.datas.id],
+              },
+            },
+          },
+        },
       });
     }
 
@@ -369,11 +369,11 @@ function commandeReducer(state = initialState, action) {
           entities: {
             commandeUtilisateurs: {
               [action.datas.id]: {
-                $set: datas.entities.commandeUtilisateurs[action.datas.id]
-              }
-            }
-          }
-        }
+                $set: datas.entities.commandeUtilisateurs[action.datas.id],
+              },
+            },
+          },
+        },
       });
     }
 
@@ -382,16 +382,16 @@ function commandeReducer(state = initialState, action) {
     case c.NOUVEL_ACHAT: {
       const nCommandeContenus = {
         ...state.datas.entities.commandeContenus,
-        [action.datas.id]: action.datas
+        [action.datas.id]: action.datas,
       };
       return update(state, {
-        datas: { entities: { commandeContenus: { $set: nCommandeContenus } } }
+        datas: { entities: { commandeContenus: { $set: nCommandeContenus } } },
       });
     }
     case c.SUPPRESSION_ACHAT: {
       const nCommandeContenus = omit(state.datas.entities.commandeContenus, action.datas.id);
       return update(state, {
-        datas: { entities: { commandeContenus: { $set: nCommandeContenus } } }
+        datas: { entities: { commandeContenus: { $set: nCommandeContenus } } },
       });
     }
     case c.MODIF_ACHAT: {
@@ -401,11 +401,11 @@ function commandeReducer(state = initialState, action) {
             commandeContenus: {
               $set: {
                 ...state.datas.entities.commandeContenus,
-                [action.datas.id]: action.datas
-              }
-            }
-          }
-        }
+                [action.datas.id]: action.datas,
+              },
+            },
+          },
+        },
       });
     }
 
@@ -416,9 +416,9 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas.utilisateurs, arrayOf(schemas.UTILISATEURS));
       return update(state, {
         datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) }
+          entities: { $set: merge(state.datas.entities, datas.entities) },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -426,9 +426,9 @@ function commandeReducer(state = initialState, action) {
       const datas = normalize(action.datas.commande_utilisateurs, arrayOf(schemas.COMMANDE_UTILISATEURS));
       return update(state, {
         datas: {
-          entities: { $set: merge(state.datas.entities, datas.entities) }
+          entities: { $set: merge(state.datas.entities, datas.entities) },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
@@ -440,12 +440,12 @@ function commandeReducer(state = initialState, action) {
           entities: {
             utilisateurs: {
               [action.datas.id]: {
-                $set: datas.entities.utilisateurs[action.datas.id]
-              }
+                $set: datas.entities.utilisateurs[action.datas.id],
+              },
             },
-            pending: { $set: false }
-          }
-        }
+            pending: { $set: false },
+          },
+        },
       });
     }
 
@@ -455,12 +455,12 @@ function commandeReducer(state = initialState, action) {
       const nouvelleCommande = { ...nCommande, id, commandeId, utilisateurId };
       const nCommandeUtilisateurs = {
         ...state.datas.entities.commandeUtilisateurs,
-        [id]: nouvelleCommande
+        [id]: nouvelleCommande,
       };
       return update(state, {
         datas: {
-          entities: { commandeUtilisateurs: { $set: nCommandeUtilisateurs } }
-        }
+          entities: { commandeUtilisateurs: { $set: nCommandeUtilisateurs } },
+        },
       });
     }
 
@@ -495,27 +495,27 @@ function commandeReducer(state = initialState, action) {
             commandeUtilisateurs: {
               [commandeUtilisateurId]: {
                 contenus: {
-                  $push: [nCommandeContenuId]
+                  $push: [nCommandeContenuId],
                 },
-                updatedAt: { $set: null }
-              }
-            }
+                updatedAt: { $set: null },
+              },
+            },
           }
         : {
             commandeUtilisateurs: {
               [commandeUtilisateurId]: {
-                updatedAt: { $set: null }
-              }
-            }
+                updatedAt: { $set: null },
+              },
+            },
           };
 
       const ajouteNouveauContenu = commandeContenuId
         ? {
             commandeContenus: {
               [commandeContenuId]: {
-                quantite: { $set: quantiteContenuActuelle + 1 }
-              }
-            }
+                quantite: { $set: quantiteContenuActuelle + 1 },
+              },
+            },
           }
         : {
             commandeContenus: {
@@ -527,19 +527,19 @@ function commandeReducer(state = initialState, action) {
                   commandeUtilisateurId,
                   commandeId,
                   utilisateurId,
-                  offreId
-                }
-              }
-            }
+                  offreId,
+                },
+              },
+            },
           };
 
       return update(state, {
         datas: {
           entities: {
             ...ajouteNouvelleOffre,
-            ...ajouteNouveauContenu
-          }
-        }
+            ...ajouteNouveauContenu,
+          },
+        },
       });
     }
 
@@ -570,10 +570,10 @@ function commandeReducer(state = initialState, action) {
                     id !== commandeContenuId
                       ? {
                           ...m,
-                          [id]: state.datas.entities.commandeContenus[id]
+                          [id]: state.datas.entities.commandeContenus[id],
                         }
                       : { ...m }
-                )
+                ),
               },
               commandeUtilisateurs: {
                 [commandeUtilisateurId]: {
@@ -581,12 +581,12 @@ function commandeReducer(state = initialState, action) {
                   contenus: {
                     $set: state.datas.entities.commandeUtilisateurs[commandeUtilisateurId].contenus.filter(
                       id => id !== commandeContenuId
-                    )
-                  }
-                }
-              }
-            }
-          }
+                    ),
+                  },
+                },
+              },
+            },
+          },
         });
       }
 
@@ -596,17 +596,17 @@ function commandeReducer(state = initialState, action) {
             commandeContenus: {
               [commandeContenuId]: {
                 quantite: {
-                  $set: nouvelleQuantite
-                }
-              }
+                  $set: nouvelleQuantite,
+                },
+              },
             },
             commandeUtilisateurs: {
               [commandeUtilisateurId]: {
-                updatedAt: { $set: null }
-              }
-            }
-          }
-        }
+                updatedAt: { $set: null },
+              },
+            },
+          },
+        },
       });
     }
 
@@ -625,15 +625,15 @@ function commandeReducer(state = initialState, action) {
               [commandeUtilisateurId]: {
                 livraisonId: { $set: livraisonId },
                 plageHoraire: { $set: plageHoraire },
-                updatedAt: { $set: null }
-              }
-            }
-          }
-        }
+                updatedAt: { $set: null },
+              },
+            },
+          },
+        },
       });
     }
 
-    case "ws/NOUVELLE_COMMANDE_UTILISATEUR": {
+    case 'ws/NOUVELLE_COMMANDE_UTILISATEUR': {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       const stateContenus = state.datas.entities.commandeContenus;
       Object.keys(datas.entities.commandeContenus).forEach(
@@ -644,19 +644,19 @@ function commandeReducer(state = initialState, action) {
           entities: {
             commandeUtilisateurs: {
               [action.datas.id]: {
-                $set: datas.entities.commandeUtilisateurs[action.datas.id]
-              }
+                $set: datas.entities.commandeUtilisateurs[action.datas.id],
+              },
             },
             commandeContenus: {
-              $set: stateContenus
-            }
-          }
+              $set: stateContenus,
+            },
+          },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
-    case "ws/MODIF_COMMANDE_UTILISATEUR": {
+    case 'ws/MODIF_COMMANDE_UTILISATEUR': {
       const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);
       const stateContenus = state.datas.entities.commandeContenus;
       Object.keys(datas.entities.commandeContenus).forEach(
@@ -667,19 +667,19 @@ function commandeReducer(state = initialState, action) {
           entities: {
             commandeUtilisateurs: {
               [action.datas.id]: {
-                $set: datas.entities.commandeUtilisateurs[action.datas.id]
-              }
+                $set: datas.entities.commandeUtilisateurs[action.datas.id],
+              },
             },
             commandeContenus: {
-              $set: stateContenus
-            }
-          }
+              $set: stateContenus,
+            },
+          },
         },
-        pending: { $set: false }
+        pending: { $set: false },
       });
     }
 
-    case "ws/SUPPRESSION_ACHAT":
+    case 'ws/SUPPRESSION_ACHAT':
       return update(state, {
         datas: {
           entities: {
@@ -690,24 +690,24 @@ function commandeReducer(state = initialState, action) {
                     ? m
                     : {
                         ...m,
-                        [id]: state.datas.entities.commandeContenus[id]
+                        [id]: state.datas.entities.commandeContenus[id],
                       },
                 {}
-              )
-            }
-          }
-        }
+              ),
+            },
+          },
+        },
       });
 
-    case "ws/OFFRE_MODIF_STOCK":
+    case 'ws/OFFRE_MODIF_STOCK':
       return update(state, {
         datas: {
           entities: {
             offres: {
-              [action.datas.id]: { stock: { $set: action.datas.stock } }
-            }
-          }
-        }
+              [action.datas.id]: { stock: { $set: action.datas.stock } },
+            },
+          },
+        },
       });
     default:
       return state;

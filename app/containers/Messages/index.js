@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { createStructuredSelector } from "reselect";
-import Paper from "material-ui/Paper";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import Paper from 'material-ui/Paper';
 
-import { selectMessage } from "containers/App/selectors";
-import styles from "./styles.css";
-import { marquerCommeLu } from "containers/App/actions";
+import { selectMessage } from 'containers/App/selectors';
+import styles from './styles.css';
+import { marquerCommeLu } from 'containers/App/actions';
 
 class Messages extends Component {
   static propTypes = {
     message: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
-    marquerCommeLu: PropTypes.func.isRequired
+    marquerCommeLu: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -25,8 +25,8 @@ class Messages extends Component {
     if (!msg) return null;
     return (
       <div className="row center-md">
-        <div className="col-md-8" style={{ marginBottom: "1em" }}>
-          <Paper style={{ padding: "15px", fontSize: "1.5em", fontWeight: "bold" }}>
+        <div className="col-md-8" style={{ marginBottom: '1em' }}>
+          <Paper style={{ padding: '15px', fontSize: '1.5em', fontWeight: 'bold' }}>
             <div>{msg.objet}</div>
             <div><small>{msg.identiteExpediteur}</small></div>
           </Paper>
@@ -42,13 +42,13 @@ class Messages extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  message: selectMessage()
+  message: selectMessage(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      marquerCommeLu
+      marquerCommeLu,
     },
     dispatch
   );

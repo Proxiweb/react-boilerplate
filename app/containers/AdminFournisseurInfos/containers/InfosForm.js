@@ -1,29 +1,29 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { reduxForm, Field } from "redux-form";
-import { TextField, Toggle } from "redux-form-material-ui";
-import RaisedButton from "material-ui/RaisedButton";
-import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
-import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { reduxForm, Field } from 'redux-form';
+import { TextField, Toggle } from 'redux-form-material-ui';
+import RaisedButton from 'material-ui/RaisedButton';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const options = {
-  options: ["inline", "list", "textAlign", "link", "remove", "history"],
+  options: ['inline', 'list', 'textAlign', 'link', 'remove', 'history'],
   inline: {
     inDropdown: false,
     className: undefined,
-    options: ["bold", "italic", "underline", "strikethrough"]
+    options: ['bold', 'italic', 'underline', 'strikethrough'],
   },
   list: {
     inDropdown: false,
     className: undefined,
-    options: ["unordered", "ordered"]
-  }
+    options: ['unordered', 'ordered'],
+  },
 };
 
-import classnames from "classnames";
-import styles from "./styles.css";
+import classnames from 'classnames';
+import styles from './styles.css';
 
 class InfosForm extends Component {
   static propTypes = {
@@ -31,7 +31,7 @@ class InfosForm extends Component {
     changePresentation: PropTypes.func.isRequired,
     // valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
-    pristine: PropTypes.bool.isRequired
+    pristine: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -39,12 +39,12 @@ class InfosForm extends Component {
     const { presentation } = this.props.initialValues; // eslint-disable-line
 
     this.state = {
-      rawHtml: this.getInitialHTML(presentation || "<p>description</p>")
+      rawHtml: this.getInitialHTML(presentation || '<p>description</p>'),
     };
   }
 
   state = {
-    rawHtml: null
+    rawHtml: null,
   };
 
   onEditorChange = editorContent => {
@@ -105,7 +105,7 @@ class InfosForm extends Component {
           <div className="col-md-6">
             <Field floatingLabelText="Siret" name="siret" component={TextField} fullWidth />
           </div>
-          <div className="col-md-12" style={{ textAlign: "left" }}>
+          <div className="col-md-12" style={{ textAlign: 'left' }}>
             <Editor
               editorClassName={styles.editorClass}
               toolbar={options}
@@ -124,7 +124,7 @@ class InfosForm extends Component {
 }
 
 const infosForm = reduxForm({
-  form: "info_fournisseur"
+  form: 'info_fournisseur',
 })(InfosForm);
 
 export default infosForm;

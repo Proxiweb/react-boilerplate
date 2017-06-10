@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import RaisedButton from "material-ui/RaisedButton";
-import round from "lodash/round";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import RaisedButton from 'material-ui/RaisedButton';
+import round from 'lodash/round';
 
 export default class ValidationCommande extends Component {
   // eslint-disable-line
@@ -9,7 +9,7 @@ export default class ValidationCommande extends Component {
     depots: PropTypes.array.isRequired,
     commandeUtilisateurs: PropTypes.array.isRequired,
     paiements: PropTypes.object.isRequired,
-    totaux: PropTypes.object.isRequired
+    totaux: PropTypes.object.isRequired,
   };
 
   render() {
@@ -17,7 +17,7 @@ export default class ValidationCommande extends Component {
     let allOks = true;
     commandeUtilisateurs.forEach(cu => {
       const dep = depots.find(
-        d => d.utilisateurId === cu.utilisateurId && !d.transfertEffectue && d.type === "depot_relais"
+        d => d.utilisateurId === cu.utilisateurId && !d.transfertEffectue && d.type === 'depot_relais'
       );
 
       // si un dépot a été fait, en tenir compte
@@ -32,7 +32,7 @@ export default class ValidationCommande extends Component {
     if (!allOks) return null;
 
     return (
-      <div className="row center-md" style={{ marginBottom: "1em" }}>
+      <div className="row center-md" style={{ marginBottom: '1em' }}>
         <div className="col-md-6"><RaisedButton label="Valider la commande" primary /></div>
       </div>
     );

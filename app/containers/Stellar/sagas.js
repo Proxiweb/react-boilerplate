@@ -1,6 +1,6 @@
-import { take, put, call, select } from "redux-saga/effects";
-import { selectEnv } from "containers/Stellar/selectors";
-import { LOAD_ACCOUNT, TRUST, PAY, FEDERATION } from "./constants";
+import { take, put, call, select } from 'redux-saga/effects';
+import { selectEnv } from 'containers/Stellar/selectors';
+import { LOAD_ACCOUNT, TRUST, PAY, FEDERATION } from './constants';
 import {
   loadAccount,
   loadAccountError,
@@ -11,10 +11,10 @@ import {
   paid,
   payError,
   fedLookupSuccess,
-  fedLookupError
-} from "./actions";
+  fedLookupError,
+} from './actions';
 
-import api from "../../utils/stellarApi";
+import api from '../../utils/stellarApi';
 
 // export function* logger() {
 //   while (1) { // eslint-disable-line
@@ -89,5 +89,5 @@ export default [
   lookupSaga,
   paySaga,
   loadAccountSaga,
-  trustSaga
+  trustSaga,
 ];

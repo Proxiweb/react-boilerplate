@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const PureSelect = ({ input, label, cols, datas, meta: { touched, error } }) =>
   <div className={cols ? `col-sm-${cols}` : null}>
@@ -17,7 +17,7 @@ PureSelect.propTypes = {
   meta: PropTypes.object.isRequired,
   label: PropTypes.string,
   cols: PropTypes.string,
-  datas: PropTypes.object.isRequired
+  datas: PropTypes.object.isRequired,
 };
 
 export default PureSelect;

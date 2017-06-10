@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { push } from "react-router-redux";
-import isWithinRange from "date-fns/is_within_range";
-import addWeeks from "date-fns/add_weeks";
-import startOfDay from "date-fns/start_of_day";
-import endOfDay from "date-fns/end_of_day";
-import startOfWeek from "date-fns/start_of_week";
-import endOfWeek from "date-fns/end_of_week";
-import isAfter from "date-fns/is_after";
-import flatten from "lodash/flatten";
-import uniq from "lodash/uniq";
-import includes from "lodash/includes";
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import Paper from "material-ui/Paper";
-import Helmet from "react-helmet";
-import { createStructuredSelector } from "reselect";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
+import isWithinRange from 'date-fns/is_within_range';
+import addWeeks from 'date-fns/add_weeks';
+import startOfDay from 'date-fns/start_of_day';
+import endOfDay from 'date-fns/end_of_day';
+import startOfWeek from 'date-fns/start_of_week';
+import endOfWeek from 'date-fns/end_of_week';
+import isAfter from 'date-fns/is_after';
+import flatten from 'lodash/flatten';
+import uniq from 'lodash/uniq';
+import includes from 'lodash/includes';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import Paper from 'material-ui/Paper';
+import Helmet from 'react-helmet';
+import { createStructuredSelector } from 'reselect';
 
 import {
   selectAsyncState,
@@ -25,18 +25,18 @@ import {
   selectFournisseursIds,
   selectOffres,
   selectCommandesUtilisateurs,
-  selectProduits
-} from "./selectors";
+  selectProduits,
+} from './selectors';
 
-import { selectAuthUtilisateurId, selectRoles } from "containers/CompteUtilisateur/selectors";
+import { selectAuthUtilisateurId, selectRoles } from 'containers/CompteUtilisateur/selectors';
 
-import { selectLocationState, selectPending } from "containers/App/selectors";
+import { selectLocationState, selectPending } from 'containers/App/selectors';
 
-import styles from "./styles.css";
-import Semainier from "./components/Semainier";
-import CommandesLongTerme from "./containers/CommandesLongTerme";
+import styles from './styles.css';
+import Semainier from './components/Semainier';
+import CommandesLongTerme from './containers/CommandesLongTerme';
 
-import { loadCommandes, loadOffres, loadFournisseurs, ajouter, loadCommande } from "./actions";
+import { loadCommandes, loadOffres, loadFournisseurs, ajouter, loadCommande } from './actions';
 
 export class Commande extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -53,14 +53,14 @@ export class Commande extends React.Component {
     loadFournisseurs: PropTypes.func.isRequired,
     pushState: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    roles: PropTypes.array.isRequired
+    roles: PropTypes.array.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       buttonClicked: false,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 
@@ -72,7 +72,7 @@ export class Commande extends React.Component {
     );
     this.props.loadFournisseurs({ relaiId, jointures: true });
     this.props.loadOffres({ relaiId, jointures: true });
-    this.props.loadCommandes({ relaiId, periode: "courantes" });
+    this.props.loadCommandes({ relaiId, periode: 'courantes' });
   };
 
   componentWillUnmount = () => {
@@ -140,8 +140,8 @@ export class Commande extends React.Component {
 
   buildTitleAndMeta = () =>
     <Helmet
-      title={"Proxiweb - Commande en cours"}
-      meta={[{ name: "description", content: "Commandes proxiweb" }]}
+      title={'Proxiweb - Commande en cours'}
+      meta={[{ name: 'description', content: 'Commandes proxiweb' }]}
     />;
 
   render() {
@@ -154,12 +154,12 @@ export class Commande extends React.Component {
       typesProduits,
       roles,
       offres,
-      fournisseurs
+      fournisseurs,
     } = this.props;
 
     const { buttonClicked, lastUpdated } = this.state;
 
-    const isAdmin = includes(roles, "RELAI_ADMIN") || includes(roles, "ADMIN");
+    const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
     if (
       !buttonClicked &&
       commandes &&
@@ -233,13 +233,13 @@ export class Commande extends React.Component {
         <div className="row center-md">
           {this.buildTitleAndMeta()}
           <div className="col-md-6">
-            <div style={{ margin: "auto", width: "70px" }}>
+            <div style={{ margin: 'auto', width: '70px' }}>
               <RefreshIndicator
                 size={70}
                 left={0}
                 top={20}
                 status="loading"
-                style={{ display: "inline-block", position: "relative" }}
+                style={{ display: 'inline-block', position: 'relative' }}
               />
             </div>
           </div>
@@ -252,20 +252,20 @@ export class Commande extends React.Component {
         <div className={`${styles.loader} row`}>
           {this.buildTitleAndMeta()}
           <Paper className="col-md-12">
-            <div style={{ margin: "auto", width: "70px" }}>
+            <div style={{ margin: 'auto', width: '70px' }}>
               <RefreshIndicator
                 size={70}
                 left={0}
                 top={20}
                 status="loading"
-                style={{ display: "inline-block", position: "relative" }}
+                style={{ display: 'inline-block', position: 'relative' }}
               />
             </div>
             <div
               style={{
-                margin: "40px auto",
-                width: "300px",
-                textAlign: "center"
+                margin: '40px auto',
+                width: '300px',
+                textAlign: 'center',
               }}
             >
               Chargement des commandes...
@@ -304,7 +304,7 @@ const mapStateToProps = createStructuredSelector({
   typesProduits: selectTypesProduits(),
   asyncState: selectAsyncState(),
   route: selectLocationState(),
-  pending: selectPending()
+  pending: selectPending(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -315,7 +315,7 @@ function mapDispatchToProps(dispatch) {
     loadFournisseurs: query => dispatch(loadFournisseurs(query)),
     loadCommande: id => dispatch(loadCommande(id)),
     pushState: url => dispatch(push(url)),
-    ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte))
+    ajouter: (contenuId, qte) => dispatch(ajouter(contenuId, qte)),
   };
 }
 

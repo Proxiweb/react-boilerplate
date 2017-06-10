@@ -1,16 +1,16 @@
-import request from "superagent";
-import StellarSdk from "stellar-sdk";
-import toml from "toml";
+import request from 'superagent';
+import StellarSdk from 'stellar-sdk';
+import toml from 'toml';
 
 const getServer = () => {
   switch (process.env.NODE_ENV) {
-    case "production":
+    case 'production':
       StellarSdk.Network.usePublicNetwork();
-      return new StellarSdk.Server("https://horizon.stellar.org"); // -testnet
-    case "development":
+      return new StellarSdk.Server('https://horizon.stellar.org'); // -testnet
+    case 'development':
     default:
       StellarSdk.Network.usePublicNetwork();
-      return new StellarSdk.Server("https://horizon.stellar.org");
+      return new StellarSdk.Server('https://horizon.stellar.org');
   }
 };
 
@@ -23,7 +23,7 @@ const loadAccount = accountId =>
       .then(accountResult =>
         resolve({
           balances: accountResult.balances,
-          sequence: accountResult.sequence
+          sequence: accountResult.sequence,
         })
       )
       .catch(err => reject(err))
@@ -34,7 +34,7 @@ const loadPayments = (accountId, limit = 10) =>
     getServer()
       .payments()
       .forAccount(accountId)
-      .order("desc")
+      .order('desc')
       .limit(limit)
       .call()
       .then(payments => resolve(payments.records))
@@ -46,7 +46,7 @@ const loadEffects = (accountId, limit = 10) =>
     getServer()
       .effects()
       .forAccount(accountId)
-      .order("desc")
+      .order('desc')
       .limit(limit)
       .call()
       .then(effects => resolve(effects.records))
@@ -65,7 +65,7 @@ const trust = (currencyCode, maxTrust, issuer, stellarKeys) =>
           .addOperation(
             StellarSdk.Operation.changeTrust({
               asset: new StellarSdk.Asset(currencyCode, issuer),
-              limit: maxTrust
+              limit: maxTrust,
             })
           )
           .build();
@@ -93,7 +93,7 @@ const pay = ({ destination, currency, currencyIssuer, amount, stellarKeys }) =>
             StellarSdk.Operation.payment({
               destination,
               asset: new StellarSdk.Asset(currency, currencyIssuer),
-              amount: amount.toString()
+              amount: amount.toString(),
             })
           )
           .build();
@@ -108,14 +108,14 @@ const pay = ({ destination, currency, currencyIssuer, amount, stellarKeys }) =>
 
 const fedLookup = name =>
   new Promise((resolve, reject) => {
-    const hostname = name.split("*")[1];
+    const hostname = name.split('*')[1];
     return request.get(`https://${hostname}/.well-known/stellar.toml`).end((err, resp) => {
       if (err) {
         reject(err);
       }
       const configJSON = toml.parse(resp.text);
       const fedServer = configJSON.FEDERATION_SERVER;
-      return request.get(`${fedServer}?q=${name}&type=name`).type("text/plain").end((error, response) => {
+      return request.get(`${fedServer}?q=${name}&type=name`).type('text/plain').end((error, response) => {
         if (error) {
           reject(error);
         }
@@ -136,5 +136,5 @@ module.exports = {
   loadAccount,
   loadPayments,
   getServer,
-  loadEffects
+  loadEffects,
 };

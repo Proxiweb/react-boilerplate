@@ -1,46 +1,46 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import capitalize from "lodash/capitalize";
-import { createStructuredSelector } from "reselect";
-import Paper from "material-ui/Paper";
-import MenuItem from "material-ui/MenuItem";
-import RaisedButton from "material-ui/RaisedButton";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import capitalize from 'lodash/capitalize';
+import { createStructuredSelector } from 'reselect';
+import Paper from 'material-ui/Paper';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import { Editor } from "react-draft-wysiwyg";
-import draftToHtml from "draftjs-to-html";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import { saveMessage } from "containers/App/actions";
-import { selectPending } from "containers/App/selectors";
+import { saveMessage } from 'containers/App/actions';
+import { selectPending } from 'containers/App/selectors';
 
-import { selectCompteUtilisateur } from "containers/CompteUtilisateur/selectors";
+import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
-import CustomSelectField from "components/CustomSelectField";
+import CustomSelectField from 'components/CustomSelectField';
 
 const options = {
-  options: ["inline", "link"],
+  options: ['inline', 'link'],
   inline: {
     inDropdown: false,
     className: undefined,
-    options: ["bold", "italic", "underline", "strikethrough"]
-  }
+    options: ['bold', 'italic', 'underline', 'strikethrough'],
+  },
 };
 
-import styles from "./styles.css";
+import styles from './styles.css';
 
 class Support extends Component {
   // eslint-disable-line
   static propTypes = {
     user: PropTypes.object.isRequired,
     envoyer: PropTypes.func.isRequired,
-    pending: PropTypes.bool.isRequired
+    pending: PropTypes.bool.isRequired,
   };
 
   state = {
     objet: null,
-    message: null
+    message: null,
   };
 
   onEditorChange = editorContent => this.setState({ ...this.state, message: draftToHtml(editorContent) });
@@ -52,10 +52,10 @@ class Support extends Component {
       {
         ...this.state,
         de: this.props.user.id,
-        a: "3c3fff89-9604-4729-b794-69dd60005dfe",
-        identiteExpediteur: `${capitalize(this.props.user.prenom)} ${this.props.user.nom.toUpperCase()}`
+        a: '3c3fff89-9604-4729-b794-69dd60005dfe',
+        identiteExpediteur: `${capitalize(this.props.user.prenom)} ${this.props.user.nom.toUpperCase()}`,
       },
-      "/"
+      '/'
     );
 
   render() {
@@ -66,7 +66,7 @@ class Support extends Component {
     return (
       <div className="row center-md">
         <div className="col-md-6">
-          <Paper style={{ padding: "1em" }}>
+          <Paper style={{ padding: '1em' }}>
             <div className="row center-md">
               <div className="col-md-8">
                 <h2>
@@ -94,7 +94,7 @@ class Support extends Component {
                 <RaisedButton
                   disabled={!valide && !pending}
                   type="submit"
-                  label={pending ? "Envoi..." : "Envoyer"}
+                  label={pending ? 'Envoi...' : 'Envoyer'}
                   primary
                   fullWidth
                   onClick={this.handleEnvoyer}
@@ -110,13 +110,13 @@ class Support extends Component {
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
-  pending: selectPending()
+  pending: selectPending(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      envoyer: saveMessage
+      envoyer: saveMessage,
     },
     dispatch
   );
