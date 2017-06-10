@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-// import merge from 'lodash/merge';
+import isAfter from 'date-fns/is_after';
 import uniq from 'lodash/uniq';
 import flatten from 'lodash/flatten';
 
@@ -20,6 +20,7 @@ export const selectFournisseurId = () => (state, props) =>
 export const selectCotisationId = () => state => state.cotisationId;
 const selectTypeProduitId = () => (state, props) => props.params.typeProduitId;
 const selectProduitId = () => (state, props) => props.params.produitId;
+const selectNow = () => () => new Date();
 // const selectRelaisId = () => () => 'e3f38e82-9f29-46c6-a0d7-3181451455a4';
 
 const getModel = (substate, name) => {
@@ -211,6 +212,38 @@ export const selectCommandeProduits = () =>
     }
   );
 
+/* tous les produits de ma commandes */
+export const selectCommandeProduitsVisibles = () =>
+  createSelector(
+    selectCommande(),
+    selectCommandeProduits(),
+    selectFournisseursIds(),
+    selectNow(),
+    (commande, produits, fournisseursIds, now) =>
+      // if (!commande || !produits || fournisseursIds) return null;
+      // console.log(commande, produits, fournisseursIds, now);
+      produits.filter(produit => {
+        if (
+          !produit.enStock ||
+          !fournisseursIds[produit.fournisseurId].visible
+        ) {
+          return false;
+        }
+
+        const limitationFournisseur = commande.datesLimites.find(
+          dL => dL.fournisseurId === produit.fournisseurId
+        );
+
+        if (!limitationFournisseur) return true;
+
+        return (
+          limitationFournisseur.dateLimite === null ||
+          !isAfter(new Date(), limitationFournisseur.dateLimite)
+        );
+        return false;
+      })
+  );
+
 export const selectProduitsRelaisIds = () =>
   createSelector(
     selectFournisseursRelais(),
@@ -276,7 +309,7 @@ export const selectCommandeTypesProduits = () =>
 export const selectCommandeTypesProduitsVisibles = () =>
   createSelector(
     selectFournisseursIds(),
-    selectCommandeProduits(),
+    selectCommandeProduitsVisibles(),
     selectTypesProduits(),
     (fournisseursIds, produits, typeProduits) => {
       if (!produits || !typeProduits) return null;

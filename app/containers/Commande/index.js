@@ -319,7 +319,6 @@ const mapStateToProps = createStructuredSelector({
   // fonctionne sur homepage sans passer par le router params{ relaiId: 'xxxx' }
   // est passé en props, fonctionne aussi avec le routage /relais/xxx/commandes
   commandes: selectCommandesRelais(),
-
   commandesUtilisateurs: selectCommandesUtilisateurs(),
   relaiId: selectRelaisId(),
   utilisateurId: selectAuthUtilisateurId(),

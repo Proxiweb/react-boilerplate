@@ -16,7 +16,7 @@ import capitalize from 'lodash/capitalize';
 
 import {
   selectCommandeTypesProduitsVisibles,
-  selectCommandeProduits,
+  selectCommandeProduitsVisibles,
   selectFournisseurProduit,
   selectProduits,
   selectParams,
@@ -154,11 +154,12 @@ export class CommandeEdit extends React.Component {
       : null;
     if (premierTypeProduit) {
       const pdts = commandeProduits.filter(
-        prod => prod.typeProduitId === premierTypeProduit.id && prod.enStock
+        prod => prod.typeProduitId === premierTypeProduit.id
       );
       if (pdts && pdts.length) {
         this.props.pushState(
-          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0].id}?utilisateurId=${this.utilisateurId}`
+          `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0]
+            .id}?utilisateurId=${this.utilisateurId}`
         );
       }
     }
@@ -287,7 +288,9 @@ export class CommandeEdit extends React.Component {
               params={params}
               autreUtilisateur={
                 autreUtilisateur
-                  ? `${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`
+                  ? `${capitalize(
+                      autreUtilisateur.prenom
+                    )} ${autreUtilisateur.nom.toUpperCase()}`
                   : null
               }
             />
@@ -311,26 +314,26 @@ export class CommandeEdit extends React.Component {
           <div className="col-lg-5">
             {!commande || commande.contenus.length === 0
               ? <Paper>
-                  <div className={`row ${styles.panel}`}>
-                    <div className="col-md-5" style={constStyles.alignRight}>
-                      <ShoppingCart style={computedStyles.shoppingCart} />
-                    </div>
-                    <div className="col-md-5">
-                      <h1 style={computedStyles.panierVide}>Panier vide</h1>
-                    </div>
-                    {autreUtilisateur &&
-                      <div
-                        className="col-md-12"
-                        style={constStyles.alignCenter}
-                      >
+                <div className={`row ${styles.panel}`}>
+                  <div className="col-md-5" style={constStyles.alignRight}>
+                    <ShoppingCart style={computedStyles.shoppingCart} />
+                  </div>
+                  <div className="col-md-5">
+                    <h1 style={computedStyles.panierVide}>Panier vide</h1>
+                  </div>
+                  {autreUtilisateur &&
+                  <div
+                    className="col-md-12"
+                    style={constStyles.alignCenter}
+                  >
                         Commande de
                         {' '}
-                        {autreUtilisateur.prenom}
-                        {' '}
-                        {autreUtilisateur.nom.toUpperCase()}
-                      </div>}
-                  </div>
-                </Paper>
+                    {autreUtilisateur.prenom}
+                    {' '}
+                    {autreUtilisateur.nom.toUpperCase()}
+                  </div>}
+                </div>
+              </Paper>
               : <OrderValidate
                 params={params}
                 utilisateurId={this.utilisateurId}
@@ -349,7 +352,7 @@ export class CommandeEdit extends React.Component {
 const mapStateToProps = createStructuredSelector({
   typeProduits: selectCommandeTypesProduitsVisibles(),
   // commande: selectCommande(), // commande courante en cours d'édition
-  commandeProduits: selectCommandeProduits(),
+  commandeProduits: selectCommandeProduitsVisibles(),
   produitsById: selectProduits(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   // cdeCommandeContenus: selectCommandeCommandeContenus(),
