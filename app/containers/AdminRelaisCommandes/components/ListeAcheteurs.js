@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { List, makeSelectable } from 'material-ui/List';
-import { format } from 'utils/dates';
-import compareDesc from 'date-fns/compare_desc';
-import addMinutes from 'date-fns/add_minutes';
-import getTime from 'date-fns/get_time';
-import groupBy from 'lodash/groupBy';
-import RaisedButton from 'material-ui/RaisedButton';
-import Subheader from 'material-ui/Subheader';
-import { calculeTotauxCommande } from 'containers/Commande/utils';
-import DepotRelais from 'containers/DepotRelais';
-import { selectStellarKeys } from 'containers/App/selectors';
-import ListeAcheteursItem from './ListeAcheteursItem';
-import styles from './styles.css';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { List, makeSelectable } from "material-ui/List";
+import { format } from "utils/dates";
+import compareDesc from "date-fns/compare_desc";
+import addMinutes from "date-fns/add_minutes";
+import getTime from "date-fns/get_time";
+import groupBy from "lodash/groupBy";
+import RaisedButton from "material-ui/RaisedButton";
+import Subheader from "material-ui/Subheader";
+import { calculeTotauxCommande } from "containers/Commande/utils";
+import DepotRelais from "containers/DepotRelais";
+import { selectStellarKeys } from "containers/App/selectors";
+import ListeAcheteursItem from "./ListeAcheteursItem";
+import styles from "./styles.css";
 const SelectableList = makeSelectable(List);
 
 class ListeAcheteurs extends Component {
@@ -29,7 +29,7 @@ class ListeAcheteurs extends Component {
     distributions: PropTypes.array.isRequired,
     depots: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
   };
 
   state = {
@@ -37,7 +37,7 @@ class ListeAcheteurs extends Component {
     utilisateurDepot: null,
     utilisateurTotalCommande: null,
     utilisateurBalance: null,
-    depot: false,
+    depot: false
   };
 
   handleClose = () => this.setState({ ...this.state, depot: false });
@@ -46,18 +46,13 @@ class ListeAcheteurs extends Component {
 
   handleDepotRelais = () => this.setState({ ...this.state, depot: false });
 
-  handleClick = (
-    utilisateurSelected,
-    utilisateurDepot,
-    utilisateurTotalCommande,
-    utilisateurBalance
-  ) => {
+  handleClick = (utilisateurSelected, utilisateurDepot, utilisateurTotalCommande, utilisateurBalance) => {
     this.setState({
       ...this.state,
       utilisateurSelected,
       utilisateurDepot,
       utilisateurTotalCommande,
-      utilisateurBalance,
+      utilisateurBalance
     });
     this.props.onChange(utilisateurSelected);
   };
@@ -71,14 +66,10 @@ class ListeAcheteurs extends Component {
       stellarKeys,
       offres,
       commandeContenus,
-      depots,
+      depots
     } = this.props;
 
-    const {
-      utilisateurDepot,
-      utilisateurTotalCommande,
-      utilisateurBalance,
-    } = this.state;
+    const { utilisateurDepot, utilisateurTotalCommande, utilisateurBalance } = this.state;
 
     const utilisateur = utilisateurs.find(u => u.id === utilisateurId);
     // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
@@ -95,38 +86,31 @@ class ListeAcheteurs extends Component {
             : null,
           debutLivraisonUnix: distribution
             ? getTime(addMinutes(distribution.debut, distribution.plageHoraire))
-            : 0,
+            : 0
         };
       })
       .slice()
       .sort(
         (cu1, cu2) =>
-          cu1.debutLivraisonUnix > cu2.debutLivraisonUnix &&
-          cu1.utilisateur.nom > cu2.utilisateur.nom
+          cu1.debutLivraisonUnix > cu2.debutLivraisonUnix && cu1.utilisateur.nom > cu2.utilisateur.nom
       );
 
-    const acheteursGrp = groupBy(acheteurs, 'debutLivraisonISO');
+    const acheteursGrp = groupBy(acheteurs, "debutLivraisonISO");
 
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
-          {stellarKeys &&
-            (!stellarKeys.adresse || !stellarKeys.secret) &&
-            <p>Parametrez Proxiweb</p>}
+          {stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret) && <p>Parametrez Proxiweb</p>}
           {// !utilisateurDepot &&
           utilisateurId &&
             <RaisedButton
               primary
               fullWidth
               label="Depot"
-              disabled={
-                stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)
-              }
+              disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
               onClick={() => this.setState({ ...this.state, depot: true })}
             />}
-          {false &&
-            utilisateurDepot &&
-            `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
+          {false && utilisateurDepot && `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
           {// !utilisateurDepot &&
           utilisateurId &&
             utilisateurBalance &&
@@ -145,10 +129,10 @@ class ListeAcheteurs extends Component {
         </div>
         <div className={`col-md-12 ${styles.listeAcheteurs}`}>
           <SelectableList value={utilisateurId}>
-            {Object.keys(acheteursGrp).map(key => (
+            {Object.keys(acheteursGrp).map(key =>
               <div key={key}>
-                <Subheader>{format(key, 'LL HH:mm')}</Subheader>
-                {acheteursGrp[key].map((cu, idx2) => (
+                <Subheader>{format(key, "LL HH:mm")}</Subheader>
+                {acheteursGrp[key].map((cu, idx2) =>
                   <ListeAcheteursItem
                     key={idx2}
                     utilisateur={cu.utilisateur}
@@ -160,12 +144,12 @@ class ListeAcheteurs extends Component {
                       filter: cc => cc.utilisateurId === cu.utilisateurId,
                       offres,
                       commandeContenus,
-                      commandeId,
+                      commandeId
                     })}
                   />
-                ))}
+                )}
               </div>
-            ))}
+            )}
           </SelectableList>
         </div>
       </div>
@@ -174,7 +158,7 @@ class ListeAcheteurs extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  stellarKeys: selectStellarKeys(),
+  stellarKeys: selectStellarKeys()
 });
 
 export default connect(mapStateToProps)(ListeAcheteurs);

@@ -1,4 +1,4 @@
-import assign from 'lodash/assign';
+import assign from "lodash/assign";
 
 export function getStateFromStorage(key, initialState, appyToState = {}) {
   const wsState = window.sessionStorage.getItem(key);

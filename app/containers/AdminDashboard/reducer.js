@@ -5,7 +5,7 @@
  */
 
 const initialState = {
-  utilisateurs: [],
+  utilisateurs: []
 };
 
 function dashboardReducer(state = initialState, action) {

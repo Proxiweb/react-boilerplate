@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /**
  * Direct selector to the compteUtilisateur state domain
@@ -26,26 +26,27 @@ export const selectPaymentsPagingToken = () =>
   createSelector(selectCompteUtilisateurDomain(), substate => substate.payments.pagingToken);
 
 export const selectAuthUtilisateurId = () =>
-  createSelector([selectCompteUtilisateur()], auth => auth ? auth.id : undefined);
+  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.id : undefined));
 
 export const selectDatePaiementCotisation = () =>
-  createSelector([selectCompteUtilisateur()], auth => auth ? auth.datePaiementCotisation : undefined);
+  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.datePaiementCotisation : undefined));
 
 export const selectRoles = () =>
-  createSelector([selectCompteUtilisateur()], auth => auth ? auth.roles : undefined);
+  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.roles : undefined));
 
 export const selectRelaiId = () =>
-  createSelector([selectCompteUtilisateur()], auth => auth ? auth.relaiId : undefined);
+  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.relaiId : undefined));
 
 export const selectAuthApiKey = () =>
-  createSelector([selectCompteUtilisateur()], auth => auth ? auth.apiKey : undefined);
+  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.apiKey : undefined));
 
 export const selectBalance = () =>
   createSelector(selectCompteUtilisateurDomain(), substate =>
-    substate.balances.find(bal => bal.asset_code === 'PROXI'));
+    substate.balances.find(bal => bal.asset_code === "PROXI")
+  );
 
 export const selectMontantBalance = () =>
-  createSelector(selectBalance(), balance => balance ? parseFloat(balance.balance) : null);
+  createSelector(selectBalance(), balance => (balance ? parseFloat(balance.balance) : null));
 
 export const selectMaxBalance = () => createSelector(selectBalance(), balance => parseFloat(balance.limit));
 
@@ -57,6 +58,6 @@ export const selectVirements = () =>
     selectCompteUtilisateurDomain(),
     substate =>
       substate.virements
-        ? substate.virements.filter(dep => dep.type === 'virement' && !dep.transfertEffectue)
+        ? substate.virements.filter(dep => dep.type === "virement" && !dep.transfertEffectue)
         : null
   );

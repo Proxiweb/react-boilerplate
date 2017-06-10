@@ -5,8 +5,8 @@
 **/
 export default function generateConstants(domain, scope) {
   const constants = {};
-  const states = ['START', 'SUCCESS', 'ERROR'];
-  states.forEach((state) => {
+  const states = ["START", "SUCCESS", "ERROR"];
+  states.forEach(state => {
     constants[`ASYNC_${scope.toUpperCase()}_${state}`] = `${domain}/ASYNC_${scope.toUpperCase()}_${state}`;
   });
 
@@ -19,5 +19,7 @@ export default function generateConstants(domain, scope) {
 **/
 export const findActionType = (scope, constants, type) =>
   constants[
-    Object.keys(constants).find((key) => constants[key].match(new RegExp(`\\w+${scope.toUpperCase()}_${type.toUpperCase()}`)))
+    Object.keys(constants).find(key =>
+      constants[key].match(new RegExp(`\\w+${scope.toUpperCase()}_${type.toUpperCase()}`))
+    )
   ];

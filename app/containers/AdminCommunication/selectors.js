@@ -1,10 +1,8 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
 /**
  * Direct selector to the compteUtilisateur state domain
  */
-export const selectCommunicationDomain = () =>
-  state => state.admin.communication;
+export const selectCommunicationDomain = () => state => state.admin.communication;
 
-export const selectCommunications = () =>
-  createSelector(selectCommunicationDomain(), domain => domain.datas);
+export const selectCommunications = () => createSelector(selectCommunicationDomain(), domain => domain.datas);

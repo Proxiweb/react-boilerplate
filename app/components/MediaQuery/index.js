@@ -1,10 +1,10 @@
 /* eslint-disable */
-import React from 'react';
-import PropTypes from 'prop-types';
-import matchMedia from 'matchmedia';
-import hyphenate from 'hyphenate-style-name';
-import mediaQuery from './mediaQuery';
-import toQuery from './toQuery';
+import React from "react";
+import PropTypes from "prop-types";
+import matchMedia from "matchmedia";
+import hyphenate from "hyphenate-style-name";
+import mediaQuery from "./mediaQuery";
+import toQuery from "./toQuery";
 
 const defaultTypes = {
   component: PropTypes.node,
@@ -23,7 +23,7 @@ function omit(object, keys) {
 }
 
 export default class MediaQuery extends React.Component {
-  static displayName = 'MediaQuery';
+  static displayName = "MediaQuery";
   static defaultProps = {
     values: {}
   };
@@ -47,7 +47,7 @@ export default class MediaQuery extends React.Component {
     }
 
     if (!this.query) {
-      throw new Error('Invalid or missing MediaQuery!');
+      throw new Error("Invalid or missing MediaQuery!");
     }
 
     if (props.values) {
@@ -80,7 +80,7 @@ export default class MediaQuery extends React.Component {
   };
 
   render() {
-    if (typeof this.props.children === 'function') {
+    if (typeof this.props.children === "function") {
       return this.props.children(this.state.matches);
     }
 
@@ -93,15 +93,11 @@ export default class MediaQuery extends React.Component {
     const wrapChildren =
       this.props.component ||
       childrenCount > 1 ||
-      typeof this.props.children === 'string' ||
+      typeof this.props.children === "string" ||
       (Array.isArray(this.props.children) && childrenCount == 1) ||
       this.props.children === undefined;
     if (wrapChildren) {
-      return React.createElement(
-        this.props.component || 'div',
-        props,
-        this.props.children
-      );
+      return React.createElement(this.props.component || "div", props, this.props.children);
     } else if (hasMergeProps) {
       return React.cloneElement(this.props.children, props);
     } else if (childrenCount) {

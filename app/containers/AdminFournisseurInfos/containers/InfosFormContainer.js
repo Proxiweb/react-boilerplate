@@ -1,14 +1,15 @@
-import React from 'react'; import PropTypes from 'prop-types';
-import { createStructuredSelector } from 'reselect';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { isPristine, change } from 'redux-form';
+import React from "react";
+import PropTypes from "prop-types";
+import { createStructuredSelector } from "reselect";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { isPristine, change } from "redux-form";
 
-import { selectPending } from 'containers/App/selectors';
-import { saveFournisseur } from 'containers/Commande/actions';
-import InfosForm from './InfosForm';
+import { selectPending } from "containers/App/selectors";
+import { saveFournisseur } from "containers/Commande/actions";
+import InfosForm from "./InfosForm";
 
-const isFormPristine = () => state => isPristine('info_fournisseur')(state);
+const isFormPristine = () => state => isPristine("info_fournisseur")(state);
 
 class fournisseurFormContainer extends React.Component {
   static propTypes = {
@@ -17,7 +18,7 @@ class fournisseurFormContainer extends React.Component {
     pristine: PropTypes.bool.isRequired,
     changeValue: PropTypes.func.isRequired,
     saveFournisseur: PropTypes.func.isRequired,
-    pending: PropTypes.bool.isRequired,
+    pending: PropTypes.bool.isRequired
   };
 
   handleSubmit = values => {
@@ -34,7 +35,7 @@ class fournisseurFormContainer extends React.Component {
         onSubmit={this.handleSubmit}
         pending={pending}
         pristine={pristine}
-        changePresentation={val => changeValue('info_fournisseur', 'presentation', val)}
+        changePresentation={val => changeValue("info_fournisseur", "presentation", val)}
       />
     );
   }
@@ -42,15 +43,16 @@ class fournisseurFormContainer extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: selectPending(),
-  pristine: isFormPristine(),
+  pristine: isFormPristine()
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-  {
-    changeValue: change,
-    saveFournisseur,
-  },
-  dispatch
-);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      changeValue: change,
+      saveFournisseur
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(fournisseurFormContainer);

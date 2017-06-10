@@ -1,10 +1,11 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import Slider from 'material-ui/Slider';
-import RaisedButton from 'material-ui/RaisedButton';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Slider from "material-ui/Slider";
+import RaisedButton from "material-ui/RaisedButton";
 
-import Virement from './Virement';
+import Virement from "./Virement";
 
-import styles from './styles.css';
+import styles from "./styles.css";
 
 export default class Virements extends Component {
   static propTypes = {
@@ -12,12 +13,12 @@ export default class Virements extends Component {
     programmerVirement: PropTypes.func.isRequired,
     annulerVirement: PropTypes.func.isRequired,
     utilisateurId: PropTypes.string.isRequired,
-    virements: PropTypes.array.isRequired,
-  }
+    virements: PropTypes.array.isRequired
+  };
 
   state = {
-    montant: 10,
-  }
+    montant: 10
+  };
 
   render() {
     const { max, programmerVirement, utilisateurId, virements, annulerVirement } = this.props;
@@ -26,14 +27,18 @@ export default class Virements extends Component {
     if (virements.length > 0) {
       return (
         <div className="col-md-12">
-          {virements.map((vir, idx) => <Virement key={idx} virement={vir} annulerVirement={annulerVirement} />)}
+          {virements.map((vir, idx) =>
+            <Virement key={idx} virement={vir} annulerVirement={annulerVirement} />
+          )}
         </div>
       );
     }
 
     return (
       <div className="col-md-8">
-        <p style={{ minHeight: '18px' }}>{montant !== null && montant > 0 && `Montant du virement : ${montant} €`}</p>
+        <p style={{ minHeight: "18px" }}>
+          {montant !== null && montant > 0 && `Montant du virement : ${montant} €`}
+        </p>
         <Slider
           min={0}
           max={max}

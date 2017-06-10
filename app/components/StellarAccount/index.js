@@ -1,16 +1,17 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import api from 'utils/stellarApi';
-import round from 'lodash/round';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import api from "utils/stellarApi";
+import round from "lodash/round";
 
 class StellarAccount extends Component {
   static propTypes = {
     stellarAdr: PropTypes.string.isRequired,
-    onAccountLoaded: PropTypes.func.isRequired,
+    onAccountLoaded: PropTypes.func.isRequired
   };
 
   state = {
     account: null,
-    loading: false,
+    loading: false
   };
 
   componentDidMount() {
@@ -29,7 +30,7 @@ class StellarAccount extends Component {
     api
       .loadAccount(adresse)
       .then(res => {
-        const account = res.balances.find(b => b.asset_code === 'PROXI');
+        const account = res.balances.find(b => b.asset_code === "PROXI");
         this.setState({ account, loading: false });
         this.props.onAccountLoaded(account);
       })
@@ -42,8 +43,8 @@ class StellarAccount extends Component {
     const { loading, account } = this.state;
     return (
       <h3>
-        Solde porte-monnaie{' '}
-        {loading && !account && '...'}
+        Solde porte-monnaie{" "}
+        {loading && !account && "..."}
         {this.state.account && round(parseFloat(this.state.account.balance), 2).toFixed(2)}
       </h3>
     );

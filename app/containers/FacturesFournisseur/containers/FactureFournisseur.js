@@ -1,33 +1,29 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import { format } from 'utils/dates';
-import round from 'lodash/round';
-import classnames from 'classnames';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { createStructuredSelector } from "reselect";
+import { format } from "utils/dates";
+import round from "lodash/round";
+import classnames from "classnames";
 
 import {
   selectOffres,
   selectFournisseurs,
   selectProduits,
   selectCommande,
-  selectUtilisateurs,
-} from 'containers/Commande/selectors';
+  selectUtilisateurs
+} from "containers/Commande/selectors";
 
-import {
-  loadFournisseurs,
-  fetchUtilisateurs,
-} from 'containers/Commande/actions';
+import { loadFournisseurs, fetchUtilisateurs } from "containers/Commande/actions";
 
-import { selectPending } from 'containers/App/selectors';
+import { selectPending } from "containers/App/selectors";
 
-import { calculeTotauxCommande } from 'containers/Commande/utils';
-import {
-  trouveTarification,
-} from 'containers/CommandeEdit/components/components/AffichePrix';
+import { calculeTotauxCommande } from "containers/Commande/utils";
+import { trouveTarification } from "containers/CommandeEdit/components/components/AffichePrix";
 
-import Adresse from './Adresse';
-import styles from './styles.css';
+import Adresse from "./Adresse";
+import styles from "./styles.css";
 
 class FactureFournisseur extends Component {
   // eslint-disable-line
@@ -42,7 +38,7 @@ class FactureFournisseur extends Component {
     utilisateurs: PropTypes.object,
     fournisseurs: PropTypes.array.isRequired,
     loadU: PropTypes.func.isRequired,
-    loadF: PropTypes.func.isRequired,
+    loadF: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -65,29 +61,19 @@ class FactureFournisseur extends Component {
   loadAcheteurs() {
     const { commandeUtilisateurs, utilisateurs, loadU } = this.props;
     const utilisateursIds = commandeUtilisateurs
-      .filter(
-        cu =>
-          !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId)
-      ) // ne pas charger ceux déjà chargés
+      .filter(cu => !utilisateurs || !utilisateurs.find(u => u.id === cu.utilisateurId)) // ne pas charger ceux déjà chargés
       .map(cu => cu.utilisateurId);
 
     loadU(utilisateursIds);
   }
 
   buildProducts = (utilisateurId, autoEntrepreneur) => {
-    const {
-      commandeContenus: cc,
-      contenus: c,
-      offres,
-      produits,
-      params,
-    } = this.props;
+    const { commandeContenus: cc, contenus: c, offres, produits, params } = this.props;
     const commandeContenus = cc.map(id => c[id]);
     const contenus = commandeContenus.filter(
       cC =>
         cC.utilisateurId === utilisateurId &&
-        produits[offres[cC.offreId].produitId].fournisseurId ===
-          params.fournisseurId
+        produits[offres[cC.offreId].produitId].fournisseurId === params.fournisseurId
     );
 
     if (!contenus.length) return null;
@@ -97,7 +83,7 @@ class FactureFournisseur extends Component {
       commandeContenus,
       offres,
       commandeId,
-      filter: cc => cc.utilisateurId === utilisateurId,
+      filter: cc => cc.utilisateurId === utilisateurId
     });
 
     const rows = contenus.map((contenu, idx) => {
@@ -142,7 +128,7 @@ class FactureFournisseur extends Component {
     return rows;
   };
 
-  split = str => str.split('-')[0];
+  split = str => str.split("-")[0];
 
   render() {
     const {
@@ -152,7 +138,7 @@ class FactureFournisseur extends Component {
       commande,
       utilisateurs,
       fournisseurs,
-      params,
+      params
     } = this.props;
 
     if (
@@ -172,10 +158,7 @@ class FactureFournisseur extends Component {
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
         {commandeUtilisateurs.map((cu, idx) => {
-          const contenusCommande = this.buildProducts(
-            cu.utilisateurId,
-            fournisseur.autoEntrepreneur
-          );
+          const contenusCommande = this.buildProducts(cu.utilisateurId, fournisseur.autoEntrepreneur);
           if (!contenusCommande) return null;
           cpt += 1;
           return (
@@ -186,13 +169,13 @@ class FactureFournisseur extends Component {
                     <tr>
                       <td
                         style={{
-                          fontSize: '20px',
-                          lineHeight: '20px',
-                          color: '#333',
+                          fontSize: "20px",
+                          lineHeight: "20px",
+                          color: "#333"
                         }}
                       >
                         <h3 className="factureTitle">
-                          Facture Proxiweb{' '}
+                          Facture Proxiweb{" "}
                           <small>
                             {this.split(cu.commandeId)}
                             -
@@ -205,13 +188,13 @@ class FactureFournisseur extends Component {
 
                       <td
                         style={{
-                          fontSize: '20px',
-                          lineHeight: '20px',
-                          color: '#333',
+                          fontSize: "20px",
+                          lineHeight: "20px",
+                          color: "#333"
                         }}
                       >
                         <h3 className="factureTitle">
-                          {format(commande.dateCommande, 'DD MM')}
+                          {format(commande.dateCommande, "DD MM")}
                         </h3>
                       </td>
                     </tr>
@@ -224,14 +207,10 @@ class FactureFournisseur extends Component {
                   <table>
                     <tr>
                       <td>
-                        {fournisseur &&
-                          <Adresse label="Fournisseur" datas={fournisseur} />}
+                        {fournisseur && <Adresse label="Fournisseur" datas={fournisseur} />}
                       </td>
                       <td>
-                        <Adresse
-                          label="Client"
-                          datas={utils.find(u => u.id === cu.utilisateurId)}
-                        />
+                        <Adresse label="Client" datas={utils.find(u => u.id === cu.utilisateurId)} />
                       </td>
                     </tr>
                   </table>
@@ -257,9 +236,7 @@ class FactureFournisseur extends Component {
               {fournisseur.autoEntrepreneur &&
                 <tr>
                   <td colSpan="4">
-                    {
-                      'T.V.A. non applicable. Article 293B du code général des impôts.'
-                    }
+                    {"T.V.A. non applicable. Article 293B du code général des impôts."}
                   </td>
                 </tr>}
             </table>
@@ -276,14 +253,14 @@ const mapStateToProps = createStructuredSelector({
   produits: selectProduits(),
   utilisateurs: selectUtilisateurs(),
   fournisseurs: selectFournisseurs(),
-  offres: selectOffres(),
+  offres: selectOffres()
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadU: fetchUtilisateurs,
-      loadF: loadFournisseurs,
+      loadF: loadFournisseurs
     },
     dispatch
   );

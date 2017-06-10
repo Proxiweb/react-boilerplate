@@ -1,13 +1,14 @@
-import React from 'react'; import PropTypes from 'prop-types';
-import SelectField from 'material-ui/SelectField';
+import React from "react";
+import PropTypes from "prop-types";
+import SelectField from "material-ui/SelectField";
 
 const styles = {
-  underlineStyle: { borderColor: 'gray' },
-  floatingLabelStyle: { color: 'gray' },
-  iconStyle: { fill: 'gray' },
+  underlineStyle: { borderColor: "gray" },
+  floatingLabelStyle: { color: "gray" },
+  iconStyle: { fill: "gray" }
 };
 
-const CustomSelectField = ({ children, ...props }) => (
+const CustomSelectField = ({ children, ...props }) =>
   <SelectField
     underlineStyle={styles.underlineStyle}
     floatingLabelStyle={styles.floatingLabelStyle}
@@ -15,11 +16,10 @@ const CustomSelectField = ({ children, ...props }) => (
     {...props}
   >
     {children}
-  </SelectField>
-);
+  </SelectField>;
 
 CustomSelectField.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.any
 };
 
 export default CustomSelectField;

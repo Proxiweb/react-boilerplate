@@ -4,18 +4,19 @@
  *
  */
 
-import React from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
-import { Tabs, Tab } from 'material-ui/Tabs';
-import Paper from 'material-ui/Paper';
-import { logout } from '../Login/actions';
-import { selectPayments, selectBalance, selectRelaiId } from './selectors';
-import { selectRelais } from 'containers/Commande/selectors';
-import { selectLocationState } from 'containers/App/selectors';
-import ProfileFormContainer from 'containers/ProfileFormContainer';
-import NotificationsForm from 'components/NotificationsForm';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { push } from "react-router-redux";
+import { createStructuredSelector } from "reselect";
+import { Tabs, Tab } from "material-ui/Tabs";
+import Paper from "material-ui/Paper";
+import { logout } from "../Login/actions";
+import { selectPayments, selectBalance, selectRelaiId } from "./selectors";
+import { selectRelais } from "containers/Commande/selectors";
+import { selectLocationState } from "containers/App/selectors";
+import ProfileFormContainer from "containers/ProfileFormContainer";
+import NotificationsForm from "components/NotificationsForm";
 
 export class CompteUtilisateur extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -25,11 +26,11 @@ export class CompteUtilisateur extends React.Component {
     relaiId: PropTypes.string.isRequired,
     relais: PropTypes.string,
     params: PropTypes.object.isRequired,
-    pushState: PropTypes.func.isRequired,
+    pushState: PropTypes.func.isRequired
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   };
 
   handleChange = value => {
@@ -58,8 +59,8 @@ export class CompteUtilisateur extends React.Component {
             {relais &&
               relais[relaiId] &&
               <Tab label="Relais" value="relais">
-                <Paper zDepth={2} style={{ padding: '1rem', minHeight: '444px' }}>
-                  <p style={{ textAlign: 'center' }}>
+                <Paper zDepth={2} style={{ padding: "1rem", minHeight: "444px" }}>
+                  <p style={{ textAlign: "center" }}>
                     Vous êtes inscrit sur le relais <strong>{relais[relaiId].nom}</strong>
                   </p>
                 </Paper>
@@ -76,14 +77,14 @@ const mapStateToProps = createStructuredSelector({
   compte: selectBalance(),
   locationState: selectLocationState(),
   relaiId: selectRelaiId(),
-  relais: selectRelais(),
+  relais: selectRelais()
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: url => dispatch(push(url)),
-    logout: () => dispatch(logout()), // eslint-disable-line
+    logout: () => dispatch(logout()) // eslint-disable-line
   };
 }
 

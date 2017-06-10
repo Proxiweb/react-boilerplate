@@ -1,16 +1,17 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import AutoComplete from 'material-ui/AutoComplete';
-import { loadDepots } from './actions';
-import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
-import { Column, Table } from 'react-virtualized';
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
-import authorization from 'containers/Authorization';
-import { selectDepots, selectTotal } from './selectors';
-import { format } from 'utils/dates';
-import styles from './index.css';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { createStructuredSelector } from "reselect";
+import AutoComplete from "material-ui/AutoComplete";
+import { loadDepots } from "./actions";
+import { loadUtilisateurs } from "containers/AdminUtilisateurs/actions";
+import { Column, Table } from "react-virtualized";
+import { selectUtilisateurs } from "containers/AdminUtilisateurs/selectors";
+import authorization from "containers/Authorization";
+import { selectDepots, selectTotal } from "./selectors";
+import { format } from "utils/dates";
+import styles from "./index.css";
 
 class AdminDepot extends Component {
   // eslint-disable-line
@@ -19,24 +20,19 @@ class AdminDepot extends Component {
     utilisateurs: PropTypes.array.isRequired,
     total: PropTypes.number.isRequired,
     loadDepotsDatas: PropTypes.func.isRequired,
-    loadUtilisateursDatas: PropTypes.func.isRequired,
+    loadUtilisateursDatas: PropTypes.func.isRequired
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   };
 
   state = {
-    filtreNom: null,
+    filtreNom: null
   };
 
   componentDidMount() {
-    const {
-      depots,
-      loadDepotsDatas,
-      utilisateurs,
-      loadUtilisateursDatas,
-    } = this.props;
+    const { depots, loadDepotsDatas, utilisateurs, loadUtilisateursDatas } = this.props;
 
     if (!depots.length) {
       loadDepotsDatas();
@@ -49,9 +45,7 @@ class AdminDepot extends Component {
 
   handleUpdateChange = recherche => {
     const { utilisateurs } = this.props;
-    const utilisateur = utilisateurs.find(
-      u => `${u.nom} ${u.prenom}` === recherche
-    );
+    const utilisateur = utilisateurs.find(u => `${u.nom} ${u.prenom}` === recherche);
     if (utilisateur) {
       this.props.loadDepotsDatas({ utilisateurId: utilisateur.id });
     }
@@ -84,10 +78,8 @@ class AdminDepot extends Component {
             rowCount={depots.length}
             rowGetter={({ index }) => depots[index]}
             rowStyle={obj => ({
-              borderBottom: 'solid 1px silver',
-              backgroundColor: obj.index % 2 === 0 || obj.index === -1
-                ? 'white'
-                : palette.oddColor,
+              borderBottom: "solid 1px silver",
+              backgroundColor: obj.index % 2 === 0 || obj.index === -1 ? "white" : palette.oddColor
             })}
           >
             <Column label="Type" dataKey="type" width="150" />
@@ -95,26 +87,22 @@ class AdminDepot extends Component {
               label="Effectué"
               dataKey="transfertEffectue"
               width="150"
-              cellDataGetter={({ rowData }) =>
-                rowData.transfertEffectue ? 'oui' : 'non'}
+              cellDataGetter={({ rowData }) => (rowData.transfertEffectue ? "oui" : "non")}
             />
             <Column label="Montant" dataKey="montant" width="150" />
             <Column
               label="Date"
               dataKey="createdAt"
               width="350"
-              cellDataGetter={({ rowData }) =>
-                format(rowData.createdAt, 'DDDD MM YYYY')}
+              cellDataGetter={({ rowData }) => format(rowData.createdAt, "DDDD MM YYYY")}
             />
             <Column
               label="Utilisateur"
               dataKey="utilisateurId"
               width="350"
               cellDataGetter={({ rowData }) => {
-                const ut = utilisateurs.find(
-                  u => u.id === rowData.utilisateurId
-                );
-                return ut ? `${ut.prenom} ${ut.nom}` : '---';
+                const ut = utilisateurs.find(u => u.id === rowData.utilisateurId);
+                return ut ? `${ut.prenom} ${ut.nom}` : "---";
               }}
             />
           </Table>
@@ -127,19 +115,19 @@ class AdminDepot extends Component {
 const mapStateToProps = createStructuredSelector({
   depots: selectDepots(),
   total: selectTotal(),
-  utilisateurs: selectUtilisateurs(),
+  utilisateurs: selectUtilisateurs()
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadDepotsDatas: loadDepots,
-      loadUtilisateursDatas: loadUtilisateurs,
+      loadUtilisateursDatas: loadUtilisateurs
     },
     dispatch
   );
 
-export default authorization(
-  connect(mapStateToProps, mapDispatchToProps)(AdminDepot),
-  ['ADMIN', 'RELAI_ADMIN']
-);
+export default authorization(connect(mapStateToProps, mapDispatchToProps)(AdminDepot), [
+  "ADMIN",
+  "RELAI_ADMIN"
+]);

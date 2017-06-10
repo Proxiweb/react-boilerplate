@@ -1,6 +1,7 @@
-import React from 'react'; import PropTypes from 'prop-types';
-import CommandePanel from './CommandePanel';
-import Panel from 'components/Panel';
+import React from "react";
+import PropTypes from "prop-types";
+import CommandePanel from "./CommandePanel";
+import Panel from "components/Panel";
 
 const Semainier = ({
   commandesIds,
@@ -13,8 +14,8 @@ const Semainier = ({
   utilisateurId,
   pending,
   buttonClicked,
-  withLink,
-}) => (
+  withLink
+}) =>
   <div className="col-xs">
     <Panel>{titreCol}</Panel>
     <div>
@@ -28,13 +29,9 @@ const Semainier = ({
 
           return (
             <CommandePanel
-              nom={infos ? infos.join(', ') : null}
+              nom={infos ? infos.join(", ") : null}
               dateCommande={commandes[key].dateCommande}
-              label={
-                commandeUtilisateurExiste(key)
-                  ? 'Modifier ma commande'
-                  : 'Commander'
-              }
+              label={commandeUtilisateurExiste(key) ? "Modifier ma commande" : "Commander"}
               prct={100}
               fav={false}
               key={idx}
@@ -42,19 +39,14 @@ const Semainier = ({
               disabled={pending}
               clickHandler={() => {
                 buttonClicked();
-                pushState(
-                  `/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`
-                );
+                pushState(`/relais/${relaiId}/commandes/${key}?utilisateurId=${utilisateurId}`);
               }}
-              url={
-                withLink ? `/admin/relais/${relaiId}/commandes/${key}` : null
-              }
+              url={withLink ? `/admin/relais/${relaiId}/commandes/${key}` : null}
             />
           );
         })}
     </div>
-  </div>
-);
+  </div>;
 
 Semainier.propTypes = {
   getCommandeInfos: PropTypes.func.isRequired,
@@ -67,7 +59,7 @@ Semainier.propTypes = {
   utilisateurId: PropTypes.string.isRequired,
   titreCol: PropTypes.string.isRequired,
   pending: PropTypes.bool.isRequired,
-  withLink: PropTypes.bool.isRequired,
+  withLink: PropTypes.bool.isRequired
 };
 
 export default Semainier;

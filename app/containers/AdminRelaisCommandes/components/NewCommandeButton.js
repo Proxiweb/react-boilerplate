@@ -1,33 +1,28 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { createStructuredSelector } from 'reselect';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { bindActionCreators } from 'redux';
-import styles from './styles.css';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import { selectCommandeId } from 'containers/Commande/selectors';
-import { selectRoute } from 'containers/App/selectors';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { createStructuredSelector } from "reselect";
+import { connect } from "react-redux";
+import { push } from "react-router-redux";
+import { bindActionCreators } from "redux";
+import styles from "./styles.css";
+import ContentAdd from "material-ui/svg-icons/content/add";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import { selectCommandeId } from "containers/Commande/selectors";
+import { selectRoute } from "containers/App/selectors";
 
 class NewCommandeButton extends Component {
   static propTypes = {
-    relaiId: PropTypes.string.isRequired,
+    relaiId: PropTypes.string.isRequired
   };
 
   handleNewCommande = () => {
-    this.props.pushState(
-      `/admin/relais/${this.props.relaiId}/commandes/nouvelle`
-    );
+    this.props.pushState(`/admin/relais/${this.props.relaiId}/commandes/nouvelle`);
   };
 
   render() {
     return (
-      <div style={{ textAlign: 'center' }}>
-        <FloatingActionButton
-          primary
-          className={styles.addButton}
-          onClick={this.handleNewCommande}
-        >
+      <div style={{ textAlign: "center" }}>
+        <FloatingActionButton primary className={styles.addButton} onClick={this.handleNewCommande}>
           <ContentAdd />
         </FloatingActionButton>
       </div>
@@ -38,7 +33,7 @@ class NewCommandeButton extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      pushState: push,
+      pushState: push
     },
     dispatch
   );

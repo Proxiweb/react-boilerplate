@@ -1,9 +1,10 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 export default class TrustForm extends Component {
   static propTypes = {
     trust: PropTypes.func.isRequired,
-    stellarKeys: PropTypes.object.isRequired,
-  }
+    stellarKeys: PropTypes.object.isRequired
+  };
 
   constructor(props) {
     super(props);
@@ -19,15 +20,43 @@ export default class TrustForm extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="form-group">
-          <input name="issuer" type="text" className="form-control" placeholder="Issuer" ref={(node) => { this.issuer = node; }} defaultValue="GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI" />
+          <input
+            name="issuer"
+            type="text"
+            className="form-control"
+            placeholder="Issuer"
+            ref={node => {
+              this.issuer = node;
+            }}
+            defaultValue="GCSKO7QZZW6HNQ45J624XLRFUIB6HQYD4ZIFVFWSJUR5VAFBZP7FC7JI"
+          />
         </div>
         <div className="form-group">
-          <input name="code" type="text" className="form-control" placeholder="code" ref={(node) => { this.code = node; }} defaultValue="PROXI" />
+          <input
+            name="code"
+            type="text"
+            className="form-control"
+            placeholder="code"
+            ref={node => {
+              this.code = node;
+            }}
+            defaultValue="PROXI"
+          />
         </div>
         <div className="form-group">
-          <input name="amount" type="number" className="form-control" placeholder="amout" ref={(node) => { this.amount = node; }} defaultValue="200" />
+          <input
+            name="amount"
+            type="number"
+            className="form-control"
+            placeholder="amout"
+            ref={node => {
+              this.amount = node;
+            }}
+            defaultValue="200"
+          />
         </div>
         <button className="btn btn-primary btn-block" type="submit">Trust</button>
       </form>
-  ); }
+    );
+  }
 }

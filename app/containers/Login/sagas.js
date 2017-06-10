@@ -1,27 +1,23 @@
-import { take, put, call, fork, select } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
-import differenceInMinutes from 'date-fns/difference_in_minutes';
-import { push } from 'react-router-redux';
-import { findActionType } from '../../utils/asyncSagaConstants';
-import { delay } from 'redux-saga';
-import { loginConst, registerConst, LOGOUT } from './constants';
-import { addEffect } from './actions';
+import { take, put, call, fork, select } from "redux-saga/effects";
+import { eventChannel } from "redux-saga";
+import differenceInMinutes from "date-fns/difference_in_minutes";
+import { push } from "react-router-redux";
+import { findActionType } from "../../utils/asyncSagaConstants";
+import { delay } from "redux-saga";
+import { loginConst, registerConst, LOGOUT } from "./constants";
+import { addEffect } from "./actions";
 
-import { addMessage } from 'containers/App/actions';
+import { addMessage } from "containers/App/actions";
 
-import {
-  accountLoaded,
-  loadAccountError,
-  storeStellarKeys,
-} from 'containers/CompteUtilisateur/actions';
+import { accountLoaded, loadAccountError, storeStellarKeys } from "containers/CompteUtilisateur/actions";
 
 // import {
 //   selectPayments
 // } from 'containers/CompteUtilisateur/selectors';
 //
-import { depotCbConst } from 'containers/CompteUtilisateur/constants';
+import { depotCbConst } from "containers/CompteUtilisateur/constants";
 
-import api from '../../utils/stellarApi';
+import api from "../../utils/stellarApi";
 
 // import {
 //   loginSuccess,
@@ -73,7 +69,7 @@ function effects(accountId) {
 export function* onLoginSuccess() {
   while (true) {
     // eslint-disable-line
-    const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
+    const action = yield take(findActionType("login", loginConst, "SUCCESS"));
     if (action.datas.user.stellarKeys) {
       yield fork(loadAccountSaga, action.datas.user.stellarKeys.adresse);
     }
@@ -82,9 +78,9 @@ export function* onLoginSuccess() {
       if (!user.nom) {
         yield put(push(`/users/${user.id}/profile?tab=profil`));
       }
-      yield put(push('/')); // /relais/${user.relaiId}/commandes
+      yield put(push("/")); // /relais/${user.relaiId}/commandes
     } else {
-      yield put(push('/choixrelais'));
+      yield put(push("/choixrelais"));
     }
   }
 }
@@ -92,15 +88,15 @@ export function* onLoginSuccess() {
 export function* onRegisterSuccess() {
   while (true) {
     // eslint-disable-line
-    yield take(findActionType('register', registerConst, 'SUCCESS'));
-    yield put(push('/choixrelais'));
+    yield take(findActionType("register", registerConst, "SUCCESS"));
+    yield put(push("/choixrelais"));
   }
 }
 
 export function* loadAccountOnWalletCreation() {
   while (true) {
     // eslint-disable-line
-    const action = yield take('WS/STELLAR_WALLET_UTILISATEUR');
+    const action = yield take("WS/STELLAR_WALLET_UTILISATEUR");
     yield put(storeStellarKeys(action.datas.stellarKeys));
     yield fork(loadAccountSaga, action.datas.stellarKeys.adresse);
   }
@@ -109,13 +105,13 @@ export function* loadAccountOnWalletCreation() {
 export function* onFirstLoginSaved() {
   while (true) {
     // eslint-disable-line
-    const action = yield take('WS/FIRST_PROFILE_SAVED');
+    const action = yield take("WS/FIRST_PROFILE_SAVED");
     yield put(push(`/accueil/${action.datas.relaiId}`));
   }
 }
 
 export function* listenStellarPaymentsOnLoginSuccess() {
-  const action = yield take(findActionType('login', loginConst, 'SUCCESS'));
+  const action = yield take(findActionType("login", loginConst, "SUCCESS"));
   const channel = effects(action.datas.user.stellarKeys.adresse);
   while (true) {
     // eslint-disable-line
@@ -123,7 +119,7 @@ export function* listenStellarPaymentsOnLoginSuccess() {
     yield put(addEffect(effect));
     const since = differenceInMinutes(new Date(), effect.trx.created_at);
     if (since < 2) {
-      yield put(addMessage({ type: 'success', text: 'nouveau paiement' }));
+      yield put(addMessage({ type: "success", text: "nouveau paiement" }));
     }
   }
 }
@@ -134,15 +130,8 @@ export function* listenDepotCb() {
     yield take(depotCbConst.ASYNC_DEPOT_CB_SUCCESS);
     yield call(delay, 5000);
     const state = yield select();
-    if (
-      state.compteUtilisateur &&
-      state.compteUtilisateur.auth &&
-      state.compteUtilisateur.auth.stellarKeys
-    ) {
-      yield fork(
-        loadAccountSaga,
-        state.compteUtilisateur.auth.stellarKeys.adresse
-      );
+    if (state.compteUtilisateur && state.compteUtilisateur.auth && state.compteUtilisateur.auth.stellarKeys) {
+      yield fork(loadAccountSaga, state.compteUtilisateur.auth.stellarKeys.adresse);
     }
   }
 }
@@ -160,7 +149,7 @@ export function* onLogout() {
   while (true) {
     // eslint-disable-line
     const action = yield take(LOGOUT);
-    yield put(push(action.redirectPathname || '/'));
+    yield put(push(action.redirectPathname || "/"));
   }
 }
 
@@ -172,5 +161,5 @@ export default [
   onRegisterSuccess,
   loadAccountOnWalletCreation,
   listenDepotCb,
-  listenStellarPaymentsOnLoginSuccess,
+  listenStellarPaymentsOnLoginSuccess
 ];

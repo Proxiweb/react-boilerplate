@@ -4,23 +4,20 @@
  * This will setup the i18n language files and locale data for your app.
  *
  */
-import { addLocaleData } from 'react-intl';
+import { addLocaleData } from "react-intl";
 
-import enLocaleData from 'react-intl/locale-data/en';
-import frLocaleData from 'react-intl/locale-data/fr';
+import enLocaleData from "react-intl/locale-data/en";
+import frLocaleData from "react-intl/locale-data/fr";
 
-export const appLocales = [
-  'en',
-  'fr',
-];
+export const appLocales = ["en", "fr"];
 
-import enTranslationMessages from './translations/en.json';
-import frTranslationMessages from './translations/fr.json';
+import enTranslationMessages from "./translations/en.json";
+import frTranslationMessages from "./translations/fr.json";
 
 addLocaleData(enLocaleData);
 addLocaleData(frLocaleData);
 
-const formatTranslationMessages = (messages) => {
+const formatTranslationMessages = messages => {
   const formattedMessages = {};
   for (const message of messages) {
     formattedMessages[message.id] = message.message || message.defaultMessage;
@@ -31,5 +28,5 @@ const formatTranslationMessages = (messages) => {
 
 export const translationMessages = {
   en: formatTranslationMessages(enTranslationMessages),
-  fr: formatTranslationMessages(frTranslationMessages),
+  fr: formatTranslationMessages(frTranslationMessages)
 };

@@ -1,6 +1,6 @@
-import 'whatwg-fetch';
-import checkStatus from './checkStatus';
-import parseJSON from './parse';
+import "whatwg-fetch";
+import checkStatus from "./checkStatus";
+import parseJSON from "./parse";
 
 /**
  * Requests a URL, returning a promise
@@ -14,6 +14,6 @@ export default function request(url, options) {
   return fetch(url, options)
     .then(checkStatus)
     .then(parseJSON)
-    .then((datas) => ({ datas }))
-    .catch((err) => ({ err }));
+    .then(datas => ({ datas }))
+    .catch(err => ({ err }));
 }

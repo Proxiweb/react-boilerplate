@@ -1,22 +1,20 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
-import { List, ListItem, makeSelectable } from 'material-ui/List';
-import Paper from 'material-ui/Paper';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import AddIcon from 'material-ui/svg-icons/content/add';
-import classnames from 'classnames';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { push } from "react-router-redux";
+import { createStructuredSelector } from "reselect";
+import { List, ListItem, makeSelectable } from "material-ui/List";
+import Paper from "material-ui/Paper";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import AddIcon from "material-ui/svg-icons/content/add";
+import classnames from "classnames";
 
-import { loadFournisseur } from 'containers/AdminFournisseur/actions';
-import {
-  selectFournisseurProduits,
-  selectFournisseur,
-} from 'containers/Commande/selectors';
-import { selectPending } from 'containers/App/selectors';
-import { loadTypesProduits } from 'containers/Commande/actions';
-import styles from './styles.css';
+import { loadFournisseur } from "containers/AdminFournisseur/actions";
+import { selectFournisseurProduits, selectFournisseur } from "containers/Commande/selectors";
+import { selectPending } from "containers/App/selectors";
+import { loadTypesProduits } from "containers/Commande/actions";
+import styles from "./styles.css";
 
 const SelectableList = makeSelectable(List);
 
@@ -29,7 +27,7 @@ class CatalogueFournisseur extends Component {
     fournisseur: PropTypes.object.isRequired,
     children: PropTypes.node,
     produits: PropTypes.array,
-    pending: PropTypes.bool.isRequired,
+    pending: PropTypes.bool.isRequired
   };
 
   componentDidMount() {
@@ -38,14 +36,10 @@ class CatalogueFournisseur extends Component {
   }
 
   handleChangeList = (event, produitId) =>
-    this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`,
-    );
+    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`);
 
   handleNewProduct = () =>
-    this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`,
-    );
+    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`);
 
   render() {
     const { produits, params, pending, fournisseur } = this.props;
@@ -53,9 +47,7 @@ class CatalogueFournisseur extends Component {
     return (
       <Paper>
         <div className="row">
-          <div
-            className={classnames('col-md-3', styles.panel, styles.listePdt)}
-          >
+          <div className={classnames("col-md-3", styles.panel, styles.listePdt)}>
             {
               <FloatingActionButton
                 mini="true"
@@ -75,22 +67,22 @@ class CatalogueFournisseur extends Component {
                 {produits
                   .slice()
                   .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
-                  .map((pdt, idx) => (
+                  .map((pdt, idx) =>
                     <ListItem
                       key={idx}
                       primaryText={pdt.nom.toUpperCase()}
                       value={pdt.id}
-                      style={{ color: pdt.enStock ? 'black' : 'gray' }}
+                      style={{ color: pdt.enStock ? "black" : "gray" }}
                     />
-                  ))}
+                  )}
               </SelectableList>}
           </div>
-          <div className={classnames('col-md-9', styles.panel)}>
+          <div className={classnames("col-md-9", styles.panel)}>
             {this.props.children &&
               React.cloneElement(this.props.children, {
                 produit: produits.find(pdt => pdt.id === params.produitId),
                 params,
-                fournisseur,
+                fournisseur
               })}
           </div>
         </div>
@@ -101,7 +93,7 @@ class CatalogueFournisseur extends Component {
 const mapStateToProps = createStructuredSelector({
   produits: selectFournisseurProduits(),
   fournisseur: selectFournisseur(),
-  pending: selectPending(),
+  pending: selectPending()
 });
 
 const mapDispatchToProps = dispatch =>
@@ -109,11 +101,9 @@ const mapDispatchToProps = dispatch =>
     {
       load: loadFournisseur,
       loadTypes: loadTypesProduits,
-      pushState: push,
+      pushState: push
     },
-    dispatch,
+    dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  CatalogueFournisseur,
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CatalogueFournisseur);

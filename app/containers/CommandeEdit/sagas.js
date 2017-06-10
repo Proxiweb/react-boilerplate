@@ -1,8 +1,8 @@
-import { put, select, take } from 'redux-saga/effects';
-import { takeLatest } from 'redux-saga';
-import c from './constants';
-import { selectCommandeEditDomain } from './selectors';
-import { sauvegarder } from './actions';
+import { put, select, take } from "redux-saga/effects";
+import { takeLatest } from "redux-saga";
+import c from "./constants";
+import { selectCommandeEditDomain } from "./selectors";
+import { sauvegarder } from "./actions";
 
 // Individual exports for testing
 export function* sauvegarderSaga() {
@@ -11,16 +11,18 @@ export function* sauvegarderSaga() {
 }
 
 export function* setDistibutionSaga() {
-  while(1) { // eslint-disable-line
+  while (1) {
+    // eslint-disable-line
     yield takeLatest(c.CHANGE_DISTRIBUTION, sauvegarderSaga);
   }
 }
 
 export function* redirectOnAnnuler() {
-  while(1) { // eslint-disable-line
+  while (1) {
+    // eslint-disable-line
     try {
       yield take(c.ASYNC_ANNULER_SUCCESS);
-      window.location = '/';
+      window.location = "/";
     } catch (e) {
       console.log(e);
     }
@@ -28,7 +30,4 @@ export function* redirectOnAnnuler() {
 }
 
 // All sagas to be loaded
-export default [
-  setDistibutionSaga,
-  redirectOnAnnuler,
-];
+export default [setDistibutionSaga, redirectOnAnnuler];

@@ -1,14 +1,15 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import IconButton from 'material-ui/IconButton';
-import AddIcon from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import IconButton from "material-ui/IconButton";
+import AddIcon from "material-ui/svg-icons/content/add";
+import FloatingActionButton from "material-ui/FloatingActionButton";
 
-import styles from './styles.css';
+import styles from "./styles.css";
 
 export default class OffresTopBar extends Component {
   // eslint-disable-line
   static propTypes = {
-    onNewOffer: PropTypes.func.isRequired,
+    onNewOffer: PropTypes.func.isRequired
   };
 
   render() {

@@ -1,5 +1,5 @@
-import generateConstants from 'utils/asyncSagaConstants';
+import generateConstants from "utils/asyncSagaConstants";
 
-const c = generateConstants('app/AdminUtilisateurs', 'load_utilisateurs');
+const c = generateConstants("app/AdminUtilisateurs", "load_utilisateurs");
 
 export default c;

@@ -1,15 +1,9 @@
-import { createSelector } from 'reselect';
+import { createSelector } from "reselect";
 
-const selectStellarDomain = () => (state) => state.stellar;
+const selectStellarDomain = () => state => state.stellar;
 
-export const selectEnv = () => createSelector(
-  selectStellarDomain(),
-  (state) => state.env
-);
+export const selectEnv = () => createSelector(selectStellarDomain(), state => state.env);
 
-export const selectContacts = () => createSelector(
-  selectStellarDomain(),
-  (state) => state.contacts
-);
+export const selectContacts = () => createSelector(selectStellarDomain(), state => state.contacts);
 
 export default selectStellarDomain;

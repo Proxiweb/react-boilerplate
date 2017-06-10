@@ -5,7 +5,4 @@ function* loadAdminDatas() {
   return;
 }
 
-
-export default [
-  loadAdminDatas,
-];
+export default [loadAdminDatas];

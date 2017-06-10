@@ -1,15 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import groupBy from 'lodash/groupBy';
-import DetailCommandeProduit from './DetailCommandeProduit';
-import includes from 'lodash/includes';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-} from 'material-ui/Table';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import groupBy from "lodash/groupBy";
+import DetailCommandeProduit from "./DetailCommandeProduit";
+import includes from "lodash/includes";
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from "material-ui/Table";
 
 // eslint-disable-next-line
 export default class DetailsCommande extends Component {
@@ -21,15 +15,15 @@ export default class DetailsCommande extends Component {
     commandeContenus: PropTypes.array.isRequired,
     produits: PropTypes.array.isRequired,
     selectable: PropTypes.bool.isRequired,
-    souligneQte: PropTypes.bool.isRequired,
+    souligneQte: PropTypes.bool.isRequired
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   };
 
   static defaultProps = {
-    selectable: false,
+    selectable: false
   };
 
   handleRowSelection = selectedRows => console.log(selectedRows); // eslint-disable-line
@@ -43,51 +37,47 @@ export default class DetailsCommande extends Component {
       commandeId,
       offres,
       roles,
-      souligneQte,
+      souligneQte
     } = this.props;
 
-    const grouped = groupBy(contenusFiltered, 'offreId');
+    const grouped = groupBy(contenusFiltered, "offreId");
     const contenusAgg = Object.keys(grouped).map(offreId =>
       grouped[offreId].reduce(
         (m, c) => ({
           offreId,
           quantite: m.quantite + c.quantite,
-          qteRegul: m.qteRegul + c.qteRegul,
+          qteRegul: m.qteRegul + c.qteRegul
         }),
         { offreId, quantite: 0, qteRegul: 0 }
       )
     );
 
     const { muiTheme } = this.context;
-    const isAdmin = includes(roles, 'RELAI_ADMIN') || includes(roles, 'ADMIN');
+    const isAdmin = includes(roles, "RELAI_ADMIN") || includes(roles, "ADMIN");
 
     return (
-      <Table
-        selectable={selectable}
-        multiSelectable={selectable}
-        onCellHover={this.handleRowSelection}
-      >
+      <Table selectable={selectable} multiSelectable={selectable} onCellHover={this.handleRowSelection}>
         <TableHeader
           displaySelectAll={selectable}
           style={{
-            backgroundColor: muiTheme.palette.tableHeaderBackgroundColor,
+            backgroundColor: muiTheme.palette.tableHeaderBackgroundColor
           }}
         >
           <TableRow>
-            <TableHeaderColumn style={{ color: 'black' }}>
+            <TableHeaderColumn style={{ color: "black" }}>
               Désignation
             </TableHeaderColumn>
-            <TableHeaderColumn style={{ color: 'black' }}>
+            <TableHeaderColumn style={{ color: "black" }}>
               Prix
             </TableHeaderColumn>
-            <TableHeaderColumn style={{ color: 'black' }}>
+            <TableHeaderColumn style={{ color: "black" }}>
               Quantité
             </TableHeaderColumn>
-            <TableHeaderColumn style={{ color: 'black' }}>
+            <TableHeaderColumn style={{ color: "black" }}>
               Total
             </TableHeaderColumn>
             {isAdmin &&
-              <TableHeaderColumn style={{ color: 'black' }}>
+              <TableHeaderColumn style={{ color: "black" }}>
                 Modif
               </TableHeaderColumn>}
           </TableRow>
@@ -97,35 +87,23 @@ export default class DetailsCommande extends Component {
             contenusAgg
               // .filter(pdt => contenusFiltered.find(c => c.offre.produitId === pdt.id))
               .map((contenu, key) => {
-                const contenuComplet = contenusFiltered.find(
-                  c => c.offreId === contenu.offreId
-                );
-                const produit = produits.find(
-                  pdt => pdt.id === offres[contenuComplet.offreId].produitId
-                );
+                const contenuComplet = contenusFiltered.find(c => c.offreId === contenu.offreId);
+                const produit = produits.find(pdt => pdt.id === offres[contenuComplet.offreId].produitId);
                 if (!produit) return null;
                 return (
                   <DetailCommandeProduit
                     idx={key}
                     produit={produit}
                     selectable={selectable}
-                    contenu={contenusFiltered
-                      .filter(c => c.offreId === contenu.offreId)
-                      .reduce(
-                        (m, c) => ({
-                          ...c,
-                          quantite: c.qteRegul + c.quantite + m.quantite,
-                        }),
-                      {
-                        quantite: 0,
-                      }
-                      )}
+                    contenu={contenusFiltered.filter(c => c.offreId === contenu.offreId).reduce((m, c) => ({
+                      ...c,
+                      quantite: c.qteRegul + c.quantite + m.quantite
+                    }), {
+                      quantite: 0
+                    })}
                     qteTotalOffre={commandeContenus
                       .filter(c => c.offreId === contenu.offreId)
-                      .reduce(
-                        (memo, item) => memo + item.quantite + item.qteRegul,
-                        0
-                      )}
+                      .reduce((memo, item) => memo + item.quantite + item.qteRegul, 0)}
                     offre={offres[contenuComplet.offreId]}
                     commandeId={commandeId}
                     readOnly={!isAdmin}

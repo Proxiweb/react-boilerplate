@@ -9,17 +9,18 @@
  * the linting exception.
  */
 
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { push } from 'react-router-redux';
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
-import { loadRelais } from 'containers/Commande/actions';
-import { selectRelais } from 'containers/Commande/selectors';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { push } from "react-router-redux";
+import { selectCompteUtilisateur } from "containers/CompteUtilisateur/selectors";
+import { loadRelais } from "containers/Commande/actions";
+import { selectRelais } from "containers/Commande/selectors";
 // import styles from './styles.css';
-import { createStructuredSelector } from 'reselect';
-import Commandes from 'containers/Commande';
-import HomePageAnon from './containers/HomePageAnon';
+import { createStructuredSelector } from "reselect";
+import Commandes from "containers/Commande";
+import HomePageAnon from "./containers/HomePageAnon";
 // import Cache from 'containers/Commande/containers/Cache';
 // eslint-disable-next-line react/prefer-stateless-function
 class HomePage extends Component {
@@ -33,7 +34,7 @@ class HomePage extends Component {
   render() {
     const { auth, relais } = this.props;
     if (auth && auth.relaiId) {
-      if (!auth.relaiId) this.props.push('/choixRelais');
+      if (!auth.relaiId) this.props.push("/choixRelais");
       if (!relais) this.props.loadRelais({ id: auth.relaiId });
       return <Commandes params={{ relaiId: auth.relaiId }} />;
     }

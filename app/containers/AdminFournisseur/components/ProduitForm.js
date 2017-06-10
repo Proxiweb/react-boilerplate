@@ -1,33 +1,34 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { reduxForm, Field } from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
-import CustomSelectField from 'components/CustomSelectField';
-import { TextField } from 'redux-form-material-ui';
-import { Editor } from 'react-draft-wysiwyg';
-import draftToHtml from 'draftjs-to-html';
-import { convertFromHTML, ContentState, convertToRaw } from 'draft-js';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { reduxForm, Field } from "redux-form";
+import MenuItem from "material-ui/MenuItem";
+import CustomSelectField from "components/CustomSelectField";
+import { TextField } from "redux-form-material-ui";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import { convertFromHTML, ContentState, convertToRaw } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-import styles from './styles.css';
-import RaisedButton from 'material-ui/RaisedButton';
+import styles from "./styles.css";
+import RaisedButton from "material-ui/RaisedButton";
 
 const options = {
-  options: ['inline', 'list', 'textAlign', 'link', 'remove', 'history'],
+  options: ["inline", "list", "textAlign", "link", "remove", "history"],
   inline: {
     inDropdown: false,
     className: undefined,
-    options: ['bold', 'italic', 'underline', 'strikethrough'],
+    options: ["bold", "italic", "underline", "strikethrough"]
   },
   list: {
     inDropdown: false,
     className: undefined,
-    options: ['unordered', 'ordered'],
-  },
+    options: ["unordered", "ordered"]
+  }
 };
 
 const renderSelectField = datas => (
-  { input, label, meta: { touched, error }, ...custom }, // eslint-disable-line
-) => (
+  { input, label, meta: { touched, error }, ...custom } // eslint-disable-line
+) =>
   <CustomSelectField
     floatingLabelText={label}
     errorText={touched && error}
@@ -35,56 +36,53 @@ const renderSelectField = datas => (
     onChange={(event, index, value) => input.onChange(value)}
     {...custom}
   >
-    {datas.map(data => (
-      <MenuItem key={data.value} value={data.value} primaryText={data.label} />
-    ))}
-  </CustomSelectField>
-);
+    {datas.map(data => <MenuItem key={data.value} value={data.value} primaryText={data.label} />)}
+  </CustomSelectField>;
 
 const renderUnitesConservation = renderSelectField([
   {
-    value: 'jours',
-    label: 'jours',
+    value: "jours",
+    label: "jours"
   },
   {
-    value: 'semaines',
-    label: 'semaines',
+    value: "semaines",
+    label: "semaines"
   },
   {
-    value: 'mois',
-    label: 'mois',
-  },
+    value: "mois",
+    label: "mois"
+  }
 ]);
 
 const renderTva = renderSelectField([
   {
     value: 5.5,
-    label: '5.5',
+    label: "5.5"
   },
   {
     value: 10,
-    label: '10',
+    label: "10"
   },
   {
     value: 20,
-    label: '20',
-  },
+    label: "20"
+  }
 ]);
 
 const renderTypesProduits = typesProduits =>
   renderSelectField(
     Object.keys(typesProduits).map(value => ({
       value: typesProduits[value].id,
-      label: typesProduits[value].nom,
-    })),
+      label: typesProduits[value].nom
+    }))
   );
 
 const renderClassementComplementaire = categoriesSecondaires =>
   renderSelectField(
     categoriesSecondaires.map(value => ({
       value,
-      label: value,
-    })),
+      label: value
+    }))
   );
 
 class ProduitForm extends Component {
@@ -95,7 +93,7 @@ class ProduitForm extends Component {
     typesProduits: PropTypes.object.isRequired,
     valeurs: PropTypes.object.isRequired,
     pending: PropTypes.bool.isRequired,
-    pristine: PropTypes.bool.isRequired,
+    pristine: PropTypes.bool.isRequired
   };
 
   constructor(props) {
@@ -103,12 +101,12 @@ class ProduitForm extends Component {
     const { description } = this.props.initialValues; // eslint-disable-line
 
     this.state = {
-      rawHtml: this.getInitialHTML(description),
+      rawHtml: this.getInitialHTML(description)
     };
   }
 
   state = {
-    rawHtml: null,
+    rawHtml: null
   };
 
   onEditorChange = editorContent => {
@@ -128,34 +126,21 @@ class ProduitForm extends Component {
   // }
 
   render() {
-    const {
-      handleSubmit,
-      pending,
-      pristine,
-      typesProduits,
-      valeurs,
-    } = this.props;
+    const { handleSubmit, pending, pristine, typesProduits, valeurs } = this.props;
 
-    const categoriesSecondaires = valeurs.produit &&
-      valeurs.produit.values.typeProduitId
-      ? typesProduits[valeurs.produit.values.typeProduitId]
-          .categoriesSecondaires
+    const categoriesSecondaires = valeurs.produit && valeurs.produit.values.typeProduitId
+      ? typesProduits[valeurs.produit.values.typeProduitId].categoriesSecondaires
       : [];
 
     return (
       <form onSubmit={handleSubmit}>
-        <div className="row" style={{ minHeight: '400px' }}>
+        <div className="row" style={{ minHeight: "400px" }}>
           <div className="col-md-12">
-            <Field
-              floatingLabelText="Nom"
-              name="nom"
-              component={TextField}
-              fullWidth
-            />
+            <Field floatingLabelText="Nom" name="nom" component={TextField} fullWidth />
           </div>
           <div className="col-md-12">
             <Field
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               floatingLabelText="Description"
               name="description"
               component={TextField}
@@ -170,20 +155,10 @@ class ProduitForm extends Component {
             />
           </div>
           <div className="col-md-3">
-            <Field
-              floatingLabelText="Tva"
-              name="tva"
-              component={renderTva}
-              fullWidth
-            />
+            <Field floatingLabelText="Tva" name="tva" component={renderTva} fullWidth />
           </div>
           <div className="col-md-3">
-            <Field
-              floatingLabelText="Stock"
-              name="stock"
-              component={TextField}
-              fullWidth
-            />
+            <Field floatingLabelText="Stock" name="stock" component={TextField} fullWidth />
           </div>
           <div className="col-md-3">
             <Field
@@ -214,9 +189,7 @@ class ProduitForm extends Component {
               <Field
                 floatingLabelText="Classement complémentaire"
                 name="typeProduitSecondaire"
-                component={renderClassementComplementaire(
-                  categoriesSecondaires,
-                )}
+                component={renderClassementComplementaire(categoriesSecondaires)}
                 fullWidth
               />
             </div>}
@@ -230,27 +203,13 @@ class ProduitForm extends Component {
               />
             </div>}
           <div className="col-md-6">
-            <Field
-              floatingLabelText="Référence"
-              name="ref"
-              component={TextField}
-              fullWidth
-            />
+            <Field floatingLabelText="Référence" name="ref" component={TextField} fullWidth />
           </div>
         </div>
         {!pristine &&
           <div className="row center-md">
-            <div
-              className={`col-md-8 ${styles.formFooter}`}
-              style={{ minHeight: 52 }}
-            >
-              <RaisedButton
-                type="submit"
-                label="Valider"
-                primary
-                fullWidth
-                disabled={pending}
-              />
+            <div className={`col-md-8 ${styles.formFooter}`} style={{ minHeight: 52 }}>
+              <RaisedButton type="submit" label="Valider" primary fullWidth disabled={pending} />
             </div>
           </div>}
       </form>
@@ -259,7 +218,7 @@ class ProduitForm extends Component {
 }
 
 const produitForm = reduxForm({
-  form: 'produit',
+  form: "produit"
 })(ProduitForm);
 
 export default produitForm;

@@ -1,4 +1,3 @@
-
 const commandeVide = {
   dateCommande: null,
   montantMinRelai: null,
@@ -6,12 +5,12 @@ const commandeVide = {
   note: null,
   illustration: null,
   publiee: null,
-  diffusee: null,
+  diffusee: null
 };
 
 export const nouvelleCommandeReducer = (state = commandeVide, action) => {
   switch (action.type) {
-    case 'TEST':
+    case "TEST":
       return state;
     default:
       return state;

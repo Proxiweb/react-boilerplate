@@ -1,40 +1,39 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import { createStructuredSelector } from 'reselect';
-import round from 'lodash/round';
-import { Card, CardActions, CardHeader } from 'material-ui/Card';
-import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
-import RaisedButton from 'material-ui/RaisedButton';
-import LinearProgress from 'material-ui/LinearProgress';
-import { green500, cyan500 } from 'material-ui/styles/colors';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router";
+import { createStructuredSelector } from "reselect";
+import round from "lodash/round";
+import { Card, CardActions, CardHeader } from "material-ui/Card";
+import ShoppingCartIcon from "material-ui/svg-icons/action/shopping-cart";
+import RaisedButton from "material-ui/RaisedButton";
+import LinearProgress from "material-ui/LinearProgress";
+import { green500, cyan500 } from "material-ui/styles/colors";
 
-import { calculeTotauxCommande } from 'containers/Commande/utils';
-import Panel from 'components/Panel';
+import { calculeTotauxCommande } from "containers/Commande/utils";
+import Panel from "components/Panel";
 
 import {
   selectCommandeContenus,
-  selectOffres, // selectCommandesUtilisateur,
-} from 'containers/Commande/selectors';
+  selectOffres // selectCommandesUtilisateur,
+} from "containers/Commande/selectors";
 
-import CommandePanel from 'containers/Commande/components/CommandePanel';
-import styles from './styles.css';
+import CommandePanel from "containers/Commande/components/CommandePanel";
+import styles from "./styles.css";
 
-const Offre = (
-  {
-    imageSrc,
-    nom,
-    tarif,
-    prct,
-    commandeId,
-    pushState,
-    relaiId,
-    utilisateurId,
-    buttonClicked,
-    commandeUtilisateurExiste,
-    withLink,
-  }
-) => (
+const Offre = ({
+  imageSrc,
+  nom,
+  tarif,
+  prct,
+  commandeId,
+  pushState,
+  relaiId,
+  utilisateurId,
+  buttonClicked,
+  commandeUtilisateurExiste,
+  withLink
+}) =>
   <Card style={{ marginBottom: 20 }}>
     <CardHeader
       title={
@@ -53,12 +52,12 @@ const Offre = (
           mode="determinate"
           value={prct}
           color={prct < 100 ? cyan500 : green500}
-          style={{ height: 6, backgroundColor: '#EDE7E7' }}
+          style={{ height: 6, backgroundColor: "#EDE7E7" }}
         />
       </div>}
     <CardActions expandable>
       <RaisedButton
-        label={commandeUtilisateurExiste(commandeId) ? 'Modifier ma commande' : 'Commander'}
+        label={commandeUtilisateurExiste(commandeId) ? "Modifier ma commande" : "Commander"}
         icon={<ShoppingCartIcon />}
         fullWidth
         primary
@@ -68,8 +67,7 @@ const Offre = (
         }}
       />
     </CardActions>
-  </Card>
-);
+  </Card>;
 
 Offre.propTypes = {
   imageSrc: PropTypes.string,
@@ -82,7 +80,7 @@ Offre.propTypes = {
   pushState: PropTypes.func.isRequired,
   withLink: PropTypes.bool.isRequired,
   buttonClicked: PropTypes.func.isRequired,
-  commandeUtilisateurExiste: PropTypes.func.isRequired,
+  commandeUtilisateurExiste: PropTypes.func.isRequired
 };
 
 class CommandesLongTerme extends Component {
@@ -98,7 +96,7 @@ class CommandesLongTerme extends Component {
     getCommandeInfos: PropTypes.func.isRequired,
     buttonClicked: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    withLink: PropTypes.bool.isRequired,
+    withLink: PropTypes.bool.isRequired
   };
 
   getInfos = commandeId => {
@@ -111,7 +109,7 @@ class CommandesLongTerme extends Component {
       return {
         prct,
         infoTarif: `${nbreAcheteurs} acheteurs sur ${qteMin}`,
-        typesProduits: getCommandeInfos(commandeId),
+        typesProduits: getCommandeInfos(commandeId)
       };
     }
 
@@ -136,7 +134,7 @@ class CommandesLongTerme extends Component {
       prct,
       infoTarif: `${prix} € sur ${montantMin} €`,
       prix,
-      typesProduits: getCommandeInfos(commandeId),
+      typesProduits: getCommandeInfos(commandeId)
     };
   };
 
@@ -149,7 +147,7 @@ class CommandesLongTerme extends Component {
       pending,
       relaiId,
       utilisateurId,
-      withLink,
+      withLink
     } = this.props;
     return (
       <div>
@@ -160,9 +158,9 @@ class CommandesLongTerme extends Component {
           if (commandes[id].dateCommande) {
             return (
               <CommandePanel
-                nom={infos ? infos.typesProduits.join(', ') : null}
+                nom={infos ? infos.typesProduits.join(", ") : null}
                 dateCommande={commandes[id].dateCommande}
-                label={commandeUtilisateurExiste(id) ? 'Modifier ma commande' : 'Commander'}
+                label={commandeUtilisateurExiste(id) ? "Modifier ma commande" : "Commander"}
                 prct={100}
                 fav={false}
                 key={idx}
@@ -178,7 +176,7 @@ class CommandesLongTerme extends Component {
           return (
             <Offre
               key={idx}
-              nom={infos.typesProduits.join(',')}
+              nom={infos.typesProduits.join(",")}
               commandeId={id}
               tarif={infos.infoTarif}
               prct={infos.prct}
@@ -199,7 +197,7 @@ class CommandesLongTerme extends Component {
 
 const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeContenus(),
-  offres: selectOffres(),
+  offres: selectOffres()
   // commandeUtilisateurs: selectCommandesUtilisateurs(),
 });
 

@@ -1,27 +1,28 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { push } from 'react-router-redux';
-import { format } from 'utils/dates';
-import { createStructuredSelector } from 'reselect';
-import { List, ListItem, makeSelectable } from 'material-ui/List';
-import RaisedButton from 'material-ui/RaisedButton';
-import compareDesc from 'date-fns/compare_desc';
-import classnames from 'classnames';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { push } from "react-router-redux";
+import { format } from "utils/dates";
+import { createStructuredSelector } from "reselect";
+import { List, ListItem, makeSelectable } from "material-ui/List";
+import RaisedButton from "material-ui/RaisedButton";
+import compareDesc from "date-fns/compare_desc";
+import classnames from "classnames";
 
-import { loadFournisseur } from 'containers/AdminFournisseur/actions';
+import { loadFournisseur } from "containers/AdminFournisseur/actions";
 
-import { loadCommandes } from 'containers/Commande/actions';
+import { loadCommandes } from "containers/Commande/actions";
 import {
   selectCommandeCommandeUtilisateurs,
   selectCommandeCommandeContenus,
   selectCommandeContenus,
-  selectFournisseurCommandes,
-} from 'containers/Commande/selectors';
+  selectFournisseurCommandes
+} from "containers/Commande/selectors";
 
-import { selectLocationState, selectPending } from 'containers/App/selectors';
+import { selectLocationState, selectPending } from "containers/App/selectors";
 
-import styles from './styles.css';
+import styles from "./styles.css";
 
 const SelectableList = makeSelectable(List);
 
@@ -37,7 +38,7 @@ class CommandesFournisseur extends Component {
     commandes: PropTypes.array,
     commandeUtilisateurs: PropTypes.array,
     commandeContenus: PropTypes.array,
-    contenus: PropTypes.object,
+    contenus: PropTypes.object
   };
 
   componentDidMount() {
@@ -56,9 +57,7 @@ class CommandesFournisseur extends Component {
   };
 
   handleChangeList = (event, value) => {
-    this.props.pushState(
-      `/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`
-    );
+    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`);
   };
 
   render() {
@@ -69,7 +68,7 @@ class CommandesFournisseur extends Component {
       contenus,
       locationState,
       commandeContenus,
-      pending,
+      pending
     } = this.props;
 
     if (!commandes) return null;
@@ -78,24 +77,18 @@ class CommandesFournisseur extends Component {
     return (
       <div className="row">
         {!print &&
-          <div className={classnames('col-md-3', styles.panel)}>
+          <div className={classnames("col-md-3", styles.panel)}>
             <SelectableList value={commandeId} onChange={this.handleChangeList}>
               {commandes
                 .slice()
                 .filter(cde => cde.dateCommande)
                 .sort((a, b) => compareDesc(a.dateCommande, b.dateCommande))
-                .map((cde, idx) => (
-                  <ListItem
-                    key={idx}
-                    primaryText={format(cde.dateCommande, 'DD MM')}
-                    value={cde.id}
-                  />
-                ))}
+                .map((cde, idx) =>
+                  <ListItem key={idx} primaryText={format(cde.dateCommande, "DD MM")} value={cde.id} />
+                )}
             </SelectableList>
           </div>}
-        <div
-          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
-        >
+        <div className={classnames(print ? "col-md-12" : "col-md-9", styles.panel)}>
           {!print &&
             commandeId &&
             <div className="row around-md">
@@ -107,7 +100,7 @@ class CommandesFournisseur extends Component {
                   onClick={() =>
                     window.open(
                       `/fournisseurs/${fournisseurId}/commandes/${commandeId}?print=true`,
-                      '_blank'
+                      "_blank"
                     )}
                 />
               </div>
@@ -117,10 +110,7 @@ class CommandesFournisseur extends Component {
                   fullWidth
                   label="Facture"
                   onClick={() =>
-                    window.open(
-                      `/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`,
-                      '_blank'
-                    )}
+                    window.open(`/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`, "_blank")}
                 />
               </div>
             </div>}
@@ -134,7 +124,7 @@ class CommandesFournisseur extends Component {
               params: this.props.params,
               commandeUtilisateurs,
               contenus,
-              commandeContenus,
+              commandeContenus
             })}
         </div>
       </div>
@@ -147,7 +137,7 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeCommandeContenus(),
   contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  locationState: selectLocationState(),
+  locationState: selectLocationState()
 });
 
 const mapDispatchToProps = dispatch =>
@@ -155,11 +145,9 @@ const mapDispatchToProps = dispatch =>
     {
       load: loadFournisseur,
       loadCde: loadCommandes,
-      pushState: push,
+      pushState: push
     },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  CommandesFournisseur
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CommandesFournisseur);

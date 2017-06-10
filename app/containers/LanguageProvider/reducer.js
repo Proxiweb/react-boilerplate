@@ -4,12 +4,10 @@
  *
  */
 
-import {
-  CHANGE_LOCALE,
-} from './constants';
+import { CHANGE_LOCALE } from "./constants";
 
 const initialState = {
-  locale: 'en',
+  locale: "en"
 };
 
 function languageProviderReducer(state = initialState, action) {

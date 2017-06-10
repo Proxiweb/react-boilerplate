@@ -8,65 +8,63 @@
  *
  */
 
-import { findActionType } from 'utils/asyncSagaConstants';
+import { findActionType } from "utils/asyncSagaConstants";
 
 import {
- ADD_MESSAGE,
- REMOVE_MESSAGE,
- GLOBAL_PENDING_START,
- GLOBAL_PENDING_STOP,
- SELECTIONNER_RELAIS,
- SET_STELLAR_KEYS,
- messagesConst as c,
- messageSaveConst as cS,
-} from './constants';
+  ADD_MESSAGE,
+  REMOVE_MESSAGE,
+  GLOBAL_PENDING_START,
+  GLOBAL_PENDING_STOP,
+  SELECTIONNER_RELAIS,
+  SET_STELLAR_KEYS,
+  messagesConst as c,
+  messageSaveConst as cS
+} from "./constants";
 
 export function addMessage(message) {
   return {
     type: ADD_MESSAGE,
-    payload: { message },
+    payload: { message }
   };
 }
 
 export function removeMessage(id) {
   return {
     type: REMOVE_MESSAGE,
-    payload: { id },
+    payload: { id }
   };
 }
 
-
-export const loadMessages = (query) => ({
-  type: findActionType('load_messages', c, 'START'),
-  url: 'utilisateur_messages',
-  query,
+export const loadMessages = query => ({
+  type: findActionType("load_messages", c, "START"),
+  url: "utilisateur_messages",
+  query
 });
 
-export const marquerCommeLu = (id) => ({
-  type: findActionType('save_message', cS, 'START'),
+export const marquerCommeLu = id => ({
+  type: findActionType("save_message", cS, "START"),
   url: `utilisateur_messages/${id}/lu`,
-  method: 'put',
+  method: "put"
 });
 
 export const saveMessage = (message, redirectSuccess) => ({
-  type: findActionType('save_message', cS, 'START'),
-  url: 'utilisateur_messages',
+  type: findActionType("save_message", cS, "START"),
+  url: "utilisateur_messages",
   datas: { ...message },
-  method: 'post',
-  msgSuccess: 'Message envoyé !',
-  redirectSuccess,
+  method: "post",
+  msgSuccess: "Message envoyé !",
+  redirectSuccess
 });
 
-export const selectionneRelais = (relaiId) => ({
+export const selectionneRelais = relaiId => ({
   type: SELECTIONNER_RELAIS,
-  payload: { relaiId },
+  payload: { relaiId }
 });
 
-export const setStellarKeys = (stellarKeys) => ({
+export const setStellarKeys = stellarKeys => ({
   type: SET_STELLAR_KEYS,
-  payload: { stellarKeys },
+  payload: { stellarKeys }
 });
-
 
 export const startGlobalPending = () => ({ type: GLOBAL_PENDING_START });
 export const stopGlobalPending = () => ({ type: GLOBAL_PENDING_STOP });

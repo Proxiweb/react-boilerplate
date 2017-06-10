@@ -1,24 +1,22 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { List, ListItem, makeSelectable } from 'material-ui/List';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { List, ListItem, makeSelectable } from "material-ui/List";
 const SelectableList = makeSelectable(List);
-import { bindActionCreators } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import capitalize from 'lodash/capitalize';
-import { format } from 'utils/dates';
-import Panel from './Panel';
+import { bindActionCreators } from "redux";
+import { createStructuredSelector } from "reselect";
+import capitalize from "lodash/capitalize";
+import { format } from "utils/dates";
+import Panel from "./Panel";
 
-import {
-  loadCommandeUtilisateurs,
-  loadFournisseurs,
-} from 'containers/Commande/actions';
+import { loadCommandeUtilisateurs, loadFournisseurs } from "containers/Commande/actions";
 
 import {
   selectCommandesUtilisateurs,
   selectCommandeContenus,
   selectOffres,
-  selectProduits,
-} from 'containers/Commande/selectors';
+  selectProduits
+} from "containers/Commande/selectors";
 
 class Utilisateur extends Component {
   static propTypes = {
@@ -28,12 +26,12 @@ class Utilisateur extends Component {
     commandeUtilisateurId: PropTypes.string,
     loadCommandeUtilisateurs: PropTypes.func.isRequired,
     loadFournisseurs: PropTypes.func.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired
   };
 
   state = {
     fournisseursLoaded: {},
-    utilisateursCommandesLoaded: {},
+    utilisateursCommandesLoaded: {}
   };
 
   componentWillReceiveProps(nextProps) {
@@ -42,7 +40,7 @@ class Utilisateur extends Component {
       const cLoaded = {};
       if (!this.state.utilisateursCommandesLoaded[nextProps.utilisateur.id]) {
         this.props.loadCommandeUtilisateurs({
-          utilisateurId: nextProps.utilisateur.id,
+          utilisateurId: nextProps.utilisateur.id
         });
         cLoaded[nextProps.utilisateur.id] = true;
       }
@@ -50,7 +48,7 @@ class Utilisateur extends Component {
       if (!this.state.fournisseursLoaded[nextProps.utilisateur.relaiId]) {
         this.props.loadFournisseurs({
           relaiId: nextProps.utilisateur.relaiId,
-          jointures: true,
+          jointures: true
         });
         fLoaded[nextProps.utilisateur.relaiId] = true;
       }
@@ -58,31 +56,25 @@ class Utilisateur extends Component {
       this.setState({
         fournisseursLoaded: {
           ...this.state.fournisseursLoaded,
-          ...fLoaded,
+          ...fLoaded
         },
         utilisateursCommandesLoaded: {
           ...this.state.utilisateursCommandesLoaded,
-          ...cLoaded,
-        },
+          ...cLoaded
+        }
       });
     }
   }
 
   render() {
-    const {
-      commandeUtilisateurs,
-      commandeUtilisateurId,
-      utilisateur,
-      pending,
-      onClick,
-    } = this.props;
+    const { commandeUtilisateurs, commandeUtilisateurId, utilisateur, pending, onClick } = this.props;
 
     return (
       <Panel
         title={
           utilisateur
             ? `${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}`
-            : 'Sélectionnez un utilisateur'
+            : "Sélectionnez un utilisateur"
         }
       >
         {pending && <p>Chargement...</p>}
@@ -91,18 +83,16 @@ class Utilisateur extends Component {
           <SelectableList value={commandeUtilisateurId} onChange={onClick}>
 
             {Object.keys(commandeUtilisateurs)
-              .filter(
-                id => commandeUtilisateurs[id].utilisateurId === utilisateur.id
-              )
-              .map(id => (
+              .filter(id => commandeUtilisateurs[id].utilisateurId === utilisateur.id)
+              .map(id =>
                 <ListItem
                   value={id}
-                  innerDivStyle={{ padding: '4px 0' }}
-                  nestedListStyle={{ padding: '5px' }}
+                  innerDivStyle={{ padding: "4px 0" }}
+                  nestedListStyle={{ padding: "5px" }}
                 >
-                  {format(commandeUtilisateurs[id].createdAt, 'MMMM D YYYY')}
+                  {format(commandeUtilisateurs[id].createdAt, "MMMM D YYYY")}
                 </ListItem>
-              ))}
+              )}
           </SelectableList>}
       </Panel>
     );
@@ -113,14 +103,14 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeContenus(),
   offres: selectOffres(),
   produits: selectProduits(),
-  commandeUtilisateurs: selectCommandesUtilisateurs(),
+  commandeUtilisateurs: selectCommandesUtilisateurs()
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadCommandeUtilisateurs,
-      loadFournisseurs,
+      loadFournisseurs
     },
     dispatch
   );

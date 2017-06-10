@@ -1,9 +1,10 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { createStructuredSelector } from 'reselect';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { createStructuredSelector } from "reselect";
 
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from "material-ui/RaisedButton";
 import {
   Table,
   TableHeader,
@@ -11,28 +12,28 @@ import {
   TableRow,
   TableRowColumn,
   TableHeaderColumn,
-  TableFooter,
-} from 'material-ui/Table';
+  TableFooter
+} from "material-ui/Table";
 
-import { createCommande } from 'containers/Commande/actions';
-import { selectCommande } from 'containers/Commande/selectors';
+import { createCommande } from "containers/Commande/actions";
+import { selectCommande } from "containers/Commande/selectors";
 
 class FinalisationDetails extends Component {
   static propTypes = {
     commande: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     destinataires: PropTypes.array.isRequired,
-    createCommande: PropTypes.func.isRequired,
+    createCommande: PropTypes.func.isRequired
   };
 
   state = {
-    selectedIdx: null,
+    selectedIdx: null
   };
 
   handleSelection = ([selectedIdx]) => {
     const { destinataires } = this.props;
     this.setState({
-      selectedIdx: typeof selectedIdx !== 'undefined' ? selectedIdx : null,
+      selectedIdx: typeof selectedIdx !== "undefined" ? selectedIdx : null
     });
   };
 
@@ -40,15 +41,14 @@ class FinalisationDetails extends Component {
     const { destinataires, commande } = this.props;
     const { selectedIdx } = this.state;
     const newDest = destinataires.map(
-      (d, idx) =>
-        idx === selectedIdx ? { ...d, paiementOk: !d.paiementOk } : { ...d }
+      (d, idx) => (idx === selectedIdx ? { ...d, paiementOk: !d.paiementOk } : { ...d })
     );
     this.props.createCommande(
       {
         ...commande,
-        finalisation: { ...commande.finalisation, destinataires: newDest },
+        finalisation: { ...commande.finalisation, destinataires: newDest }
       },
-      'Paiement commande sauvegardé'
+      "Paiement commande sauvegardé"
     );
   };
 
@@ -72,7 +72,7 @@ class FinalisationDetails extends Component {
                   <TableRowColumn>{dest.nom}</TableRowColumn>
                   <TableRowColumn>{dest.montant} €</TableRowColumn>
                   <TableRowColumn>
-                    {dest.paiementOk ? 'oui' : 'non'}
+                    {dest.paiementOk ? "oui" : "non"}
                   </TableRowColumn>
                 </TableRow>
               );
@@ -80,13 +80,9 @@ class FinalisationDetails extends Component {
           </TableBody>
         </Table>
         {selectedIdx !== null &&
-          <div style={{ marginTop: '1em' }}>
+          <div style={{ marginTop: "1em" }}>
             <RaisedButton
-              label={
-                destinataires[selectedIdx].paiementOk
-                  ? 'Annuler le paiement'
-                  : 'Valider le paiement'
-              }
+              label={destinataires[selectedIdx].paiementOk ? "Annuler le paiement" : "Valider le paiement"}
               primary
               fullWidth
               onClick={this.handleClick}
@@ -98,17 +94,15 @@ class FinalisationDetails extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commande: selectCommande(),
+  commande: selectCommande()
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      createCommande,
+      createCommande
     },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  FinalisationDetails
-);
+export default connect(mapStateToProps, mapDispatchToProps)(FinalisationDetails);

@@ -1,26 +1,28 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom'; // eslint-disable-line
-import { connect } from 'react-redux';
-import { removeMessage } from 'containers/App/actions';
-import Snackbar from 'material-ui/Snackbar';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import ReactDOM from "react-dom"; // eslint-disable-line
+import { connect } from "react-redux";
+import { removeMessage } from "containers/App/actions";
+import Snackbar from "material-ui/Snackbar";
 
-class Notifications extends Component { // eslint-disable-line
+class Notifications extends Component {
+  // eslint-disable-line
   static propTypes = {
     messages: PropTypes.array.isRequired,
-    removeMsg: PropTypes.func.isRequired,
-  }
+    removeMsg: PropTypes.func.isRequired
+  };
 
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
+      open: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.messages.length > this.props.messages.length) {
       this.setState({
-        open: true,
+        open: true
       });
     }
   }
@@ -29,7 +31,7 @@ class Notifications extends Component { // eslint-disable-line
     const { messages, removeMsg } = this.props;
     removeMsg(messages[0].id);
     this.setState({
-      open: false,
+      open: false
     });
   };
 
@@ -38,16 +40,16 @@ class Notifications extends Component { // eslint-disable-line
     if (messages.length < 1) return null;
     const message = messages[0];
     const colors = {
-      error: { backgroundColor: '#B43133', color: 'white' },
-      success: { backgroundColor: '#7DB646', color: 'black' },
-      info: { backgroundColor: '#000', color: 'white' },
+      error: { backgroundColor: "#B43133", color: "white" },
+      success: { backgroundColor: "#7DB646", color: "black" },
+      info: { backgroundColor: "#000", color: "white" }
     };
     return (
       <Snackbar
         open={this.state.open}
         message={message.text}
         autoHideDuration={message.duration || 5000}
-        bodyStyle={{ backgroundColor: colors[message.type].backgroundColor, textAlign: 'center' }}
+        bodyStyle={{ backgroundColor: colors[message.type].backgroundColor, textAlign: "center" }}
         contentStyle={{ color: colors[message.type].color }}
         onRequestClose={this.handleRequestClose}
       />
@@ -56,6 +58,6 @@ class Notifications extends Component { // eslint-disable-line
 }
 
 export default connect(
-  (state) => ({ messages: state.global.messages }),
-  (dispatch) => ({ removeMsg: (id) => dispatch(removeMessage(id)) })
+  state => ({ messages: state.global.messages }),
+  dispatch => ({ removeMsg: id => dispatch(removeMessage(id)) })
 )(Notifications);

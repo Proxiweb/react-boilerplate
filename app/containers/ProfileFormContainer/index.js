@@ -1,18 +1,17 @@
-import React from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import capitalize from 'lodash/capitalize';
-import {
-  isPristine,
-} from 'redux-form';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { createStructuredSelector } from "reselect";
+import capitalize from "lodash/capitalize";
+import { isPristine } from "redux-form";
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
-import { saveAccount } from 'containers/CompteUtilisateur/actions';
-import { selectPending } from 'containers/App/selectors';
-import ProfileForm from './components/ProfileForm';
+import { selectCompteUtilisateur } from "containers/CompteUtilisateur/selectors";
+import { saveAccount } from "containers/CompteUtilisateur/actions";
+import { selectPending } from "containers/App/selectors";
+import ProfileForm from "./components/ProfileForm";
 
-const isProfilePristine = () => (state) => isPristine('profile')(state);
+const isProfilePristine = () => state => isPristine("profile")(state);
 
 // import submit from './submit';
 
@@ -22,24 +21,23 @@ class ProfileFormContainer extends React.Component {
     relaiId: PropTypes.string.isRequired,
     pristine: PropTypes.bool.isRequired,
     pending: PropTypes.bool.isRequired,
-    saveAccount: PropTypes.func.isRequired,
-  }
+    saveAccount: PropTypes.func.isRequired
+  };
 
-  handleSubmit = (values) => {
+  handleSubmit = values => {
     const sauvegardeInitiale = this.props.profile.nom !== values.nom;
 
     this.props.saveAccount(
       this.props.profile.id,
-      { ...values,
+      {
+        ...values,
         nom: values.nom.toUpperCase(),
-        prenom: capitalize(values.prenom),
+        prenom: capitalize(values.prenom)
       },
       null,
-      sauvegardeInitiale
-        ? `/relais/${this.props.relaiId}/commandes`
-        : null,
+      sauvegardeInitiale ? `/relais/${this.props.relaiId}/commandes` : null
     );
-  }
+  };
 
   render() {
     const { pending, profile, pristine } = this.props;
@@ -57,11 +55,15 @@ class ProfileFormContainer extends React.Component {
 const mapStateToProps = createStructuredSelector({
   profile: selectCompteUtilisateur(),
   pending: selectPending(),
-  pristine: isProfilePristine(),
+  pristine: isProfilePristine()
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  saveAccount,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      saveAccount
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileFormContainer);

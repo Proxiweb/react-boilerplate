@@ -1,11 +1,11 @@
 // import { selectCommandeDomain } from '../selectors';
 // import { fromJS } from 'immutable';
-import expect from 'expect';
+import expect from "expect";
 
 // const selector = selectCommandeDomain();
 
-describe('selectCommandeDomain', () => {
-  it('Expect to have unit tests specified', () => {
-    expect('Test case').toEqual(false);
+describe("selectCommandeDomain", () => {
+  it("Expect to have unit tests specified", () => {
+    expect("Test case").toEqual(false);
   });
 });

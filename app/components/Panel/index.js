@@ -1,21 +1,20 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-class Panel extends Component { // eslint-disable-line
+class Panel extends Component {
+  // eslint-disable-line
   static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.string,
-    ]),
-    padding: PropTypes.number.isRequired,
-  }
+    children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    padding: PropTypes.number.isRequired
+  };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   };
 
   static defaultProps = {
-    padding: 10,
-  }
+    padding: 10
+  };
 
   render() {
     const palette = this.context.muiTheme.palette;
@@ -23,9 +22,9 @@ class Panel extends Component { // eslint-disable-line
       backgroundColor: palette.groupColor,
       border: `solid 1px ${palette.groupColorBorder}`,
       padding: this.props.padding,
-      textAlign: 'center',
-      marginBottom: '1rem',
-      fontSize: '1.2em',
+      textAlign: "center",
+      marginBottom: "1rem",
+      fontSize: "1.2em"
     };
     return <div style={style}>{this.props.children}</div>; // {...this.props}
   }

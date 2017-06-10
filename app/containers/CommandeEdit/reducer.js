@@ -3,11 +3,11 @@
  * CommandeEdit reducer
  *
  */
-import update from 'immutability-helper';
-import assign from 'lodash/assign';
-import findIndex from 'lodash/findIndex';
-import c from './constants';
-import uuid from 'node-uuid';
+import update from "immutability-helper";
+import assign from "lodash/assign";
+import findIndex from "lodash/findIndex";
+import c from "./constants";
+import uuid from "node-uuid";
 
 const commandeVide = {
   id: undefined,
@@ -21,7 +21,7 @@ const commandeVide = {
   prestationRelai: null,
   recolteFond: 0,
   utilisateurId: null,
-  contenus: [],
+  contenus: []
 };
 
 const initialState = {};
@@ -30,30 +30,30 @@ const initCommande = (state, commandeId) => update(state, { [commandeId]: { $set
 
 const ajouter = (state, commandeId, offre) => {
   const idx = findIndex(state[commandeId].contenus, { offreId: offre.offreId });
-  const changed = typeof state[commandeId].id !== 'undefined';
+  const changed = typeof state[commandeId].id !== "undefined";
 
   if (idx === -1) {
     return update(state, {
       [commandeId]: {
         contenus: { $push: [{ ...offre, id: uuid.v4() }] },
-        modifiee: { $set: changed },
-      },
+        modifiee: { $set: changed }
+      }
     });
   }
   const nQte = state[commandeId].contenus[idx].quantite + 1;
   return update(state, {
     [commandeId]: {
       contenus: { [idx]: { quantite: { $set: nQte } } },
-      modifiee: { $set: changed },
-    },
+      modifiee: { $set: changed }
+    }
   });
 };
 
 const supprimer = (state, commandeId, offreId) => {
   const newContenus = state[commandeId].contenus.filter(cont => cont.offreId !== offreId);
-  const changed = typeof state[commandeId].id !== 'undefined';
+  const changed = typeof state[commandeId].id !== "undefined";
   return update(state, {
-    [commandeId]: { contenus: { $set: newContenus }, modifiee: { $set: changed } },
+    [commandeId]: { contenus: { $set: newContenus }, modifiee: { $set: changed } }
   });
 };
 
@@ -61,12 +61,12 @@ const supprimer = (state, commandeId, offreId) => {
 const augmenter = (state, commandeId, offreId) => {
   const idx = findIndex(state[commandeId].contenus, { offreId });
   const nQte = state[commandeId].contenus[idx].quantite + 1;
-  const changed = typeof state[commandeId].id !== 'undefined';
+  const changed = typeof state[commandeId].id !== "undefined";
   return update(state, {
     [commandeId]: {
       contenus: { [idx]: { quantite: { $set: nQte } } },
-      modifiee: { $set: changed },
-    },
+      modifiee: { $set: changed }
+    }
   });
 };
 
@@ -75,19 +75,19 @@ const diminuer = (state, commandeId, offreId) => {
   const idx = findIndex(state[commandeId].contenus, { offreId });
   const nQte = state[commandeId].contenus[idx].quantite - 1;
   if (nQte === 0) return supprimer(state, commandeId, offreId);
-  const changed = typeof state[commandeId].id !== 'undefined';
+  const changed = typeof state[commandeId].id !== "undefined";
   return update(state, {
     [commandeId]: {
       contenus: { [idx]: { quantite: { $set: nQte } } },
-      modifiee: { $set: changed },
-    },
+      modifiee: { $set: changed }
+    }
   });
 };
 
 const majTarifs = (state, payload) => {
   const { totalCommande, partDistribution, commandeId } = payload;
   return update(state, {
-    [commandeId]: { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } },
+    [commandeId]: { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } }
   });
 };
 
@@ -109,7 +109,7 @@ const commandeEditReducer = (state = initialState, action) => {
 
     case c.ASYNC_SAUVEGARDER_SUCCESS:
       return update(state, {
-        [action.datas.commandeId]: { $set: assign(action.datas, { modifiee: false }) },
+        [action.datas.commandeId]: { $set: assign(action.datas, { modifiee: false }) }
       });
 
     case c.ASYNC_ANNULER_SUCCESS:
@@ -118,8 +118,8 @@ const commandeEditReducer = (state = initialState, action) => {
     case c.LOAD_COMMANDE:
       return update(state, {
         [action.payload.datas.commandeId]: {
-          $set: assign(action.payload.datas, { modifiee: false }),
-        },
+          $set: assign(action.payload.datas, { modifiee: false })
+        }
       });
 
     case c.SET_DISTRIBUTION: {
@@ -133,8 +133,8 @@ const commandeEditReducer = (state = initialState, action) => {
         [commandeId]: {
           plageHoraire: { $set: plageHoraire },
           livraisonId: { $set: livraisonId },
-          modifiee: { $set: typeof state[commandeId].id !== 'undefined' },
-        },
+          modifiee: { $set: typeof state[commandeId].id !== "undefined" }
+        }
       });
     }
 

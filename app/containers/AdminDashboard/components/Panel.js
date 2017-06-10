@@ -1,8 +1,9 @@
-import React from 'react'; import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
-import styles from './styles.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Paper from "material-ui/Paper";
+import styles from "./styles.css";
 
-const Panel = ({ title, children }) => (
+const Panel = ({ title, children }) =>
   <Paper className={styles.panel}>
     <div className={`dragHandle ${styles.title}`}>
       {title}
@@ -10,12 +11,11 @@ const Panel = ({ title, children }) => (
     <div className={styles.content}>
       {children}
     </div>
-  </Paper>
-);
+  </Paper>;
 
 Panel.propTypes = {
   title: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default Panel;

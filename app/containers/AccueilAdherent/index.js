@@ -1,21 +1,22 @@
-import React, { Component } from 'react'; import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { push } from 'react-router-redux';
-import Helmet from 'react-helmet';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { createStructuredSelector } from 'reselect';
-import RaisedButton from 'material-ui/RaisedButton';
-import Paper from 'material-ui/Paper';
-import { selectRelais } from 'containers/AdminRelais/selectors';
-import { loadRelais } from 'containers/AdminRelais/actions';
-import legumes from './legumes.jpg';
-import styles from './styles.css';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { push } from "react-router-redux";
+import Helmet from "react-helmet";
+import RefreshIndicator from "material-ui/RefreshIndicator";
+import { createStructuredSelector } from "reselect";
+import RaisedButton from "material-ui/RaisedButton";
+import Paper from "material-ui/Paper";
+import { selectRelais } from "containers/AdminRelais/selectors";
+import { loadRelais } from "containers/AdminRelais/actions";
+import legumes from "./legumes.jpg";
+import styles from "./styles.css";
 
-const constStyles  = {
+const constStyles = {
   refresh: {
-    display: 'inline-block',
-    position: 'relative',
+    display: "inline-block",
+    position: "relative"
   }
 };
 
@@ -24,8 +25,8 @@ class AccueilAdherent extends Component {
     relais: PropTypes.array.isRequired,
     params: PropTypes.object.isRequired,
     load: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired,
-  }
+    pushState: PropTypes.func.isRequired
+  };
 
   componentDidMount() {
     if (!this.findRelais()) {
@@ -33,10 +34,7 @@ class AccueilAdherent extends Component {
     }
   }
 
-  findRelais = () =>
-    this.props.relais.find(
-      (r) => r.id === this.props.params.relaiId
-    );
+  findRelais = () => this.props.relais.find(r => r.id === this.props.params.relaiId);
 
   render() {
     const ceRelais = this.findRelais();
@@ -45,9 +43,7 @@ class AccueilAdherent extends Component {
       <div className="row center-md">
         <Helmet
           title="Proxiweb - Bienvenue sur ce relais"
-          meta={[
-            { name: 'description', content: 'Message de bienvenue' },
-          ]}
+          meta={[{ name: "description", content: "Message de bienvenue" }]}
         />
         <div className="col-md-8">
           {ceRelais &&
@@ -66,26 +62,16 @@ class AccueilAdherent extends Component {
                   <RaisedButton
                     label="Consulter les commandes en cours"
                     primary
-                    onClick={() =>
-                      pushState('/')
-                    }
+                    onClick={() => pushState("/")}
                   />
                 </div>
-                <div className="col-md-6">
-                </div>
+                <div className="col-md-6" />
               </div>
             </Paper>}
           {!ceRelais &&
             <Paper style={styles.refresh}>
-              <RefreshIndicator
-                size={70}
-                left={0}
-                top={20}
-                status="loading"
-                style={constStyles.refresh}
-              />
-            </Paper>
-          }
+              <RefreshIndicator size={70} left={0} top={20} status="loading" style={constStyles.refresh} />
+            </Paper>}
         </div>
       </div>
     );
@@ -93,12 +79,16 @@ class AccueilAdherent extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais(),
+  relais: selectRelais()
 });
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  load: loadRelais,
-  pushState: push,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      load: loadRelais,
+      pushState: push
+    },
+    dispatch
+  );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccueilAdherent);

@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux';
-import update from 'immutability-helper';
-import adminUtilisateursReducer from 'containers/AdminUtilisateurs/reducer';
-import adminRelaisReducer from 'containers/AdminRelais/reducer';
-import AdminCommunicationReducer from 'containers/AdminCommunication/reducer';
-import c from './constants';
+import { combineReducers } from "redux";
+import update from "immutability-helper";
+import adminUtilisateursReducer from "containers/AdminUtilisateurs/reducer";
+import adminRelaisReducer from "containers/AdminRelais/reducer";
+import AdminCommunicationReducer from "containers/AdminCommunication/reducer";
+import c from "./constants";
 
 const initialState = {
   datas: [],
-  total: null,
+  total: null
 };
 
 const adminDepotReducer = (state = initialState, action) => {
@@ -29,5 +29,5 @@ export default combineReducers({
   depots: adminDepotReducer,
   utilisateurs: adminUtilisateursReducer,
   relais: adminRelaisReducer,
-  communication: AdminCommunicationReducer,
+  communication: AdminCommunicationReducer
 });

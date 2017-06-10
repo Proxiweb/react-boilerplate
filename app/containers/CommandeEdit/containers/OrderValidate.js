@@ -1,35 +1,33 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { bindActionCreators } from 'redux';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import Paper from 'material-ui/Paper';
-import isBefore from 'date-fns/is_before';
-import { format } from 'utils/dates';
-import isAfter from 'date-fns/is_after';
-import addYears from 'date-fns/add_years';
-import addMinutes from 'date-fns/add_minutes';
-import TrashIcon from 'material-ui/svg-icons/action/delete-forever';
-import DateRangeIcon from 'material-ui/svg-icons/action/date-range';
-import EditorIcon from 'material-ui/svg-icons/editor/mode-edit';
-import assign from 'lodash/assign';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { bindActionCreators } from "redux";
+import RaisedButton from "material-ui/RaisedButton";
+import FlatButton from "material-ui/FlatButton";
+import Paper from "material-ui/Paper";
+import isBefore from "date-fns/is_before";
+import { format } from "utils/dates";
+import isAfter from "date-fns/is_after";
+import addYears from "date-fns/add_years";
+import addMinutes from "date-fns/add_minutes";
+import TrashIcon from "material-ui/svg-icons/action/delete-forever";
+import DateRangeIcon from "material-ui/svg-icons/action/date-range";
+import EditorIcon from "material-ui/svg-icons/editor/mode-edit";
+import assign from "lodash/assign";
 
-import DetailCommande from 'components/DetailCommande';
-import DistributionSelector
-  from 'containers/CommandeEdit/components/components/DistributionSelector';
-import DistributionSelected
-  from 'containers/CommandeEdit/components/components/DistributionSelected';
-import Paiement from 'containers/CommandeEdit/components/Paiement';
-import { calculeTotauxCommande } from 'containers/Commande/utils';
+import DetailCommande from "components/DetailCommande";
+import DistributionSelector from "containers/CommandeEdit/components/components/DistributionSelector";
+import DistributionSelected from "containers/CommandeEdit/components/components/DistributionSelected";
+import Paiement from "containers/CommandeEdit/components/Paiement";
+import { calculeTotauxCommande } from "containers/Commande/utils";
 
 import {
   ajouter,
   // augmenter,
   // diminuer,
-  supprimer, // sauvegarder, // annuler, // setDistibution,
-} from 'containers/CommandeEdit/actions';
+  supprimer // sauvegarder, // annuler, // setDistibution,
+} from "containers/CommandeEdit/actions";
 
 // import { selectCommande, isCotisationInCommande } from 'containers/CommandeEdit/selectors';
 
@@ -39,44 +37,42 @@ import {
   selectOffres,
   selectProduits,
   selectOffreCotisation,
-  selectCotisationId,
-} from 'containers/Commande/selectors';
+  selectCotisationId
+} from "containers/Commande/selectors";
 
 import {
   ajouterOffre,
   diminuerOffre,
   setDistibution,
   sauvegarder,
-  annuler,
-} from 'containers/Commande/actions';
+  annuler
+} from "containers/Commande/actions";
 
-import { selectPending } from 'containers/App/selectors';
+import { selectPending } from "containers/App/selectors";
 
-import {
-  selectDatePaiementCotisation,
-} from 'containers/CompteUtilisateur/selectors';
+import { selectDatePaiementCotisation } from "containers/CompteUtilisateur/selectors";
 
-import styles from './OrderValidate.css';
+import styles from "./OrderValidate.css";
 
 const constStyles = {
   margin20: {
-    marginTop: 20,
+    marginTop: 20
   },
   margin40: {
-    marginTop: 40,
+    marginTop: 40
   },
   minWidth: {
-    minWidth: 44,
+    minWidth: 44
   },
   textAlignCenter: {
-    textAlign: 'center',
+    textAlign: "center"
   },
   paiementCotisation: {
-    textAlign: 'center',
-    backgroundColor: 'white',
-    marginTop: '1em',
-    padding: '1em',
-  },
+    textAlign: "center",
+    backgroundColor: "white",
+    marginTop: "1em",
+    padding: "1em"
+  }
 };
 
 class OrderValidate extends Component {
@@ -96,21 +92,20 @@ class OrderValidate extends Component {
     annuler: PropTypes.func.isRequired,
     supprimer: PropTypes.func.isRequired,
     augmenter: PropTypes.func.isRequired,
-    ajouter: PropTypes.func.isRequired,
     diminuer: PropTypes.func.isRequired,
     setDistibution: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
     offreCotisation: PropTypes.object.isRequired,
     datePaiementCotisation: PropTypes.string,
-    cotisationId: PropTypes.string.isRequired,
+    cotisationId: PropTypes.string.isRequired
   };
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   };
 
   state = {
-    view: 'panier',
+    view: "panier"
   };
 
   selectionnePlageHoraire = (plageHoraire, livraisonId) => {
@@ -119,40 +114,31 @@ class OrderValidate extends Component {
       commandeId,
       utilisateurId,
       plageHoraire,
-      livraisonId,
+      livraisonId
     });
-    this.setState({ view: 'panier' });
+    this.setState({ view: "panier" });
   };
 
   showValidate = () => {
-    const {
-      commande,
-      params: { commandeId },
-      utilisateurId,
-      pending,
-      commandeContenus,
-      offres,
-    } = this.props;
+    const { commande, params: { commandeId }, utilisateurId, pending, commandeContenus, offres } = this.props;
 
     const { palette } = this.context.muiTheme;
     let label = null;
     let textButtonColor = null;
 
     if (commande.createdAt !== null && commande.updatedAt === null) {
-      textButtonColor = 'black';
-      label = pending
-        ? 'Sauvegarde des modifications...'
-        : 'Sauvegarder mes modifications';
+      textButtonColor = "black";
+      label = pending ? "Sauvegarde des modifications..." : "Sauvegarder mes modifications";
     } else {
-      label = pending ? 'Validation de la commande...' : 'Valider la commande';
-      textButtonColor = 'white';
+      label = pending ? "Validation de la commande..." : "Valider la commande";
+      textButtonColor = "white";
     }
 
     const { prix, recolteFond } = calculeTotauxCommande({
       commandeContenus,
       offres,
       commandeId,
-      filter: cc => cc.utilisateurId === utilisateurId,
+      filter: cc => cc.utilisateurId === utilisateurId
     });
 
     return (
@@ -175,8 +161,8 @@ class OrderValidate extends Component {
                 recolteFond,
                 contenus: commande.contenus.map(id => ({
                   ...commandeContenus[id],
-                  id,
-                })),
+                  id
+                }))
               })
             )}
         />
@@ -185,11 +171,7 @@ class OrderValidate extends Component {
   };
 
   showPaiementCotisation = () => {
-    const {
-      offreCotisation,
-      utilisateurId,
-      params: { commandeId },
-    } = this.props;
+    const { offreCotisation, utilisateurId, params: { commandeId } } = this.props;
     return (
       <RaisedButton
         label="Payer la cotisation"
@@ -200,7 +182,7 @@ class OrderValidate extends Component {
             offreId: offreCotisation.id,
             quantite: 1,
             commandeId,
-            utilisateurId,
+            utilisateurId
           })}
       />
     );
@@ -218,7 +200,7 @@ class OrderValidate extends Component {
         />
         <FlatButton
           label="modifier"
-          onClick={() => this.setState({ view: 'distribution' })}
+          onClick={() => this.setState({ view: "distribution" })}
           className={styles.distriButton}
           icon={<EditorIcon />}
           style={constStyles.minWidth}
@@ -227,14 +209,13 @@ class OrderValidate extends Component {
     );
   };
 
-  showDistribButton = () => (
+  showDistribButton = () =>
     <RaisedButton
       label="Choisissez le jour de distribution"
       icon={<DateRangeIcon />}
       style={constStyles.margin20}
-      onClick={() => this.setState({ view: 'distribution' })}
-    />
-  );
+      onClick={() => this.setState({ view: "distribution" })}
+    />;
 
   showDetailsCommande = contenus => {
     const {
@@ -244,7 +225,7 @@ class OrderValidate extends Component {
       produitsById,
       commandeContenus,
       panierExpanded,
-      utilisateurId,
+      utilisateurId
     } = this.props;
 
     return (
@@ -282,7 +263,7 @@ class OrderValidate extends Component {
     return (
       <div style={constStyles.textAlignCenter}>
         <RaisedButton
-          label={`${!pending ? 'Annuler ma ' : 'Annulation de la '}commande`}
+          label={`${!pending ? "Annuler ma " : "Annulation de la "}commande`}
           secondary
           style={constStyles.margin20}
           onClick={() => this.props.annuler({ id: commande.id, commandeId })}
@@ -304,8 +285,7 @@ class OrderValidate extends Component {
       datePaiementCotisation,
       offreCotisation,
       utilisateurId,
-      cotisationId,
-      autreUtilisateur,
+      autreUtilisateur
     } = this.props;
 
     const cotisationDansCommande = Object.keys(commandeContenus).find(
@@ -317,22 +297,19 @@ class OrderValidate extends Component {
 
     const { view } = this.state;
     const contenusCommande = commande.contenus.map(
-      item => (typeof item === 'string' ? commandeContenus[item] : item)
+      item => (typeof item === "string" ? commandeContenus[item] : item)
     );
 
     const cotisationAJour =
-      datePaiementCotisation &&
-      isAfter(addYears(datePaiementCotisation, 1), new Date());
+      datePaiementCotisation && isAfter(addYears(datePaiementCotisation, 1), new Date());
 
     return (
       <div>
-        {view === 'distribution'
+        {view === "distribution"
           ? this.showDistributionSelector()
           : this.showDetailsCommande(contenusCommande)}
-        {view === 'panier' &&
-          commande.livraisonId &&
-          this.showDistribSelected()}
-        {view !== 'distribution' &&
+        {view === "panier" && commande.livraisonId && this.showDistribSelected()}
+        {view !== "distribution" &&
           commandeProxiweb.dateCommande &&
           !commande.livraisonId &&
           commande.contenus.length > 0 &&
@@ -340,12 +317,12 @@ class OrderValidate extends Component {
           <div style={constStyles.textAlignCenter}>
             {this.showDistribButton()}
           </div>}
-        {view === 'panier' &&
+        {view === "panier" &&
           (cotisationAJour || cotisationDansCommande) &&
           (commande.livraisonId || !commandeProxiweb.dateCommande) &&
           (!commande.createdAt || !commande.updatedAt) &&
           this.showValidate()}
-        {view === 'panier' &&
+        {view === "panier" &&
           /* si passage de commande, pas de gestion cotisation */
           !autreUtilisateur &&
           !cotisationAJour &&
@@ -355,7 +332,7 @@ class OrderValidate extends Component {
             <p>{"Vous n'êtes pas à jour de votre cotisation de 3 €"}</p>
             {this.showPaiementCotisation()}
           </Paper>}
-        {view === 'panier' &&
+        {view === "panier" &&
           !commande.dateLivraison &&
           commande.id &&
           isBefore(addMinutes(commande.createdAt, 1), new Date()) &&
@@ -363,7 +340,7 @@ class OrderValidate extends Component {
           this.showCancel()}
         {commande.id &&
           balance !== null &&
-          view === 'panier' &&
+          view === "panier" &&
           <Paiement
             commandeContenus={commandeContenus}
             commandeId={params.commandeId}
@@ -371,7 +348,7 @@ class OrderValidate extends Component {
             balance={balance}
             offres={offres}
             pending={pending}
-            dateLimite={format(commandeProxiweb.dateCommande, 'dddd DD MMMM ')}
+            dateLimite={format(commandeProxiweb.dateCommande, "dddd DD MMMM ")}
           />}
       </div>
     );
@@ -386,7 +363,7 @@ const mapStateToProps = createStructuredSelector({
   datePaiementCotisation: selectDatePaiementCotisation(),
   offreCotisation: selectOffreCotisation(),
   cotisationId: selectCotisationId(),
-  pending: selectPending(),
+  pending: selectPending()
 });
 
 const mapDispatchToProps = dispatch =>
@@ -398,7 +375,7 @@ const mapDispatchToProps = dispatch =>
       supprimer,
       sauvegarder,
       annuler,
-      setDistibution,
+      setDistibution
     },
     dispatch
   );

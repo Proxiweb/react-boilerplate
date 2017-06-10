@@ -3,75 +3,75 @@
  * CommandeEdit actions
  *
  */
-import { findActionType } from 'utils/asyncSagaConstants';
-import c from './constants';
+import { findActionType } from "utils/asyncSagaConstants";
+import c from "./constants";
 
 export const initCommande = commandeId => ({
   type: c.INIT_COMMANDE,
-  payload: { commandeId },
+  payload: { commandeId }
 });
 
 export const sauvegarder = datas => ({
-  type: findActionType('sauvegarder', c, 'START'),
-  url: datas.id ? `commande_utilisateurs/${datas.id}` : 'commande_utilisateurs',
-  method: datas.id ? 'put' : 'post',
-  msgPending: 'Sauvegarde commande',
-  datas: { ...datas, modifiee: false },
+  type: findActionType("sauvegarder", c, "START"),
+  url: datas.id ? `commande_utilisateurs/${datas.id}` : "commande_utilisateurs",
+  method: datas.id ? "put" : "post",
+  msgPending: "Sauvegarde commande",
+  datas: { ...datas, modifiee: false }
 });
 
 export const annuler = (id, commandeId) => ({
-  type: findActionType('annuler', c, 'START'),
+  type: findActionType("annuler", c, "START"),
   url: `commande_utilisateurs/${id}`,
-  method: 'del',
-  msgPending: 'Annulation commande',
-  datas: { commandeId, id },
+  method: "del",
+  msgPending: "Annulation commande",
+  datas: { commandeId, id }
 });
 
 export function ajouter(commandeId, offre) {
   return {
     type: c.AJOUTER_OFFRE,
-    payload: { commandeId, offre },
+    payload: { commandeId, offre }
   };
 }
 
 export function augmenter(commandeId, offreId) {
   return {
     type: c.AUGMENTER_OFFRE,
-    payload: { commandeId, offreId },
+    payload: { commandeId, offreId }
   };
 }
 
 export function diminuer(commandeId, offreId) {
   return {
     type: c.DIMINUER_OFFRE,
-    payload: { commandeId, offreId },
+    payload: { commandeId, offreId }
   };
 }
 
 export function supprimer(commandeId, offreId) {
   return {
     type: c.SUPPRIMER_OFFRE,
-    payload: { commandeId, offreId },
+    payload: { commandeId, offreId }
   };
 }
 
 export function load(datas) {
   return {
     type: c.LOAD_COMMANDE,
-    payload: { datas },
+    payload: { datas }
   };
 }
 
 export function setDistibution(commandeId, plageHoraire, livraisonId) {
   return {
     type: c.SET_DISTRIBUTION,
-    payload: { plageHoraire, livraisonId, commandeId },
+    payload: { plageHoraire, livraisonId, commandeId }
   };
 }
 
 export function modifieTotaux(commandeId, totalCommande, partDistribution) {
   return {
     type: c.MODIFIE_TOTAUX,
-    payload: { commandeId, totalCommande, partDistribution },
+    payload: { commandeId, totalCommande, partDistribution }
   };
 }

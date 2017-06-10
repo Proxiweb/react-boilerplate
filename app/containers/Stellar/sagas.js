@@ -1,6 +1,6 @@
-import { take, put, call, select } from 'redux-saga/effects';
-import { selectEnv } from 'containers/Stellar/selectors';
-import { LOAD_ACCOUNT, TRUST, PAY, FEDERATION } from './constants';
+import { take, put, call, select } from "redux-saga/effects";
+import { selectEnv } from "containers/Stellar/selectors";
+import { LOAD_ACCOUNT, TRUST, PAY, FEDERATION } from "./constants";
 import {
   loadAccount,
   loadAccountError,
@@ -11,10 +11,10 @@ import {
   paid,
   payError,
   fedLookupSuccess,
-  fedLookupError,
-} from './actions';
+  fedLookupError
+} from "./actions";
 
-import api from '../../utils/stellarApi';
+import api from "../../utils/stellarApi";
 
 // export function* logger() {
 //   while (1) { // eslint-disable-line
@@ -24,7 +24,8 @@ import api from '../../utils/stellarApi';
 // }
 
 export function* loadAccountSaga() {
-  while(1) { // eslint-disable-line
+  while (1) {
+    // eslint-disable-line
     const action = yield take(LOAD_ACCOUNT);
     const env = yield select(selectEnv());
     try {
@@ -39,7 +40,8 @@ export function* loadAccountSaga() {
 }
 
 export function* trustSaga() {
-  while(1) { // eslint-disable-line
+  while (1) {
+    // eslint-disable-line
     const action = yield take(TRUST);
     const env = yield select(selectEnv());
     try {
@@ -53,7 +55,8 @@ export function* trustSaga() {
 }
 
 export function* paySaga() {
-  while(1) { // eslint-disable-line
+  while (1) {
+    // eslint-disable-line
     const action = yield take(PAY);
     const env = yield select(selectEnv());
     try {
@@ -68,7 +71,8 @@ export function* paySaga() {
 }
 
 export function* lookupSaga() {
-  while(1) { // eslint-disable-line
+  while (1) {
+    // eslint-disable-line
     const action = yield take(FEDERATION);
     try {
       const { fedId } = action.payload;
@@ -85,5 +89,5 @@ export default [
   lookupSaga,
   paySaga,
   loadAccountSaga,
-  trustSaga,
+  trustSaga
 ];
