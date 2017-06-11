@@ -103,7 +103,7 @@ export const supprimerCommandeContenu = contenu => ({
   msgSuccess: 'Contenu commande supprimé',
 });
 
-export const createCommande = (commande, msgSuccess = 'Commande crée') => ({
+export const saveCommande = (commande, msgSuccess = 'Commande crée') => ({
   type: findActionType('create_commande', c, 'START'),
   url: `commandes${commande.id ? `/${commande.id}` : ''}`,
   method: commande.id ? 'put' : 'post',

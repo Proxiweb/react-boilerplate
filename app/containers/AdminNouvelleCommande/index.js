@@ -15,7 +15,7 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import uuid from 'node-uuid';
-import { loadFournisseurs, createCommande, loadRelais } from 'containers/Commande/actions';
+import { loadFournisseurs, saveCommande, loadRelais } from 'containers/Commande/actions';
 import {
   selectFournisseursRelais,
   selectFournisseursCommande,
@@ -275,7 +275,7 @@ const mapDispatchToProps = dispatch =>
     {
       load: loadFournisseurs,
       loadR: loadRelais,
-      create: createCommande,
+      create: saveCommande,
     },
     dispatch
   );

@@ -22,7 +22,7 @@ import {
   selectOffres,
 } from 'containers/Commande/selectors';
 
-import { createCommande } from 'containers/Commande/actions';
+import { saveCommande } from 'containers/Commande/actions';
 
 // eslint-disable-next-line
 class FinalisationCommande extends Component {
@@ -35,7 +35,7 @@ class FinalisationCommande extends Component {
     commandeContenus: PropTypes.array.isRequired,
     offres: PropTypes.object.isRequired,
     produits: PropTypes.array.isRequired,
-    createCommande: PropTypes.func.isRequired,
+    saveCommande: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -151,7 +151,7 @@ class FinalisationCommande extends Component {
       paiementOk: false,
     });
 
-    this.props.createCommande(
+    this.props.saveCommande(
       {
         ...commande,
         finalisation: {
@@ -249,7 +249,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      createCommande,
+      saveCommande,
     },
     dispatch
   );
