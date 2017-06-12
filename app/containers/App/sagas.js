@@ -1,7 +1,11 @@
 import { take, call, put, select, fork } from 'redux-saga/effects';
 import apiClient from 'utils/apiClient';
 import { push } from 'react-router-redux';
-import { addMessage, startGlobalPending, stopGlobalPending } from 'containers/App/actions';
+import {
+  addMessage,
+  startGlobalPending,
+  stopGlobalPending,
+} from 'containers/App/actions';
 import { logout } from 'containers/Login/actions';
 import omit from 'lodash/omit';
 import assign from 'lodash/assign';
@@ -11,7 +15,10 @@ export function* apiListenerSaga() {
   while (true) {
     const action = yield take('*');
 
-    if (action.type && action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)) {
+    if (
+      action.type &&
+      action.type.match(/^\w+\/\w+\/ASYNC_([A-Z_0-9]+)_START$/)
+    ) {
       //  format xxx/xxx/ASYNC_[UNE_ACTION]_START
       yield fork(apiFetcherSaga, action);
     }
@@ -36,7 +43,10 @@ export function* apiFetcherSaga(action) {
 
   const state = yield select();
   const headers = state.compteUtilisateur.token
-    ? { Authorization: `Bearer ${state.compteUtilisateur.token}`, ...action.headers }
+    ? {
+      Authorization: `Bearer ${state.compteUtilisateur.token}`,
+      ...action.headers,
+    }
     : { ...action.headers };
   const { msgPending, msgSuccess, msgError } = action;
   const query = action.query || {};
@@ -68,7 +78,11 @@ export function* apiFetcherSaga(action) {
     }
   } catch (exception) {
     yield put(stopGlobalPending());
-    if (exception.data && exception.data.message && exception.data.message === 'La session a expirée') {
+    if (
+      exception.data &&
+      exception.data.message &&
+      exception.data.message === 'La session a expirée'
+    ) {
       yield put(
         addMessage({
           type: 'error',

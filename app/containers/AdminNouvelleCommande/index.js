@@ -36,12 +36,10 @@ import styles from './styles.css';
 class NouvelleCommande extends Component {
   // eslint-disable-line
   static propTypes = {
-    commande: PropTypes.object,
     commandes: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
     relais: PropTypes.object.isRequired,
     fournisseurs: PropTypes.array.isRequired,
-    commandeUtilisateurs: PropTypes.array.isRequired,
     create: PropTypes.func.isRequired,
   };
 
@@ -86,7 +84,6 @@ class NouvelleCommande extends Component {
   };
 
   addDistrib = value => {
-    console.log(value);
     this.setState({
       ...this.state,
       distributions: [...this.state.distributions, value],
@@ -148,7 +145,7 @@ class NouvelleCommande extends Component {
     this.setState({
       ...this.state,
       datesLimites: this.state.datesLimites.map(
-        dL =>
+        dL => // eslint-disable-line
           dL.fournisseurId !== fournisseurId
             ? { ...dL }
             : { ...dL, dateLimite: format(date) }
@@ -204,7 +201,7 @@ class NouvelleCommande extends Component {
   };
 
   validate = () => {
-    const { datesLimites, parametres } = this.state;
+    const { datesLimites } = this.state;
     return datesLimites.length > 0;
     //  &&
     //   ( parametres.dateLimite instanceof Date &&
@@ -252,19 +249,9 @@ class NouvelleCommande extends Component {
   };
 
   render() {
-    const {
-      fournisseurs,
-      commande,
-      commandeUtilisateurs,
-      params: { commandeId },
-    } = this.props;
+    const { fournisseurs, params: { commandeId } } = this.props;
 
-    const {
-      datesLimites,
-      parametres,
-      distributions,
-      confirmDestroyOpen,
-    } = this.state;
+    const { datesLimites, parametres, distributions } = this.state;
     const { muiTheme } = this.context;
 
     return (

@@ -33,7 +33,7 @@ class FinalisationDetails extends Component {
       selectedIdx: typeof selectedIdx !== 'undefined' ? selectedIdx : null,
     });
 
-  handleClick = paiementOk => {
+  handleClick = () => {
     const { destinataires, commande } = this.props;
     const { selectedIdx } = this.state;
     this.props.saveCommande(
@@ -42,11 +42,17 @@ class FinalisationDetails extends Component {
         finalisation: {
           ...commande.finalisation,
           destinataires: destinataires.map(
-            (d, idx) => (idx === selectedIdx ? { ...d, paiementOk } : { ...d })
+            (
+              d,
+              idx // eslint-disable-line
+            ) =>
+              (idx === selectedIdx
+                ? { ...d, paiementOk: !d.paiementOk }
+                : { ...d })
           ),
         },
       },
-      paiementOk ? 'Paiement commande sauvegardé' : 'Paiement commande annulé'
+      'Opération effectuée'
     );
   };
 
@@ -65,13 +71,13 @@ class FinalisationDetails extends Component {
           </TableHeader>
           <TableBody deselectOnClickaway={false}>
             {destinataires.map((dest, idx) =>
-              (<TableRow selected={idx === selectedIdx}>
+              <TableRow selected={idx === selectedIdx}>
                 <TableRowColumn>{dest.nom}</TableRowColumn>
                 <TableRowColumn>{dest.montant} €</TableRowColumn>
                 <TableRowColumn>
                   {dest.paiementOk ? 'oui' : 'non'}
                 </TableRowColumn>
-              </TableRow>)
+              </TableRow>
             )}
           </TableBody>
         </Table>
@@ -85,8 +91,7 @@ class FinalisationDetails extends Component {
               }
               primary
               fullWidth
-              onClick={() =>
-                this.handleClick(!destinataires[selectedIdx].paiementOk)}
+              onTouchTap={this.handleClick}
             />
           </div>}
       </div>
