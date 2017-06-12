@@ -23,7 +23,12 @@ export default class NouvelleCommandeDistribution extends Component {
   };
 
   render() {
-    const { addDistrib, delDistrib, distributions, dateLimiteCommande } = this.props;
+    const {
+      addDistrib,
+      delDistrib,
+      distributions,
+      dateLimiteCommande,
+    } = this.props;
     const { dateLimite, heureDebut, heureFin } = this.state;
     return (
       <div className="row center-md" style={{ paddingTop: '2em' }}>
@@ -42,7 +47,8 @@ export default class NouvelleCommandeDistribution extends Component {
                 cancelLabel="Annuler"
                 minDate={dateLimiteCommande}
                 DateTimeFormat={Intl.DateTimeFormat}
-                onChange={(event, value) => this.setState(oldVal => ({ ...oldVal, dateLimite: value }))}
+                onChange={(event, value) =>
+                  this.setState(oldVal => ({ ...oldVal, dateLimite: value }))}
               />
             </div>
             <div className="col-md">
@@ -55,7 +61,8 @@ export default class NouvelleCommandeDistribution extends Component {
                 fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
-                onChange={(event, value) => this.setState(oldVal => ({ ...oldVal, heureDebut: value }))}
+                onChange={(event, value) =>
+                  this.setState(oldVal => ({ ...oldVal, heureDebut: value }))}
               />
             </div>
             <div className="col-md">
@@ -68,7 +75,8 @@ export default class NouvelleCommandeDistribution extends Component {
                 fullWidth
                 okLabel="OK"
                 cancelLabel="Annuler"
-                onChange={(event, value) => this.setState(oldVal => ({ ...oldVal, heureFin: value }))}
+                onChange={(event, value) =>
+                  this.setState(oldVal => ({ ...oldVal, heureFin: value }))}
               />
             </div>
             <div className="col-md">
@@ -80,8 +88,14 @@ export default class NouvelleCommandeDistribution extends Component {
                 style={{ marginTop: '1.2em' }}
                 onClick={() =>
                   addDistrib({
-                    debut: `${format(dateLimite, 'YYYY-MM-DD')}T${format(heureDebut, 'HH:mm')}`,
-                    fin: `${format(dateLimite, 'YYYY-MM-DD')}T${format(heureFin, 'HH:mm')}`,
+                    debut: `${format(dateLimite, 'YYYY-MM-DD')}T${format(
+                      heureDebut,
+                      'HH:mm+02:00'
+                    )}`,
+                    fin: `${format(dateLimite, 'YYYY-MM-DD')}T${format(
+                      heureFin,
+                      'HH:mm+02:00'
+                    )}`,
                   })}
               />
             </div>
@@ -90,12 +104,18 @@ export default class NouvelleCommandeDistribution extends Component {
             <div className="col-md">
               <ul style={{ listStyleType: 'none' }}>
                 {distributions.map((dist, idx) =>
-                  <li key={idx}>
-                    {`Le ${format(dist.debut, 'dddd DD/MM [de] HH:mm')} à ${format(dist.fin, 'HH:mm')}`}
-                    <IconButton tooltip="Supprimer cette distribution" onClick={() => delDistrib(idx)}>
+                  (<li key={idx}>
+                    {`Le ${format(
+                      dist.debut,
+                      'dddd DD/MM [de] HH:mm'
+                    )} à ${format(dist.fin, 'HH:mm')}`}
+                    <IconButton
+                      tooltip="Supprimer cette distribution"
+                      onClick={() => delDistrib(idx)}
+                    >
                       <ClearIcon />
                     </IconButton>
-                  </li>
+                  </li>)
                 )}
               </ul>
             </div>

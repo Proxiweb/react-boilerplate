@@ -15,7 +15,11 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import uuid from 'node-uuid';
-import { loadFournisseurs, saveCommande, loadRelais } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  saveCommande,
+  loadRelais,
+} from 'containers/Commande/actions';
 import {
   selectFournisseursRelais,
   selectFournisseursCommande,
@@ -56,7 +60,14 @@ class NouvelleCommande extends Component {
   }
 
   initCmde = commande => {
-    const { montantMin, montantMinRelai, qteMin, qteMinRelai, datesLimites, distributions } = commande;
+    const {
+      montantMin,
+      montantMinRelai,
+      qteMin,
+      qteMinRelai,
+      datesLimites,
+      distributions,
+    } = commande;
     this.setState({
       ...this.state,
       parametres: {
@@ -73,6 +84,7 @@ class NouvelleCommande extends Component {
   };
 
   addDistrib = value => {
+    console.log(value);
     this.setState({
       ...this.state,
       distributions: [...this.state.distributions, value],
@@ -82,7 +94,9 @@ class NouvelleCommande extends Component {
   delDistrib = index => {
     this.setState({
       ...this.state,
-      distributions: this.state.distributions.filter((dist, idx) => idx !== index),
+      distributions: this.state.distributions.filter(
+        (dist, idx) => idx !== index
+      ),
     });
   };
 
@@ -90,7 +104,9 @@ class NouvelleCommande extends Component {
     const { dateLimite } = this.state.parametres;
     const fournisseur = this.props.fournisseurs.find(f => f.id === value);
 
-    const infosRelai = fournisseur.relais.find(r => r.id === this.props.params.relaiId);
+    const infosRelai = fournisseur.relais.find(
+      r => r.id === this.props.params.relaiId
+    );
 
     let dateLimiteFournisseur = null;
 
@@ -99,7 +115,10 @@ class NouvelleCommande extends Component {
       const [heures, minutes] = infosRelai.limiteCommande.heure.split(':');
       dateLimiteFournisseur = format(
         addHours(
-          addMinutes(addDays(startOfDay(startOfWeek(dateLimite)), jourSemaine), parseInt(minutes, 10)),
+          addMinutes(
+            addDays(startOfDay(startOfWeek(dateLimite)), jourSemaine),
+            parseInt(minutes, 10)
+          ),
           parseInt(heures, 10)
         )
       );
@@ -117,7 +136,9 @@ class NouvelleCommande extends Component {
   delFourn = value => {
     this.setState({
       ...this.state,
-      datesLimites: this.state.datesLimites.filter(dL => dL.fournisseurId !== value),
+      datesLimites: this.state.datesLimites.filter(
+        dL => dL.fournisseurId !== value
+      ),
     });
   };
 
@@ -125,7 +146,10 @@ class NouvelleCommande extends Component {
     this.setState({
       ...this.state,
       datesLimites: this.state.datesLimites.map(
-        dL => (dL.fournisseurId !== fournisseurId ? { ...dL } : { ...dL, dateLimite: format(date) })
+        dL =>
+          dL.fournisseurId !== fournisseurId
+            ? { ...dL }
+            : { ...dL, dateLimite: format(date) }
       ),
     });
 
@@ -139,16 +163,25 @@ class NouvelleCommande extends Component {
       parametres.heureLimite &&
       parametres.dateLimite
     ) {
-      const dateCommande = this.calculeDateCommande(parametres.dateLimite, parametres.heureLimite);
+      const dateCommande = this.calculeDateCommande(
+        parametres.dateLimite,
+        parametres.heureLimite
+      );
 
       const livraisons = relais.distributionJours.map(livr => {
         const dateDebut = setMinutes(
-          setHours(setISODay(dateCommande, livr.jour - 1), livr.heureDebut.split(':')[0]),
+          setHours(
+            setISODay(dateCommande, livr.jour - 1),
+            livr.heureDebut.split(':')[0]
+          ),
           livr.heureDebut.split(':')[1]
         );
 
         const dateFin = setMinutes(
-          setHours(setISODay(dateCommande, livr.jour - 1), livr.heureFin.split(':')[0]),
+          setHours(
+            setISODay(dateCommande, livr.jour - 1),
+            livr.heureFin.split(':')[0]
+          ),
           livr.heureFin.split(':')[1]
         );
 
@@ -157,7 +190,9 @@ class NouvelleCommande extends Component {
           fin: format(dateFin),
         };
       });
-      distributions = livraisons.filter(livr => isAfter(livr.debut, dateCommande));
+      distributions = livraisons.filter(livr =>
+        isAfter(livr.debut, dateCommande)
+      );
     }
     this.setState({
       ...this.state,
@@ -184,7 +219,15 @@ class NouvelleCommande extends Component {
 
   create = () => {
     const { parametres, distributions, datesLimites } = this.state;
-    const { resume, montantMin, montantMinRelai, dateLimite, heureLimite, qteMin, qteMinRelai } = parametres;
+    const {
+      resume,
+      montantMin,
+      montantMinRelai,
+      dateLimite,
+      heureLimite,
+      qteMin,
+      qteMinRelai,
+    } = parametres;
     const { commandeId, relaiId } = this.props.params;
     const dateCommande = this.calculeDateCommande(dateLimite, heureLimite);
     const commande = {
@@ -207,9 +250,19 @@ class NouvelleCommande extends Component {
   };
 
   render() {
-    const { fournisseurs, commande, commandeUtilisateurs, params: { commandeId } } = this.props;
+    const {
+      fournisseurs,
+      commande,
+      commandeUtilisateurs,
+      params: { commandeId },
+    } = this.props;
 
-    const { datesLimites, parametres, distributions, confirmDestroyOpen } = this.state;
+    const {
+      datesLimites,
+      parametres,
+      distributions,
+      confirmDestroyOpen,
+    } = this.state;
     const { muiTheme } = this.context;
 
     return (
@@ -225,7 +278,10 @@ class NouvelleCommande extends Component {
               contentContainerClassName={styles.tab}
             >
               <Tab label="Paramètres">
-                <NouvelleCommandeParametres parametres={parametres} changeParam={this.changeParam} />
+                <NouvelleCommandeParametres
+                  parametres={parametres}
+                  changeParam={this.changeParam}
+                />
               </Tab>
               <Tab label="Fournisseurs">
                 <NouvelleCommandeListeFournisseurs

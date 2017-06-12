@@ -25,14 +25,23 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
     fournisseurSelectedId: null,
   };
 
-  handleChangeList = (event, value) => this.props.addFourn(value);
+  getDateLimite = () =>
+    this.state.fournisseurSelectedId
+      ? this.props.datesLimites.find(
+          f => f.fournisseurId === this.state.fournisseurSelectedId
+        ).dateLimite
+      : null;
 
-  handleModif = fournisseurSelectedId => this.setState({ fournisseurSelectedId });
+  handleModif = fournisseurSelectedId =>
+    this.setState({ fournisseurSelectedId });
 
   handleClose = () => this.setState({ fournisseurSelectedId: null });
 
   handleModifDate = (scope, value) => {
-    const dateLimite = format(this.getDateLimite(), 'YYYY-MM-DD HH:mm:ss').split(' ');
+    const dateLimite = format(
+      this.getDateLimite(),
+      'YYYY-MM-DD HH:mm:ss'
+    ).split(' ');
     let heure = null;
     let date = null;
     if (scope === 'dateLimite') {
@@ -42,14 +51,13 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
       date = dateLimite[0];
       heure = format(value, 'HH:mm:ss');
     }
-    this.props.onModifDateLimiteFourn(this.state.fournisseurSelectedId, format(parse(`${date}T${heure}`)));
+    this.props.onModifDateLimiteFourn(
+      this.state.fournisseurSelectedId,
+      format(parse(`${date}T${heure}Z+02:00`))
+    );
   };
 
-  getDateLimite = () =>
-    this.state.fournisseurSelectedId
-      ? this.props.datesLimites.find(f => f.fournisseurId === this.state.fournisseurSelectedId).dateLimite
-      : null;
-
+  handleChangeList = (event, value) => this.props.addFourn(value);
   render() {
     const { fournisseurs, datesLimites, delFourn } = this.props;
     const { fournisseurSelectedId } = this.state;
@@ -66,11 +74,20 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
         <div className="col-md">
           <h4 style={{ textAlign: 'center' }}>Fournisseurs</h4>
           <div style={{ maxHeight: '300px', overflowY: 'scroll' }}>
-            <SelectableList value={location.pathname} onChange={this.handleChangeList}>
+            <SelectableList
+              value={location.pathname}
+              onChange={this.handleChangeList}
+            >
               {fournisseurs
-                .filter(f => !datesLimites.find(dL => dL.fournisseurId === f.id))
+                .filter(
+                  f => !datesLimites.find(dL => dL.fournisseurId === f.id)
+                )
                 .map((fourn, idx) =>
-                  <ListItem key={idx} primaryText={fourn.nom.toUpperCase()} value={fourn.id} />
+                  (<ListItem
+                    key={idx}
+                    primaryText={fourn.nom.toUpperCase()}
+                    value={fourn.id}
+                  />)
                 )}
             </SelectableList>
           </div>
@@ -83,24 +100,38 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
             <SelectableList value={location.pathname}>
               {datesLimites
                 .filter(dL => {
-                  const fourn = fournisseurs.find(f => f.id === dL.fournisseurId);
+                  const fourn = fournisseurs.find(
+                    f => f.id === dL.fournisseurId
+                  );
                   return fourn && fourn.visible;
                 })
                 .map((dL, idx) =>
-                  <ListItem
+                  (<ListItem
                     key={idx}
-                    primaryText={fournisseurs.find(f => f.id === dL.fournisseurId).nom.toUpperCase()}
+                    primaryText={fournisseurs
+                      .find(f => f.id === dL.fournisseurId)
+                      .nom.toUpperCase()}
                     value={`${dL.fournisseurId}`}
-                    secondaryText={dL.dateLimite ? format(dL.dateLimite, 'dddd DD MMMM HH:mm ') : null}
+                    secondaryText={
+                      dL.dateLimite
+                        ? format(dL.dateLimite, 'dddd DD MMMM HH:mm ')
+                        : null
+                    }
                     rightIconButton={
                       <IconMenu
                         iconButtonElement={
-                          <IconButton touch tooltip="Modifier la date limite" tooltipPosition="bottom-left">
+                          <IconButton
+                            touch
+                            tooltip="Modifier la date limite"
+                            tooltipPosition="bottom-left"
+                          >
                             <MoreVertIcon color="gray" />
                           </IconButton>
                         }
                       >
-                        <MenuItem onClick={() => this.handleModif(dL.fournisseurId)}>
+                        <MenuItem
+                          onClick={() => this.handleModif(dL.fournisseurId)}
+                        >
                           Modifier
                         </MenuItem>
                         <MenuItem onClick={() => delFourn(dL.fournisseurId)}>
@@ -108,7 +139,7 @@ export default class NouvelleCommandeListeFournisseurs extends Component {
                         </MenuItem>
                       </IconMenu>
                     }
-                  />
+                  />)
                 )}
             </SelectableList>
           </div>

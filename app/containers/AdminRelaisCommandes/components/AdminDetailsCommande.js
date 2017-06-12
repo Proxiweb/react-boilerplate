@@ -15,6 +15,7 @@ import {
 } from 'containers/Commande/selectors';
 
 import { fetchUtilisateurs } from 'containers/Commande/actions';
+import { selectPending } from 'containers/App/selectors';
 
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
@@ -23,7 +24,6 @@ import { selectRoles } from 'containers/CompteUtilisateur/selectors';
 
 import DetailsParFournisseur from './DetailsParFournisseur';
 import ListeAcheteurs from './ListeAcheteurs';
-import { selectPending, selectCommandes } from 'containers/App/selectors';
 import DetailsParUtilisateur from './DetailsParUtilisateur';
 import ValidationCommandesAdherents from './ValidationCommandesAdherents';
 import FinalisationCommande from './FinalisationCommande';
@@ -75,12 +75,13 @@ class AdminDetailsCommande extends Component {
 
   handleChangeList = value => {
     const { relaiId, commandeId } = this.props.params;
-    this.props.pushState(`/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`);
+    this.props.pushState(
+      `/admin/relais/${relaiId}/commandes/${commandeId}/utilisateurs/${value}`
+    );
   };
 
   render() {
     const {
-      pending,
       commandeUtilisateurs,
       commandeContenus,
       commandes,
@@ -94,7 +95,10 @@ class AdminDetailsCommande extends Component {
       children,
     } = this.props;
     const commande = commandes[commandeId];
-    const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
+    if (!commande) return null;
+    const utils = utilisateurs
+      ? Object.keys(utilisateurs).map(id => utilisateurs[id])
+      : null;
     const { view } = this.state;
     return (
       <div className="row">
@@ -134,7 +138,8 @@ class AdminDetailsCommande extends Component {
             />}
           {!children &&
             commandeUtilisateurs &&
-            commandeUtilisateurs.filter(cu => cu.datePaiement).length < commandeUtilisateurs.length &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length <
+              commandeUtilisateurs.length &&
             contenus &&
             !commande.validation &&
             view === 'validation' &&
@@ -147,17 +152,24 @@ class AdminDetailsCommande extends Component {
             />}
           {!children &&
             commandeUtilisateurs &&
-            commandeUtilisateurs.filter(cu => cu.datePaiement).length === commandeUtilisateurs.length &&
+            commandeUtilisateurs.filter(cu => cu.datePaiement).length ===
+              commandeUtilisateurs.length &&
             contenus &&
             view === 'validation' &&
             !commande.finalisation &&
-            <FinalisationCommande params={params} contenus={contenus} commandeContenus={commandeContenus} />}
+            <FinalisationCommande
+              params={params}
+              contenus={contenus}
+              commandeContenus={commandeContenus}
+            />}
           {children &&
             utils &&
             <DetailsParUtilisateur
               params={params}
               commande={commande}
-              commandeUtilisateur={commandeUtilisateurs.find(cu => cu.utilisateurId === params.utilisateurId)}
+              commandeUtilisateur={commandeUtilisateurs.find(
+                cu => cu.utilisateurId === params.utilisateurId
+              )}
               roles={roles}
               depots={depots}
               utilisateur={utils.find(ut => ut.id === params.utilisateurId)}
@@ -190,4 +202,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminDetailsCommande);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  AdminDetailsCommande
+);
