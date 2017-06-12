@@ -37,18 +37,19 @@ class FinalisationDetails extends Component {
     });
   };
 
-  handleClick = () => {
+  handleClick = value => {
     const { destinataires, commande } = this.props;
     const { selectedIdx } = this.state;
     const newDest = destinataires.map(
-      (d, idx) => (idx === selectedIdx ? { ...d, paiementOk: !d.paiementOk } : { ...d })
+      (d, idx) =>
+        idx === selectedIdx ? { ...d, paiementOk: !d.paiementOk } : { ...d }
     );
     this.props.saveCommande(
       {
         ...commande,
         finalisation: { ...commande.finalisation, destinataires: newDest },
       },
-      'Paiement commande sauvegardé'
+      value ? 'Paiement commande sauvegardé' : 'Paiement commande annulé'
     );
   };
 
@@ -66,26 +67,29 @@ class FinalisationDetails extends Component {
             </TableRow>
           </TableHeader>
           <TableBody deselectOnClickaway={false}>
-            {destinataires.map((dest, idx) => {
-              return (
-                <TableRow selected={idx === selectedIdx}>
-                  <TableRowColumn>{dest.nom}</TableRowColumn>
-                  <TableRowColumn>{dest.montant} €</TableRowColumn>
-                  <TableRowColumn>
-                    {dest.paiementOk ? 'oui' : 'non'}
-                  </TableRowColumn>
-                </TableRow>
-              );
-            })}
+            {destinataires.map((dest, idx) =>
+              (<TableRow selected={idx === selectedIdx}>
+                <TableRowColumn>{dest.nom}</TableRowColumn>
+                <TableRowColumn>{dest.montant} €</TableRowColumn>
+                <TableRowColumn>
+                  {dest.paiementOk ? 'oui' : 'non'}
+                </TableRowColumn>
+              </TableRow>)
+            )}
           </TableBody>
         </Table>
         {selectedIdx !== null &&
           <div style={{ marginTop: '1em' }}>
             <RaisedButton
-              label={destinataires[selectedIdx].paiementOk ? 'Annuler le paiement' : 'Valider le paiement'}
+              label={
+                destinataires[selectedIdx].paiementOk
+                  ? 'Annuler le paiement'
+                  : 'Valider le paiement'
+              }
               primary
               fullWidth
-              onClick={this.handleClick}
+              onClick={() =>
+                this.handleClick(!destinataires[selectedIdx].paiementOk)}
             />
           </div>}
       </div>
@@ -105,4 +109,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FinalisationDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FinalisationDetails
+);
