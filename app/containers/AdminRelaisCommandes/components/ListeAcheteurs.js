@@ -46,7 +46,12 @@ class ListeAcheteurs extends Component {
 
   handleDepotRelais = () => this.setState({ ...this.state, depot: false });
 
-  handleClick = (utilisateurSelected, utilisateurDepot, utilisateurTotalCommande, utilisateurBalance) => {
+  handleClick = (
+    utilisateurSelected,
+    utilisateurDepot,
+    utilisateurTotalCommande,
+    utilisateurBalance
+  ) => {
     this.setState({
       ...this.state,
       utilisateurSelected,
@@ -69,7 +74,11 @@ class ListeAcheteurs extends Component {
       depots,
     } = this.props;
 
-    const { utilisateurDepot, utilisateurTotalCommande, utilisateurBalance } = this.state;
+    const {
+      utilisateurDepot,
+      utilisateurTotalCommande,
+      utilisateurBalance,
+    } = this.state;
 
     const utilisateur = utilisateurs.find(u => u.id === utilisateurId);
     // const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
@@ -77,40 +86,50 @@ class ListeAcheteurs extends Component {
       .filter(cu => cu.commandeId === commandeId)
       .map(cu => {
         const distribution = distributions.find(d => d.id === cu.livraisonId);
-
         return {
           ...cu,
           utilisateur: utilisateurs.find(u => u.id === cu.utilisateurId),
-          debutLivraisonISO: distribution
-            ? format(addMinutes(distribution.debut, distribution.plageHoraire))
-            : null,
-          debutLivraisonUnix: distribution
-            ? getTime(addMinutes(distribution.debut, distribution.plageHoraire))
-            : 0,
+          debutLivraisonUnix: getTime(
+            addMinutes(distribution.debut, cu.plageHoraire)
+          ),
+          distributionStr: `De ${format(
+            addMinutes(distribution.debut, cu.plageHoraire),
+            'HH:mm'
+          )} à ${format(
+            addMinutes(distribution.debut, cu.plageHoraire + 60),
+            'HH:mm'
+          )}`,
         };
       })
       .slice()
       .sort(
         (cu1, cu2) =>
-          cu1.debutLivraisonUnix > cu2.debutLivraisonUnix && cu1.utilisateur.nom > cu2.utilisateur.nom
+          cu1.debutLivraisonUnix > cu2.debutLivraisonUnix &&
+          cu1.utilisateur.nom > cu2.utilisateur.nom
       );
 
-    const acheteursGrp = groupBy(acheteurs, 'debutLivraisonISO');
+    const acheteursGrp = groupBy(acheteurs, 'distributionStr');
 
     return (
       <div className="row">
         <div className={`col-md-10 col-md-offset-1 ${styles.depot}`}>
-          {stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret) && <p>Parametrez Proxiweb</p>}
+          {stellarKeys &&
+            (!stellarKeys.adresse || !stellarKeys.secret) &&
+            <p>Parametrez Proxiweb</p>}
           {// !utilisateurDepot &&
           utilisateurId &&
             <RaisedButton
               primary
               fullWidth
               label="Depot"
-              disabled={stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)}
+              disabled={
+                stellarKeys && (!stellarKeys.adresse || !stellarKeys.secret)
+              }
               onClick={() => this.setState({ ...this.state, depot: true })}
             />}
-          {false && utilisateurDepot && `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
+          {false &&
+            utilisateurDepot &&
+            `Dépot : ${parseFloat(utilisateurDepot.montant).toFixed(2)} €`}
           {// !utilisateurDepot &&
           utilisateurId &&
             utilisateurBalance &&
@@ -130,10 +149,10 @@ class ListeAcheteurs extends Component {
         <div className={`col-md-12 ${styles.listeAcheteurs}`}>
           <SelectableList value={utilisateurId}>
             {Object.keys(acheteursGrp).map(key =>
-              <div key={key}>
-                <Subheader>{format(key, 'LL HH:mm')}</Subheader>
+              (<div key={key}>
+                <Subheader>{key}</Subheader>
                 {acheteursGrp[key].map((cu, idx2) =>
-                  <ListeAcheteursItem
+                  (<ListeAcheteursItem
                     key={idx2}
                     utilisateur={cu.utilisateur}
                     depots={depots}
@@ -146,9 +165,9 @@ class ListeAcheteurs extends Component {
                       commandeContenus,
                       commandeId,
                     })}
-                  />
+                  />)
                 )}
-              </div>
+              </div>)
             )}
           </SelectableList>
         </div>
