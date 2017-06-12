@@ -12,7 +12,6 @@ import {
   TableRow,
   TableRowColumn,
   TableHeaderColumn,
-  TableFooter,
 } from 'material-ui/Table';
 
 import { saveCommande } from 'containers/Commande/actions';
@@ -21,7 +20,6 @@ import { selectCommande } from 'containers/Commande/selectors';
 class FinalisationDetails extends Component {
   static propTypes = {
     commande: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
     destinataires: PropTypes.array.isRequired,
     saveCommande: PropTypes.func.isRequired,
   };
@@ -30,26 +28,25 @@ class FinalisationDetails extends Component {
     selectedIdx: null,
   };
 
-  handleSelection = ([selectedIdx]) => {
-    const { destinataires } = this.props;
+  handleSelection = ([selectedIdx]) =>
     this.setState({
       selectedIdx: typeof selectedIdx !== 'undefined' ? selectedIdx : null,
     });
-  };
 
-  handleClick = value => {
+  handleClick = paiementOk => {
     const { destinataires, commande } = this.props;
     const { selectedIdx } = this.state;
-    const newDest = destinataires.map(
-      (d, idx) =>
-        idx === selectedIdx ? { ...d, paiementOk: !d.paiementOk } : { ...d }
-    );
     this.props.saveCommande(
       {
         ...commande,
-        finalisation: { ...commande.finalisation, destinataires: newDest },
+        finalisation: {
+          ...commande.finalisation,
+          destinataires: destinataires.map(
+            (d, idx) => (idx === selectedIdx ? { ...d, paiementOk } : { ...d })
+          ),
+        },
       },
-      value ? 'Paiement commande sauvegardé' : 'Paiement commande annulé'
+      paiementOk ? 'Paiement commande sauvegardé' : 'Paiement commande annulé'
     );
   };
 
