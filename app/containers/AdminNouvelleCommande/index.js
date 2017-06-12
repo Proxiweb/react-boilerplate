@@ -7,6 +7,8 @@ import setISODay from 'date-fns/set_iso_day';
 import addHours from 'date-fns/add_hours';
 import addMinutes from 'date-fns/add_minutes';
 import addDays from 'date-fns/add_days';
+import setMinutes from 'date-fns/set_minutes';
+import setHours from 'date-fns/set_hours';
 import isAfter from 'date-fns/is_after';
 import startOfWeek from 'date-fns/start_of_week';
 import startOfDay from 'date-fns/start_of_day';
@@ -112,7 +114,7 @@ class NouvelleCommande extends Component {
 
     if (infosRelai && infosRelai.limiteCommande) {
       const { jourSemaine, heure } = infosRelai.limiteCommande;
-      const [heures, minutes] = infosRelai.limiteCommande.heure.split(':');
+      const [heures, minutes] = heure.split(':');
       dateLimiteFournisseur = format(
         addHours(
           addMinutes(
