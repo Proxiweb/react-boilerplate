@@ -25,7 +25,12 @@ export function diminuerOffre(offre) {
   };
 }
 
-export function setDistibution({ commandeId, utilisateurId, plageHoraire, livraisonId }) {
+export function setDistibution({
+  commandeId,
+  utilisateurId,
+  plageHoraire,
+  livraisonId,
+}) {
   return {
     type: c.SET_DISTRIBUTION,
     payload: { commandeId, utilisateurId, plageHoraire, livraisonId },
@@ -34,7 +39,9 @@ export function setDistibution({ commandeId, utilisateurId, plageHoraire, livrai
 
 export const sauvegarder = datas => ({
   type: findActionType('sauvegarder', c, 'START'),
-  url: datas.createdAt ? `commande_utilisateurs/${datas.id}` : 'commande_utilisateurs',
+  url: datas.createdAt
+    ? `commande_utilisateurs/${datas.id}`
+    : 'commande_utilisateurs',
   method: datas.createdAt ? 'put' : 'post',
   msgPending: 'Sauvegarde commande',
   datas: { ...datas },
@@ -171,7 +178,9 @@ export const importeOffres = (
   type: findActionType('importe_offres', c, 'START'),
   url: 'offre_produits/importer',
   method: 'post',
-  datas: produitId ? { fournisseurId, produitId, relaiDestinationId } : { fournisseurId, relaiDestinationId },
+  datas: produitId
+    ? { fournisseurId, produitId, relaiDestinationId }
+    : { fournisseurId, relaiDestinationId },
   msgPending: 'Sauvegarde en cours...',
   msgSuccess,
 });
@@ -185,14 +194,18 @@ export const loadFournisseurs = query => ({
   msgPending: 'Chargement fournisseurs',
 });
 
-export const saveFournisseur = (fournisseur, msgSuccess: 'Fournisseur sauvegardé') => ({
+export const saveFournisseur = (
+  fournisseur,
+  msgSuccess: 'Fournisseur sauvegardé',
+  redirectSuccess = '/'
+) => ({
   type: findActionType('save_fournisseur', c, 'START'),
   url: `fournisseurs${fournisseur.id ? `/${fournisseur.id}` : ''}`,
   method: fournisseur.id ? 'put' : 'post',
   datas: { ...fournisseur },
   msgPending: 'Sauvegarde en cours...',
   msgSuccess,
-  redirectSuccess: '/',
+  redirectSuccess,
 });
 
 /**
@@ -214,7 +227,10 @@ export const catalogueUpdated = (offres, fournisseurs) => ({
   payload: { offres, fournisseurs },
 });
 
-export const supprimerCommandeContenusFournisseur = ({ fournisseurId, commandeId }) => ({
+export const supprimerCommandeContenusFournisseur = ({
+  fournisseurId,
+  commandeId,
+}) => ({
   type: findActionType('supprimer_commande_contenus_fournisseur', c, 'START'),
   url: `/commandes/${commandeId}/fournisseurs/${fournisseurId}`,
   method: 'del',

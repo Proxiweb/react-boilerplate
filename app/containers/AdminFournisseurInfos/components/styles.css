@@ -1,0 +1,13 @@
+.listeFournisseur {
+  text-align: left;
+}
+
+.liste {
+  border: solid 1px silver;
+  overflow-y: auto;
+  height: 300px;
+}
+
+.titre {
+  text-align: center;
+}

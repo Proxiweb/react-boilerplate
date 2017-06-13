@@ -7,7 +7,7 @@ import { selectAuthUtilisateurId, selectUserId } from 'containers/CompteUtilisat
 /**
  * Direct selector to the commande state domain
  */
-const selectCommandeDomain = () => state => state.commandes || null;
+export const selectCommandeDomain = () => state => state.commandes || null;
 export const selectLastFetched = () => state => state.commandes.lastFetched;
 export const selectParams = () => (state, props) => props.params;
 export const selectCommandeId = () => (state, props) => props.params.commandeId;
