@@ -12,7 +12,7 @@ import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
 import { selectFournisseurProduits, selectFournisseur } from 'containers/Commande/selectors';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import { loadTypesProduits } from 'containers/Commande/actions';
 import styles from './styles.css';
 
@@ -93,7 +93,7 @@ class CatalogueFournisseur extends Component {
 const mapStateToProps = createStructuredSelector({
   produits: selectFournisseurProduits(),
   fournisseur: selectFournisseur(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
 });
 
 const mapDispatchToProps = dispatch =>

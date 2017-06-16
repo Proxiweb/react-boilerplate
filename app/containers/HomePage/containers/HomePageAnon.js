@@ -22,7 +22,7 @@ import { selectRelais } from 'containers/Commande/selectors';
 import { loadRelais } from 'containers/Commande/actions';
 
 import { selectionneRelais } from 'containers/App/actions';
-import { selectRelaiId } from 'containers/App/selectors';
+import { makeSelectRelaiId } from 'containers/App/selectors';
 
 import styles from './styles.css';
 import cabas from './cabas.jpg';
@@ -212,7 +212,7 @@ class HomePageAnon extends Component {
 
 const mapStateToProps = createStructuredSelector({
   relais: selectRelais(),
-  relaiId: selectRelaiId(),
+  relaiId: makeSelectRelaiId(),
 });
 
 const mapDispatchToProps = dispatch =>

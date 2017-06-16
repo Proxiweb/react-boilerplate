@@ -20,7 +20,7 @@ import {
   selectFournisseurCommandes,
 } from 'containers/Commande/selectors';
 
-import { selectLocationState, selectPending } from 'containers/App/selectors';
+import { makeSelectLocationState, makemakeSelectPending } from 'containers/App/selectors';
 
 import styles from './styles.css';
 
@@ -133,11 +133,11 @@ class CommandesFournisseur extends Component {
 }
 const mapStateToProps = createStructuredSelector({
   commandes: selectFournisseurCommandes(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   commandeContenus: selectCommandeCommandeContenus(),
   contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  locationState: selectLocationState(),
+  locationState: makeSelectLocationState(),
 });
 
 const mapDispatchToProps = dispatch =>

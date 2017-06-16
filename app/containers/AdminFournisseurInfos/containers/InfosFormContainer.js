@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { isPristine, change } from 'redux-form';
 
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import { selectRelais } from 'containers/Commande/selectors';
 import { saveFournisseur } from 'containers/Commande/actions';
 import InfosForm from './InfosForm';
@@ -76,7 +76,7 @@ class fournisseurFormContainer extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   pristine: isFormPristine(),
 });
 

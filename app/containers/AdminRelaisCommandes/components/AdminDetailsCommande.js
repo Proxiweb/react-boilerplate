@@ -15,7 +15,7 @@ import {
 } from 'containers/Commande/selectors';
 
 import { fetchUtilisateurs } from 'containers/Commande/actions';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 
 import { selectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
@@ -181,7 +181,7 @@ class AdminDetailsCommande extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
   contenus: selectCommandeContenus(),
   commandeContenus: selectCommandeCommandeContenus(),

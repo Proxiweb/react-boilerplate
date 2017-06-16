@@ -11,7 +11,7 @@ import { loadFournisseurs } from 'containers/Commande/actions';
 
 import { selectProduitsRelaisByTypeProduit, selectTypesProduitsRelais } from 'containers/Commande/selectors';
 
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 
 class Catalogue extends Component {
   // eslint-disable-line
@@ -48,7 +48,7 @@ class Catalogue extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   typeProduits: selectTypesProduitsRelais(),
   produits: selectProduitsRelaisByTypeProduit(),
 });

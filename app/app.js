@@ -100,11 +100,11 @@ globalSagas.map(store.runSaga);
 loginSagas.map(store.runSaga);
 
 // Sync history and store, as the react-router-redux reducer
-// is under the non-default key ("routing"), selectLocationState
+// is under the non-default key ("routing"), makeSelectLocationState
 // must be provided for resolving how to retrieve the "route" in the state
-import { selectLocationState } from './containers/App/selectors';
+import { makeSelectLocationState } from './containers/App/selectors';
 const history = syncHistoryWithStore(browserHistory, store, {
-  selectLocationState: selectLocationState(),
+  makeSelectLocationState: makeSelectLocationState(),
 });
 
 // Set up the router, wrapping all Routes in the App component

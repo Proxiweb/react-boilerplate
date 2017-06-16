@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { isPristine, change } from 'redux-form';
 
 // import { saveAccount } from 'containers/CompteUtilisateur/actions';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import { selectTypesProduitsByIds } from 'containers/Commande/selectors';
 import { saveProduit } from 'containers/Commande/actions';
 import ProduitForm from './ProduitForm';
@@ -49,7 +49,7 @@ class ProduitFormContainer extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   pristine: isProfilePristine(),
   typesProduits: selectTypesProduitsByIds(),
   values: getValues(),

@@ -9,7 +9,7 @@ import classnames from 'classnames';
 
 import { selectCommandes } from 'containers/Commande/selectors';
 import { loadUserCommandes, loadCommandes } from 'containers/Commande/actions';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import styles from './styles.css';
 
 import DetailCommandeContainer from './components/DetailCommandeContainer';
@@ -66,7 +66,7 @@ class HistoriqueCommandesUtilisateur extends Component {
 
 const mapStateToProps = createStructuredSelector({
   commandes: selectCommandes(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
 });
 
 const mapDispatchToProps = dispatch =>

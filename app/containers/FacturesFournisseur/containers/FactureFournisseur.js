@@ -17,7 +17,7 @@ import {
 
 import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
 
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import { trouveTarification } from 'containers/CommandeEdit/components/components/AffichePrix';
@@ -248,7 +248,7 @@ class FactureFournisseur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   commande: selectCommande(),
   produits: selectProduits(),
   utilisateurs: selectUtilisateurs(),

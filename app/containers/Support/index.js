@@ -13,7 +13,7 @@ import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import { saveMessage } from 'containers/App/actions';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
@@ -110,7 +110,7 @@ class Support extends Component {
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
 });
 
 const mapDispatchToProps = dispatch =>

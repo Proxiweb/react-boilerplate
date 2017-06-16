@@ -10,7 +10,7 @@ import { format } from 'utils/dates';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
-import { selectLocationState } from 'containers/App/selectors';
+import { makeSelectLocationState } from 'containers/App/selectors';
 
 import { loadCommandes } from 'containers/Commande/actions';
 import {
@@ -110,7 +110,7 @@ const mapStateToProps = createStructuredSelector({
   commandeContenus: selectCommandeContenus(),
   // contenus: selectCommandeContenus(),
   commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  locationState: selectLocationState(),
+  locationState: makeSelectLocationState(),
 });
 
 const mapDispatchToProps = dispatch =>

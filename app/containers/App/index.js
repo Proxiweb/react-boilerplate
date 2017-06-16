@@ -32,11 +32,11 @@ import AppMainDrawer from 'containers/AppMainDrawer';
 import { selectBalance, selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import {
-  selectPending,
+  makemakeSelectPending,
   selectMessagesUtilisateurLoaded,
   selectMessagesUtilisateur,
-  selectRelaiId,
-  selectLocationState,
+  makeSelectRelaiId,
+  makeSelectLocationState,
 } from './selectors';
 
 import { loadMessages } from './actions';
@@ -242,13 +242,13 @@ const selectDestinaires = () => state => (state.admin ? state.admin.communicatio
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   destinataires: selectDestinaires(),
   messagesLoaded: selectMessagesUtilisateurLoaded(),
   messages: selectMessagesUtilisateur(),
   compte: selectBalance(),
-  anonRelaiId: selectRelaiId(),
-  locationState: selectLocationState(),
+  anonRelaiId: makeSelectRelaiId(),
+  locationState: makeSelectLocationState(),
 });
 
 const mapDispatchToProps = dispatch =>

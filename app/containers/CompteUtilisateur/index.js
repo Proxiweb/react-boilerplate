@@ -14,7 +14,7 @@ import Paper from 'material-ui/Paper';
 import { logout } from '../Login/actions';
 import { selectPayments, selectBalance, selectRelaiId } from './selectors';
 import { selectRelais } from 'containers/Commande/selectors';
-import { selectLocationState } from 'containers/App/selectors';
+import { makeSelectLocationState } from 'containers/App/selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
 import NotificationsForm from 'components/NotificationsForm';
 
@@ -75,7 +75,7 @@ export class CompteUtilisateur extends React.Component {
 const mapStateToProps = createStructuredSelector({
   payments: selectPayments(),
   compte: selectBalance(),
-  locationState: selectLocationState(),
+  locationState: makeSelectLocationState(),
   relaiId: selectRelaiId(),
   relais: selectRelais(),
 });

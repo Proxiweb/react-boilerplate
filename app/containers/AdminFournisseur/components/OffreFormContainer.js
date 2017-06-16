@@ -7,7 +7,7 @@ import { isPristine } from 'redux-form';
 import round from 'lodash/round';
 
 import { saveOffre } from 'containers/Commande/actions';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import OffreForm from './OffreForm';
 
 const isProfilePristine = () => state => isPristine('offre')(state);
@@ -64,7 +64,7 @@ class OffreFormContainer extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   pristine: isProfilePristine(),
   valeurs: selectValeurs(),
 });

@@ -26,7 +26,7 @@ import {
 
 import { loadCommandes, initCommande } from 'containers/Commande/actions';
 import { selectAuthUtilisateurId, selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
-import { selectLocationState } from 'containers/App/selectors';
+import { makeSelectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 import Paper from 'material-ui/Paper';
 
@@ -325,7 +325,7 @@ const mapStateToProps = createStructuredSelector({
   utilisateurs: selectUtilisateurs(),
   params: selectParams(),
   fournisseur: selectFournisseurProduit(),
-  locationState: selectLocationState(),
+  locationState: makeSelectLocationState(),
   balance: selectMontantBalance(),
 });
 

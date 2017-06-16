@@ -3,7 +3,7 @@
  * App reducer
  *
  */
-// import { LOCATION_CHANGE } from 'react-router-redux';
+import { LOCATION_CHANGE } from 'react-router-redux';
 import { fromJS } from 'immutable';
 
 import {

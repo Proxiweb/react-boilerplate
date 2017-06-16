@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import Paper from 'material-ui/Paper';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { selectOffresDuProduit, selectTypesProduitsByIds } from 'containers/Commande/selectors';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import Offre from './Offre';
 import OffreFormContainer from './OffreFormContainer';
 import OffresTopBar from './OffresTopBar';
@@ -134,7 +134,7 @@ class Offres extends Component {
 const mapStateToProps = createStructuredSelector({
   offres: selectOffresDuProduit(),
   typesProduits: selectTypesProduitsByIds(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
 });
 
 export default connect(mapStateToProps)(Offres);

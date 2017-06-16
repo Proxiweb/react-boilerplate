@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { isPristine, change } from 'redux-form';
 import RelaisForm from 'containers/AdminRelais/components/RelaisForm';
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 import { saveRelais } from 'containers/AdminRelais/actions';
 
 const isProfilePristine = () => state => isPristine('profile')(state);
@@ -41,7 +41,7 @@ class InfosRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
   pristine: isProfilePristine(),
 });
 

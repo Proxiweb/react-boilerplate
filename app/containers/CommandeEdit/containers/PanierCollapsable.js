@@ -18,7 +18,7 @@ import { sauvegarder } from 'containers/CommandeEdit/actions';
 
 import { selectOffres, selectCommandeContenus } from 'containers/Commande/selectors';
 
-import { selectPending } from 'containers/App/selectors';
+import { makemakeSelectPending } from 'containers/App/selectors';
 
 import OrderValidate from './OrderValidate';
 
@@ -221,7 +221,7 @@ class PanierCollapsable extends Component {
 const mapStateToProps = createStructuredSelector({
   offres: selectOffres(),
   commandeContenus: selectCommandeContenus(),
-  pending: selectPending(),
+  pending: makemakeSelectPending(),
 });
 
 const mapDispatchToProps = dispatch =>
