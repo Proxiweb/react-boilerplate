@@ -46,16 +46,17 @@ module.exports = (config) => {
         base: 'Chrome',
         flags: ['--no-sandbox'],
       },
-    },
-
-    coverageReporter: {
-      dir: path.join(process.cwd(), 'coverage'),
-      reporters: [
-        { type: 'lcov', subdir: 'lcov' },
-        { type: 'html', subdir: 'html' },
-        { type: 'text-summary' },
-      ],
-    },
+    }
+    // ,
+    //
+    // coverageReporter: {
+    //   dir: path.join(process.cwd(), 'coverage'),
+    //   reporters: [
+    //     { type: 'lcov', subdir: 'lcov' },
+    //     { type: 'html', subdir: 'html' },
+    //     { type: 'text-summary' },
+    //   ],
+    // },
 
   });
 };

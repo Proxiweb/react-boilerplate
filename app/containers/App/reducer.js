@@ -3,9 +3,8 @@
  * App reducer
  *
  */
-import update from 'immutability-helper';
-import uuid from 'node-uuid';
-import { LOCATION_CHANGE } from 'react-router-redux';
+// import { LOCATION_CHANGE } from 'react-router-redux';
+import { fromJS } from 'immutable';
 
 import {
   ADD_MESSAGE,
@@ -20,7 +19,7 @@ import {
 
 import { REHYDRATE } from 'redux-persist/constants';
 
-const initialState = {
+const initialState = fromJS({
   messages: [],
   pending: true,
   utilisateur_messages: {
@@ -30,53 +29,46 @@ const initialState = {
   relaiId: null,
   stellarKeys: null,
   nombre_clients: 0,
-};
-
-const updateMessage = (state, message) => {
-  const autreMessages = state.utilisateur_messages.datas.find(id => id === message.id) || [];
-  return update(state, {
-    utilisateur_messages: {
-      datas: { $set: autreMessages.concat(message) },
-    },
-  });
-};
+});
 
 function notificationsReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_MESSAGE:
-      return update(state, { messages: { $push: [{ ...action.payload.message, id: uuid.v4() }] } });
+      return state.updateIn(['messages'], arr =>
+        arr.push(fromJS({ ...action.payload }))
+      );
     case REMOVE_MESSAGE:
-      return update(state, {
-        messages: { $set: state.messages.filter(not => not.id !== action.payload.id) },
-      });
+      return state.updateIn(['messages'], arr =>
+        arr.filter(msg => msg.get('id') !== action.payload.id)
+      );
     case c.ASYNC_LOAD_MESSAGES_SUCCESS:
-      return update(state, {
-        utilisateur_messages: { datas: { $set: action.datas.messages } },
-        loaded: { $set: true },
-      });
+      return state
+        .setIn(['utilisateur_messages', 'datas'], action.datas.messages)
+        .set('loaded', true);
     case cS.ASYNC_SAVE_MESSAGE_SUCCESS:
-      return updateMessage(state, action.datas);
+      return state.updateIn(
+        ['utilisateur_messages', 'datas'],
+        msg => (action.msg.id === msg.id ? action.msg : msg)
+      );
     case GLOBAL_PENDING_START:
-      return { ...state, pending: true };
+      return state.set('pending', true);
     case GLOBAL_PENDING_STOP:
-      return { ...state, pending: false };
+      return state.set('pending', false);
     case LOCATION_CHANGE:
-      return { ...state, pending: false };
+      return state.set('pending', false);
     case SELECTIONNER_RELAIS:
-      return { ...state, relaiId: action.payload.relaiId };
+      return state.set('relaiId', action.payload.relaiId);
     case SET_STELLAR_KEYS:
-      return { ...state, stellarKeys: action.payload.stellarKeys };
+      return state.set('stellarKeys', action.payload.stellarKeys);
     case 'WS/NOMBRE_CLIENTS':
-      return { ...state, nombre_clients: action.datas.nombre_clients };
+      return state.set('nombre_clients', action.datas.nombre_clients);
     case REHYDRATE: {
       const incoming = action.payload.global;
       if (!incoming) return state;
       const stellarKeys = incoming.stellarKeys;
-      return {
-        ...state,
-        relaiId: incoming.relaiId,
-        stellarKeys,
-      };
+      return state
+        .set('relaiId', incoming.relaiId)
+        .set('stellarKeys', { stellarKeys });
     }
     default:
       return state;

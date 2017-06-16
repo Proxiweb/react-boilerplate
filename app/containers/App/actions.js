@@ -9,6 +9,7 @@
  */
 
 import { findActionType } from 'utils/asyncSagaConstants';
+import uuid from 'node-uuid';
 
 import {
   ADD_MESSAGE,
@@ -21,10 +22,11 @@ import {
   messageSaveConst as cS,
 } from './constants';
 
-export function addMessage(message) {
+export function addMessage(message, id) {
+  const idt = id || uuid.v4();
   return {
     type: ADD_MESSAGE,
-    payload: { message },
+    payload: { message, id: idt },
   };
 }
 
