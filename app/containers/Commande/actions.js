@@ -285,8 +285,8 @@ export const loadUserCommandes = userId => ({
   msgPending: 'Chargement commandes',
 });
 
-export const ajouter = (contenuId, qte) => ({
+export const ajouter = (contenuId, quantite) => ({
   type: c.AJOUTER,
   contenuId,
-  quantite: qte,
+  quantite,
 });

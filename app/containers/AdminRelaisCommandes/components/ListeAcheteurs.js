@@ -12,7 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Subheader from 'material-ui/Subheader';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import DepotRelais from 'containers/DepotRelais';
-import { selectStellarKeys } from 'containers/App/selectors';
+import { makeSelectStellarKeys } from 'containers/App/selectors';
 import ListeAcheteursItem from './ListeAcheteursItem';
 import styles from './styles.css';
 const SelectableList = makeSelectable(List);
@@ -177,7 +177,7 @@ class ListeAcheteurs extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  stellarKeys: selectStellarKeys(),
+  stellarKeys: makeSelectStellarKeys(),
 });
 
 export default connect(mapStateToProps)(ListeAcheteurs);

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { List, ListItem } from 'material-ui/List';
 import CheckIcon from 'material-ui/svg-icons/action/done';
 import RaisedButton from 'material-ui/RaisedButton';
-import { selectStellarKeys } from 'containers/App/selectors';
+import { makeSelectStellarKeys } from 'containers/App/selectors';
 import { selectRelais } from 'containers/Commande/selectors';
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
@@ -78,7 +78,7 @@ class ChoixRelais extends Component {
 
 const mapStateToProps = createStructuredSelector({
   relais: selectRelais(),
-  stellarKeys: selectStellarKeys(),
+  stellarKeys: makeSelectStellarKeys(),
   utilisateur: selectCompteUtilisateur(),
 });
 

@@ -7,7 +7,7 @@ import round from 'lodash/round';
 import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import { createStructuredSelector } from 'reselect';
-import { selectStellarKeys } from 'containers/App/selectors';
+import { makeSelectStellarKeys } from 'containers/App/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import api from 'utils/stellarApi';
 
@@ -170,7 +170,7 @@ const mapStateToProps = createStructuredSelector({
   produits: selectCommandeProduits(),
   offres: selectOffres(),
   auth: selectCompteUtilisateur(),
-  stellarKeys: selectStellarKeys(),
+  stellarKeys: makeSelectStellarKeys(),
   commande: selectCommande(),
 });
 

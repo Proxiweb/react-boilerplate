@@ -30,7 +30,7 @@ import {
 
 import { selectAuthUtilisateurId, selectRoles } from 'containers/CompteUtilisateur/selectors';
 
-import { makeSelectLocationState, makemakeSelectPending } from 'containers/App/selectors';
+import { makeSelectLocationState, makeSelectPending } from 'containers/App/selectors';
 
 import styles from './styles.css';
 import Semainier from './components/Semainier';
@@ -304,7 +304,7 @@ const mapStateToProps = createStructuredSelector({
   typesProduits: selectTypesProduits(),
   asyncState: selectAsyncState(),
   route: makeSelectLocationState(),
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
 });
 
 function mapDispatchToProps(dispatch) {

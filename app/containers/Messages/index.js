@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import Paper from 'material-ui/Paper';
 
-import { makeSelectMessage } from 'containers/App/selectors';
+import { makeSelectMessageUtilisateur } from 'containers/App/selectors';
 import styles from './styles.css';
 import { marquerCommeLu } from 'containers/App/actions';
 
@@ -42,7 +42,7 @@ class Messages extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  message: makeSelectMessage(),
+  message: makeSelectMessageUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>

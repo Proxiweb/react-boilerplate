@@ -11,7 +11,7 @@ import { createStructuredSelector } from 'reselect';
 import LoginForm from '../../components/LoginForm';
 import { login, register, motdepasse } from './actions';
 // import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
-import { makeSelectLocationState, makemakeSelectPending } from 'containers/App/selectors';
+import { makeSelectLocationState, makeSelectPending } from 'containers/App/selectors';
 
 export class Login extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -35,7 +35,7 @@ export class Login extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
   locationState: makeSelectLocationState(),
 });
 

@@ -8,7 +8,7 @@ import ReactGridLayout from 'react-grid-layout';
 import { loadUtilisateurs, loadRelais } from 'containers/Commande/actions';
 import { selectUtilisateurs, selectCommandesUtilisateurs, selectRelais } from 'containers/Commande/selectors';
 
-import { makemakeSelectPending, makeSelectNombreClients } from 'containers/App/selectors';
+import { makeSelectPending, makeSelectNombreClients } from 'containers/App/selectors';
 
 import Panel from './components/Panel';
 import Utilisateurs from './components/Utilisateurs';
@@ -112,7 +112,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
   utilisateurs: selectUtilisateurs(),
   commandeUtilisateurs: selectCommandesUtilisateurs(),
   relais: selectRelais(),

@@ -48,7 +48,7 @@ import {
   annuler,
 } from 'containers/Commande/actions';
 
-import { makemakeSelectPending } from 'containers/App/selectors';
+import { makeSelectPending } from 'containers/App/selectors';
 
 import { selectDatePaiementCotisation } from 'containers/CompteUtilisateur/selectors';
 
@@ -363,7 +363,7 @@ const mapStateToProps = createStructuredSelector({
   datePaiementCotisation: selectDatePaiementCotisation(),
   offreCotisation: selectOffreCotisation(),
   cotisationId: selectCotisationId(),
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
 });
 
 const mapDispatchToProps = dispatch =>

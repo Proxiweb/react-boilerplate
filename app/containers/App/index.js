@@ -18,9 +18,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import runtime from 'offline-plugin/runtime';
-import styles from './styles.css';
-import Notifications from 'containers/Notifications';
 import CircularProgress from 'material-ui/CircularProgress';
+import Notifications from 'containers/Notifications';
 import MenuItem from 'material-ui/MenuItem';
 import Close from 'material-ui/svg-icons/navigation/close';
 import IconButton from 'material-ui/IconButton';
@@ -28,21 +27,22 @@ import NavigationMenuIcon from 'material-ui/svg-icons/navigation/menu';
 import FlatButton from 'material-ui/FlatButton';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
-
 import { selectBalance, selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { logout } from 'containers/Login/actions';
+import { refresh } from 'containers/CompteUtilisateur/actions';
+
+import styles from './styles.css';
 
 import {
-  makemakeSelectPending,
-  selectMessagesUtilisateurLoaded,
-  selectMessagesUtilisateur,
+  makeSelectPending,
+  makeSelectMessagesUtilisateurLoaded,
+  makeSelectMessages,
   makeSelectRelaiId,
   makeSelectLocationState,
 } from './selectors';
 
 import { loadMessages } from './actions';
 
-import { logout } from 'containers/Login/actions';
-import { refresh } from 'containers/CompteUtilisateur/actions';
 import Logged from './components/Logged';
 import Login from './components/Login';
 import MessageMaj from './components/MessageMaj';
@@ -242,10 +242,10 @@ const selectDestinaires = () => state => (state.admin ? state.admin.communicatio
 
 const mapStateToProps = createStructuredSelector({
   user: selectCompteUtilisateur(),
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
   destinataires: selectDestinaires(),
-  messagesLoaded: selectMessagesUtilisateurLoaded(),
-  messages: selectMessagesUtilisateur(),
+  messagesLoaded: makeSelectMessagesUtilisateurLoaded(),
+  messages: makeSelectMessages(),
   compte: selectBalance(),
   anonRelaiId: makeSelectRelaiId(),
   locationState: makeSelectLocationState(),

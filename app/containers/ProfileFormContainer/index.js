@@ -8,7 +8,7 @@ import { isPristine } from 'redux-form';
 
 import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
-import { makemakeSelectPending } from 'containers/App/selectors';
+import { makeSelectPending } from 'containers/App/selectors';
 import ProfileForm from './components/ProfileForm';
 
 const isProfilePristine = () => state => isPristine('profile')(state);
@@ -54,7 +54,7 @@ class ProfileFormContainer extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   profile: selectCompteUtilisateur(),
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
   pristine: isProfilePristine(),
 });
 

@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { isPristine, change } from 'redux-form';
 import Paper from 'material-ui/Paper';
 
-import { makemakeSelectPending } from 'containers/App/selectors';
+import { makeSelectPending } from 'containers/App/selectors';
 
 import { selectFournisseursIds, selectCommandeDomain } from 'containers/Commande/selectors';
 import { loadFournisseurs, loadRelais } from 'containers/Commande/actions';
@@ -61,7 +61,7 @@ class InfosFournisseur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
   fournisseurs: selectFournisseursIds(),
   donnees: selectCommandeDomain(),
 });

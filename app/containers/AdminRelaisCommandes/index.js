@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
-import { makemakeSelectPending } from 'containers/App/selectors';
+import { makeSelectPending } from 'containers/App/selectors';
 
 import { format } from 'utils/dates';
 import addMonths from 'date-fns/add_months';
@@ -104,7 +104,7 @@ class AdminRelaisCommandes extends Component {
 const mapStateToProps = createStructuredSelector({
   relais: selectRelaisSelected(),
   commandes: selectCommandes(),
-  pending: makemakeSelectPending(),
+  pending: makeSelectPending(),
 });
 
 const mapDispatchToProps = dispatch =>

@@ -1,42 +1,41 @@
 // makeSelectLocationState expects a plain JS object for the routing state
 import { createSelector } from 'reselect';
 
-const selectGlobal = (state) => state.get('global');
+export const makeSelectGlobal = () => (state) => state.get('global');
 export const selectParams = () => (state, props) => props.params;
 
 const makeSelectPending = () => createSelector(
-  selectGlobal,
+  makeSelectGlobal(),
   (globalState) => globalState.get('pending')
 );
 
 const makeSelectRelaiId = () => createSelector(
-  selectGlobal,
+  makeSelectGlobal(),
   (globalState) => globalState.get('relaiId')
 );
 
 const makeSelectStellarKeys = () => createSelector(
-  selectGlobal,
+  makeSelectGlobal(),
   (globalState) => globalState.get('stellarKeys')
 );
 
 const makeSelectNombreClients = () => createSelector(
-  selectGlobal,
+  makeSelectGlobal(),
   (globalState) => globalState.get('nombre_clients')
 );
 
 const makeSelectMessages = () => createSelector(
-  selectGlobal,
-  (globalState) => globalState.get('utilisateur_messages')
+  makeSelectGlobal(),
+  (globalState) => globalState.getIn(['utilisateur_messages', 'datas'])
 );
 
 const makeSelectMessagesUtilisateurLoaded = () => createSelector(
-  selectGlobal,
+  makeSelectGlobal(),
   (globalState) => globalState.getIn(['utilisateur_messages', 'loaded'])
 );
 
-
 const makeSelectMessageUtilisateur = () => createSelector(
-  selectGlobal,
+  makeSelectGlobal(),
   selectParams(),
   (globalState, params) =>
     globalState
@@ -44,21 +43,21 @@ const makeSelectMessageUtilisateur = () => createSelector(
       .find(msg => msg.get('id') === params.get('messageId'))
 );
 
-export const makemakeSelectPending = () => state => state.global.pending;
-export const selectRelaiId = () => state => state.global.relaiId;
-export const selectStellarKeys = () => state => state.global.stellarKeys;
-export const makeSelectNombreClients = () => state => state.global.nombre_clients;
-const selectMessages = () => state => state.global.utilisateur_messages;
-export const selectMessagesUtilisateurLoaded = () =>
-  createSelector(selectMessages(), messages => messages && messages.loaded);
-export const selectMessagesUtilisateur = () =>
-  createSelector(selectMessages(), msg => (msg ? msg.datas : null));
-export const selectMessage = () =>
-  createSelector(
-    selectMessagesUtilisateur(),
-    selectParams(),
-    (messages, params) => (messages ? messages.find(msg => msg.id === params.messageId) : null)
-  );
+// export const makeSelectPending = () => state => state.global.pending;
+// export const selectRelaiId = () => state => state.global.relaiId;
+// export const selectStellarKeys = () => state => state.global.stellarKeys;
+// export const makeSelectNombreClients = () => state => state.global.nombre_clients;
+// const selectMessages = () => state => state.global.utilisateur_messages;
+// export const selectMessagesUtilisateurLoaded = () =>
+//   createSelector(selectMessages(), messages => messages && messages.loaded);
+// export const selectMessagesUtilisateur = () =>
+//   createSelector(selectMessages(), msg => (msg ? msg.datas : null));
+// export const makeSelectMessage = () =>
+//   createSelector(
+//     selectMessagesUtilisateur(),
+//     selectParams(),
+//     (messages, params) => (messages ? messages.find(msg => msg.id === params.messageId) : null)
+//   );
 
 const makeSelectLocationState = () => {
   let prevRoutingState;

@@ -8,7 +8,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { selectStellarKeys } from 'containers/App/selectors';
+import { makeSelectStellarKeys } from 'containers/App/selectors';
 import { setStellarKeys } from 'containers/App/actions';
 
 class ProxiwebConfig extends Component {
@@ -58,7 +58,7 @@ class ProxiwebConfig extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  stellarKeys: selectStellarKeys(),
+  stellarKeys: makeSelectStellarKeys(),
 });
 
 const mapDispatchToProps = dispatch =>
