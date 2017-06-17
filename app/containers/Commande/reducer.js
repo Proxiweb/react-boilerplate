@@ -212,10 +212,59 @@ function commandeReducer(state = initialState, action) {
     // //   });
     // // }
     //
-    // case c.ASYNC_ANNULER_SUCCESS: {
-    //   const { commandeId, id } = action.req.datas;
-    //   return annuleCommandeUtilisateur(state, id, commandeId);
-    // }
+    case c.ASYNC_ANNULER_SUCCESS: {
+      const { commandeId, id } = action.req.datas;
+      return state
+        .updateIn(['datas', 'entities', 'commandeUtilisateurs'], cU =>
+          cU.delete(id)
+        )
+        .updateIn(['datas', 'entities', 'commandeContenus'], cCs =>
+          cCs.filter(cC => cC.get('commandeUtilisateurId') !== id)
+        )
+        .updateIn(
+        [
+          'datas',
+          'entities',
+          'commandes',
+          commandeId,
+          'commandeUtilisateurs',
+        ],
+          cUs => cUs.filter(cuId => cuId !== id)
+        );
+
+      // return annuleCommandeUtilisateur(state, id, commandeId);
+      // const annuleCommandeUtilisateur = (state, commandeUtilisateurId, cdeId) => {
+      //   const { commandeUtilisateurs, commandeContenus, commandes } = state.datas.entities;
+      //
+      //   const contenusRestants = Object.keys(commandeContenus)
+      //     .filter(id => commandeUtilisateurs[id] && !includes(commandeUtilisateurs[id].contenus, id))
+      //     .reduce((memo, id) => ({ [id]: commandeContenus[id] }), {});
+      //
+      //   const commandeUtilisateursRestants = Object.keys(commandeUtilisateurs)
+      //     .filter(id => id !== commandeUtilisateurId)
+      //     .reduce((memo, id) => ({ [id]: commandeUtilisateurs[id] }), {});
+      //
+      //   const commandeCommandeUtilisateursRestants = commandes[cdeId].commandeUtilisateurs.filter(
+      //     id => id !== commandeUtilisateurId
+      //   );
+      //
+      //   return update(state, {
+      //     datas: {
+      //       entities: {
+      //         commandeUtilisateurs: { $set: commandeUtilisateursRestants },
+      //         commandeContenus: { $set: contenusRestants },
+      //         commandes: {
+      //           [cdeId]: {
+      //             commandeUtilisateurs: {
+      //               $set: commandeCommandeUtilisateursRestants,
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //   });
+      // };
+    }
     //
     // case c.ASYNC_CREATE_COMMANDE_SUCCESS:
     // case c.ASYNC_LOAD_COMMANDE_SUCCESS: {
@@ -458,7 +507,6 @@ function commandeReducer(state = initialState, action) {
     //
     case c.AJOUTER_OFFRE: {
       const { offreId, utilisateurId, commandeId } = action.payload;
-
       const commandeUtilisateurId = state
         .getIn(['datas', 'entities', 'commandeUtilisateurs'])
         .findKey(
@@ -466,10 +514,9 @@ function commandeReducer(state = initialState, action) {
             item.get('utilisateurId') === utilisateurId &&
             item.get('commandeId') === commandeId
         );
-
       const commandeContenuId = commandeUtilisateurId
         ? state
-            .getIn('datas', 'entities', 'commandeContenus')
+            .getIn(['datas', 'entities', 'commandeContenus'])
             .findKey(
               item =>
                 item.get('utilisateurId') === utilisateurId &&
@@ -489,7 +536,6 @@ function commandeReducer(state = initialState, action) {
           'quantite',
         ])
         : 0;
-
       const id = uuid.v4();
 
       const stateAvecNouveauContenu = commandeContenuId
@@ -515,119 +561,133 @@ function commandeReducer(state = initialState, action) {
             })
           );
 
-      return stateAvecNouveauContenu.updateIn(
-        ['datas', 'entities', 'commandeUtilisateurs'],
-        cu =>
-          !commandeUtilisateurId
-            ? cu.set(
-                id,
-                nCommande.merge({
-                  commandeId,
-                  utilisateurId,
-                })
-              )
-            : cu.get(commandeUtilisateurId).set('updatedAt', null)
-      );
-
-      // return update(state, {
-      //   datas: {
-      //     entities: {
-      //       ...ajouteNouvelleOffre,
-      //       ...ajouteNouveauContenu,
-      //     },
-      //   },
-      // });
+      let rState;
+      if (!commandeUtilisateurId) {
+        rState = stateAvecNouveauContenu.setIn(
+          ['datas', 'entities', 'commandeUtilisateurs', id],
+          nCommande.merge({
+            contenus: [nCommandeContenuId],
+            commandeId,
+            utilisateurId,
+          })
+        );
+      } else {
+        rState = stateAvecNouveauContenu.setIn(
+          [
+            'datas',
+            'entities',
+            'commandeUtilisateurs',
+            commandeUtilisateurId,
+            'updatedAt',
+          ],
+          null
+        );
+      }
+      return rState;
     }
     //
-    // case c.DIMINUER_OFFRE: {
-    //   const { offreId, commandeId, utilisateurId } = action.payload;
-    //   const commandeContenuId = Object.keys(state.datas.entities.commandeContenus).find(
-    //     id =>
-    //       state.datas.entities.commandeContenus[id].utilisateurId === utilisateurId &&
-    //       state.datas.entities.commandeContenus[id].commandeId === commandeId &&
-    //       state.datas.entities.commandeContenus[id].offreId === offreId
-    //   );
-    //
-    //   const nouvelleQuantite = state.datas.entities.commandeContenus[commandeContenuId].quantite - 1;
-    //
-    //   const commandeUtilisateurId = Object.keys(state.datas.entities.commandeUtilisateurs).find(
-    //     id =>
-    //       state.datas.entities.commandeUtilisateurs[id].utilisateurId === utilisateurId &&
-    //       state.datas.entities.commandeUtilisateurs[id].commandeId === commandeId
-    //   );
-    //
-    //   if (nouvelleQuantite === 0) {
-    //     return update(state, {
-    //       datas: {
-    //         entities: {
-    //           commandeContenus: {
-    //             $set: Object.keys(state.datas.entities.commandeContenus).reduce(
-    //               (m, id) =>
-    //                 id !== commandeContenuId
-    //                   ? {
-    //                       ...m,
-    //                       [id]: state.datas.entities.commandeContenus[id],
-    //                     }
-    //                   : { ...m }
-    //             ),
-    //           },
-    //           commandeUtilisateurs: {
-    //             [commandeUtilisateurId]: {
-    //               updatedAt: { $set: null },
-    //               contenus: {
-    //                 $set: state.datas.entities.commandeUtilisateurs[commandeUtilisateurId].contenus.filter(
-    //                   id => id !== commandeContenuId
-    //                 ),
-    //               },
-    //             },
-    //           },
-    //         },
-    //       },
-    //     });
-    //   }
-    //
-    //   return update(state, {
-    //     datas: {
-    //       entities: {
-    //         commandeContenus: {
-    //           [commandeContenuId]: {
-    //             quantite: {
-    //               $set: nouvelleQuantite,
-    //             },
-    //           },
-    //         },
-    //         commandeUtilisateurs: {
-    //           [commandeUtilisateurId]: {
-    //             updatedAt: { $set: null },
-    //           },
-    //         },
-    //       },
-    //     },
-    //   });
-    // }
-    //
-    // case c.SET_DISTRIBUTION: {
-    //   const { commandeId, utilisateurId, plageHoraire, livraisonId } = action.payload;
-    //   const commandeUtilisateurId = Object.keys(state.datas.entities.commandeUtilisateurs).find(
-    //     id =>
-    //       state.datas.entities.commandeUtilisateurs[id].utilisateurId === utilisateurId &&
-    //       state.datas.entities.commandeUtilisateurs[id].commandeId === commandeId
-    //   );
-    //
-    //   return update(state, {
-    //     datas: {
-    //       entities: {
-    //         commandeUtilisateurs: {
-    //           [commandeUtilisateurId]: {
-    //             livraisonId: { $set: livraisonId },
-    //             plageHoraire: { $set: plageHoraire },
-    //             updatedAt: { $set: null },
-    //           },
-    //         },
-    //       },
-    //     },
-    //   });
-    // }
+    case c.DIMINUER_OFFRE: {
+      const { offreId, commandeId, utilisateurId } = action.payload;
+      const commandeContenuId = state
+        .getIn(['datas', 'entities', 'commandeContenus'])
+        .findKey(
+          item =>
+            item.get('utilisateurId') === utilisateurId &&
+            item.get('commandeId') === commandeId &&
+            item.get('offreId') === offreId
+        );
+      const nouvelleQuantite =
+        state.getIn([
+          'datas',
+          'entities',
+          'commandeContenus',
+          commandeContenuId,
+          'quantite',
+        ]) - 1;
+      const commandeUtilisateurId = state
+        .getIn(['datas', 'entities', 'commandeUtilisateurs'])
+        .findKey(
+          item =>
+            item.get('utilisateurId') === utilisateurId &&
+            item.get('commandeId') === commandeId
+        );
+
+      if (nouvelleQuantite === 0) {
+        return state
+          .updateIn(['datas', 'entities', 'commandeContenus'], cont =>
+            cont.delete(commandeContenuId)
+          )
+          .setIn(
+          [
+            'datas',
+            'entities',
+            'commandeUtilisateurs',
+            commandeUtilisateurId,
+            'updatedAt',
+          ],
+            null
+          )
+          .updateIn(
+          [
+            'datas',
+            'entities',
+            'commandeUtilisateurs',
+            commandeUtilisateurId,
+            'contenus',
+          ],
+            contenus => contenus.filter(id => id !== commandeContenuId)
+          );
+      }
+
+      return state
+        .setIn(
+        [
+          'datas',
+          'entities',
+          'commandeContenus',
+          commandeContenuId,
+          'quantite',
+        ],
+          nouvelleQuantite
+        )
+        .setIn(
+        [
+          'datas',
+          'entities',
+          'commandeUtilisateurs',
+          commandeUtilisateurId,
+          'updatedAt',
+        ],
+          null
+        );
+    }
+
+    case c.SET_DISTRIBUTION: {
+      const {
+        commandeId,
+        utilisateurId,
+        plageHoraire,
+        livraisonId,
+      } = action.payload;
+
+      const commandeUtilisateurId = state
+        .getIn(['datas', 'entities', 'commandeUtilisateurs'])
+        .findKey(
+          item =>
+            item.get('utilisateurId') === utilisateurId &&
+            item.get('commandeId') === commandeId
+        );
+
+      return state.updateIn(
+        ['datas', 'entities', 'commandeUtilisateurs', commandeUtilisateurId],
+        cu =>
+          cu.merge({
+            livraisonId,
+            plageHoraire,
+            updatedAt: null,
+          })
+      );
+    }
     //
     // case 'ws/NOUVELLE_COMMANDE_UTILISATEUR': {
     //   const datas = normalize(action.datas, schemas.COMMANDE_UTILISATEURS);

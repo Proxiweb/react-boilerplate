@@ -2,19 +2,20 @@ const webpackConfig = require('../webpack/webpack.test.babel');
 const argv = require('minimist')(process.argv.slice(2));
 const path = require('path');
 
-module.exports = (config) => {
+module.exports = config => {
   config.set({
     frameworks: ['mocha'],
     reporters: ['coverage', 'mocha'],
     browsers: process.env.TRAVIS // eslint-disable-line no-nested-ternary
       ? ['ChromeTravis']
-      : process.env.APPVEYOR
-        ? ['IE'] : ['Chrome'],
+      : process.env.APPVEYOR ? ['IE'] : ['Chrome'],
 
     autoWatch: false,
     singleRun: true,
+    // logLevel: config.LOG_DEBUG,
 
     client: {
+      captureConsole: true,
       mocha: {
         grep: argv.grep,
       },
@@ -46,7 +47,13 @@ module.exports = (config) => {
         base: 'Chrome',
         flags: ['--no-sandbox'],
       },
-    }
+    },
+
+    browserConsoleLogOptions: {
+      level: 'log',
+      format: '%b %T: %m',
+      terminal: true,
+    },
     // ,
     //
     // coverageReporter: {
@@ -57,6 +64,5 @@ module.exports = (config) => {
     //     { type: 'text-summary' },
     //   ],
     // },
-
   });
 };
