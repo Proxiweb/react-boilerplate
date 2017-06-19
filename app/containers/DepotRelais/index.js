@@ -14,7 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import { ajouterDepot } from 'containers/AdminDepot/actions';
-import { selectRoles } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectRoles } from 'containers/CompteUtilisateur/selectors';
 import styles from './styles.css';
 
 class DepotRelais extends Component {
@@ -109,12 +109,21 @@ class DepotRelais extends Component {
   };
 
   render() {
-    const { totalCommande, balance, roles, onRequestClose, stellarKeys, open } = this.props;
+    const {
+      totalCommande,
+      balance,
+      roles,
+      onRequestClose,
+      stellarKeys,
+      open,
+    } = this.props;
 
     const { montant, type, depotEnCours } = this.state;
     const manque = round(parseFloat(balance.balance) - totalCommande, 2);
     const max = round(parseFloat(balance.limit) - parseFloat(balance.balance));
-    const manqueStr = manque > 0 ? '' : `( manque ${(manque * -1).toFixed(2)} €)`;
+    const manqueStr = manque > 0
+      ? ''
+      : `( manque ${(manque * -1).toFixed(2)} €)`;
     const invalid = montant === null || type === null || depotEnCours;
 
     return (
@@ -122,21 +131,22 @@ class DepotRelais extends Component {
         title={`Déposer des fonds ( max ${max} €)`}
         actions={[
           <FlatButton label="Annuler" primary onTouchTap={onRequestClose} />,
-          (includes(roles, 'ADMIN') || includes(roles, 'DEPOT_DIRECT')) && stellarKeys
+          (includes(roles, 'ADMIN') || includes(roles, 'DEPOT_DIRECT')) &&
+            stellarKeys
             ? <RaisedButton
-                label="Depot express"
-                primary
-                type="submit"
-                onTouchTap={this.handleDepotExpress}
-                disabled={invalid}
-              />
+              label="Depot express"
+              primary
+              type="submit"
+              onTouchTap={this.handleDepotExpress}
+              disabled={invalid}
+            />
             : <RaisedButton
-                label="Ajouter au borderau"
-                type="submit"
-                primary
-                onTouchTap={() => this.handleDeposer()}
-                disabled={invalid}
-              />,
+              label="Ajouter au borderau"
+              type="submit"
+              primary
+              onTouchTap={() => this.handleDeposer()}
+              disabled={invalid}
+            />,
         ]}
         modal={false}
         open={this.props.open}
@@ -156,7 +166,8 @@ class DepotRelais extends Component {
                   step="0.01"
                   floatingLabelText={`Montant déposé ${manqueStr}`}
                   label="Montant déposé"
-                  onChange={(event, m) => this.setState({ ...this.state, montant: m })}
+                  onChange={(event, m) =>
+                    this.setState({ ...this.state, montant: m })}
                 />
               </div>
               <div className="col-md-6">
@@ -183,7 +194,8 @@ class DepotRelais extends Component {
                     fullWidth
                     floatingLabelText="Information supplémentaire"
                     label="Information supplémentaire"
-                    onChange={(event, inf) => this.setState({ ...this.state, inf })}
+                    onChange={(event, inf) =>
+                      this.setState({ ...this.state, inf })}
                   />
                 </div>}
             </div>
@@ -194,7 +206,7 @@ class DepotRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  roles: selectRoles(),
+  roles: makeSelectRoles(),
 });
 
 const mapDispatchToProps = dispatch =>

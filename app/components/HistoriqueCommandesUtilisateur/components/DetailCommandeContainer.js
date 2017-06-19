@@ -11,10 +11,10 @@ import DetailCommande from 'components/DetailCommande';
 import { loadCommandes } from 'containers/Commande/actions';
 
 import {
-  selectProduits,
-  selectOffres,
-  selectCommandesUtilisateurs,
-  selectCommandeContenus,
+  makeSelectProduits,
+  makeSelectOffres,
+  makeSelectCommandesUtilisateurs,
+  makeSelectCommandeContenus,
 } from 'containers/Commande/selectors';
 
 class DetailCommandeContainer extends Component {
@@ -49,7 +49,12 @@ class DetailCommandeContainer extends Component {
   }
 
   isLoaded = props => {
-    const { commandesUtilisateurs, commandeId, utilisateurId, contenus } = props;
+    const {
+      commandesUtilisateurs,
+      commandeId,
+      utilisateurId,
+      contenus,
+    } = props;
 
     if (!commandesUtilisateurs || !contenus) return false;
 
@@ -61,8 +66,9 @@ class DetailCommandeContainer extends Component {
 
     return (
       commandeUtilisateurId &&
-      Object.keys(contenus).filter(id => contenus[id].commandeUtilisateurId === commandeUtilisateurId)
-        .length > 0
+      Object.keys(contenus).filter(
+        id => contenus[id].commandeUtilisateurId === commandeUtilisateurId
+      ).length > 0
     );
   };
 
@@ -128,10 +134,10 @@ class DetailCommandeContainer extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  produits: selectProduits(),
-  offres: selectOffres(),
-  contenus: selectCommandeContenus(),
-  commandesUtilisateurs: selectCommandesUtilisateurs(),
+  produits: makeSelectProduits(),
+  offres: makeSelectOffres(),
+  contenus: makeSelectCommandeContenus(),
+  commandesUtilisateurs: makeSelectCommandesUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -142,4 +148,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailCommandeContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailCommandeContainer
+);

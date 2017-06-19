@@ -14,10 +14,10 @@ import { makeSelectLocationState } from 'containers/App/selectors';
 
 import { loadCommandes } from 'containers/Commande/actions';
 import {
-  selectCommandeCommandeUtilisateurs,
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectCommandesRelais,
+  makeSelectCommandeCommandeUtilisateurs,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectCommandesRelais,
 } from 'containers/Commande/selectors';
 
 import styles from './styles.css';
@@ -50,11 +50,19 @@ class FacturesDistributeur extends Component {
 
   handleChangeList = (event, value) => {
     this.props.loadCde(value);
-    this.props.pushState(`/distributeurs/${this.props.params.relaiId}/factures/${value}`);
+    this.props.pushState(
+      `/distributeurs/${this.props.params.relaiId}/factures/${value}`
+    );
   };
 
   render() {
-    const { commandes, params, commandeUtilisateurs, commandeContenus, locationState } = this.props;
+    const {
+      commandes,
+      params,
+      commandeUtilisateurs,
+      commandeContenus,
+      locationState,
+    } = this.props;
 
     if (!commandes) return null;
 
@@ -80,17 +88,26 @@ class FacturesDistributeur extends Component {
       <div className="row">
         {!print &&
           <div className={classnames('col-md-3', styles.panel)}>
-            <SelectableList value={params.commandeId} onChange={this.handleChangeList}>
+            <SelectableList
+              value={params.commandeId}
+              onChange={this.handleChangeList}
+            >
               {Object.keys(commandes)
                 .slice()
                 .filter(id => commandes[id].dateCommande)
                 .sort(compareDesc)
                 .map((id, idx) =>
-                  <ListItem key={idx} primaryText={format(commandes[id].dateCommande, 'DD MM')} value={id} />
+                  (<ListItem
+                    key={idx}
+                    primaryText={format(commandes[id].dateCommande, 'DD MM')}
+                    value={id}
+                  />)
                 )}
             </SelectableList>
           </div>}
-        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
+        <div
+          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
+        >
           {this.props.children &&
             commandeUtilisateurs &&
             commandeContenus &&
@@ -106,10 +123,10 @@ class FacturesDistributeur extends Component {
   }
 }
 const mapStateToProps = createStructuredSelector({
-  commandes: selectCommandesRelais(),
-  commandeContenus: selectCommandeContenus(),
-  // contenus: selectCommandeContenus(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
+  commandes: makeSelectCommandesRelais(),
+  commandeContenus: makeSelectCommandeContenus(),
+  // contenus: makeSelectCommandeContenus(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
   locationState: makeSelectLocationState(),
 });
 
@@ -122,4 +139,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FacturesDistributeur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FacturesDistributeur
+);

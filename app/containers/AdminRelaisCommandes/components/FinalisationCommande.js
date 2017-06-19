@@ -15,11 +15,11 @@ import { calculeTotauxCommande } from 'containers/Commande/utils';
 import api from 'utils/stellarApi';
 
 import {
-  selectFournisseursCommande,
-  selectCommandeProduits,
-  selectCommande,
-  selectUtilisateurs,
-  selectOffres,
+  makeSelectFournisseursCommande,
+  makeSelectCommandeProduits,
+  makeSelectCommande,
+  makeSelectUtilisateurs,
+  makeSelectOffres,
 } from 'containers/Commande/selectors';
 
 import { saveCommande } from 'containers/Commande/actions';
@@ -40,7 +40,13 @@ class FinalisationCommande extends Component {
 
   constructor(props) {
     super(props);
-    const { offres, commandeContenus, produits, contenus, params: { commandeId } } = this.props;
+    const {
+      offres,
+      commandeContenus,
+      produits,
+      contenus,
+      params: { commandeId },
+    } = this.props;
 
     this.state = {
       paiements: null,
@@ -50,7 +56,9 @@ class FinalisationCommande extends Component {
           .filter(
             id =>
               contenus[id].commandeId === commandeId &&
-              produits.find(pdt => pdt.id === offres[contenus[id].offreId].produitId).fournisseurId === f.id
+              produits.find(
+                pdt => pdt.id === offres[contenus[id].offreId].produitId
+              ).fournisseurId === f.id
           )
           .map(id => contenus[id]);
 
@@ -138,12 +146,17 @@ class FinalisationCommande extends Component {
     });
 
     const distributeurId = Object.keys(utilisateurs).find(
-      id => utilisateurs[id].relaiId === relaiId && includes(utilisateurs[id].roles, 'RELAI_ADMIN')
+      id =>
+        utilisateurs[id].relaiId === relaiId &&
+        includes(utilisateurs[id].roles, 'RELAI_ADMIN')
     );
 
     destinataires.push({
       id: distributeurId,
-      montant: Object.keys(this.state.revenus).reduce((m, id) => m + this.state.revenus[id].recolteFond, 0),
+      montant: Object.keys(this.state.revenus).reduce(
+        (m, id) => m + this.state.revenus[id].recolteFond,
+        0
+      ),
       nom: `${capitalize(utilisateurs[distributeurId].prenom)} ${utilisateurs[
         distributeurId
       ].nom.toUpperCase()}`,
@@ -169,13 +182,15 @@ class FinalisationCommande extends Component {
       0
     );
     const totalCommande = Object.keys(this.state.revenus).reduce(
-      (m, id) => m + this.state.revenus[id].recolteFond + this.state.revenus[id].prix,
+      (m, id) =>
+        m + this.state.revenus[id].recolteFond + this.state.revenus[id].prix,
       0
     );
     return (
       <div className="row center-md" style={{ padding: '1em' }}>
-        {Object.keys(this.state.revenus).filter(id => this.state.revenus[id].prix).map((id, idx) => {
-          return (
+        {Object.keys(this.state.revenus)
+          .filter(id => this.state.revenus[id].prix)
+          .map((id, idx) => (
             <div key={idx} className="col-md-6">
               <div className="row">
                 <div className="col-md-12">
@@ -183,7 +198,13 @@ class FinalisationCommande extends Component {
                     label={truncate(this.state.revenus[id].nom, {
                       length: 25,
                     })}
-                    icon={<SwapHorizIcon color={this.state.revenus[id].sync ? 'green' : 'silver'} />}
+                    icon={
+                      <SwapHorizIcon
+                        color={
+                            this.state.revenus[id].sync ? 'green' : 'silver'
+                          }
+                      />
+                      }
                     onClick={() => this.toggleSync(id)}
                   />
                 </div>
@@ -193,20 +214,19 @@ class FinalisationCommande extends Component {
                     step="0.01"
                     type="number"
                     name={`prix_${id}`}
-                    onChange={this.handleChange} // eslint-disable-line
+                    onChange={this.handleChange}
                   />
                   <input
                     value={this.state.revenus[id].recolteFond}
                     step="0.01"
                     type="number"
                     name={`recolteFond_${id}`}
-                    onChange={this.handleChange} // eslint-disable-line
+                    onChange={this.handleChange}
                   />
                 </div>
               </div>
             </div>
-          );
-        })}
+            ))}
         <div className="col-md-12">
           <div className="row center-md">
             <div className="col-md-6">
@@ -227,9 +247,16 @@ class FinalisationCommande extends Component {
                 </h3>}
             </div>
             {this.state.paiements &&
-              Math.abs(totalCommande - parseFloat(this.state.paiements.balance)) < 0.0099 &&
+              Math.abs(
+                totalCommande - parseFloat(this.state.paiements.balance)
+              ) < 0.0099 &&
               <div className="col-md-10">
-                <RaisedButton label="Valider la ventilation" primary fullWidth onClick={this.saveCommande} />
+                <RaisedButton
+                  label="Valider la ventilation"
+                  primary
+                  fullWidth
+                  onClick={this.saveCommande}
+                />
               </div>}
           </div>
         </div>
@@ -239,11 +266,11 @@ class FinalisationCommande extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseursCommande(),
-  commande: selectCommande(),
-  produits: selectCommandeProduits(),
-  offres: selectOffres(),
-  utilisateurs: selectUtilisateurs(),
+  fournisseurs: makeSelectFournisseursCommande(),
+  commande: makeSelectCommande(),
+  produits: makeSelectCommandeProduits(),
+  offres: makeSelectOffres(),
+  utilisateurs: makeSelectUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -254,4 +281,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FinalisationCommande);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FinalisationCommande
+);

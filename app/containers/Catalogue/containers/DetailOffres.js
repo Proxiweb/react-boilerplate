@@ -6,10 +6,10 @@ import FlatButton from 'material-ui/FlatButton';
 import { createStructuredSelector } from 'reselect';
 
 import {
-  selectOffresDuProduit,
-  selectTypesProduitsRelais,
-  selectFournisseursRelais,
-  selectProduitsRelaisByTypeProduit,
+  makeSelectOffresDuProduit,
+  makeSelectTypesProduitsRelais,
+  makeSelectFournisseursRelais,
+  makeSelectProduitsRelaisByTypeProduit,
 } from 'containers/Commande/selectors';
 
 import OffreDetails from 'components/OffreDetails';
@@ -53,7 +53,8 @@ class DetailOffres extends Component {
         <div className="row">
           <div className={`col-md-12 ${styles.fournisseurSwitch}`}>
             <FlatButton
-              onClick={() => this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
+              onClick={() =>
+                this.setState(oldState => ({ viewOffre: !oldState.viewOffre }))}
               primary
               label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
             />
@@ -84,7 +85,10 @@ class DetailOffres extends Component {
               </div>
               <div className="col-md-6">
                 {viewOffre &&
-                  <p className={styles.right} dangerouslySetInnerHTML={{ __html: produit.description }} />}
+                  <p
+                    className={styles.right}
+                    dangerouslySetInnerHTML={{ __html: produit.description }}
+                  />}
                 {!viewOffre &&
                   <p
                     dangerouslySetInnerHTML={{
@@ -97,20 +101,24 @@ class DetailOffres extends Component {
         </div>
         <div style={{ padding: '1em' }}>
           {viewOffre &&
-            offres.filter(o => o.active && o.relaiId === relaiId && !o.archive).map((offre, idx) => {
-              const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
-              const tR = offre.tarifications.length > 1;
-              return (
-                <OffreDetails
-                  key={idx}
-                  typeProduit={typeProduit}
-                  offre={offre}
-                  subTitle="Tarif dégressif (cliquez pour plus de détails)"
-                  expandable={tR}
-                  style={{ marginBottom: '10px' }}
-                />
-              );
-            })}
+            offres
+              .filter(o => o.active && o.relaiId === relaiId && !o.archive)
+              .map((offre, idx) => {
+                const typeProduit = typeProduits.find(
+                  typesPdt => typesPdt.id === produit.typeProduitId
+                );
+                const tR = offre.tarifications.length > 1;
+                return (
+                  <OffreDetails
+                    key={idx}
+                    typeProduit={typeProduit}
+                    offre={offre}
+                    subTitle="Tarif dégressif (cliquez pour plus de détails)"
+                    expandable={tR}
+                    style={{ marginBottom: '10px' }}
+                  />
+                );
+              })}
         </div>
       </Paper>
     );
@@ -118,10 +126,10 @@ class DetailOffres extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  typeProduits: selectTypesProduitsRelais(),
-  offres: selectOffresDuProduit(),
-  fournisseurs: selectFournisseursRelais(),
-  produits: selectProduitsRelaisByTypeProduit(),
+  typeProduits: makeSelectTypesProduitsRelais(),
+  offres: makeSelectOffresDuProduit(),
+  fournisseurs: makeSelectFournisseursRelais(),
+  produits: makeSelectProduitsRelaisByTypeProduit(),
 });
 
 export default connect(mapStateToProps)(DetailOffres);

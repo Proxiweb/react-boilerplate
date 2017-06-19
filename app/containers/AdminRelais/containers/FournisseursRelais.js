@@ -10,13 +10,18 @@ import Toggle from 'material-ui/Toggle';
 import { createStructuredSelector } from 'reselect';
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
 import {
-  selectFournisseurs,
-  selectProduits,
-  selectOffres,
-  selectTypesProduitsByIds,
+  makeSelectFournisseurs,
+  makeSelectProduits,
+  makeSelectOffres,
+  makeSelectTypesProduitsByIds,
 } from 'containers/Commande/selectors';
 
-import { loadFournisseurs, loadTypesProduits, importeOffres, saveOffre } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  loadTypesProduits,
+  importeOffres,
+  saveOffre,
+} from 'containers/Commande/actions';
 
 import ArchiveIcon from 'material-ui/svg-icons/action/assignment-returned';
 import styles from './styles.css';
@@ -76,8 +81,15 @@ class FournisseursRelais extends Component {
   handleImporterOffres = () => {
     const { produitSelected, fournisseurSelected } = this.state;
     const { relaiId: relaiDestinationId } = this.props.params;
-    const msgSuccess = `Offre${!produitSelected ? 's' : ''} importée${!produitSelected ? 's' : ''}`;
-    this.props.importeOffres(fournisseurSelected, produitSelected || null, relaiDestinationId, msgSuccess);
+    const msgSuccess = `Offre${!produitSelected
+      ? 's'
+      : ''} importée${!produitSelected ? 's' : ''}`;
+    this.props.importeOffres(
+      fournisseurSelected,
+      produitSelected || null,
+      relaiDestinationId,
+      msgSuccess
+    );
   };
 
   handleStore = offre => {
@@ -87,24 +99,44 @@ class FournisseursRelais extends Component {
   };
 
   render() {
-    const { fournisseurs, produits, offres: offresById, params, typesProduits } = this.props;
+    const {
+      fournisseurs,
+      produits,
+      offres: offresById,
+      params,
+      typesProduits,
+    } = this.props;
     const { fournisseurSelected, produitSelected } = this.state;
-    const fournisseur = fournisseurSelected ? fournisseurs.find(f => f.id === fournisseurSelected) : null;
+    const fournisseur = fournisseurSelected
+      ? fournisseurs.find(f => f.id === fournisseurSelected)
+      : null;
 
     const produitsFournisseur = fournisseurSelected && produits
-      ? Object.keys(produits).map(k => produits[k]).filter(p => p.fournisseurId === fournisseurSelected)
+      ? Object.keys(produits)
+          .map(k => produits[k])
+          .filter(p => p.fournisseurId === fournisseurSelected)
       : [];
 
-    const offres = offresById ? Object.keys(offresById).map(id => offresById[id]) : [];
+    const offres = offresById
+      ? Object.keys(offresById).map(id => offresById[id])
+      : [];
     const offresProduit = produitSelected
-      ? offres.filter(o => o.produitId === produitSelected && o.relaiId === params.relaiId && !o.archive)
+      ? offres.filter(
+          o =>
+            o.produitId === produitSelected &&
+            o.relaiId === params.relaiId &&
+            !o.archive
+        )
       : [];
 
     return (
       <div className="row">
         <div className="col-md-4">
           {fournisseurs &&
-            <ListeFournisseursRelais onChange={this.handleChangeFournisseur} relaiId={params.relaiId} />}
+            <ListeFournisseursRelais
+              onChange={this.handleChangeFournisseur}
+              relaiId={params.relaiId}
+            />}
 
           {produitsFournisseur.length > 0 &&
             <SelectableList
@@ -113,20 +145,25 @@ class FournisseursRelais extends Component {
               className={styles.listePdts}
             >
               {produitsFournisseur.map((pdt, idx) =>
-                <ListItem
+                (<ListItem
                   key={idx}
                   primaryText={pdt.nom.toUpperCase()}
                   value={pdt.id}
                   leftIcon={
                     <PastilleIcon
                       color={
-                        offres.find(o => o.produitId === pdt.id && o.active && o.relaiId === params.relaiId)
+                        offres.find(
+                          o =>
+                            o.produitId === pdt.id &&
+                            o.active &&
+                            o.relaiId === params.relaiId
+                        )
                           ? 'green'
                           : 'silver'
                       }
                     />
                   }
-                />
+                />)
               )}
             </SelectableList>}
         </div>
@@ -164,25 +201,28 @@ class FournisseursRelais extends Component {
               .slice()
               .sort((o1, o2) => o1.active > o2.active)
               .map((o, idx) =>
-                <OffreProduit
-                  typeProduit={typesProduits[produits[produitSelected].typeProduitId]}
+                (<OffreProduit
+                  typeProduit={
+                    typesProduits[produits[produitSelected].typeProduitId]
+                  }
                   key={idx}
                   handleStore={this.handleStore}
                   offre={o}
-                />
+                />)
               )}
           {produitSelected &&
-            (offresProduit.length === 0 || offresProduit.filter(o => o.active).length === 0) &&
-            <div className="row center-md">
-              <div className="col-md-6">
-                <RaisedButton
-                  primary
-                  label="Importer l'offre"
-                  fullWidth
-                  onClick={this.handleImporterOffres}
-                />
-              </div>
-            </div>}
+            (offresProduit.length === 0 ||
+              offresProduit.filter(o => o.active).length === 0) &&
+              <div className="row center-md">
+                <div className="col-md-6">
+                  <RaisedButton
+                    primary
+                    label="Importer l'offre"
+                    fullWidth
+                    onClick={this.handleImporterOffres}
+                  />
+                </div>
+              </div>}
           {!produitSelected &&
             fournisseurSelected &&
             <FournisseurHebdoSwitch
@@ -211,10 +251,10 @@ class FournisseursRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseurs(),
-  produits: selectProduits(),
-  typesProduits: selectTypesProduitsByIds(),
-  offres: selectOffres(),
+  fournisseurs: makeSelectFournisseurs(),
+  produits: makeSelectProduits(),
+  typesProduits: makeSelectTypesProduitsByIds(),
+  offres: makeSelectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>

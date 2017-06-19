@@ -8,7 +8,10 @@ import Paper from 'material-ui/Paper';
 
 import { makeSelectPending } from 'containers/App/selectors';
 
-import { selectFournisseursIds, selectCommandeDomain } from 'containers/Commande/selectors';
+import {
+  makeSelectFournisseursIds,
+  makeSelectDomain,
+} from 'containers/Commande/selectors';
 import { loadFournisseurs, loadRelais } from 'containers/Commande/actions';
 
 import InfosFormContainer from './containers/InfosFormContainer';
@@ -35,24 +38,32 @@ class InfosFournisseur extends Component {
     if (!fournisseurs || !fournisseurs[fournisseurId]) {
       this.props.loadFournisseurs({ id: fournisseurId, jointures: true });
     }
-
   }
 
   render() {
-    const { fournisseurs, params: { fournisseurId }, donnees, pending } = this.props;
+    const {
+      fournisseurs,
+      params: { fournisseurId },
+      donnees,
+      pending,
+    } = this.props;
     let relais = null;
     try {
       relais = donnees.datas.entities.relais;
-    } catch (e) {
-    }
+    } catch (e) {}
 
     return (
       <div className="row center-md">
         <div className="col-md-8">
           <Paper>
             {fournisseurs &&
-              fournisseurs[fournisseurId] && relais &&
-              <InfosFormContainer params={this.props.params} fournisseur={fournisseurs[fournisseurId]} relais={relais}/>}
+              fournisseurs[fournisseurId] &&
+              relais &&
+              <InfosFormContainer
+                params={this.props.params}
+                fournisseur={fournisseurs[fournisseurId]}
+                relais={relais}
+              />}
           </Paper>
         </div>
       </div>
@@ -62,15 +73,15 @@ class InfosFournisseur extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
-  fournisseurs: selectFournisseursIds(),
-  donnees: selectCommandeDomain(),
+  fournisseurs: makeSelectFournisseursIds(),
+  donnees: makeSelectDomain(),
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadFournisseurs,
-      loadRelais
+      loadRelais,
     },
     dispatch
   );

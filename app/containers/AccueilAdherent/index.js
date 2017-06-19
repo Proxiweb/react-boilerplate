@@ -8,7 +8,7 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { createStructuredSelector } from 'reselect';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
-import { selectRelais } from 'containers/AdminRelais/selectors';
+import { makeSelectRelais } from 'containers/AdminRelais/selectors';
 import { loadRelais } from 'containers/AdminRelais/actions';
 import legumes from './legumes.jpg';
 import styles from './styles.css';
@@ -34,7 +34,8 @@ class AccueilAdherent extends Component {
     }
   }
 
-  findRelais = () => this.props.relais.find(r => r.id === this.props.params.relaiId);
+  findRelais = () =>
+    this.props.relais.find(r => r.id === this.props.params.relaiId);
 
   render() {
     const ceRelais = this.findRelais();
@@ -70,7 +71,13 @@ class AccueilAdherent extends Component {
             </Paper>}
           {!ceRelais &&
             <Paper style={styles.refresh}>
-              <RefreshIndicator size={70} left={0} top={20} status="loading" style={constStyles.refresh} />
+              <RefreshIndicator
+                size={70}
+                left={0}
+                top={20}
+                status="loading"
+                style={constStyles.refresh}
+              />
             </Paper>}
         </div>
       </div>
@@ -79,7 +86,7 @@ class AccueilAdherent extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais(),
+  relais: makeSelectRelais(),
 });
 
 const mapDispatchToProps = dispatch =>

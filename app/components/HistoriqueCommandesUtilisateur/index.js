@@ -7,7 +7,7 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { createStructuredSelector } from 'reselect';
 import classnames from 'classnames';
 
-import { selectCommandes } from 'containers/Commande/selectors';
+import { makeSelectCommandes } from 'containers/Commande/selectors';
 import { loadUserCommandes, loadCommandes } from 'containers/Commande/actions';
 import { makeSelectPending } from 'containers/App/selectors';
 import styles from './styles.css';
@@ -65,7 +65,7 @@ class HistoriqueCommandesUtilisateur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandes: selectCommandes(),
+  commandes: makeSelectCommandes(),
   pending: makeSelectPending(),
 });
 
@@ -79,4 +79,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoriqueCommandesUtilisateur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  HistoriqueCommandesUtilisateur
+);

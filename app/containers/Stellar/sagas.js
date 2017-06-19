@@ -1,5 +1,5 @@
 import { take, put, call, select } from 'redux-saga/effects';
-import { selectEnv } from 'containers/Stellar/selectors';
+import { makeSelectEnv } from 'containers/Stellar/selectors';
 import { LOAD_ACCOUNT, TRUST, PAY, FEDERATION } from './constants';
 import {
   loadAccount,
@@ -19,7 +19,7 @@ import api from '../../utils/stellarApi';
 // export function* logger() {
 //   while (1) { // eslint-disable-line
 //     const action = yield take('*');
-//     console.log({action, state: select()}); // eslint-disable-line
+//     console.log({action, state: makeSelect()}); // eslint-disable-line
 //   }
 // }
 
@@ -27,11 +27,19 @@ export function* loadAccountSaga() {
   while (1) {
     // eslint-disable-line
     const action = yield take(LOAD_ACCOUNT);
-    const env = yield select(selectEnv());
+    const env = yield select(makeSelectEnv());
     try {
-      const account = yield call(api.loadAccount, env, action.payload.accountId);
+      const account = yield call(
+        api.loadAccount,
+        env,
+        action.payload.accountId
+      );
       yield put(accountLoaded(account));
-      const payments = yield call(api.loadPayments, env, action.payload.accountId);
+      const payments = yield call(
+        api.loadPayments,
+        env,
+        action.payload.accountId
+      );
       yield put(paymentsLoaded(payments));
     } catch (err) {
       yield put(loadAccountError(err));
@@ -43,10 +51,17 @@ export function* trustSaga() {
   while (1) {
     // eslint-disable-line
     const action = yield take(TRUST);
-    const env = yield select(selectEnv());
+    const env = yield select(makeSelectEnv());
     try {
       const { currencyCode, maxTrust, issuer, stellarKeys } = action.payload;
-      const res = yield call(api.trust, env, currencyCode, maxTrust, issuer, stellarKeys);
+      const res = yield call(
+        api.trust,
+        env,
+        currencyCode,
+        maxTrust,
+        issuer,
+        stellarKeys
+      );
       yield put(trusted(res));
     } catch (err) {
       yield put(trustError(err));
@@ -58,10 +73,24 @@ export function* paySaga() {
   while (1) {
     // eslint-disable-line
     const action = yield take(PAY);
-    const env = yield select(selectEnv());
+    const env = yield select(makeSelectEnv());
     try {
-      const { destination, currency, currencyIssuer, amount, stellarKeys } = action.payload;
-      const res = yield call(api.pay, env, destination, currency, currencyIssuer, amount, stellarKeys);
+      const {
+        destination,
+        currency,
+        currencyIssuer,
+        amount,
+        stellarKeys,
+      } = action.payload;
+      const res = yield call(
+        api.pay,
+        env,
+        destination,
+        currency,
+        currencyIssuer,
+        amount,
+        stellarKeys
+      );
       yield put(paid(res));
       yield put(loadAccount(stellarKeys.accountId));
     } catch (err) {

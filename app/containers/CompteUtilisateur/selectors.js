@@ -3,61 +3,85 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the compteUtilisateur state domain
  */
-const selectCompteUtilisateurDomain = () => state => state.compteUtilisateur;
+const makeSelectCompteUtilisateurDomain = () => state =>
+  state.get('compteUtilisateur');
 /**
  * Other specific selectors
  */
-export const selectUserId = () => (state, props) => props.params.userId;
+export const makeSelectUserId = () => (state, props) => props.params.userId;
 
 /**
  * Default selector used by CompteUtilisateur
  */
 
-export const selectCompteUtilisateur = () =>
-  createSelector([selectCompteUtilisateurDomain()], substate => substate.auth);
-
-export const selectToken = () =>
-  createSelector([selectCompteUtilisateurDomain()], substate => substate.token);
-
-export const selectPayments = () =>
-  createSelector(selectCompteUtilisateurDomain(), substate => substate.payments.datas);
-
-export const selectPaymentsPagingToken = () =>
-  createSelector(selectCompteUtilisateurDomain(), substate => substate.payments.pagingToken);
-
-export const selectAuthUtilisateurId = () =>
-  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.id : undefined));
-
-export const selectDatePaiementCotisation = () =>
-  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.datePaiementCotisation : undefined));
-
-export const selectRoles = () =>
-  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.roles : undefined));
-
-export const selectRelaiId = () =>
-  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.relaiId : undefined));
-
-export const selectAuthApiKey = () =>
-  createSelector([selectCompteUtilisateur()], auth => (auth ? auth.apiKey : undefined));
-
-export const selectBalance = () =>
-  createSelector(selectCompteUtilisateurDomain(), substate =>
-    substate.balances.find(bal => bal.asset_code === 'PROXI')
+export const makeSelectCompteUtilisateur = () =>
+  createSelector([makeSelectCompteUtilisateurDomain()], substate =>
+    substate.get('auth')
   );
 
-export const selectMontantBalance = () =>
-  createSelector(selectBalance(), balance => (balance ? parseFloat(balance.balance) : null));
+export const makeSelectToken = () =>
+  createSelector([makeSelectCompteUtilisateurDomain()], substate =>
+    substate.get('token')
+  );
 
-export const selectMaxBalance = () => createSelector(selectBalance(), balance => parseFloat(balance.limit));
+export const makeSelectPayments = () =>
+  createSelector(makeSelectCompteUtilisateurDomain(), substate =>
+    substate.getIn(['payments', 'datas'])
+  );
 
-export const selectLoading = () =>
-  createSelector([selectCompteUtilisateurDomain()], substate => substate.loading);
+export const makeSelectPaymentsPagingToken = () =>
+  createSelector(makeSelectCompteUtilisateurDomain(), substate =>
+    substate.getIn(['payments', 'pagingToken'])
+  );
 
-export const selectVirements = () =>
+export const makeSelectAuthUtilisateurId = () =>
+  createSelector([makeSelectCompteUtilisateur()], auth => auth.get('id'));
+
+export const makeSelectDatePaiementCotisation = () =>
+  createSelector([makeSelectCompteUtilisateur()], auth =>
+    auth.get('datePaiementCotisation')
+  );
+
+export const makeSelectRoles = () =>
+  createSelector([makeSelectCompteUtilisateur()], auth => auth.get('roles'));
+
+export const makeSelectRelaiId = () =>
+  createSelector([makeSelectCompteUtilisateur()], auth => auth.get('relaiId'));
+
+export const makeSelectAuthApiKey = () =>
+  createSelector([makeSelectCompteUtilisateur()], auth => auth.get('apiKey'));
+
+export const makeSelectBalance = () =>
+  createSelector(makeSelectCompteUtilisateurDomain(), substate =>
+    substate.get('balances').find(bal => bal.get('asset_code') === 'PROXI')
+  );
+
+export const makeSelectMontantBalance = () =>
   createSelector(
-    selectCompteUtilisateurDomain(),
+    makeSelectBalance(),
+    balance => (balance ? parseFloat(balance.get('balance')) : null)
+  );
+
+export const makeSelectMaxBalance = () =>
+  createSelector(makeSelectBalance(), balance =>
+    parseFloat(balance.get('limit'))
+  );
+
+export const makeSelectLoading = () =>
+  createSelector([makeSelectCompteUtilisateurDomain()], substate =>
+    substate.get('loading')
+  );
+
+export const makeSelectVirements = () =>
+  createSelector(
+    makeSelectCompteUtilisateurDomain(),
     substate =>
-      substate.virements
-        ? substate.virements.filter(dep => dep.type === 'virement' && !dep.transfertEffectue)
+      substate.get('virements')
+        ? substate
+            .get('virements')
+            .filter(
+              dep =>
+                dep.get('type') === 'virement' && !dep.get('transfertEffectue')
+            )
         : null
   );

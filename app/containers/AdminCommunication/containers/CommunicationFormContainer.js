@@ -10,9 +10,13 @@ import EmailIcon from 'material-ui/svg-icons/communication/mail-outline';
 import MessageIcon from 'material-ui/svg-icons/communication/message';
 
 import CommunicationForm from 'components/CommunicationForm';
-import { sendCommunication, removeDestinataire, setMessage } from 'containers/AdminCommunication/actions';
-import { selectCommunicationDomain } from 'containers/AdminCommunication/selectors';
-import { selectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
+import {
+  sendCommunication,
+  removeDestinataire,
+  setMessage,
+} from 'containers/AdminCommunication/actions';
+import { makeSelectCommunicationDomain } from 'containers/AdminCommunication/selectors';
+import { makeSelectAuthApiKey } from 'containers/CompteUtilisateur/selectors';
 import { get } from 'utils/apiClient';
 import styles from './styles.css';
 
@@ -68,30 +72,35 @@ class CommunicationFormContainer extends Component {
 
         <div className="row">
           <div className={`col-md-6 ${styles.panel} ${styles.dest}`}>
-            {destinataires.slice().sort((a, b) => a.identite > b.identite).map((dest, idx) =>
-              <div key={idx} className="row end-md">
-                <div className="col-md-4">
-                  {dest.email &&
-                    <Chip
-                      style={{ margin: 4 }}
-                      onRequestDelete={() => this.props.removeDest(dest.id, 'email')}
-                    >
-                      <Avatar color="#444" icon={<EmailIcon />} />
-                      {dest.identite}
-                    </Chip>}
-                </div>
-                <div className="col-md-4">
-                  {dest.telPortable &&
-                    <Chip
-                      style={{ margin: 4 }}
-                      onRequestDelete={() => this.props.removeDest(dest.id, 'telPortable')}
-                    >
-                      <Avatar color="#444" icon={<MessageIcon />} />
-                      {dest.identite}
-                    </Chip>}
-                </div>
-              </div>
-            )}
+            {destinataires
+              .slice()
+              .sort((a, b) => a.identite > b.identite)
+              .map((dest, idx) =>
+                (<div key={idx} className="row end-md">
+                  <div className="col-md-4">
+                    {dest.email &&
+                      <Chip
+                        style={{ margin: 4 }}
+                        onRequestDelete={() =>
+                          this.props.removeDest(dest.id, 'email')}
+                      >
+                        <Avatar color="#444" icon={<EmailIcon />} />
+                        {dest.identite}
+                      </Chip>}
+                  </div>
+                  <div className="col-md-4">
+                    {dest.telPortable &&
+                      <Chip
+                        style={{ margin: 4 }}
+                        onRequestDelete={() =>
+                          this.props.removeDest(dest.id, 'telPortable')}
+                      >
+                        <Avatar color="#444" icon={<MessageIcon />} />
+                        {dest.identite}
+                      </Chip>}
+                  </div>
+                </div>)
+              )}
           </div>
           <div className={`col-md-6 ${styles.panel}`}>
             <CommunicationForm
@@ -109,8 +118,8 @@ class CommunicationFormContainer extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  communication: selectCommunicationDomain(),
-  apiKey: selectAuthApiKey(),
+  communication: makeSelectCommunicationDomain(),
+  apiKey: makeSelectAuthApiKey(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -123,4 +132,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommunicationFormContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CommunicationFormContainer
+);

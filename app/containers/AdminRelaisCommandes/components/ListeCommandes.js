@@ -12,9 +12,12 @@ import subMonths from 'date-fns/sub_months';
 import isBefore from 'date-fns/is_before';
 import isAfter from 'date-fns/is_after';
 import { format } from 'utils/dates';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import {
+  BottomNavigation,
+  BottomNavigationItem,
+} from 'material-ui/BottomNavigation';
 
-import { selectCommandeId } from 'containers/Commande/selectors';
+import { makeSelectCommandeId } from 'containers/Commande/selectors';
 import { loadCommandes } from 'containers/Commande/actions';
 import ListeCommandeItem from './ListeCommandeItem';
 
@@ -58,15 +61,19 @@ class ListeCommandes extends Component {
 
   buildListeCommandes = () => {
     const { commandes } = this.props;
-    let commandesFiltredIds = null;
+    const commandesFiltredIds = null;
     switch (this.state.typeCommandeListees) {
       case 0:
         return Object.keys(commandes).filter(
-          id => commandes[id].dateCommande === null || isBefore(new Date(), commandes[id].dateCommande)
+          id =>
+            commandes[id].dateCommande === null ||
+            isBefore(new Date(), commandes[id].dateCommande)
         );
       case 1:
         return Object.keys(commandes).filter(
-          id => commandes[id].dateCommande !== null && isAfter(new Date(), commandes[id].dateCommande)
+          id =>
+            commandes[id].dateCommande !== null &&
+            isAfter(new Date(), commandes[id].dateCommande)
         );
       case 2:
       default:
@@ -75,7 +82,13 @@ class ListeCommandes extends Component {
   };
 
   render() {
-    const { pending, commandeId, commandes, relais, params: { relaiId } } = this.props;
+    const {
+      pending,
+      commandeId,
+      commandes,
+      relais,
+      params: { relaiId },
+    } = this.props;
     const commandesFiltredIds = this.buildListeCommandes();
 
     return (
@@ -92,15 +105,23 @@ class ListeCommandes extends Component {
           >
             {commandesFiltredIds
               .filter(
-                id => typeof commandes[id].distributions.find(d => d.relaiId === relaiId) !== 'undefined'
+                id =>
+                  typeof commandes[id].distributions.find(
+                    d => d.relaiId === relaiId
+                  ) !== 'undefined'
               )
               .sort(
                 (key1, key2) =>
                   !commandes[key1].dateCommande ||
-                  getTime(commandes[key1].dateCommande) < getTime(commandes[key2].dateCommande)
+                  getTime(commandes[key1].dateCommande) <
+                    getTime(commandes[key2].dateCommande)
               )
               .map((key, idx) =>
-                <ListeCommandeItem key={idx} commande={commandes[key]} relaiId={relais.id} />
+                (<ListeCommandeItem
+                  key={idx}
+                  commande={commandes[key]}
+                  relaiId={relais.id}
+                />)
               )}
           </SelectableList>}
         {
@@ -134,7 +155,7 @@ const mapDispatchToProps = dispatch =>
   );
 
 const mapStateToProps = createStructuredSelector({
-  commandeId: selectCommandeId(),
+  commandeId: makeSelectCommandeId(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListeCommandes);

@@ -12,8 +12,12 @@ import { createStructuredSelector } from 'reselect';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import { logout } from '../Login/actions';
-import { selectPayments, selectBalance, selectRelaiId } from './selectors';
-import { selectRelais } from 'containers/Commande/selectors';
+import {
+  makeSelectPayments,
+  makeSelectBalance,
+  makeSelectRelaiId,
+} from './selectors';
+import { makeSelectRelais } from 'containers/Commande/selectors';
 import { makeSelectLocationState } from 'containers/App/selectors';
 import ProfileFormContainer from 'containers/ProfileFormContainer';
 import NotificationsForm from 'components/NotificationsForm';
@@ -46,12 +50,19 @@ export class CompteUtilisateur extends React.Component {
       <div className="row center-lg">
         <div className="col-lg-6">
           <Tabs
-            inkBarStyle={{ height: 7, backgroundColor: this.context.muiTheme.appBar.color, marginTop: -7 }}
+            inkBarStyle={{
+              height: 7,
+              backgroundColor: this.context.muiTheme.appBar.color,
+              marginTop: -7,
+            }}
             value={query.tab}
             onChange={this.handleChange}
           >
             <Tab label="Profil" value="profil">
-              <ProfileFormContainer relaiId={this.props.relaiId} afterSubmit={this.toggleState} />
+              <ProfileFormContainer
+                relaiId={this.props.relaiId}
+                afterSubmit={this.toggleState}
+              />
             </Tab>
             <Tab label="Notifications" value="notifications">
               <NotificationsForm />
@@ -59,9 +70,13 @@ export class CompteUtilisateur extends React.Component {
             {relais &&
               relais[relaiId] &&
               <Tab label="Relais" value="relais">
-                <Paper zDepth={2} style={{ padding: '1rem', minHeight: '444px' }}>
+                <Paper
+                  zDepth={2}
+                  style={{ padding: '1rem', minHeight: '444px' }}
+                >
                   <p style={{ textAlign: 'center' }}>
-                    Vous êtes inscrit sur le relais <strong>{relais[relaiId].nom}</strong>
+                    Vous êtes inscrit sur le relais{' '}
+                    <strong>{relais[relaiId].nom}</strong>
                   </p>
                 </Paper>
               </Tab>}
@@ -73,18 +88,18 @@ export class CompteUtilisateur extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  payments: selectPayments(),
-  compte: selectBalance(),
+  payments: makeSelectPayments(),
+  compte: makeSelectBalance(),
   locationState: makeSelectLocationState(),
-  relaiId: selectRelaiId(),
-  relais: selectRelais(),
+  relaiId: makeSelectRelaiId(),
+  relais: makeSelectRelais(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: url => dispatch(push(url)),
-    logout: () => dispatch(logout()), // eslint-disable-line
+    logout: () => dispatch(logout()) // eslint-disable-line
   };
 }
 

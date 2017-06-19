@@ -23,11 +23,11 @@ import {
   loadRelais,
 } from 'containers/Commande/actions';
 import {
-  selectFournisseursRelais,
-  selectFournisseursCommande,
-  selectCommandeCommandeUtilisateurs,
+  makeSelectFournisseursRelais,
+  makeSelectFournisseursCommande,
+  makeSelectCommandeCommandeUtilisateurs,
 } from 'containers/Commande/selectors';
-import { selectToken } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectToken } from 'containers/CompteUtilisateur/selectors';
 import NouvelleCommandeListeFournisseurs from './components/NouvelleCommandeListeFournisseurs';
 import NouvelleCommandeParametres from './components/NouvelleCommandeParametres';
 import NouvelleCommandeDistribution from './components/NouvelleCommandeDistribution';
@@ -309,10 +309,10 @@ class NouvelleCommande extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseursRelais(),
-  fournisseursCommande: selectFournisseursCommande(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  token: selectToken(),
+  fournisseurs: makeSelectFournisseursRelais(),
+  fournisseursCommande: makeSelectFournisseursCommande(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
+  token: makeSelectToken(),
 });
 
 const mapDispatchToProps = dispatch =>

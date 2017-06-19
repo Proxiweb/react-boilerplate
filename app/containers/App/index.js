@@ -27,7 +27,10 @@ import NavigationMenuIcon from 'material-ui/svg-icons/navigation/menu';
 import FlatButton from 'material-ui/FlatButton';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AppMainDrawer from 'containers/AppMainDrawer';
-import { selectBalance, selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import {
+  makeSelectBalance,
+  makeSelectCompteUtilisateur,
+} from 'containers/CompteUtilisateur/selectors';
 import { logout } from 'containers/Login/actions';
 import { refresh } from 'containers/CompteUtilisateur/actions';
 
@@ -119,7 +122,8 @@ class App extends Component {
     });
   };
 
-  toggleDrawer = () => this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
+  toggleDrawer = () =>
+    this.setState({ ...this.state, drawerOpen: !this.state.drawerOpen });
 
   closeDrawer = () => this.setState({ ...this.state, drawerOpen: false });
 
@@ -172,12 +176,18 @@ class App extends Component {
         <Toolbar
           className={`${styles.noPrint} ${styles.toolbar}`}
           style={{
-            backgroundColor: process.env.NODE_ENV === 'development' ? '#438DED' : muiTheme.appBar.color,
+            backgroundColor: process.env.NODE_ENV === 'development'
+              ? '#438DED'
+              : muiTheme.appBar.color,
             height: '50px',
           }}
         >
           <ToolbarGroup firstChild>
-            <IconButton touch onClick={this.toggleDrawer} style={{ paddingRight: 0 }}>
+            <IconButton
+              touch
+              onClick={this.toggleDrawer}
+              style={{ paddingRight: 0 }}
+            >
               <NavigationMenuIcon />
             </IconButton>
             <FlatButton
@@ -203,10 +213,10 @@ class App extends Component {
           </ToolbarGroup>
           {user
             ? <Logged
-                messages={messages.filter(m => m.dateConsultation === null)}
-                destinataires={destinataires}
-                pushState={pushState}
-              />
+              messages={messages.filter(m => m.dateConsultation === null)}
+              destinataires={destinataires}
+              pushState={pushState}
+            />
             : <Login onClick={this.handleChangeList} />}
         </Toolbar>
         <AppMainDrawer
@@ -222,7 +232,12 @@ class App extends Component {
           header={
             <MenuItem
               primaryText="Menu"
-              rightIcon={<Close color={drawerStyle.textColor} style={{ height: 40, width: 30 }} />}
+              rightIcon={
+                <Close
+                  color={drawerStyle.textColor}
+                  style={{ height: 40, width: 30 }}
+                />
+              }
               onTouchTap={this.closeDrawer}
               style={drawerStyle}
             />
@@ -238,15 +253,16 @@ class App extends Component {
   }
 }
 
-const selectDestinaires = () => state => (state.admin ? state.admin.communication.destinataires : []);
+const makeSelectDestinaires = () => state =>
+  state.admin ? state.admin.communication.destinataires : [];
 
 const mapStateToProps = createStructuredSelector({
-  user: selectCompteUtilisateur(),
+  user: makeSelectCompteUtilisateur(),
   pending: makeSelectPending(),
-  destinataires: selectDestinaires(),
+  destinataires: makeSelectDestinaires(),
   messagesLoaded: makeSelectMessagesUtilisateurLoaded(),
   messages: makeSelectMessages(),
-  compte: selectBalance(),
+  compte: makeSelectBalance(),
   anonRelaiId: makeSelectRelaiId(),
   locationState: makeSelectLocationState(),
 });

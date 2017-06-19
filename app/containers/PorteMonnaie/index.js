@@ -13,10 +13,10 @@ import { Tabs, Tab } from 'material-ui/Tabs';
 import round from 'lodash/round';
 
 import {
-  selectPayments,
-  selectBalance,
-  selectVirements,
-  selectCompteUtilisateur,
+  makeSelectPayments,
+  makeSelectBalance,
+  makeSelectVirements,
+  makeSelectCompteUtilisateur,
 } from 'containers/CompteUtilisateur/selectors';
 
 import {
@@ -26,7 +26,7 @@ import {
   deposerCB,
 } from 'containers/CompteUtilisateur/actions';
 
-import { selectParams } from 'containers/App/selectors';
+import { makeSelectParams } from 'containers/App/selectors';
 
 import Virements from './components/Virements';
 import CarteBleue from './components/CarteBleue';
@@ -57,7 +57,15 @@ export class PorteMonnaie extends React.Component {
   };
 
   render() {
-    const { compte, progVir, params, virements, annulVir, auth, depCb } = this.props;
+    const {
+      compte,
+      progVir,
+      params,
+      virements,
+      annulVir,
+      auth,
+      depCb,
+    } = this.props;
     const muiTheme = this.context.muiTheme;
     if (!compte) return null;
     return (
@@ -68,13 +76,25 @@ export class PorteMonnaie extends React.Component {
             <span className={styles.montant}> {round(compte.balance, 2)}</span>
           </div>
           {auth.stellarKeys &&
-            <ListeEffetsCompteStellar stellarAddress={auth.stellarKeys.adresse} limit="10" />}
+            <ListeEffetsCompteStellar
+              stellarAddress={auth.stellarKeys.adresse}
+              limit="10"
+            />}
         </div>
         <div className={`col-md-6 ${styles.panel}`}>
-          <div className={`${styles.porteMonnaie}`} style={{ textAlign: 'center' }}>
+          <div
+            className={`${styles.porteMonnaie}`}
+            style={{ textAlign: 'center' }}
+          >
             Approvisionner le porte-monnaie
           </div>
-          <Tabs inkBarStyle={{ height: 7, backgroundColor: muiTheme.appBar.color, marginTop: -7 }}>
+          <Tabs
+            inkBarStyle={{
+              height: 7,
+              backgroundColor: muiTheme.appBar.color,
+              marginTop: -7,
+            }}
+          >
             <Tab label="Virement Sepa">
               <div className={styles.appro}>
                 <div className="row center-md">
@@ -92,7 +112,11 @@ export class PorteMonnaie extends React.Component {
             <Tab label="Carte bancaire">
               <div className={styles.appro}>
                 <div className="row center-md">
-                  <CarteBleue max={compte.limit - compte.balance} email={auth.email} deposerCB={depCb} />
+                  <CarteBleue
+                    max={compte.limit - compte.balance}
+                    email={auth.email}
+                    deposerCB={depCb}
+                  />
                 </div>
               </div>
             </Tab>
@@ -104,11 +128,11 @@ export class PorteMonnaie extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  payments: selectPayments(),
-  compte: selectBalance(),
-  virements: selectVirements(),
-  params: selectParams(),
-  auth: selectCompteUtilisateur(),
+  payments: makeSelectPayments(),
+  compte: makeSelectBalance(),
+  virements: makeSelectVirements(),
+  params: makeSelectParams(),
+  auth: makeSelectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>

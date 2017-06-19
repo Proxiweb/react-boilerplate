@@ -13,9 +13,18 @@ import addMonths from 'date-fns/add_months';
 import subMonths from 'date-fns/sub_months';
 import classnames from 'classnames';
 
-import { loadCommandes, loadFournisseurs, loadUtilisateurs, loadRelais } from 'containers/Commande/actions';
+import {
+  loadCommandes,
+  loadFournisseurs,
+  loadUtilisateurs,
+  loadRelais,
+} from 'containers/Commande/actions';
 
-import { selectCommandes, selectCommandeId, selectRelaisSelected } from 'containers/Commande/selectors';
+import {
+  makeSelectCommandes,
+  makeSelectCommandeId,
+  makeSelectRelaisSelected,
+} from 'containers/Commande/selectors';
 
 import IconButton from 'material-ui/IconButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -84,12 +93,26 @@ class AdminRelaisCommandes extends Component {
       <div className="row">
         <div className={classnames('col-md-2', styles.panel)}>
           {!children &&
-            <NewCommandeButton commandeId={commandeId} action={action} params={params} relaiId={relaiId} />}
+            <NewCommandeButton
+              commandeId={commandeId}
+              action={action}
+              params={params}
+              relaiId={relaiId}
+            />}
           {commandes &&
-            <ListeCommandes params={params} commandes={commandes} relais={relais} pending={pending} />}
+            <ListeCommandes
+              params={params}
+              commandes={commandes}
+              relais={relais}
+              pending={pending}
+            />}
         </div>
         {this.props.children &&
-          <DetailCommandeWrapper commandes={commandes} params={params} relais={relais}>
+          <DetailCommandeWrapper
+            commandes={commandes}
+            params={params}
+            relais={relais}
+          >
             {React.cloneElement(this.props.children, {
               commandes,
               params,
@@ -102,8 +125,8 @@ class AdminRelaisCommandes extends Component {
   }
 }
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelaisSelected(),
-  commandes: selectCommandes(),
+  relais: makeSelectRelaisSelected(),
+  commandes: makeSelectCommandes(),
   pending: makeSelectPending(),
 });
 
@@ -119,4 +142,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminRelaisCommandes);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  AdminRelaisCommandes
+);

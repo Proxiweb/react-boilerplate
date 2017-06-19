@@ -7,7 +7,10 @@ import { loadAccount, trust as trustAction, pay, fedLookup } from './actions';
 import TrustForm from '../../components/TrustForm';
 import PaymentForm from '../../components/PaymentForm';
 
-import { selectContacts, default as selectStellarDomain } from './selectors';
+import {
+  makeSelectContacts,
+  default as makeSelectStellarDomain,
+} from './selectors';
 
 class StellarMain extends Component {
   // eslint-disable-line
@@ -66,13 +69,15 @@ class StellarMain extends Component {
           <div className="alert alert-info text-center">
             <ul className="list-unstyled">
               {account.balances.map(bal =>
-                <li key={bal.asset_type === 'native' ? 'XLM' : bal.asset_code}>
-                  {parseFloat(bal.balance)} {bal.asset_type === 'native' ? 'XLM' : bal.asset_code}
-                </li>
+                (<li key={bal.asset_type === 'native' ? 'XLM' : bal.asset_code}>
+                  {parseFloat(bal.balance)}{' '}
+                  {bal.asset_type === 'native' ? 'XLM' : bal.asset_code}
+                </li>)
               )}
             </ul>
           </div>}
-        {this.state.action === 'show_trust' && <TrustForm stellarKeys={stellarKeys} trust={trust} />}
+        {this.state.action === 'show_trust' &&
+          <TrustForm stellarKeys={stellarKeys} trust={trust} />}
         {this.state.action === 'show_payment' &&
           <PaymentForm
             stellarKeys={this.props.account.stellarKeys}
@@ -98,8 +103,8 @@ const mapDispatchToProps = dispatch =>
   );
 
 const mapStateToProps = createStructuredSelector({
-  account: selectStellarDomain(),
-  contacts: selectContacts(),
+  account: makeSelectStellarDomain(),
+  contacts: makeSelectContacts(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StellarMain);

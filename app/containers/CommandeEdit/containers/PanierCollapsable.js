@@ -16,7 +16,10 @@ import LigneFondsOk from 'containers/CommandeEdit/components/LigneFondsOk';
 
 import { sauvegarder } from 'containers/CommandeEdit/actions';
 
-import { selectOffres, selectCommandeContenus } from 'containers/Commande/selectors';
+import {
+  makeSelectOffres,
+  makeSelectCommandeContenus,
+} from 'containers/Commande/selectors';
 
 import { makeSelectPending } from 'containers/App/selectors';
 
@@ -73,9 +76,7 @@ class PanierCollapsable extends Component {
 
   componentDidMount = () => this.setState({ ...this.state, first: false });
 
-  shouldComponentUpdate = nextProps => {
-    return true;
-  };
+  shouldComponentUpdate = nextProps => true;
 
   buildTitle = (nbreProduits, panierExpanded) => {
     const { commandeUtilisateur, autreUtilisateur } = this.props;
@@ -85,7 +86,9 @@ class PanierCollapsable extends Component {
     }
 
     if (!panierExpanded) {
-      const formule = nbreProduits > 0 ? 'Cliquez ici pour valider votre commande' : '';
+      const formule = nbreProduits > 0
+        ? 'Cliquez ici pour valider votre commande'
+        : '';
       return autreUtilisateur ? `${formule} de ${autreUtilisateur}` : formule;
     }
 
@@ -149,7 +152,10 @@ class PanierCollapsable extends Component {
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <div className={styles.text} onClick={expandable ? this.toggleState : null}>
+          <div
+            className={styles.text}
+            onClick={expandable ? this.toggleState : null}
+          >
             <div className={styles.title}>
               <span>
                 Panier :
@@ -159,16 +165,18 @@ class PanierCollapsable extends Component {
                 </strong>
                 {panierExpanded // eslint-disable-line
                   ? <span>
-                      {' '}
+                    {' '}
                       (dont
                       {' '}
-                      <strong>
-                        {round(totaux.recolteFond, 2).toFixed(2)} €
+                    <strong>
+                      {round(totaux.recolteFond, 2).toFixed(2)} €
                       </strong>
-                      {' '}
+                    {' '}
                       pour la prestation de distribution)
                     </span>
-                  : nbreProduits > 0 ? ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}` : ''}
+                  : nbreProduits > 0
+                    ? ` - ${nbreProduits} produit${nbreProduits > 1 ? 's' : ''}`
+                    : ''}
                 {typeof balance === 'number' && totaux.prix > 0 && msgPaiement}
               </span>
             </div>
@@ -185,7 +193,11 @@ class PanierCollapsable extends Component {
                 fullWidth
                 label={label}
                 labelColor={modifiee ? 'black' : 'white'}
-                backgroundColor={modifiee ? muiTheme.palette.warningColor : muiTheme.palette.primary1Color}
+                backgroundColor={
+                  modifiee
+                    ? muiTheme.palette.warningColor
+                    : muiTheme.palette.primary1Color
+                }
                 icon={<ActionDoneIcon />}
                 onClick={() =>
                   this.props.sauvegarder({
@@ -197,7 +209,10 @@ class PanierCollapsable extends Component {
           </div>
           {expandable &&
             <div className={styles.expand}>
-              <IconButton onClick={this.toggleState} style={constStyles.iconExpandableButton}>
+              <IconButton
+                onClick={this.toggleState}
+                style={constStyles.iconExpandableButton}
+              >
                 {!expanded && <KeyboardDownIcon />}
                 {expanded && <KeyboardUpIcon />}
               </IconButton>
@@ -219,8 +234,8 @@ class PanierCollapsable extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  offres: selectOffres(),
-  commandeContenus: selectCommandeContenus(),
+  offres: makeSelectOffres(),
+  commandeContenus: makeSelectCommandeContenus(),
   pending: makeSelectPending(),
 });
 

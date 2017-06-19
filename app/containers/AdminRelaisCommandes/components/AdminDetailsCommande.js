@@ -6,21 +6,21 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 import {
-  selectCommandeCommandeUtilisateurs,
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectOffres,
-  selectCommandeId,
-  selectUtilisateurs,
+  makeSelectCommandeCommandeUtilisateurs,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectCommandeId,
+  makeSelectUtilisateurs,
 } from 'containers/Commande/selectors';
 
 import { fetchUtilisateurs } from 'containers/Commande/actions';
 import { makeSelectPending } from 'containers/App/selectors';
 
-import { selectDepots } from 'containers/AdminDepot/selectors';
+import { makeSelectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 
-import { selectRoles } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectRoles } from 'containers/CompteUtilisateur/selectors';
 
 import DetailsParFournisseur from './DetailsParFournisseur';
 import ListeAcheteurs from './ListeAcheteurs';
@@ -182,14 +182,14 @@ class AdminDetailsCommande extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  contenus: selectCommandeContenus(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  utilisateurs: selectUtilisateurs(),
-  commandeId: selectCommandeId(),
-  depots: selectDepots(),
-  roles: selectRoles(),
-  offres: selectOffres(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
+  contenus: makeSelectCommandeContenus(),
+  commandeContenus: makeSelectCommandeCommandeContenus(),
+  utilisateurs: makeSelectUtilisateurs(),
+  commandeId: makeSelectCommandeId(),
+  depots: makeSelectDepots(),
+  roles: makeSelectRoles(),
+  offres: makeSelectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>

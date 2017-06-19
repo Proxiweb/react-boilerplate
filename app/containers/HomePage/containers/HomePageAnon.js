@@ -18,10 +18,10 @@ import DescriptionIcon from 'material-ui/svg-icons/action/description';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import ShoppingCartIcon from 'material-ui/svg-icons/action/shopping-cart';
 
-import { selectRelais } from 'containers/Commande/selectors';
+import { makeSelectRelais } from 'containers/Commande/selectors';
 import { loadRelais } from 'containers/Commande/actions';
 
-import { selectionneRelais } from 'containers/App/actions';
+import { makeSelectionneRelais } from 'containers/App/actions';
 import { makeSelectRelaiId } from 'containers/App/selectors';
 
 import styles from './styles.css';
@@ -58,17 +58,26 @@ class HomePageAnon extends Component {
   };
 
   buildHelmet = () =>
-    <Helmet
+    (<Helmet
       title="Association ProxiWeb"
-      meta={[{ name: 'description', content: "Organisation d'achats groupés pour villages petits et gros" }]}
-    />;
+      meta={[
+        {
+          name: 'description',
+          content: "Organisation d'achats groupés pour villages petits et gros",
+        },
+      ]}
+    />);
 
   render() {
     const { relais, relaiId, pushState } = this.props;
     if (!relais) return null;
 
-    const { muiTheme: { palette: { warningColor, primary1Color } } } = this.context;
-    const buttonRelaisOuCatalogueColor = this.state.justChanged ? warningColor : primary1Color;
+    const {
+      muiTheme: { palette: { warningColor, primary1Color } },
+    } = this.context;
+    const buttonRelaisOuCatalogueColor = this.state.justChanged
+      ? warningColor
+      : primary1Color;
 
     if (this.state.selectionRelais) {
       return (
@@ -77,11 +86,11 @@ class HomePageAnon extends Component {
             <Paper className={styles.homepage}>
               <List>
                 {Object.keys(relais).map((key, idx) =>
-                  <ListItem
+                  (<ListItem
                     key={idx}
                     primaryText={relais[key].nom.toUpperCase()}
                     onClick={() => this.handleChoisirRelais(relais[key].id)}
-                  />
+                  />)
                 )}
               </List>
             </Paper>
@@ -104,7 +113,10 @@ class HomePageAnon extends Component {
                   <div className={`col-md-6 ${styles.texteEncart}`}>
                     <h1>Relais ProxiWeb</h1>
                     <h3>{"Un groupement d'achat et des relais locaux"}</h3>
-                    <h3>{'pour villages'} <small>petits</small> et <span>Gros</span></h3>
+                    <h3>
+                      {'pour villages'} <small>petits</small> et{' '}
+                      <span>Gros</span>
+                    </h3>
                     <div className={`row ${styles.boutonsEncart}`}>
                       <div className="col-md-6">
                         <RaisedButton
@@ -123,7 +135,11 @@ class HomePageAnon extends Component {
                             label="Votre relais"
                             primary
                             fullWidth
-                            onClick={() => this.setState({ selectionRelais: true, justChanged: false })}
+                            onClick={() =>
+                              this.setState({
+                                selectionRelais: true,
+                                justChanged: false,
+                              })}
                           />}
                         {relaiId &&
                           <RaisedButton
@@ -144,7 +160,9 @@ class HomePageAnon extends Component {
               <div className="col-md-4">
                 <h1>{"L'association"}</h1>
                 <p>
-                  {"L'association ProxWeb crée un site internet permettant d'organiser des achats groupés"}
+                  {
+                    "L'association ProxWeb crée un site internet permettant d'organiser des achats groupés"
+                  }
                 </p>
                 <ul>
                   <li>Catalogue des produits</li>
@@ -170,17 +188,24 @@ class HomePageAnon extends Component {
               <div className="col-md-4">
                 <h1>Les relais locaux</h1>
                 <p>
-                  Localement, des travailleurs indépendants créent des relais pour distribuer les produits,
+                  Localement, des travailleurs indépendants créent des relais
+                  pour distribuer les produits,
                   ils sont rémunérés pour ce service.
                   <strong>{"L'association ne prend pas de commission"}</strong>.
                 </p>
-                <p>{"Ils définissent le montant qu'ils veulent percevoir pour effectuer la distribution."}</p>
+                <p>
+                  {
+                    "Ils définissent le montant qu'ils veulent percevoir pour effectuer la distribution."
+                  }
+                </p>
                 <p>
                   {
                     "ProxiWeb ne prend pas de commission : l'association est financée uniquement par les cotisations."
                   }
                   <strong>
-                    {'Le réseau bénéficie entièrement à ceux qui, chaque jour, le font fonctionner.'}
+                    {
+                      'Le réseau bénéficie entièrement à ceux qui, chaque jour, le font fonctionner.'
+                    }
                   </strong>
                 </p>
               </div>
@@ -192,8 +217,16 @@ class HomePageAnon extends Component {
                     onTouchTap={() => pushState('/login?action=register')}
                   />
                   {/* <MenuItem primaryText="Forum de discussion" leftIcon={<CommunicationChatBubble />} /> */}
-                  <MenuItem primaryText="Contactez-nous" disabled leftIcon={<CommunicationEmail />} />
-                  <MenuItem primaryText="Questions fréquentes" disabled leftIcon={<HelpIcon />} />
+                  <MenuItem
+                    primaryText="Contactez-nous"
+                    disabled
+                    leftIcon={<CommunicationEmail />}
+                  />
+                  <MenuItem
+                    primaryText="Questions fréquentes"
+                    disabled
+                    leftIcon={<HelpIcon />}
+                  />
                   <Divider />
                   <MenuItem
                     primaryText="Documentation"
@@ -211,7 +244,7 @@ class HomePageAnon extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais(),
+  relais: makeSelectRelais(),
   relaiId: makeSelectRelaiId(),
 });
 
@@ -220,7 +253,7 @@ const mapDispatchToProps = dispatch =>
     {
       pushState: push,
       load: loadRelais,
-      choisirRelais: selectionneRelais,
+      choisirRelais: makeSelectionneRelais,
     },
     dispatch
   );

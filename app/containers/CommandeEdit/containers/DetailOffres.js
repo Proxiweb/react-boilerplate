@@ -11,14 +11,14 @@ import MediaQuery from 'components/MediaQuery';
 import StarIcon from 'material-ui/svg-icons/toggle/star';
 import { createStructuredSelector } from 'reselect';
 import {
-  selectOffresProduitAvecTotalAchats,
-  selectCommandeTypesProduits,
-  selectCommandeContenus,
-  selectFournisseurProduit,
-  selectProduits,
+  makeSelectOffresProduitAvecTotalAchats,
+  makeSelectCommandeTypesProduits,
+  makeSelectCommandeContenus,
+  makeSelectFournisseurProduit,
+  makeSelectProduits,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 
 import { ajouterOffre } from 'containers/Commande/actions';
@@ -101,7 +101,9 @@ class DetailOffres extends Component {
     const estFavoris = auth.produitsFavoris.find(item => item === produitId);
     const photoUrl = !produit.photo
       ? '/assets/pas_de_photo.png'
-      : produit.photo.search('http') !== -1 ? produit.photo : `https://proxiweb.fr/${produit.photo}`;
+      : produit.photo.search('http') !== -1
+        ? produit.photo
+        : `https://proxiweb.fr/${produit.photo}`;
     return (
       <div className={styles.offreso}>
         <Paper>
@@ -109,12 +111,19 @@ class DetailOffres extends Component {
             <div className={`col-md-2 ${styles.favoris}`}>
               {viewOffre &&
                 <FlatButton
-                  tooltip={`${estFavoris ? 'Retirer des ' : 'Ajouter aux '}produits favoris`}
+                  tooltip={`${estFavoris
+                    ? 'Retirer des '
+                    : 'Ajouter aux '}produits favoris`}
                   onClick={() => this.toggleFav(produitId)}
                   style={constStyles.starButton}
                   hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                   title="Ajouter aux favoris"
-                  icon={<StarIcon color={estFavoris ? '#ffd203' : 'silver'} style={constStyles.star} />}
+                  icon={
+                    <StarIcon
+                      color={estFavoris ? '#ffd203' : 'silver'}
+                      style={constStyles.star}
+                    />
+                  }
                 />}
             </div>
             <div className={`col-md-10 ${styles.fournisseurSwitch}`}>
@@ -126,7 +135,11 @@ class DetailOffres extends Component {
                 primary
                 hoverColor={shader(this.context.muiTheme.appBar.color, +0.6)}
                 label={viewOffre ? fournisseur.nom : 'Afficher les offres'}
-                title={viewOffre ? 'Afficher les infos fournisseur' : 'Afficher les produits'}
+                title={
+                  viewOffre
+                    ? 'Afficher les infos fournisseur'
+                    : 'Afficher les produits'
+                }
               />
             </div>
             {viewOffre &&
@@ -136,7 +149,12 @@ class DetailOffres extends Component {
             <div className="col-md-10">
               <div className="row" style={constStyles.margin}>
                 <div className="col-md-6">
-                  {viewOffre && <img src={photoUrl} alt={produit.nom} style={constStyles.imageStyle} />}
+                  {viewOffre &&
+                    <img
+                      src={photoUrl}
+                      alt={produit.nom}
+                      style={constStyles.imageStyle}
+                    />}
                   {!viewOffre &&
                     <img
                       src={`https://proxiweb.fr/${fournisseur.illustration}`}
@@ -149,7 +167,10 @@ class DetailOffres extends Component {
                     <p
                       dangerouslySetInnerHTML={{ __html: produit.description }} // eslint-disable-line
                     />}
-                  {viewOffre && produit.tags && produit.tags.length > 0 && <p>{produit.tags.join(' - ')}</p>}
+                  {viewOffre &&
+                    produit.tags &&
+                    produit.tags.length > 0 &&
+                    <p>{produit.tags.join(' - ')}</p>}
                   {!viewOffre &&
                     <p
                       dangerouslySetInnerHTML={{
@@ -162,9 +183,13 @@ class DetailOffres extends Component {
           </div>
           {viewOffre &&
             offres.filter(o => !o.archive).map((offre, idx) => {
-              const typeProduit = typeProduits.find(typesPdt => typesPdt.id === produit.typeProduitId);
+              const typeProduit = typeProduits.find(
+                typesPdt => typesPdt.id === produit.typeProduitId
+              );
               const qteCommande = Object.keys(commandeContenus)
-                .filter(id => commandeContenus[id].commandeId === params.commandeId)
+                .filter(
+                  id => commandeContenus[id].commandeId === params.commandeId
+                )
                 .map(id => commandeContenus[id])
                 .reduce((m, c) => m + c.quantite, 0);
 
@@ -218,12 +243,12 @@ class DetailOffres extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  typeProduits: selectCommandeTypesProduits(),
-  offres: selectOffresProduitAvecTotalAchats(),
-  fournisseur: selectFournisseurProduit(),
-  produitsById: selectProduits(),
-  commandeContenus: selectCommandeContenus(),
-  auth: selectCompteUtilisateur(),
+  typeProduits: makeSelectCommandeTypesProduits(),
+  offres: makeSelectOffresProduitAvecTotalAchats(),
+  fournisseur: makeSelectFournisseurProduit(),
+  produitsById: makeSelectProduits(),
+  commandeContenus: makeSelectCommandeContenus(),
+  auth: makeSelectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>

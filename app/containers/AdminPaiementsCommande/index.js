@@ -9,13 +9,13 @@ import WalletIcon from 'material-ui/svg-icons/action/account-balance-wallet';
 import api from 'utils/stellarApi';
 
 import {
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectOffres,
-  selectCommandeCommandeUtilisateurs,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectCommandeCommandeUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import { makeSelectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import round from 'lodash/round';
 import styles from './styles.css';
@@ -25,7 +25,7 @@ import capitalize from 'lodash/capitalize';
 const SelectableList = makeSelectable(List);
 
 import DepotRelais from 'containers/DepotRelais';
-import { selectDepots } from 'containers/AdminDepot/selectors';
+import { makeSelectDepots } from 'containers/AdminDepot/selectors';
 import { loadDepotsRelais } from 'containers/AdminDepot/actions';
 import ValidationCommande from './components/ValidationCommande';
 
@@ -58,7 +58,9 @@ class PaiementsCommande extends Component {
   }
 
   loadAccount(id, accountId) {
-    const contenus = Object.keys(this.props.contenus).map(k => this.props.contenus[k]);
+    const contenus = Object.keys(this.props.contenus).map(
+      k => this.props.contenus[k]
+    );
     const { params, commandeContenus, offres } = this.props;
 
     const { commandeId } = params;
@@ -104,7 +106,11 @@ class PaiementsCommande extends Component {
     if (error) {
       return (
         <div className="col-md-12">
-          <h1>{"Les comptes n'ont pu être chargé veuillez réessayer ultérieurement"}</h1>
+          <h1>
+            {
+              "Les comptes n'ont pu être chargé veuillez réessayer ultérieurement"
+            }
+          </h1>
         </div>
       );
     }
@@ -122,36 +128,57 @@ class PaiementsCommande extends Component {
               />
             </div>
             <div className="col-md-4 col-md-offset-2">
-              <SelectableList value={utilisateurSelected} onChange={this.handleChangeList}>
-                {commandeUtilisateurs.filter(cu => cu.commandeId === params.commandeId).map((cu, idx) => {
-                  const ut = utilisateurs.find(u => u.id === cu.utilisateurId);
-                  const dep = depots.find(
-                    d =>
-                      d.utilisateurId === cu.utilisateurId &&
-                      !d.transfertEffectue &&
-                      d.type === 'depot_relais'
-                  );
-                  // si un dépot a été fait, en tenir compte
-                  const totalAvecDepot = dep && dep.montant
-                    ? round(parseFloat(dep.montant) + parseFloat(paiements[ut.id].balance), 2)
-                    : round(parseFloat(paiements[ut.id].balance), 2);
+              <SelectableList
+                value={utilisateurSelected}
+                onChange={this.handleChangeList}
+              >
+                {commandeUtilisateurs
+                  .filter(cu => cu.commandeId === params.commandeId)
+                  .map((cu, idx) => {
+                    const ut = utilisateurs.find(
+                      u => u.id === cu.utilisateurId
+                    );
+                    const dep = depots.find(
+                      d =>
+                        d.utilisateurId === cu.utilisateurId &&
+                        !d.transfertEffectue &&
+                        d.type === 'depot_relais'
+                    );
+                    // si un dépot a été fait, en tenir compte
+                    const totalAvecDepot = dep && dep.montant
+                      ? round(
+                          parseFloat(dep.montant) +
+                            parseFloat(paiements[ut.id].balance),
+                          2
+                        )
+                      : round(parseFloat(paiements[ut.id].balance), 2);
 
-                  let iconColor = 'silver';
-                  if (paiements[ut.id]) {
-                    iconColor = totaux[ut.id] <= totalAvecDepot ? 'green' : 'orange';
-                  }
-                  return (
-                    <ListItem
-                      key={idx}
-                      primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}
-                           ${totaux[ut.id] ? ` - ${totaux[ut.id].toFixed(2)} €` : ''}
+                    let iconColor = 'silver';
+                    if (paiements[ut.id]) {
+                      iconColor = totaux[ut.id] <= totalAvecDepot
+                        ? 'green'
+                        : 'orange';
+                    }
+                    return (
+                      <ListItem
+                        key={idx}
+                        primaryText={`${ut.nom.toUpperCase()} ${capitalize(
+                          ut.prenom
+                        )}
+                           ${totaux[ut.id]
+                             ? ` - ${totaux[ut.id].toFixed(2)} €`
+                             : ''}
                           `}
-                      value={ut.id}
-                      leftIcon={cu.datePaiement ? null : <PastilleIcon color={iconColor} />}
-                      rightIcon={dep && <WalletIcon />}
-                    />
-                  );
-                })}
+                        value={ut.id}
+                        leftIcon={
+                          cu.datePaiement
+                            ? null
+                            : <PastilleIcon color={iconColor} />
+                        }
+                        rightIcon={dep && <WalletIcon />}
+                      />
+                    );
+                  })}
               </SelectableList>
             </div>
             <div className="col-md-4">
@@ -176,12 +203,12 @@ class PaiementsCommande extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  utilisateurs: selectUtilisateurs(),
-  contenus: selectCommandeContenus(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  offres: selectOffres(),
-  depots: selectDepots(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
+  utilisateurs: makeSelectUtilisateurs(),
+  contenus: makeSelectCommandeContenus(),
+  commandeContenus: makeSelectCommandeCommandeContenus(),
+  offres: makeSelectOffres(),
+  depots: makeSelectDepots(),
 });
 
 const mapDispatchToProps = dispatch =>

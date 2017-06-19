@@ -9,15 +9,15 @@ import round from 'lodash/round';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import {
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectFournisseursCommande,
-  selectCommandeProduits,
-  selectCommandeStellarAdresse,
-  selectOffres,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectFournisseursCommande,
+  makeSelectCommandeProduits,
+  makeSelectCommandeStellarAdresse,
+  makeSelectOffres,
 } from 'containers/Commande/selectors';
 
-import { selectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
+import { makeSelectUtilisateurStellarAdresse } from 'containers/AdminUtilisateurs/selectors';
 import capitalize from 'lodash/capitalize';
 import isAfter from 'date-fns/is_after';
 import { format } from 'utils/dates';
@@ -83,10 +83,15 @@ class DetailsParUtilisateur extends Component {
 
     const contenusUtilisateur = Object.keys(commandeContenus)
       .map(key => commandeContenus[key])
-      .filter(c => c.utilisateurId === utilisateur.id && c.commandeId === commandeId);
+      .filter(
+        c => c.utilisateurId === utilisateur.id && c.commandeId === commandeId
+      );
 
     const depot = depots.find(
-      d => d.utilisateurId === utilisateurId && !d.transfertEffectue && d.type === 'depot_relais'
+      d =>
+        d.utilisateurId === utilisateurId &&
+        !d.transfertEffectue &&
+        d.type === 'depot_relais'
     );
 
     const totaux = calculeTotauxCommande({
@@ -97,12 +102,15 @@ class DetailsParUtilisateur extends Component {
       commandeId: params.commandeId,
     });
     const credit =
-      parseFloat(this.state.account ? this.state.account.balance : 0) + (depot ? depot.montant : 0);
+      parseFloat(this.state.account ? this.state.account.balance : 0) +
+      (depot ? depot.montant : 0);
     const totalCommande = round(totaux.prix + totaux.recolteFond, 2);
 
     const paiementOk = this.state.account ? credit >= totalCommande : false;
 
-    const identite = `${capitalize(utilisateur.prenom)} ${utilisateur.nom.toUpperCase()}`;
+    const identite = `${capitalize(
+      utilisateur.prenom
+    )} ${utilisateur.nom.toUpperCase()}`;
     return (
       <div className={`row center-md ${styles.detailsParUtilisateur}`}>
         <Helmet title={`Commande de ${identite}`} />
@@ -114,19 +122,28 @@ class DetailsParUtilisateur extends Component {
                   <strong>
                     {identite}
                     {commandeUtilisateur.createdAt &&
-                      ` passée le ${format(commandeUtilisateur.createdAt, formatPattern)}`}
+                      ` passée le ${format(
+                        commandeUtilisateur.createdAt,
+                        formatPattern
+                      )}`}
                   </strong>
                 </div>
                 <div className="col-md">
                   <div className="row arround-md">
                     <div className="col-md">
                       {commandeUtilisateur.datePaiement
-                        ? `Payée le ${format(commandeUtilisateur.datePaiement, formatPattern)}`
+                        ? `Payée le ${format(
+                            commandeUtilisateur.datePaiement,
+                            formatPattern
+                          )}`
                         : 'Non payée'}
                     </div>
                     <div className="col-md">
                       {commandeUtilisateur.dateLivraison
-                        ? `Livrée le ${format(commandeUtilisateur.dateLivraison, formatPattern)}`
+                        ? `Livrée le ${format(
+                            commandeUtilisateur.dateLivraison,
+                            formatPattern
+                          )}`
                         : 'Non livrée'}
                     </div>
                   </div>
@@ -136,7 +153,9 @@ class DetailsParUtilisateur extends Component {
             <div className="col-md-12">
               <DetailCommande
                 contenusFiltered={contenusUtilisateur}
-                commandeContenus={Object.keys(commandeContenus).map(key => commandeContenus[key])}
+                commandeContenus={Object.keys(commandeContenus).map(
+                  key => commandeContenus[key]
+                )}
                 produits={produits}
                 commandeId={params.commandeId}
                 offres={offres}
@@ -191,8 +210,12 @@ class DetailsParUtilisateur extends Component {
             </div>
             <div className="col-md-6" style={{ marginTop: '1em' }}>
               <h3>
-                {this.state.account && !paiementOk && <p>Manque {round(totalCommande - credit, 2)} €</p>}
-                {this.state.account && paiementOk && <p>Restera {round(credit - totalCommande, 2)} €</p>}
+                {this.state.account &&
+                  !paiementOk &&
+                  <p>Manque {round(totalCommande - credit, 2)} €</p>}
+                {this.state.account &&
+                  paiementOk &&
+                  <p>Restera {round(credit - totalCommande, 2)} €</p>}
               </h3>
             </div>
 
@@ -202,7 +225,9 @@ class DetailsParUtilisateur extends Component {
           </Tab>
           <Tab label="Comptes">
             {utilisateur.stellarKeys &&
-              <ListeEffetsCompteStellar stellarAddress={utilisateur.stellarKeys.adresse} />}
+              <ListeEffetsCompteStellar
+                stellarAddress={utilisateur.stellarKeys.adresse}
+              />}
           </Tab>
         </Tabs>
       </div>
@@ -211,13 +236,13 @@ class DetailsParUtilisateur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  // contenus: selectCommandeContenus(),
-  commandeContenus: selectCommandeContenus(),
-  offres: selectOffres(),
-  fournisseurs: selectFournisseursCommande(),
-  produits: selectCommandeProduits(),
-  utilisateurStellarAdresse: selectUtilisateurStellarAdresse(),
-  commandeStellarAdresse: selectCommandeStellarAdresse(),
+  // contenus: makeSelectCommandeContenus(),
+  commandeContenus: makeSelectCommandeContenus(),
+  offres: makeSelectOffres(),
+  fournisseurs: makeSelectFournisseursCommande(),
+  produits: makeSelectCommandeProduits(),
+  utilisateurStellarAdresse: makeSelectUtilisateurStellarAdresse(),
+  commandeStellarAdresse: makeSelectCommandeStellarAdresse(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -228,4 +253,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsParUtilisateur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailsParUtilisateur
+);

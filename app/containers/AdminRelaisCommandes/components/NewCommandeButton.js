@@ -7,8 +7,8 @@ import { bindActionCreators } from 'redux';
 import styles from './styles.css';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import { selectCommandeId } from 'containers/Commande/selectors';
-import { selectRoute } from 'containers/App/selectors';
+import { makeSelectCommandeId } from 'containers/Commande/selectors';
+import { makeSelectRoute } from 'containers/App/selectors';
 
 class NewCommandeButton extends Component {
   static propTypes = {
@@ -16,13 +16,19 @@ class NewCommandeButton extends Component {
   };
 
   handleNewCommande = () => {
-    this.props.pushState(`/admin/relais/${this.props.relaiId}/commandes/nouvelle`);
+    this.props.pushState(
+      `/admin/relais/${this.props.relaiId}/commandes/nouvelle`
+    );
   };
 
   render() {
     return (
       <div style={{ textAlign: 'center' }}>
-        <FloatingActionButton primary className={styles.addButton} onClick={this.handleNewCommande}>
+        <FloatingActionButton
+          primary
+          className={styles.addButton}
+          onClick={this.handleNewCommande}
+        >
           <ContentAdd />
         </FloatingActionButton>
       </div>

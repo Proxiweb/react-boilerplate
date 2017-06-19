@@ -7,7 +7,7 @@ import { isPristine, change } from 'redux-form';
 
 // import { saveAccount } from 'containers/CompteUtilisateur/actions';
 import { makeSelectPending } from 'containers/App/selectors';
-import { selectTypesProduitsByIds } from 'containers/Commande/selectors';
+import { makeSelectTypesProduitsByIds } from 'containers/Commande/selectors';
 import { saveProduit } from 'containers/Commande/actions';
 import ProduitForm from './ProduitForm';
 
@@ -33,7 +33,14 @@ class ProduitFormContainer extends React.Component {
   };
 
   render() {
-    const { pending, produit, pristine, typesProduits, changeValue, values } = this.props;
+    const {
+      pending,
+      produit,
+      pristine,
+      typesProduits,
+      changeValue,
+      values,
+    } = this.props;
     return (
       <ProduitForm
         initialValues={produit}
@@ -51,7 +58,7 @@ class ProduitFormContainer extends React.Component {
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
   pristine: isProfilePristine(),
-  typesProduits: selectTypesProduitsByIds(),
+  typesProduits: makeSelectTypesProduitsByIds(),
   values: getValues(),
 });
 
@@ -64,4 +71,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProduitFormContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ProduitFormContainer
+);

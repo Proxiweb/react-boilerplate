@@ -117,8 +117,8 @@ class ProduitSelector extends React.Component {
 }
 
 // const mapStateToProps = createStructuredSelector({
-//   typeProduits: selectTypesProduitsRelais(),
-//   produits: selectProduitsRelaisByTypeProduit(),
+//   typeProduits: makeSelectTypesProduitsRelais(),
+//   produits: makeSelectProduitsRelaisByTypeProduit(),
 // });
 
 const mapDispatchToProps = dispatch =>

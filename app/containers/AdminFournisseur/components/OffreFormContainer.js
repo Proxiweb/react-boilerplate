@@ -11,7 +11,7 @@ import { makeSelectPending } from 'containers/App/selectors';
 import OffreForm from './OffreForm';
 
 const isProfilePristine = () => state => isPristine('offre')(state);
-const selectValeurs = () => state => state.form;
+const makeSelectValeurs = () => state => state.form;
 
 // import submit from './submit';
 
@@ -41,7 +41,14 @@ class OffreFormContainer extends React.Component {
   };
 
   render() {
-    const { pending, offre, pristine, handleToggeState, valeurs, quantiteUnite } = this.props;
+    const {
+      pending,
+      offre,
+      pristine,
+      handleToggeState,
+      valeurs,
+      quantiteUnite,
+    } = this.props;
 
     const tarifications = offre.tarifications.map(t => ({
       ...t,
@@ -66,7 +73,7 @@ class OffreFormContainer extends React.Component {
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
   pristine: isProfilePristine(),
-  valeurs: selectValeurs(),
+  valeurs: makeSelectValeurs(),
 });
 
 const mapDispatchToProps = dispatch =>

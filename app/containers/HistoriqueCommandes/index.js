@@ -5,8 +5,8 @@ import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { selectCommandeId } from 'containers/Commande/selectors';
-import { selectUserId } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCommandeId } from 'containers/Commande/selectors';
+import { makeSelectUserId } from 'containers/CompteUtilisateur/selectors';
 
 import HistoriqueCommandesUtilisateur from 'components/HistoriqueCommandesUtilisateur';
 
@@ -20,7 +20,9 @@ class HistoriqueCommandes extends Component {
   };
 
   handleChangeList = (event, value) =>
-    this.props.pushState(`/users/${this.props.params.userId}/commandes/${value}`);
+    this.props.pushState(
+      `/users/${this.props.params.userId}/commandes/${value}`
+    );
 
   render() {
     const { commandeId, userId } = this.props;
@@ -35,8 +37,8 @@ class HistoriqueCommandes extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  userId: selectUserId(),
-  commandeId: selectCommandeId(),
+  userId: makeSelectUserId(),
+  commandeId: makeSelectCommandeId(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -47,4 +49,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(HistoriqueCommandes);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  HistoriqueCommandes
+);

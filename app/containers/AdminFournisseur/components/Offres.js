@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Paper from 'material-ui/Paper';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { selectOffresDuProduit, selectTypesProduitsByIds } from 'containers/Commande/selectors';
+import {
+  makeSelectOffresDuProduit,
+  makeSelectTypesProduitsByIds,
+} from 'containers/Commande/selectors';
 import { makeSelectPending } from 'containers/App/selectors';
 import Offre from './Offre';
 import OffreFormContainer from './OffreFormContainer';
@@ -29,7 +32,10 @@ class Offres extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.produit.id !== this.props.produit.id || nextProps.pending !== this.props.pending) {
+    if (
+      nextProps.produit.id !== this.props.produit.id ||
+      nextProps.pending !== this.props.pending
+    ) {
       this.setState({ ...this.state, editMode: false });
     }
   }
@@ -42,7 +48,8 @@ class Offres extends Component {
       nouvelle: false,
     });
 
-  createOffre = () => this.setState({ ...this.state, editMode: true, nouvelle: true });
+  createOffre = () =>
+    this.setState({ ...this.state, editMode: true, nouvelle: true });
 
   render() {
     const { offres, typesProduits, produit, pending } = this.props;
@@ -78,13 +85,13 @@ class Offres extends Component {
                     .slice()
                     .sort((o1, o2) => o1.active > o2.active)
                     .map((off, idx) =>
-                      <Offre
+                      (<Offre
                         index={idx}
                         key={idx}
                         offre={off}
                         typeProduit={typeProduit}
                         handleToggeState={() => this.toggleState(idx)}
-                      />
+                      />)
                     )}
                 {(!offres || !offres.length) &&
                   <Paper className={styles.aucuneOffre} style={aucuneOffreCss}>
@@ -132,8 +139,8 @@ class Offres extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  offres: selectOffresDuProduit(),
-  typesProduits: selectTypesProduitsByIds(),
+  offres: makeSelectOffresDuProduit(),
+  typesProduits: makeSelectTypesProduitsByIds(),
   pending: makeSelectPending(),
 });
 

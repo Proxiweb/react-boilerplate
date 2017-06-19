@@ -6,13 +6,13 @@ import { createStructuredSelector } from 'reselect';
 import api from 'utils/stellarApi';
 
 import {
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectOffres,
-  selectCommandeCommandeUtilisateurs,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectCommandeCommandeUtilisateurs
 } from 'containers/Commande/selectors';
 
-import { selectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
+import { makeSelectUtilisateurs } from 'containers/AdminUtilisateurs/selectors';
 import round from 'lodash/round';
 import classnames from 'classnames';
 import capitalize from 'lodash/capitalize';
@@ -25,13 +25,13 @@ class AdminFinalisationCommande extends Component {
     depots: PropTypes.array,
     offres: PropTypes.object.isRequired,
     utilisateurs: PropTypes.array.isRequired,
-    params: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired
   };
 
   state = {
     paiements: {},
     totaux: {},
-    utilisateurSelected: null,
+    utilisateurSelected: null
   };
 
   render() {
@@ -46,11 +46,11 @@ class AdminFinalisationCommande extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  utilisateurs: selectUtilisateurs(),
-  contenus: selectCommandeContenus(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  offres: selectOffres(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
+  utilisateurs: makeSelectUtilisateurs(),
+  contenus: makeSelectCommandeContenus(),
+  commandeContenus: makeSelectCommandeCommandeContenus(),
+  offres: makeSelectOffres()
 });
 
 export default connect(mapStateToProps)(AdminFinalisationCommande);

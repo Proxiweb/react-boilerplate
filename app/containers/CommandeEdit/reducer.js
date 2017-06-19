@@ -6,10 +6,11 @@
 import update from 'immutability-helper';
 import assign from 'lodash/assign';
 import findIndex from 'lodash/findIndex';
+import { fromJS } from 'immutable';
 import c from './constants';
 import uuid from 'node-uuid';
 
-const commandeVide = {
+const commandeVide = fromJS({
   id: undefined,
   commandeId: null,
   dateLivraison: null,
@@ -22,11 +23,11 @@ const commandeVide = {
   recolteFond: 0,
   utilisateurId: null,
   contenus: [],
-};
+});
 
-const initialState = {};
+const initialState = fromJS({});
 
-const initCommande = (state, commandeId) => update(state, { [commandeId]: { $set: commandeVide } });
+const initCommande = (state, commandeId) => state.set(commandeId, commandeVide);
 
 const ajouter = (state, commandeId, offre) => {
   const idx = findIndex(state[commandeId].contenus, { offreId: offre.offreId });
@@ -50,10 +51,15 @@ const ajouter = (state, commandeId, offre) => {
 };
 
 const supprimer = (state, commandeId, offreId) => {
-  const newContenus = state[commandeId].contenus.filter(cont => cont.offreId !== offreId);
+  const newContenus = state[commandeId].contenus.filter(
+    cont => cont.offreId !== offreId
+  );
   const changed = typeof state[commandeId].id !== 'undefined';
   return update(state, {
-    [commandeId]: { contenus: { $set: newContenus }, modifiee: { $set: changed } },
+    [commandeId]: {
+      contenus: { $set: newContenus },
+      modifiee: { $set: changed },
+    },
   });
 };
 
@@ -87,7 +93,10 @@ const diminuer = (state, commandeId, offreId) => {
 const majTarifs = (state, payload) => {
   const { totalCommande, partDistribution, commandeId } = payload;
   return update(state, {
-    [commandeId]: { montant: { $set: totalCommande }, recolteFond: { $set: partDistribution } },
+    [commandeId]: {
+      montant: { $set: totalCommande },
+      recolteFond: { $set: partDistribution },
+    },
   });
 };
 
@@ -99,21 +108,33 @@ const commandeEditReducer = (state = initialState, action) => {
       return ajouter(state, action.payload.commandeId, action.payload.offre);
 
     case c.SUPPRIMER_OFFRE:
-      return supprimer(state, action.payload.commandeId, action.payload.offreId);
+      return supprimer(
+        state,
+        action.payload.commandeId,
+        action.payload.offreId
+      );
 
     case c.DIMINUER_OFFRE:
       return diminuer(state, action.payload.commandeId, action.payload.offreId);
 
     case c.AUGMENTER_OFFRE:
-      return augmenter(state, action.payload.commandeId, action.payload.offreId);
+      return augmenter(
+        state,
+        action.payload.commandeId,
+        action.payload.offreId
+      );
 
     case c.ASYNC_SAUVEGARDER_SUCCESS:
       return update(state, {
-        [action.datas.commandeId]: { $set: assign(action.datas, { modifiee: false }) },
+        [action.datas.commandeId]: {
+          $set: assign(action.datas, { modifiee: false }),
+        },
       });
 
     case c.ASYNC_ANNULER_SUCCESS:
-      return update(state, { [action.req.datas.commandeId]: { $set: commandeVide } });
+      return update(state, {
+        [action.req.datas.commandeId]: { $set: commandeVide },
+      });
 
     case c.LOAD_COMMANDE:
       return update(state, {
@@ -125,7 +146,10 @@ const commandeEditReducer = (state = initialState, action) => {
     case c.SET_DISTRIBUTION: {
       const { plageHoraire, livraisonId, commandeId } = action.payload;
       const commande = state[commandeId];
-      if (commande.plageHoraire === plageHoraire && commande.livraisonId === livraisonId) {
+      if (
+        commande.plageHoraire === plageHoraire &&
+        commande.livraisonId === livraisonId
+      ) {
         return state;
       }
 

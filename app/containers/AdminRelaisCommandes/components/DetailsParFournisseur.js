@@ -9,12 +9,12 @@ import { createStructuredSelector } from 'reselect';
 import { calculeTotauxCommande } from 'containers/Commande/utils';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
-  selectFournisseursCommande,
-  selectCommandeProduits,
-  selectOffres,
+  makeSelectFournisseursCommande,
+  makeSelectCommandeProduits,
+  makeSelectOffres,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import CommandeFournisseur from './CommandeFournisseur';
 import CommandeDistributeur from './CommandeDistributeur';
@@ -46,7 +46,7 @@ class DetailsParFournisseur extends Component {
     const { finalisation } = this.props;
     this.state = {
       // eslint-disable-next-line
-      viewFinalisation: finalisation ? true : false,
+      viewFinalisation: finalisation ? true : false
     };
   }
 
@@ -103,12 +103,15 @@ class DetailsParFournisseur extends Component {
       commandeId,
     });
 
-    const nbreCommandeLivrees = commandeUtilisateurs.filter(cu => cu.dateLivraison).length;
+    const nbreCommandeLivrees = commandeUtilisateurs.filter(
+      cu => cu.dateLivraison
+    ).length;
     const distribuee = nbreCommandeLivrees === commandeUtilisateurs.length;
 
     return (
       <div className={`row ${styles.detailsParFournisseur}`}>
-        {(includes(auth.roles, 'ADMIN') || includes(auth.roles, 'RELAI_ADMIN')) &&
+        {(includes(auth.roles, 'ADMIN') ||
+          includes(auth.roles, 'RELAI_ADMIN')) &&
           <FournisseurToolbar
             relaiId={relaiId}
             role={auth.roles}
@@ -139,11 +142,16 @@ class DetailsParFournisseur extends Component {
             />}
         </div>
         {viewFinalisation &&
-          <FinalisationDetails destinataires={finalisation.destinataires} params={params} />}
+          <FinalisationDetails
+            destinataires={finalisation.destinataires}
+            params={params}
+          />}
         {!viewFinalisation &&
           <div className={`col-md-12 ${styles.listeCommandes}`}>
             {fournisseurs.filter(f => f.visible).map((fournisseur, idx) => {
-              const pdts = produits.filter(pdt => pdt.fournisseurId === fournisseur.id);
+              const pdts = produits.filter(
+                pdt => pdt.fournisseurId === fournisseur.id
+              );
               return (
                 <div className="col-md-12" style={{ marginTop: '1em' }}>
                   <CommandeFournisseur
@@ -176,10 +184,10 @@ class DetailsParFournisseur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseursCommande(),
-  produits: selectCommandeProduits(),
-  offres: selectOffres(),
-  auth: selectCompteUtilisateur(),
+  fournisseurs: makeSelectFournisseursCommande(),
+  produits: makeSelectCommandeProduits(),
+  offres: makeSelectOffres(),
+  auth: makeSelectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -191,4 +199,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsParFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DetailsParFournisseur
+);

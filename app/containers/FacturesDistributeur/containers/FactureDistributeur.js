@@ -9,13 +9,13 @@ import round from 'lodash/round';
 import classnames from 'classnames';
 
 import {
-  selectOffres,
-  selectProduits,
-  selectCommande,
-  selectUtilisateurs,
+  makeSelectOffres,
+  makeSelectProduits,
+  makeSelectCommande,
+  makeSelectUtilisateurs,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import { fetchUtilisateurs } from 'containers/Commande/actions';
 
@@ -57,7 +57,9 @@ class FactureDistributeur extends Component {
   loadAcheteurs() {
     const { commandeUtilisateurs, utilisateurs, loadU } = this.props;
     const utilisateursIds = commandeUtilisateurs
-      .filter(cu => !utilisateurs || !Object.keys(utilisateurs)[cu.utilisateurId]) // ne pas charger ceux déjà chargés
+      .filter(
+        cu => !utilisateurs || !Object.keys(utilisateurs)[cu.utilisateurId]
+      ) // ne pas charger ceux déjà chargés
       .map(cu => cu.utilisateurId);
     loadU(utilisateursIds);
   }
@@ -95,9 +97,21 @@ class FactureDistributeur extends Component {
   split = str => str.split('-')[0];
 
   render() {
-    const { commandeUtilisateurs, commandeContenus, commande, offres, utilisateurs, auth } = this.props;
+    const {
+      commandeUtilisateurs,
+      commandeContenus,
+      commande,
+      offres,
+      utilisateurs,
+      auth,
+    } = this.props;
 
-    if (!commande || !commandeUtilisateurs || !commandeContenus || !utilisateurs) {
+    if (
+      !commande ||
+      !commandeUtilisateurs ||
+      !commandeContenus ||
+      !utilisateurs
+    ) {
       return null;
     }
 
@@ -169,7 +183,9 @@ class FactureDistributeur extends Component {
                 Prestation distribution HT
               </td>
             </tr>
-            {commandeUtilisateurs.map((cu, idx) => this.buildCommandeUtilisateurRow(cu.utilisateurId, idx))}
+            {commandeUtilisateurs.map((cu, idx) =>
+              this.buildCommandeUtilisateurRow(cu.utilisateurId, idx)
+            )}
             <tr>
               <td colSpan="2" style={{ textAlign: 'right' }}>
                 Total: <strong>{totaux.recolteFond} €</strong>
@@ -177,7 +193,9 @@ class FactureDistributeur extends Component {
             </tr>
             <tr>
               <td colSpan="2">
-                {'T.V.A. non applicable. Article 293B du code général des impôts.'}
+                {
+                  'T.V.A. non applicable. Article 293B du code général des impôts.'
+                }
               </td>
             </tr>
           </tbody>
@@ -189,11 +207,11 @@ class FactureDistributeur extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
-  commande: selectCommande(),
-  produits: selectProduits(),
-  utilisateurs: selectUtilisateurs(),
-  auth: selectCompteUtilisateur(),
-  offres: selectOffres(),
+  commande: makeSelectCommande(),
+  produits: makeSelectProduits(),
+  utilisateurs: makeSelectUtilisateurs(),
+  auth: makeSelectCompteUtilisateur(),
+  offres: makeSelectOffres(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -204,4 +222,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FactureDistributeur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FactureDistributeur
+);

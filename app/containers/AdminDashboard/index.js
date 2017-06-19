@@ -6,9 +6,16 @@ import { createStructuredSelector } from 'reselect';
 import ReactGridLayout from 'react-grid-layout';
 
 import { loadUtilisateurs, loadRelais } from 'containers/Commande/actions';
-import { selectUtilisateurs, selectCommandesUtilisateurs, selectRelais } from 'containers/Commande/selectors';
+import {
+  makeSelectUtilisateurs,
+  makeSelectCommandesUtilisateurs,
+  makeSelectRelais,
+} from 'containers/Commande/selectors';
 
-import { makeSelectPending, makeSelectNombreClients } from 'containers/App/selectors';
+import {
+  makeSelectPending,
+  makeSelectNombreClients,
+} from 'containers/App/selectors';
 
 import Panel from './components/Panel';
 import Utilisateurs from './components/Utilisateurs';
@@ -37,13 +44,20 @@ class Dashboard extends Component {
     this.props.loadRelais();
   }
 
-  handleSelectUtilisateur = (event, utilisateurId) => this.setState({ utilisateurId });
+  handleSelectUtilisateur = (event, utilisateurId) =>
+    this.setState({ utilisateurId });
 
   handleSelectCommandeUtilisateur = (event, commandeUtilisateurId) =>
     this.setState({ commandeUtilisateurId });
 
   render() {
-    const { relais, utilisateurs, pending, commandeUtilisateurs, nombreClients } = this.props;
+    const {
+      relais,
+      utilisateurs,
+      pending,
+      commandeUtilisateurs,
+      nombreClients,
+    } = this.props;
     const { utilisateurId, commandeUtilisateurId } = this.state;
     const layout = [
       { i: 'a', x: 0, y: 0, w: 1, h: 2 },
@@ -75,10 +89,10 @@ class Dashboard extends Component {
           {!commandeUtilisateur
             ? <Panel title="Auncune commande" />
             : <Commande
-                commandeUtilisateur={commandeUtilisateur}
-                pending={pending}
-                commandeUtilisateurId={commandeUtilisateurId}
-              />}
+              commandeUtilisateur={commandeUtilisateur}
+              pending={pending}
+              commandeUtilisateurId={commandeUtilisateurId}
+            />}
         </div>
         <div key={'b'}>
           <Utilisateurs
@@ -91,11 +105,11 @@ class Dashboard extends Component {
         <div key={'c'}>
           {utilisateurId
             ? <Utilisateur
-                utilisateur={utilisateurs[utilisateurId]}
-                pending={pending}
-                onClick={this.handleSelectCommandeUtilisateur}
-                commandeUtilisateurId={commandeUtilisateurId}
-              />
+              utilisateur={utilisateurs[utilisateurId]}
+              pending={pending}
+              onClick={this.handleSelectCommandeUtilisateur}
+              commandeUtilisateurId={commandeUtilisateurId}
+            />
             : <Panel title="Sélectionnez un utilisateur" />}
         </div>
         <div key={'d'}>
@@ -113,9 +127,9 @@ class Dashboard extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
-  utilisateurs: selectUtilisateurs(),
-  commandeUtilisateurs: selectCommandesUtilisateurs(),
-  relais: selectRelais(),
+  utilisateurs: makeSelectUtilisateurs(),
+  commandeUtilisateurs: makeSelectCommandesUtilisateurs(),
+  relais: makeSelectRelais(),
   nombreClients: makeSelectNombreClients(),
 });
 

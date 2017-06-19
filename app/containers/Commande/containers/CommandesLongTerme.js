@@ -14,8 +14,8 @@ import { calculeTotauxCommande } from 'containers/Commande/utils';
 import Panel from 'components/Panel';
 
 import {
-  selectCommandeContenus,
-  selectOffres, // selectCommandesUtilisateur,
+  makeSelectCommandeContenus,
+  makeSelectOffres, // selectCommandesUtilisateur,
 } from 'containers/Commande/selectors';
 
 import CommandePanel from 'containers/Commande/components/CommandePanel';
@@ -34,11 +34,16 @@ const Offre = ({
   commandeUtilisateurExiste,
   withLink,
 }) =>
-  <Card style={{ marginBottom: 20 }}>
+  (<Card style={{ marginBottom: 20 }}>
     <CardHeader
       title={
         withLink
-          ? <Link to={`/admin/relais/${relaiId}/commandes/${commandeId}`} className={styles.link}>{nom}</Link>
+          ? <Link
+            to={`/admin/relais/${relaiId}/commandes/${commandeId}`}
+            className={styles.link}
+          >
+            {nom}
+          </Link>
           : nom
       }
       subtitle={tarif}
@@ -57,17 +62,23 @@ const Offre = ({
       </div>}
     <CardActions expandable>
       <RaisedButton
-        label={commandeUtilisateurExiste(commandeId) ? 'Modifier ma commande' : 'Commander'}
+        label={
+          commandeUtilisateurExiste(commandeId)
+            ? 'Modifier ma commande'
+            : 'Commander'
+        }
         icon={<ShoppingCartIcon />}
         fullWidth
         primary
         onClick={() => {
           buttonClicked();
-          pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`);
+          pushState(
+            `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${utilisateurId}`
+          );
         }}
       />
     </CardActions>
-  </Card>;
+  </Card>);
 
 Offre.propTypes = {
   imageSrc: PropTypes.string,
@@ -100,7 +111,12 @@ class CommandesLongTerme extends Component {
   };
 
   getInfos = commandeId => {
-    const { commandeContenus, commandes, offres, getCommandeInfos } = this.props;
+    const {
+      commandeContenus,
+      commandes,
+      offres,
+      getCommandeInfos,
+    } = this.props;
     const { montantMin, qteMin } = commandes[commandeId];
 
     if (qteMin) {
@@ -125,7 +141,12 @@ class CommandesLongTerme extends Component {
     let prct = 0;
     let prix = 0;
     if (contenus.length > 0 && montantMin) {
-      const totaux = calculeTotauxCommande({ contenus, offres, commandeContenus, commandeId });
+      const totaux = calculeTotauxCommande({
+        contenus,
+        offres,
+        commandeContenus,
+        commandeId,
+      });
       prix = round(totaux.prix, 2);
       prct = parseInt(prix * 100 / montantMin, 10);
     }
@@ -160,7 +181,11 @@ class CommandesLongTerme extends Component {
               <CommandePanel
                 nom={infos ? infos.typesProduits.join(', ') : null}
                 dateCommande={commandes[id].dateCommande}
-                label={commandeUtilisateurExiste(id) ? 'Modifier ma commande' : 'Commander'}
+                label={
+                  commandeUtilisateurExiste(id)
+                    ? 'Modifier ma commande'
+                    : 'Commander'
+                }
                 prct={100}
                 fav={false}
                 key={idx}
@@ -168,7 +193,9 @@ class CommandesLongTerme extends Component {
                 disabled={pending}
                 clickHandler={() => {
                   buttonClicked();
-                  pushState(`/relais/${relaiId}/commandes/${id}?utilisateurId=${utilisateurId}`);
+                  pushState(
+                    `/relais/${relaiId}/commandes/${id}?utilisateurId=${utilisateurId}`
+                  );
                 }}
               />
             );
@@ -196,9 +223,9 @@ class CommandesLongTerme extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeContenus: selectCommandeContenus(),
-  offres: selectOffres(),
-  // commandeUtilisateurs: selectCommandesUtilisateurs(),
+  commandeContenus: makeSelectCommandeContenus(),
+  offres: makeSelectOffres(),
+  // commandeUtilisateurs: makeSelectCommandesUtilisateurs(),
 });
 
 export default connect(mapStateToProps)(CommandesLongTerme);

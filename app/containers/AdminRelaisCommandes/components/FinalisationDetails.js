@@ -15,7 +15,7 @@ import {
 } from 'material-ui/Table';
 
 import { saveCommande } from 'containers/Commande/actions';
-import { selectCommande } from 'containers/Commande/selectors';
+import { makeSelectCommande } from 'containers/Commande/selectors';
 
 class FinalisationDetails extends Component {
   static propTypes = {
@@ -46,9 +46,9 @@ class FinalisationDetails extends Component {
               d,
               idx // eslint-disable-line
             ) =>
-              (idx === selectedIdx
+              idx === selectedIdx
                 ? { ...d, paiementOk: !d.paiementOk }
-                : { ...d })
+                : { ...d }
           ),
         },
       },
@@ -71,13 +71,13 @@ class FinalisationDetails extends Component {
           </TableHeader>
           <TableBody deselectOnClickaway={false}>
             {destinataires.map((dest, idx) =>
-              <TableRow selected={idx === selectedIdx}>
+              (<TableRow selected={idx === selectedIdx}>
                 <TableRowColumn>{dest.nom}</TableRowColumn>
                 <TableRowColumn>{dest.montant} €</TableRowColumn>
                 <TableRowColumn>
                   {dest.paiementOk ? 'oui' : 'non'}
                 </TableRowColumn>
-              </TableRow>
+              </TableRow>)
             )}
           </TableBody>
         </Table>
@@ -100,7 +100,7 @@ class FinalisationDetails extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commande: selectCommande(),
+  commande: makeSelectCommande(),
 });
 
 const mapDispatchToProps = dispatch =>

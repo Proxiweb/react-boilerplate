@@ -18,13 +18,13 @@ import groupBy from 'lodash/groupBy';
 import styles from './styles.css';
 
 import {
-  selectCommandeTypesProduitsVisibles,
-  selectCommandeProduitsByTypeProduit,
-  selectProduits,
-  selectFournisseursIds,
+  makeSelectCommandeTypesProduitsVisibles,
+  makeSelectCommandeProduitsByTypeProduit,
+  makeSelectProduits,
+  makeSelectFournisseursIds,
 } from 'containers/Commande/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 class ProduitSelector extends React.Component {
   static propTypes = {
@@ -52,7 +52,13 @@ class ProduitSelector extends React.Component {
     );
     if (produitsFavoris && produitsFavoris.length) {
       menuItems.push(<Divider />);
-      menuItems.push(<MenuItem key="favoris" value="favoris" primaryText="Produits favoris" />);
+      menuItems.push(
+        <MenuItem
+          key="favoris"
+          value="favoris"
+          primaryText="Produits favoris"
+        />
+      );
     }
 
     return menuItems;
@@ -82,7 +88,14 @@ class ProduitSelector extends React.Component {
   };
 
   render() {
-    const { typeProduits, produits, params, allProduits, auth, fournisseursIds } = this.props;
+    const {
+      typeProduits,
+      produits,
+      params,
+      allProduits,
+      auth,
+      fournisseursIds,
+    } = this.props;
     const { typeProduitSecondaire } = this.state;
     const { typeProduitId, produitId } = params;
     const muiTheme = this.context.muiTheme;
@@ -90,13 +103,17 @@ class ProduitSelector extends React.Component {
     if (!produits) return null;
     let typesProduitsSecondaires = null;
 
-    typesProduitsSecondaires = produits.find(p => p.typeProduitSecondaire !== null)
+    typesProduitsSecondaires = produits.find(
+      p => p.typeProduitSecondaire !== null
+    )
       ? uniq(produits.map(p => p.typeProduitSecondaire))
       : null;
 
     const listeProduits = typeProduitId !== 'favoris'
       ? produits
-      : Object.keys(allProduits).filter(id => includes(auth.produitsFavoris, id)).map(id => allProduits[id]);
+      : Object.keys(allProduits)
+          .filter(id => includes(auth.produitsFavoris, id))
+          .map(id => allProduits[id]);
 
     const listeProduitsFiltred = listeProduits.filter(
       p =>
@@ -104,20 +121,36 @@ class ProduitSelector extends React.Component {
         ((!typeProduitSecondaire && !typesProduitsSecondaires) ||
           p.typeProduitSecondaire === typeProduitSecondaire)
     );
-    const listeProduitsFiltredGrp = groupBy(listeProduitsFiltred, 'typeProduitTernaire');
+    const listeProduitsFiltredGrp = groupBy(
+      listeProduitsFiltred,
+      'typeProduitTernaire'
+    );
 
     return (
-      <div className={classnames('col-sm-4 col-lg-3 col-xs-12 col-md-4', styles.panelproduits)}>
+      <div
+        className={classnames(
+          'col-sm-4 col-lg-3 col-xs-12 col-md-4',
+          styles.panelproduits
+        )}
+      >
         <Paper style={{ padding: '0 5px' }}>
           {typeProduits &&
             (typeProduits.length > 1 || auth.produitsFavoris.length > 0) &&
-            <CustomSelectField value={typeProduitId} onChange={this.handleChange} fullWidth>
-              {this.getTypesProduitsMenuItems(typeProduits, auth.produitsFavoris)}
+            <CustomSelectField
+              value={typeProduitId}
+              onChange={this.handleChange}
+              fullWidth
+            >
+              {this.getTypesProduitsMenuItems(
+                typeProduits,
+                auth.produitsFavoris
+              )}
             </CustomSelectField>}
           {typesProduitsSecondaires &&
             <CustomSelectField
               value={typeProduitSecondaire}
-              onChange={(event, index, value) => this.setState({ typeProduitSecondaire: value })}
+              onChange={(event, index, value) =>
+                this.setState({ typeProduitSecondaire: value })}
               fullWidth
             >
               {typesProduitsSecondaires.map((val, index) =>
@@ -125,33 +158,42 @@ class ProduitSelector extends React.Component {
               )}
             </CustomSelectField>}
           {listeProduits &&
-            (!typesProduitsSecondaires || typesProduitsSecondaires.length === 0 || typeProduitSecondaire) &&
-            <List className={`${styles[`produits${produits && produits.length > 10 ? 'Scr' : ''}`]}`}>
-              {Object.keys(listeProduitsFiltredGrp).map((key, idx) =>
-                <div key={idx}>
+            (!typesProduitsSecondaires ||
+              typesProduitsSecondaires.length === 0 ||
+              typeProduitSecondaire) &&
+              <List
+                className={`${styles[
+                `produits${produits && produits.length > 10 ? 'Scr' : ''}`
+              ]}`}
+              >
+                {Object.keys(listeProduitsFiltredGrp).map((key, idx) =>
+                (<div key={idx}>
                   {Object.keys(listeProduitsFiltredGrp).length > 1 &&
                     <Subheader className={styles.subHeader}>{key}</Subheader>}
                   {listeProduitsFiltredGrp[key].map((pdt, idx2) =>
-                    <ListItem
+                    (<ListItem
                       key={idx2}
                       onClick={() => this.navigateTo(pdt.id)}
                       className={styles.pdtSelected}
                       style={
                         produitId && pdt.id === produitId
                           ? {
-                              fontSize: '0.9em',
-                              borderLeft: `solid 5px ${muiTheme.appBar.color}`,
-                              backgroundColor: shader(muiTheme.appBar.color, +0.6),
-                            }
+                            fontSize: '0.9em',
+                            borderLeft: `solid 5px ${muiTheme.appBar.color}`,
+                            backgroundColor: shader(
+                                muiTheme.appBar.color,
+                                +0.6
+                              ),
+                          }
                           : { fontSize: '0.9em', borderLeft: 'none' }
                       }
                     >
                       {pdt.nom.toUpperCase()}
-                    </ListItem>
+                    </ListItem>)
                   )}
-                </div>
+                </div>)
               )}
-            </List>}
+              </List>}
         </Paper>
       </div>
     );
@@ -159,11 +201,11 @@ class ProduitSelector extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  typeProduits: selectCommandeTypesProduitsVisibles(),
-  produits: selectCommandeProduitsByTypeProduit(),
-  fournisseursIds: selectFournisseursIds(),
-  allProduits: selectProduits(),
-  auth: selectCompteUtilisateur(),
+  typeProduits: makeSelectCommandeTypesProduitsVisibles(),
+  produits: makeSelectCommandeProduitsByTypeProduit(),
+  fournisseursIds: makeSelectFournisseursIds(),
+  allProduits: makeSelectProduits(),
+  auth: makeSelectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>

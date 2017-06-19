@@ -1,1 +1,1 @@
-export const selectRelais = () => state => state.admin.relais.datas;
+export const makeSelectRelais = () => state => state.admin.relais.datas;

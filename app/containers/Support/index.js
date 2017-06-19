@@ -15,7 +15,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { saveMessage } from 'containers/App/actions';
 import { makeSelectPending } from 'containers/App/selectors';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import CustomSelectField from 'components/CustomSelectField';
 
@@ -43,7 +43,8 @@ class Support extends Component {
     message: null,
   };
 
-  onEditorChange = editorContent => this.setState({ ...this.state, message: draftToHtml(editorContent) });
+  onEditorChange = editorContent =>
+    this.setState({ ...this.state, message: draftToHtml(editorContent) });
 
   handleObjetChange = (event, index, objet) => this.setState({ objet });
 
@@ -53,7 +54,9 @@ class Support extends Component {
         ...this.state,
         de: this.props.user.id,
         a: '3c3fff89-9604-4729-b794-69dd60005dfe',
-        identiteExpediteur: `${capitalize(this.props.user.prenom)} ${this.props.user.nom.toUpperCase()}`,
+        identiteExpediteur: `${capitalize(
+          this.props.user.prenom
+        )} ${this.props.user.nom.toUpperCase()}`,
       },
       '/'
     );
@@ -78,9 +81,18 @@ class Support extends Component {
                   fullWidth
                   onChange={this.handleObjetChange}
                 >
-                  <MenuItem value="bug" primaryText="Bug / Signaler un problème" />
-                  <MenuItem value="suggestion" primaryText="Suggérer un produit" />
-                  <MenuItem value="fournisseur" primaryText="Devenir fournisseur" />
+                  <MenuItem
+                    value="bug"
+                    primaryText="Bug / Signaler un problème"
+                  />
+                  <MenuItem
+                    value="suggestion"
+                    primaryText="Suggérer un produit"
+                  />
+                  <MenuItem
+                    value="fournisseur"
+                    primaryText="Devenir fournisseur"
+                  />
                   <MenuItem value="autre" primaryText="Autre" />
                 </CustomSelectField>
                 <Editor
@@ -109,7 +121,7 @@ class Support extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  user: selectCompteUtilisateur(),
+  user: makeSelectCompteUtilisateur(),
   pending: makeSelectPending(),
 });
 

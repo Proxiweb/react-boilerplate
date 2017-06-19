@@ -6,7 +6,10 @@ import { createStructuredSelector } from 'reselect';
 import { format } from 'utils/dates';
 
 import { List, ListItem, makeSelectable } from 'material-ui/List';
-import { selectCommandes, selectCommandesUtilisateurs } from 'containers/Commande/selectors';
+import {
+  makeSelectCommandes,
+  makeSelectCommandesUtilisateurs,
+} from 'containers/Commande/selectors';
 
 import { loadUserCommandes } from 'containers/Commande/actions';
 
@@ -40,7 +43,11 @@ class ListeCommandesUtilisateurContainer extends Component {
 
     const commandeUtilisateurs = this.props.commandeUtilisateurs
       ? Object.keys(this.props.commandeUtilisateurs)
-          .filter(id => this.props.commandeUtilisateurs[id].utilisateurId === utilisateurId)
+          .filter(
+            id =>
+              this.props.commandeUtilisateurs[id].utilisateurId ===
+              utilisateurId
+          )
           .map(id => this.props.commandeUtilisateurs[id])
       : [];
 
@@ -53,9 +60,16 @@ class ListeCommandesUtilisateurContainer extends Component {
     if (!commandes) return null;
 
     return (
-      <SelectableList value={commandeSelected} onChange={this.props.onSelectCommande}>
+      <SelectableList
+        value={commandeSelected}
+        onChange={this.props.onSelectCommande}
+      >
         {commandes.map((cde, idx) =>
-          <ListItem key={idx} primaryText={format(cde.dateCommande, 'DD MMMM')} value={cde.id} />
+          (<ListItem
+            key={idx}
+            primaryText={format(cde.dateCommande, 'DD MMMM')}
+            value={cde.id}
+          />)
         )}
       </SelectableList>
     );
@@ -63,8 +77,8 @@ class ListeCommandesUtilisateurContainer extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandes: selectCommandes(),
-  commandeUtilisateurs: selectCommandesUtilisateurs(),
+  commandes: makeSelectCommandes(),
+  commandeUtilisateurs: makeSelectCommandesUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -75,4 +89,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListeCommandesUtilisateurContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ListeCommandesUtilisateurContainer
+);

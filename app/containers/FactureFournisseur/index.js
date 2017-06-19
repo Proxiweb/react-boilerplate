@@ -7,17 +7,20 @@ import { createStructuredSelector } from 'reselect';
 import round from 'lodash/round';
 
 import {
-  selectCommandeCommandeUtilisateurs,
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectOffres,
-  selectFournisseurs,
-  selectProduits,
-  selectCommande,
-  selectUtilisateurs,
+  makeSelectCommandeCommandeUtilisateurs,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectFournisseurs,
+  makeSelectProduits,
+  makeSelectCommande,
+  makeSelectUtilisateurs
 } from 'containers/Commande/selectors';
 
-import { loadFournisseurs, fetchUtilisateurs } from 'containers/Commande/actions';
+import {
+  loadFournisseurs,
+  fetchUtilisateurs
+} from 'containers/Commande/actions';
 
 import { makeSelectPending } from 'containers/App/selectors';
 
@@ -42,11 +45,18 @@ class FactureFournisseur extends Component {
     utilisateurs: PropTypes.array.isRequired,
     fournisseurs: PropTypes.object.isRequired,
     loadU: PropTypes.func.isRequired,
-    loadF: PropTypes.func.isRequired,
+    loadF: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-    const { commandeUtilisateurs, utilisateurs, fournisseurs, loadU, loadF, params } = this.props;
+    const {
+      commandeUtilisateurs,
+      utilisateurs,
+      fournisseurs,
+      loadU,
+      loadF,
+      params
+    } = this.props;
     const { fournisseurId } = params;
     const utilisateursIds = commandeUtilisateurs
       .filter(cu => !utilisateurs[cu.utilisateurId]) // ne pas charger ceux déjà chargés
@@ -60,15 +70,23 @@ class FactureFournisseur extends Component {
   }
 
   buildProducts = utilisateurId => {
-    const { commandeContenus: cc, contenus: c, offres, produits, params } = this.props;
+    const {
+      commandeContenus: cc,
+      contenus: c,
+      offres,
+      produits,
+      params
+    } = this.props;
     const commandeContenus = cc.map(id => c[id]);
-    const contenus = commandeContenus.filter(cC => cC.utilisateurId === utilisateurId);
+    const contenus = commandeContenus.filter(
+      cC => cC.utilisateurId === utilisateurId
+    );
     const { commandeId } = params;
     const totaux = calculeTotauxCommande({
       commandeContenus,
       offres,
       commandeId,
-      filter: cc => cc.utilisateurId === utilisateurId,
+      filter: cc => cc.utilisateurId === utilisateurId
     });
     if (!contenus.length) return null;
 
@@ -79,7 +97,8 @@ class FactureFournisseur extends Component {
       const offre = offres[contenu.offreId];
       const tarif = trouveTarification(offre.tarifications, qteTotalOffre, 0);
 
-      const tarifEnBaisse = offres[contenu.offreId].tarifications[0].prix > tarif.prix;
+      const tarifEnBaisse =
+        offres[contenu.offreId].tarifications[0].prix > tarif.prix;
 
       return (
         <tr className={styles.item} key={idx}>
@@ -93,7 +112,9 @@ class FactureFournisseur extends Component {
               <span style={{ color: 'red' }}>
                 {' '}
                 <s>
-                  {parseFloat(round(offre.tarifications[0].prix / 100 / 1.055, 2)).toFixed(2)}
+                  {parseFloat(
+                    round(offre.tarifications[0].prix / 100 / 1.055, 2)
+                  ).toFixed(2)}
                 </s>
               </span>}
           </td>
@@ -119,10 +140,18 @@ class FactureFournisseur extends Component {
   };
 
   render() {
-    const { commandeUtilisateurs, commande, utilisateurs, fournisseurs, params } = this.props;
+    const {
+      commandeUtilisateurs,
+      commande,
+      utilisateurs,
+      fournisseurs,
+      params
+    } = this.props;
 
     const fournisseur = fournisseurs.find(f => f.id === params.fournisseurId);
-    const utils = utilisateurs ? Object.keys(utilisateurs).map(id => utilisateurs[id]) : null;
+    const utils = utilisateurs
+      ? Object.keys(utilisateurs).map(id => utilisateurs[id])
+      : null;
 
     return (
       <div className={classnames(styles.page, styles.invoiceBox)}>
@@ -154,10 +183,14 @@ class FactureFournisseur extends Component {
                   <table>
                     <tr>
                       <td>
-                        {fournisseur && <Adresse label="Fournisseur" datas={fournisseur} />}
+                        {fournisseur &&
+                          <Adresse label="Fournisseur" datas={fournisseur} />}
                       </td>
                       <td>
-                        <Adresse label="Client" datas={utils.find(u => u.id === cu.utilisateurId)} />
+                        <Adresse
+                          label="Client"
+                          datas={utils.find(u => u.id === cu.utilisateurId)}
+                        />
                       </td>
                     </tr>
                   </table>
@@ -189,21 +222,21 @@ class FactureFournisseur extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
-  commande: selectCommande(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  contenus: selectCommandeContenus(),
-  produits: selectProduits(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  utilisateurs: selectUtilisateurs(),
-  fournisseurs: selectFournisseurs(),
-  offres: selectOffres(),
+  commande: makeSelectCommande(),
+  commandeContenus: makeSelectCommandeCommandeContenus(),
+  contenus: makeSelectCommandeContenus(),
+  produits: makeSelectProduits(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
+  utilisateurs: makeSelectUtilisateurs(),
+  fournisseurs: makeSelectFournisseurs(),
+  offres: makeSelectOffres()
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       loadU: fetchUtilisateurs,
-      loadF: loadFournisseurs,
+      loadF: loadFournisseurs
     },
     dispatch
   );

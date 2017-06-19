@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { isPristine, change } from 'redux-form';
 
 import { makeSelectPending } from 'containers/App/selectors';
-import { selectRelais } from 'containers/Commande/selectors';
+import { makeSelectRelais } from 'containers/Commande/selectors';
 import { saveFournisseur } from 'containers/Commande/actions';
 import InfosForm from './InfosForm';
 

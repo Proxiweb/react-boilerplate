@@ -9,7 +9,10 @@ import TexteCatalogue from './containers/TexteCatalogue';
 
 import { loadFournisseurs } from 'containers/Commande/actions';
 
-import { selectProduitsRelaisByTypeProduit, selectTypesProduitsRelais } from 'containers/Commande/selectors';
+import {
+  makeSelectProduitsRelaisByTypeProduit,
+  makeSelectTypesProduitsRelais,
+} from 'containers/Commande/selectors';
 
 import { makeSelectPending } from 'containers/App/selectors';
 
@@ -36,7 +39,11 @@ class Catalogue extends Component {
       <div className="row center-md">
         <div className="col-md-4">
           {!pending &&
-            <ProduitSelector produits={produits} typeProduits={typeProduits} params={this.props.params} />}
+            <ProduitSelector
+              produits={produits}
+              typeProduits={typeProduits}
+              params={this.props.params}
+            />}
         </div>
         <div className="col-md-6">
           {produitId && <DetailOffres params={this.props.params} />}
@@ -49,8 +56,8 @@ class Catalogue extends Component {
 
 const mapStateToProps = createStructuredSelector({
   pending: makeSelectPending(),
-  typeProduits: selectTypesProduitsRelais(),
-  produits: selectProduitsRelaisByTypeProduit(),
+  typeProduits: makeSelectTypesProduitsRelais(),
+  produits: makeSelectProduitsRelaisByTypeProduit(),
 });
 
 const mapDispatchToProps = dispatch =>

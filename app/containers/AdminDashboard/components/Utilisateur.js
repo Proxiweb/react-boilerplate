@@ -9,13 +9,16 @@ import capitalize from 'lodash/capitalize';
 import { format } from 'utils/dates';
 import Panel from './Panel';
 
-import { loadCommandeUtilisateurs, loadFournisseurs } from 'containers/Commande/actions';
+import {
+  loadCommandeUtilisateurs,
+  loadFournisseurs,
+} from 'containers/Commande/actions';
 
 import {
-  selectCommandesUtilisateurs,
-  selectCommandeContenus,
-  selectOffres,
-  selectProduits,
+  makeSelectCommandesUtilisateurs,
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectProduits,
 } from 'containers/Commande/selectors';
 
 class Utilisateur extends Component {
@@ -67,13 +70,21 @@ class Utilisateur extends Component {
   }
 
   render() {
-    const { commandeUtilisateurs, commandeUtilisateurId, utilisateur, pending, onClick } = this.props;
+    const {
+      commandeUtilisateurs,
+      commandeUtilisateurId,
+      utilisateur,
+      pending,
+      onClick,
+    } = this.props;
 
     return (
       <Panel
         title={
           utilisateur
-            ? `${utilisateur.nom.toUpperCase()} ${capitalize(utilisateur.prenom)}`
+            ? `${utilisateur.nom.toUpperCase()} ${capitalize(
+                utilisateur.prenom
+              )}`
             : 'Sélectionnez un utilisateur'
         }
       >
@@ -83,15 +94,17 @@ class Utilisateur extends Component {
           <SelectableList value={commandeUtilisateurId} onChange={onClick}>
 
             {Object.keys(commandeUtilisateurs)
-              .filter(id => commandeUtilisateurs[id].utilisateurId === utilisateur.id)
+              .filter(
+                id => commandeUtilisateurs[id].utilisateurId === utilisateur.id
+              )
               .map(id =>
-                <ListItem
+                (<ListItem
                   value={id}
                   innerDivStyle={{ padding: '4px 0' }}
                   nestedListStyle={{ padding: '5px' }}
                 >
                   {format(commandeUtilisateurs[id].createdAt, 'MMMM D YYYY')}
-                </ListItem>
+                </ListItem>)
               )}
           </SelectableList>}
       </Panel>
@@ -100,10 +113,10 @@ class Utilisateur extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeContenus: selectCommandeContenus(),
-  offres: selectOffres(),
-  produits: selectProduits(),
-  commandeUtilisateurs: selectCommandesUtilisateurs(),
+  commandeContenus: makeSelectCommandeContenus(),
+  offres: makeSelectOffres(),
+  produits: makeSelectProduits(),
+  commandeUtilisateurs: makeSelectCommandesUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>

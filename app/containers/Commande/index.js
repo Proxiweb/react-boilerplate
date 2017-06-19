@@ -18,25 +18,37 @@ import Helmet from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
 
 import {
-  selectAsyncState,
-  selectRelaisId,
-  selectCommandesRelais,
-  selectTypesProduits,
-  selectFournisseursIds,
-  selectOffres,
-  selectCommandesUtilisateurs,
-  selectProduits,
+  makeSelectAsyncState,
+  makeSelectRelaisId,
+  makeSelectCommandesRelais,
+  makeSelectTypesProduits,
+  makeSelectFournisseursIds,
+  makeSelectOffres,
+  makeSelectCommandesUtilisateurs,
+  makeSelectProduits,
 } from './selectors';
 
-import { selectAuthUtilisateurId, selectRoles } from 'containers/CompteUtilisateur/selectors';
+import {
+  makeSelectAuthUtilisateurId,
+  makeSelectRoles,
+} from 'containers/CompteUtilisateur/selectors';
 
-import { makeSelectLocationState, makeSelectPending } from 'containers/App/selectors';
+import {
+  makeSelectLocationState,
+  makeSelectPending,
+} from 'containers/App/selectors';
 
 import styles from './styles.css';
 import Semainier from './components/Semainier';
 import CommandesLongTerme from './containers/CommandesLongTerme';
 
-import { loadCommandes, loadOffres, loadFournisseurs, ajouter, loadCommande } from './actions';
+import {
+  loadCommandes,
+  loadOffres,
+  loadFournisseurs,
+  ajouter,
+  loadCommande,
+} from './actions';
 
 export class Commande extends React.Component {
   // eslint-disable-line react/prefer-stateless-function
@@ -93,7 +105,11 @@ export class Commande extends React.Component {
           )
           .map(dL =>
             Object.keys(produits)
-              .filter(pdtId => produits[pdtId].visible && produits[pdtId].fournisseurId === dL.fournisseurId)
+              .filter(
+                pdtId =>
+                  produits[pdtId].visible &&
+                  produits[pdtId].fournisseurId === dL.fournisseurId
+              )
               .map(pdtId => produits[pdtId].typeProduitId)
               .map(typePdtId => typesProduits[typePdtId].nom)
           )
@@ -123,7 +139,10 @@ export class Commande extends React.Component {
       .filter(
         key =>
           !this.props.commandes[key].terminee &&
-          this.isInWeek(this.props.commandes[key].distributions[0].debut, weekOffset)
+          this.isInWeek(
+            this.props.commandes[key].distributions[0].debut,
+            weekOffset
+          )
       )
       .slice()
       .sort(key => !this.props.commandes[key].noCommande);
@@ -132,17 +151,19 @@ export class Commande extends React.Component {
     const { commandes } = this.props;
     return Object.keys(commandes)
       .filter(
-        key => !commandes[key].dateCommande || isAfter(commandes[key].dateCommande, addWeeks(new Date(), 3))
+        key =>
+          !commandes[key].dateCommande ||
+          isAfter(commandes[key].dateCommande, addWeeks(new Date(), 3))
       )
       .slice()
       .sort(key => !commandes[key].noCommande);
   };
 
   buildTitleAndMeta = () =>
-    <Helmet
+    (<Helmet
       title={'Proxiweb - Commande en cours'}
       meta={[{ name: 'description', content: 'Commandes proxiweb' }]}
-    />;
+    />);
 
   render() {
     const {
@@ -180,7 +201,8 @@ export class Commande extends React.Component {
             pushState={pushState}
             pending={pending}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -193,7 +215,8 @@ export class Commande extends React.Component {
             pending={pending}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -206,7 +229,8 @@ export class Commande extends React.Component {
             getCommandeInfos={key => this.getCommandeInfos(key)}
             pushState={pushState}
             utilisateurId={utilisateurId}
-            commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+            commandeUtilisateurExiste={commandeId =>
+              this.commandeUtilisateurExiste(commandeId)}
             buttonClicked={() => this.setState({ buttonClicked: true })}
             withLink={isAdmin}
           />
@@ -216,7 +240,8 @@ export class Commande extends React.Component {
               getCommandeInfos={key => this.getCommandeInfos(key)}
               pending={pending}
               commandes={commandes}
-              commandeUtilisateurExiste={commandeId => this.commandeUtilisateurExiste(commandeId)}
+              commandeUtilisateurExiste={commandeId =>
+                this.commandeUtilisateurExiste(commandeId)}
               buttonClicked={() => this.setState({ buttonClicked: true })}
               pushState={pushState}
               relaiId={relaiId}
@@ -281,7 +306,9 @@ export class Commande extends React.Component {
         <div className="row center-md">
           <div className="col-md-6">
             <Paper className={`${styles.noCommande}`}>
-              {commandes && Object.keys(commandes).length === 0 && <h2>Pas de commande en cours...</h2>}
+              {commandes &&
+                Object.keys(commandes).length === 0 &&
+                <h2>Pas de commande en cours...</h2>}
             </Paper>
           </div>
         </div>
@@ -293,16 +320,16 @@ export class Commande extends React.Component {
 const mapStateToProps = createStructuredSelector({
   // fonctionne sur homepage sans passer par le router params{ relaiId: 'xxxx' }
   // est passé en props, fonctionne aussi avec le routage /relais/xxx/commandes
-  commandes: selectCommandesRelais(),
-  commandesUtilisateurs: selectCommandesUtilisateurs(),
-  relaiId: selectRelaisId(),
-  utilisateurId: selectAuthUtilisateurId(),
-  roles: selectRoles(),
-  produits: selectProduits(),
-  fournisseurs: selectFournisseursIds(),
-  offres: selectOffres(),
-  typesProduits: selectTypesProduits(),
-  asyncState: selectAsyncState(),
+  commandes: makeSelectCommandesRelais(),
+  commandesUtilisateurs: makeSelectCommandesUtilisateurs(),
+  relaiId: makeSelectRelaisId(),
+  utilisateurId: makeSelectAuthUtilisateurId(),
+  roles: makeSelectRoles(),
+  produits: makeSelectProduits(),
+  fournisseurs: makeSelectFournisseursIds(),
+  offres: makeSelectOffres(),
+  typesProduits: makeSelectTypesProduits(),
+  asyncState: makeSelectAsyncState(),
   route: makeSelectLocationState(),
   pending: makeSelectPending(),
 });

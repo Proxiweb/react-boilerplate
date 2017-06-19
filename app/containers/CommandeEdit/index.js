@@ -15,17 +15,20 @@ import Helmet from 'react-helmet';
 import capitalize from 'lodash/capitalize';
 
 import {
-  selectCommandeTypesProduitsVisibles,
-  selectCommandeProduitsVisibles,
-  selectFournisseurProduit,
-  selectProduits,
-  selectParams,
-  selectCommandeCommandeUtilisateurs,
-  selectUtilisateurs,
+  makeSelectCommandeTypesProduitsVisibles,
+  makeSelectCommandeProduitsVisibles,
+  makeSelectFournisseurProduit,
+  makeSelectProduits,
+  makeSelectParams,
+  makeSelectCommandeCommandeUtilisateurs,
+  makeSelectUtilisateurs,
 } from 'containers/Commande/selectors';
 
 import { loadCommandes, initCommande } from 'containers/Commande/actions';
-import { selectAuthUtilisateurId, selectMontantBalance } from 'containers/CompteUtilisateur/selectors';
+import {
+  makeSelectAuthUtilisateurId,
+  makeSelectMontantBalance,
+} from 'containers/CompteUtilisateur/selectors';
 import { makeSelectLocationState } from 'containers/App/selectors';
 import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
 import Paper from 'material-ui/Paper';
@@ -108,7 +111,9 @@ export class CommandeEdit extends React.Component {
       utilisateurs,
     } = this.props;
 
-    const commandeUtilisateur = commandeUtilisateurs.find(cu => cu.utilisateurId === this.utilisateurId);
+    const commandeUtilisateur = commandeUtilisateurs.find(
+      cu => cu.utilisateurId === this.utilisateurId
+    );
 
     if (!commandeUtilisateur) {
       init(params.commandeId, this.utilisateurId);
@@ -144,9 +149,13 @@ export class CommandeEdit extends React.Component {
     const { commandeId, relaiId } = params;
 
     // sélectionner le premier produit du premier type
-    const premierTypeProduit = typeProduits && typeProduits.length ? typeProduits[0] : null;
+    const premierTypeProduit = typeProduits && typeProduits.length
+      ? typeProduits[0]
+      : null;
     if (premierTypeProduit) {
-      const pdts = commandeProduits.filter(prod => prod.typeProduitId === premierTypeProduit.id);
+      const pdts = commandeProduits.filter(
+        prod => prod.typeProduitId === premierTypeProduit.id
+      );
       if (pdts && pdts.length) {
         this.props.pushState(
           `/relais/${relaiId}/commandes/${commandeId}/typeProduits/${premierTypeProduit.id}/produits/${pdts[0]
@@ -209,13 +218,22 @@ export class CommandeEdit extends React.Component {
 
   routerWillLeave = () => {
     const { commandeUtilisateurs } = this.props;
-    const commandeUtilisateur = commandeUtilisateurs.find(cu => cu.utilisateurId === this.utilisateurId);
-    if (commandeUtilisateur.updatedAt || commandeUtilisateur.contenus.length === 0) {
+    const commandeUtilisateur = commandeUtilisateurs.find(
+      cu => cu.utilisateurId === this.utilisateurId
+    );
+    if (
+      commandeUtilisateur.updatedAt ||
+      commandeUtilisateur.contenus.length === 0
+    ) {
       return true;
     }
 
-    const modifMsg1 = !commandeUtilisateur.updatedAt ? ' a été modifiée mais' : '';
-    const modifMsg2 = commandeUtilisateur.updatedAt ? ' Annuler les modifications ' : 'Annuler';
+    const modifMsg1 = !commandeUtilisateur.updatedAt
+      ? ' a été modifiée mais'
+      : '';
+    const modifMsg2 = commandeUtilisateur.updatedAt
+      ? ' Annuler les modifications '
+      : 'Annuler';
     return `La commande${modifMsg1} n'a pas été validée... ${modifMsg2} ?`;
   };
 
@@ -226,10 +244,12 @@ export class CommandeEdit extends React.Component {
       utilisateurs,
       authUtilisateurId,
       // commande,
-      supprimer, // eslint-disable-line
+      supprimer // eslint-disable-line
     } = this.props;
 
-    const commandeUtilisateur = commandeUtilisateurs.find(cu => cu.utilisateurId === this.utilisateurId);
+    const commandeUtilisateur = commandeUtilisateurs.find(
+      cu => cu.utilisateurId === this.utilisateurId
+    );
     const commande = commandeUtilisateur;
 
     if (!commande) return null;
@@ -247,7 +267,9 @@ export class CommandeEdit extends React.Component {
       <div className={`${styles.commandeEdit} row`}>
         <Helmet
           title="Nouvelle commande"
-          meta={[{ name: 'description', content: 'Description of CommandeEdit' }]}
+          meta={[
+            { name: 'description', content: 'Description of CommandeEdit' },
+          ]}
         />
         <ProduitSelector params={params} utilisateurId={this.utilisateurId} />
         <MediaQuery query="(max-device-width: 1600px)">
@@ -266,47 +288,60 @@ export class CommandeEdit extends React.Component {
               params={params}
               autreUtilisateur={
                 autreUtilisateur
-                  ? `${capitalize(autreUtilisateur.prenom)} ${autreUtilisateur.nom.toUpperCase()}`
+                  ? `${capitalize(
+                      autreUtilisateur.prenom
+                    )} ${autreUtilisateur.nom.toUpperCase()}`
                   : null
               }
             />
-            {!panierExpanded && <DetailOffres params={params} utilisateurId={this.utilisateurId} />}
+            {!panierExpanded &&
+              <DetailOffres
+                params={params}
+                utilisateurId={this.utilisateurId}
+              />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1601px)">
           <div className="col-lg-4">
-            {!panierExpanded && <DetailOffres params={params} utilisateurId={this.utilisateurId} />}
+            {!panierExpanded &&
+              <DetailOffres
+                params={params}
+                utilisateurId={this.utilisateurId}
+              />}
           </div>
         </MediaQuery>
         <MediaQuery query="(min-device-width: 1601px)">
           <div className="col-lg-5">
             {!commande || commande.contenus.length === 0
               ? <Paper>
-                  <div className={`row ${styles.panel}`}>
-                    <div className="col-md-5" style={constStyles.alignRight}>
-                      <ShoppingCart style={computedStyles.shoppingCart} />
-                    </div>
-                    <div className="col-md-5">
-                      <h1 style={computedStyles.panierVide}>Panier vide</h1>
-                    </div>
-                    {autreUtilisateur &&
-                      <div className="col-md-12" style={constStyles.alignCenter}>
+                <div className={`row ${styles.panel}`}>
+                  <div className="col-md-5" style={constStyles.alignRight}>
+                    <ShoppingCart style={computedStyles.shoppingCart} />
+                  </div>
+                  <div className="col-md-5">
+                    <h1 style={computedStyles.panierVide}>Panier vide</h1>
+                  </div>
+                  {autreUtilisateur &&
+                  <div
+                    className="col-md-12"
+                    style={constStyles.alignCenter}
+                  >
                         Commande de
                         {' '}
-                        {autreUtilisateur.prenom}
-                        {' '}
-                        {autreUtilisateur.nom.toUpperCase()}
-                      </div>}
-                  </div>
-                </Paper>
+                    {autreUtilisateur.prenom}
+                    {' '}
+                    {autreUtilisateur.nom.toUpperCase()}
+                  </div>}
+                </div>
+              </Paper>
               : <OrderValidate
-                  params={params}
-                  utilisateurId={this.utilisateurId}
-                  panierExpanded={false}
-                  balance={balance}
-                  commande={commande}
-                  autreUtilisateur={autreUtilisateur !== null}
-                />}
+                params={params}
+                utilisateurId={this.utilisateurId}
+                panierExpanded={false}
+                balance={balance}
+                commande={commande}
+                autreUtilisateur={autreUtilisateur !== null}
+              />}
           </div>
         </MediaQuery>
       </div>
@@ -315,27 +350,30 @@ export class CommandeEdit extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  typeProduits: selectCommandeTypesProduitsVisibles(),
-  // commande: selectCommande(), // commande courante en cours d'édition
-  commandeProduits: selectCommandeProduitsVisibles(),
-  produitsById: selectProduits(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
-  // cdeCommandeContenus: selectCommandeCommandeContenus(),
-  authUtilisateurId: selectAuthUtilisateurId(),
-  utilisateurs: selectUtilisateurs(),
-  params: selectParams(),
-  fournisseur: selectFournisseurProduit(),
+  typeProduits: makeSelectCommandeTypesProduitsVisibles(),
+  // commande: makeSelectCommande(), // commande courante en cours d'édition
+  commandeProduits: makeSelectCommandeProduitsVisibles(),
+  produitsById: makeSelectProduits(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
+  // cdeCommandeContenus: makeSelectCommandeCommandeContenus(),
+  authUtilisateurId: makeSelectAuthUtilisateurId(),
+  utilisateurs: makeSelectUtilisateurs(),
+  params: makeSelectParams(),
+  fournisseur: makeSelectFournisseurProduit(),
   locationState: makeSelectLocationState(),
-  balance: selectMontantBalance(),
+  balance: makeSelectMontantBalance(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     pushState: url => dispatch(push(url)),
-    init: (commandeId, utilisateurId) => dispatch(initCommande(commandeId, utilisateurId)),
+    init: (commandeId, utilisateurId) =>
+      dispatch(initCommande(commandeId, utilisateurId)),
     loadCdes: () => dispatch(loadCommandes()),
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CommandeEdit));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withRouter(CommandeEdit)
+);

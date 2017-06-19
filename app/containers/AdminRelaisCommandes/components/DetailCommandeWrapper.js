@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
-import { selectCommandeId } from 'containers/Commande/selectors';
+import { makeSelectCommandeId } from 'containers/Commande/selectors';
 
 import styles from './styles.css';
 import classnames from 'classnames';
@@ -41,7 +41,7 @@ class DetailCommandeWrapper extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeId: selectCommandeId(),
+  commandeId: makeSelectCommandeId(),
 });
 
 export default connect(mapStateToProps)(DetailCommandeWrapper);

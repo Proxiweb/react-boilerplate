@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import Toggle from 'material-ui/Toggle';
 import includes from 'lodash/includes';
 
-import { selectRelais } from 'containers/AdminRelais/selectors';
+import { makeSelectRelais } from 'containers/AdminRelais/selectors';
 import { saveRelais } from 'containers/AdminRelais/actions';
 import styles from './styles.css';
 
@@ -31,7 +31,9 @@ class FournisseurHebdoSwitch extends Component {
   };
 
   fournisseurInclus = () => {
-    const relaisSelected = this.props.relais.find(r => r.id === this.props.params.relaiId);
+    const relaisSelected = this.props.relais.find(
+      r => r.id === this.props.params.relaiId
+    );
     return includes(relaisSelected.fournisseursHebdo, this.props.fournisseurId);
   };
 
@@ -61,7 +63,7 @@ class FournisseurHebdoSwitch extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais(),
+  relais: makeSelectRelais(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -72,4 +74,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FournisseurHebdoSwitch);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  FournisseurHebdoSwitch
+);

@@ -6,7 +6,6 @@ import { push } from 'react-router-redux';
 // import { createStructuredSelector } from 'reselect';
 import Helmet from 'react-helmet';
 
-// import { selectUtilisateurs } from 'containers/Commande/selectors';
 import { loadUtilisateurs } from 'containers/AdminUtilisateurs/actions';
 import styles from './styles.css';
 import classnames from 'classnames';
@@ -27,7 +26,9 @@ class AdminCommandeUtilisateurs extends Component {
 
   handleChangeList = (event, value) => {
     const { relaiId, commandeId } = this.props.params;
-    this.props.pushState(`/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${value}`);
+    this.props.pushState(
+      `/relais/${relaiId}/commandes/${commandeId}?utilisateurId=${value}`
+    );
   };
 
   render() {
@@ -56,7 +57,7 @@ class AdminCommandeUtilisateurs extends Component {
 }
 //
 // const mapStateToProps = createStructuredSelector({
-//   utilisateurs: selectUtilisateurs(),
+//   utilisateurs: makeSelectUtilisateurs(),
 // });
 
 const mapDispatchToProps = dispatch =>

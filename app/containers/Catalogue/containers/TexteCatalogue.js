@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Paper from 'material-ui/Paper';
 import { createStructuredSelector } from 'reselect';
-import { selectRelais } from 'containers/Commande/selectors';
+import { makeSelectRelais } from 'containers/Commande/selectors';
 import { loadRelais } from 'containers/Commande/actions';
 import styles from './styles.css';
 
@@ -40,7 +40,7 @@ class TexteCatalogue extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais(),
+  relais: makeSelectRelais(),
 });
 
 const mapDispatchToProps = dispatch =>

@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import capitalize from 'lodash/capitalize';
 import { isPristine } from 'redux-form';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 import { makeSelectPending } from 'containers/App/selectors';
 import ProfileForm from './components/ProfileForm';
@@ -53,7 +53,7 @@ class ProfileFormContainer extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  profile: selectCompteUtilisateur(),
+  profile: makeSelectCompteUtilisateur(),
   pending: makeSelectPending(),
   pristine: isProfilePristine(),
 });
@@ -66,4 +66,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileFormContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ProfileFormContainer
+);

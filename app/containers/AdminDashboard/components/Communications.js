@@ -20,7 +20,7 @@ import UnknownIcon from 'material-ui/svg-icons/action/help';
 import Panel from './Panel';
 
 import { loadCommunications } from 'containers/AdminCommunication/actions';
-import { selectCommunications } from 'containers/AdminCommunication/selectors';
+import { makeSelectCommunications } from 'containers/AdminCommunication/selectors';
 import styles from './styles.css';
 
 class Communications extends Component {
@@ -35,7 +35,8 @@ class Communications extends Component {
 
   componentDidMount = () => this.props.load();
 
-  handleComChange = (event, index, communicationId) => this.setState({ communicationId });
+  handleComChange = (event, index, communicationId) =>
+    this.setState({ communicationId });
 
   buildLeftIcon = destinataire => {
     const { etat } = destinataire;
@@ -82,7 +83,11 @@ class Communications extends Component {
             onChange={this.handleComChange}
           >
             {communications.map((com, idx) =>
-              <MenuItem value={com.id} key={idx} primaryText={truncate(com.objet, { length: 40 })} />
+              (<MenuItem
+                value={com.id}
+                key={idx}
+                primaryText={truncate(com.objet, { length: 40 })}
+              />)
             )}
           </CustomSelectField>}
         {communicationId &&
@@ -91,12 +96,12 @@ class Communications extends Component {
               {communications
                 .find(c => c.id === communicationId)
                 .destinataires.map((d, idx) =>
-                  <ListItem
+                  (<ListItem
                     key={idx}
                     primaryText={d.email || d.telephone}
                     disabled
                     leftIcon={this.buildLeftIcon(d)}
-                  />
+                  />)
                 )}
             </List>
           </div>}
@@ -106,7 +111,7 @@ class Communications extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  communications: selectCommunications(),
+  communications: makeSelectCommunications(),
 });
 
 const mapDispatchToProps = dispatch =>

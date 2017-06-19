@@ -14,13 +14,16 @@ import { loadFournisseur } from 'containers/AdminFournisseur/actions';
 
 import { loadCommandes } from 'containers/Commande/actions';
 import {
-  selectCommandeCommandeUtilisateurs,
-  selectCommandeCommandeContenus,
-  selectCommandeContenus,
-  selectFournisseurCommandes,
+  makeSelectCommandeCommandeUtilisateurs,
+  makeSelectCommandeCommandeContenus,
+  makeSelectCommandeContenus,
+  makeSelectFournisseurCommandes,
 } from 'containers/Commande/selectors';
 
-import { makeSelectLocationState, makeSelectPending } from 'containers/App/selectors';
+import {
+  makeSelectLocationState,
+  makeSelectPending,
+} from 'containers/App/selectors';
 
 import styles from './styles.css';
 
@@ -57,7 +60,9 @@ class CommandesFournisseur extends Component {
   };
 
   handleChangeList = (event, value) => {
-    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`);
+    this.props.pushState(
+      `/fournisseurs/${this.props.params.fournisseurId}/commandes/${value}`
+    );
   };
 
   render() {
@@ -84,11 +89,17 @@ class CommandesFournisseur extends Component {
                 .filter(cde => cde.dateCommande)
                 .sort((a, b) => compareDesc(a.dateCommande, b.dateCommande))
                 .map((cde, idx) =>
-                  <ListItem key={idx} primaryText={format(cde.dateCommande, 'DD MM')} value={cde.id} />
+                  (<ListItem
+                    key={idx}
+                    primaryText={format(cde.dateCommande, 'DD MM')}
+                    value={cde.id}
+                  />)
                 )}
             </SelectableList>
           </div>}
-        <div className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}>
+        <div
+          className={classnames(print ? 'col-md-12' : 'col-md-9', styles.panel)}
+        >
           {!print &&
             commandeId &&
             <div className="row around-md">
@@ -110,7 +121,10 @@ class CommandesFournisseur extends Component {
                   fullWidth
                   label="Facture"
                   onClick={() =>
-                    window.open(`/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`, '_blank')}
+                    window.open(
+                      `/fournisseurs/${fournisseurId}/factures/${commandeId}?print=true`,
+                      '_blank'
+                    )}
                 />
               </div>
             </div>}
@@ -132,11 +146,11 @@ class CommandesFournisseur extends Component {
   }
 }
 const mapStateToProps = createStructuredSelector({
-  commandes: selectFournisseurCommandes(),
+  commandes: makeSelectFournisseurCommandes(),
   pending: makeSelectPending(),
-  commandeContenus: selectCommandeCommandeContenus(),
-  contenus: selectCommandeContenus(),
-  commandeUtilisateurs: selectCommandeCommandeUtilisateurs(),
+  commandeContenus: makeSelectCommandeCommandeContenus(),
+  contenus: makeSelectCommandeContenus(),
+  commandeUtilisateurs: makeSelectCommandeCommandeUtilisateurs(),
   locationState: makeSelectLocationState(),
 });
 
@@ -150,4 +164,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommandesFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CommandesFournisseur
+);

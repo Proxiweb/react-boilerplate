@@ -1,7 +1,7 @@
 import { put, select, take } from 'redux-saga/effects';
 import { takeLatest } from 'redux-saga';
 import c from './constants';
-import { selectCommandeEditDomain } from './selectors';
+import { makeSelectCommandeEditDomain } from './selectors';
 import { sauvegarder } from './actions';
 
 // Individual exports for testing

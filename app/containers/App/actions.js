@@ -58,7 +58,7 @@ export const saveMessage = (message, redirectSuccess) => ({
   redirectSuccess,
 });
 
-export const selectionneRelais = relaiId => ({
+export const makeSelectionneRelais = relaiId => ({
   type: SELECTIONNER_RELAIS,
   payload: { relaiId },
 });

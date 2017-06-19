@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import includes from 'lodash/includes';
 import { createStructuredSelector } from 'reselect';
-import { selectRoles } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectRoles } from 'containers/CompteUtilisateur/selectors';
 
 const mapStateToProps = createStructuredSelector({
-  roles: selectRoles(),
+  roles: makeSelectRoles(),
 });
 
 const Authorization = (WrappedComponent, allowedRoles) =>
@@ -18,7 +18,10 @@ const Authorization = (WrappedComponent, allowedRoles) =>
       };
       render() {
         const { roles } = this.props;
-        const granted = roles.reduce((m, r) => (includes(allowedRoles, r) ? true : m), false);
+        const granted = roles.reduce(
+          (m, r) => (includes(allowedRoles, r) ? true : m),
+          false
+        );
         if (granted) {
           return <WrappedComponent {...this.props} />;
         }

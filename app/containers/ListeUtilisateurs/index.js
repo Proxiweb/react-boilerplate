@@ -10,7 +10,7 @@ import capitalize from 'lodash/capitalize';
 import styles from './styles.css';
 
 import { loadUtilisateurs } from 'containers/Commande/actions';
-import { selectUtilisateurs } from 'containers/Commande/selectors';
+import { makeSelectUtilisateurs } from 'containers/Commande/selectors';
 
 const SelectableList = makeSelectable(List);
 
@@ -36,7 +36,9 @@ class ListeUtilisateursRelais extends Component {
     const { relaiId, utilisateurs } = this.props;
 
     const utilisateursRelais = utilisateurs
-      ? Object.keys(utilisateurs).filter(key => utilisateurs[key].relaiId === relaiId)
+      ? Object.keys(utilisateurs).filter(
+          key => utilisateurs[key].relaiId === relaiId
+        )
       : null;
 
     if (!utilisateursRelais || !utilisateursRelais.length) {
@@ -94,13 +96,17 @@ class ListeUtilisateursRelais extends Component {
             })}
           value={this.state.searchItem}
         />
-        <SelectableList value={value} onChange={this.handleChangeList} className={styles.list}>
+        <SelectableList
+          value={value}
+          onChange={this.handleChangeList}
+          className={styles.list}
+        >
           {utilisateursArray.map((ut, idx) =>
-            <ListItem
+            (<ListItem
               key={idx}
               primaryText={`${ut.nom.toUpperCase()} ${capitalize(ut.prenom)}`}
               value={ut.id}
-            />
+            />)
           )}
         </SelectableList>
       </div>
@@ -109,7 +115,7 @@ class ListeUtilisateursRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  utilisateurs: selectUtilisateurs(),
+  utilisateurs: makeSelectUtilisateurs(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -120,4 +126,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListeUtilisateursRelais);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ListeUtilisateursRelais
+);

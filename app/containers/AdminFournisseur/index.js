@@ -11,7 +11,10 @@ import AddIcon from 'material-ui/svg-icons/content/add';
 import classnames from 'classnames';
 
 import { loadFournisseur } from 'containers/AdminFournisseur/actions';
-import { selectFournisseurProduits, selectFournisseur } from 'containers/Commande/selectors';
+import {
+  makeSelectFournisseurProduits,
+  makeSelectFournisseur,
+} from 'containers/Commande/selectors';
 import { makeSelectPending } from 'containers/App/selectors';
 import { loadTypesProduits } from 'containers/Commande/actions';
 import styles from './styles.css';
@@ -36,10 +39,14 @@ class CatalogueFournisseur extends Component {
   }
 
   handleChangeList = (event, produitId) =>
-    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`);
+    this.props.pushState(
+      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/${produitId}`
+    );
 
   handleNewProduct = () =>
-    this.props.pushState(`/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`);
+    this.props.pushState(
+      `/fournisseurs/${this.props.params.fournisseurId}/catalogue/new`
+    );
 
   render() {
     const { produits, params, pending, fournisseur } = this.props;
@@ -47,7 +54,9 @@ class CatalogueFournisseur extends Component {
     return (
       <Paper>
         <div className="row">
-          <div className={classnames('col-md-3', styles.panel, styles.listePdt)}>
+          <div
+            className={classnames('col-md-3', styles.panel, styles.listePdt)}
+          >
             {
               <FloatingActionButton
                 mini="true"
@@ -68,12 +77,12 @@ class CatalogueFournisseur extends Component {
                   .slice()
                   .sort((pdt1, pdt2) => pdt1.nom > pdt2.nom)
                   .map((pdt, idx) =>
-                    <ListItem
+                    (<ListItem
                       key={idx}
                       primaryText={pdt.nom.toUpperCase()}
                       value={pdt.id}
                       style={{ color: pdt.enStock ? 'black' : 'gray' }}
-                    />
+                    />)
                   )}
               </SelectableList>}
           </div>
@@ -91,8 +100,8 @@ class CatalogueFournisseur extends Component {
   }
 }
 const mapStateToProps = createStructuredSelector({
-  produits: selectFournisseurProduits(),
-  fournisseur: selectFournisseur(),
+  produits: makeSelectFournisseurProduits(),
+  fournisseur: makeSelectFournisseur(),
   pending: makeSelectPending(),
 });
 
@@ -106,4 +115,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(CatalogueFournisseur);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CatalogueFournisseur
+);

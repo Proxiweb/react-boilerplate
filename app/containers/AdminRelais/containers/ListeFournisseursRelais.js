@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { createStructuredSelector } from 'reselect';
 import { loadFournisseurs } from 'containers/Commande/actions';
 
-import { selectFournisseurs } from 'containers/Commande/selectors';
+import { makeSelectFournisseurs } from 'containers/Commande/selectors';
 
 class ListeFournisseursRelais extends Component {
   static propTypes = {
@@ -34,7 +34,11 @@ class ListeFournisseursRelais extends Component {
         hintText="Sélectionnez un fournisseur"
       >
         {fournisseurs.map((data, idx) =>
-          <MenuItem key={idx} value={data.id} primaryText={data.nom.toUpperCase()} />
+          (<MenuItem
+            key={idx}
+            value={data.id}
+            primaryText={data.nom.toUpperCase()}
+          />)
         )}
       </CustomSelectField>
     );
@@ -42,7 +46,7 @@ class ListeFournisseursRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseurs(),
+  fournisseurs: makeSelectFournisseurs(),
 });
 
 const mapDispatchToProps = dispatch =>
@@ -53,4 +57,6 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListeFournisseursRelais);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ListeFournisseursRelais
+);

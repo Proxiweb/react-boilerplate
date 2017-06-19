@@ -32,12 +32,12 @@ import {
 // import { selectCommande, isCotisationInCommande } from 'containers/CommandeEdit/selectors';
 
 import {
-  selectCommande as selectCommandeProxiweb,
-  selectCommandeContenus,
-  selectOffres,
-  selectProduits,
-  selectOffreCotisation,
-  selectCotisationId,
+  makeSelectCommande as makeSelectCommandeProxiweb,
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectProduits,
+  makeSelectOffreCotisation,
+  makeSelectCotisationId,
 } from 'containers/Commande/selectors';
 
 import {
@@ -50,7 +50,7 @@ import {
 
 import { makeSelectPending } from 'containers/App/selectors';
 
-import { selectDatePaiementCotisation } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectDatePaiementCotisation } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './OrderValidate.css';
 
@@ -120,7 +120,14 @@ class OrderValidate extends Component {
   };
 
   showValidate = () => {
-    const { commande, params: { commandeId }, utilisateurId, pending, commandeContenus, offres } = this.props;
+    const {
+      commande,
+      params: { commandeId },
+      utilisateurId,
+      pending,
+      commandeContenus,
+      offres,
+    } = this.props;
 
     const { palette } = this.context.muiTheme;
     let label = null;
@@ -128,7 +135,9 @@ class OrderValidate extends Component {
 
     if (commande.createdAt !== null && commande.updatedAt === null) {
       textButtonColor = 'black';
-      label = pending ? 'Sauvegarde des modifications...' : 'Sauvegarder mes modifications';
+      label = pending
+        ? 'Sauvegarde des modifications...'
+        : 'Sauvegarder mes modifications';
     } else {
       label = pending ? 'Validation de la commande...' : 'Valider la commande';
       textButtonColor = 'white';
@@ -171,7 +180,11 @@ class OrderValidate extends Component {
   };
 
   showPaiementCotisation = () => {
-    const { offreCotisation, utilisateurId, params: { commandeId } } = this.props;
+    const {
+      offreCotisation,
+      utilisateurId,
+      params: { commandeId },
+    } = this.props;
     return (
       <RaisedButton
         label="Payer la cotisation"
@@ -210,12 +223,12 @@ class OrderValidate extends Component {
   };
 
   showDistribButton = () =>
-    <RaisedButton
+    (<RaisedButton
       label="Choisissez le jour de distribution"
       icon={<DateRangeIcon />}
       style={constStyles.margin20}
       onClick={() => this.setState({ view: 'distribution' })}
-    />;
+    />);
 
   showDetailsCommande = contenus => {
     const {
@@ -301,14 +314,17 @@ class OrderValidate extends Component {
     );
 
     const cotisationAJour =
-      datePaiementCotisation && isAfter(addYears(datePaiementCotisation, 1), new Date());
+      datePaiementCotisation &&
+      isAfter(addYears(datePaiementCotisation, 1), new Date());
 
     return (
       <div>
         {view === 'distribution'
           ? this.showDistributionSelector()
           : this.showDetailsCommande(contenusCommande)}
-        {view === 'panier' && commande.livraisonId && this.showDistribSelected()}
+        {view === 'panier' &&
+          commande.livraisonId &&
+          this.showDistribSelected()}
         {view !== 'distribution' &&
           commandeProxiweb.dateCommande &&
           !commande.livraisonId &&
@@ -356,13 +372,13 @@ class OrderValidate extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeProxiweb: selectCommandeProxiweb(),
-  offres: selectOffres(),
-  commandeContenus: selectCommandeContenus(),
-  produitsById: selectProduits(),
-  datePaiementCotisation: selectDatePaiementCotisation(),
-  offreCotisation: selectOffreCotisation(),
-  cotisationId: selectCotisationId(),
+  commandeProxiweb: makeSelectCommandeProxiweb(),
+  offres: makeSelectOffres(),
+  commandeContenus: makeSelectCommandeContenus(),
+  produitsById: makeSelectProduits(),
+  datePaiementCotisation: makeSelectDatePaiementCotisation(),
+  offreCotisation: makeSelectOffreCotisation(),
+  cotisationId: makeSelectCotisationId(),
   pending: makeSelectPending(),
 });
 

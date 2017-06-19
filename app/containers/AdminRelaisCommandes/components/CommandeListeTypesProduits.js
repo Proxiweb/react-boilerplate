@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import uniq from 'lodash/uniq';
 import { createStructuredSelector } from 'reselect';
-import { selectTypesProduits, selectFournisseursIds, selectProduits } from 'containers/Commande/selectors';
+import {
+  makeSelectTypesProduits,
+  makeSelectFournisseursIds,
+  makeSelectProduits,
+} from 'containers/Commande/selectors';
 
 import styles from './styles.css';
 
@@ -23,7 +27,11 @@ class CommandeListeTypesProduits extends Component {
         .filter(dL => fournisseurs[dL.fournisseurId].visible)
         .reduce(
           (memo, dL) =>
-            memo.concat(Object.keys(produits).filter(id => produits[id].fournisseurId === dL.fournisseurId)),
+            memo.concat(
+              Object.keys(produits).filter(
+                id => produits[id].fournisseurId === dL.fournisseurId
+              )
+            ),
           []
         )
         .map(pdtId => produits[pdtId].typeProduitId)
@@ -36,9 +44,9 @@ class CommandeListeTypesProduits extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  typesProduits: selectTypesProduits(),
-  produits: selectProduits(),
-  fournisseurs: selectFournisseursIds(),
+  typesProduits: makeSelectTypesProduits(),
+  produits: makeSelectProduits(),
+  fournisseurs: makeSelectFournisseursIds(),
 });
 
 export default connect(mapStateToProps)(CommandeListeTypesProduits);

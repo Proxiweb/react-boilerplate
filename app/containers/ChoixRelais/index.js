@@ -8,8 +8,8 @@ import { List, ListItem } from 'material-ui/List';
 import CheckIcon from 'material-ui/svg-icons/action/done';
 import RaisedButton from 'material-ui/RaisedButton';
 import { makeSelectStellarKeys } from 'containers/App/selectors';
-import { selectRelais } from 'containers/Commande/selectors';
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectRelais } from 'containers/Commande/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { saveAccount } from 'containers/CompteUtilisateur/actions';
 import { loadRelais } from 'containers/Commande/actions';
 import Panel from 'components/Panel';
@@ -57,18 +57,22 @@ class ChoixRelais extends Component {
           <Panel>Choississez un relais</Panel>
           <List>
             {Object.keys(relais).map((key, idx) =>
-              <ListItem
+              (<ListItem
                 key={idx}
                 leftIcon={key === relaiId ? <CheckIcon /> : null}
                 primaryText={relais[key].nom.toUpperCase()}
                 onClick={() => this.setState({ relaiId: relais[key].id })}
-              />
+              />)
             )}
           </List>
           {relaiId &&
             relaiId !== utilisateur.relaiId &&
             <div className="with-margin-top" style={{ textAlign: 'center' }}>
-              <RaisedButton primary label="Sélectionner ce relais" onClick={this.sauvegarder} />
+              <RaisedButton
+                primary
+                label="Sélectionner ce relais"
+                onClick={this.sauvegarder}
+              />
             </div>}
         </div>
       </div>
@@ -77,9 +81,9 @@ class ChoixRelais extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelais(),
+  relais: makeSelectRelais(),
   stellarKeys: makeSelectStellarKeys(),
-  utilisateur: selectCompteUtilisateur(),
+  utilisateur: makeSelectCompteUtilisateur(),
 });
 
 const mapDispatchToProps = dispatch =>

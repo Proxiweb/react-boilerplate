@@ -14,9 +14,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'react-router-redux';
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 import { loadRelais } from 'containers/Commande/actions';
-import { selectRelais } from 'containers/Commande/selectors';
+import { makeSelectRelais } from 'containers/Commande/selectors';
 // import styles from './styles.css';
 import { createStructuredSelector } from 'reselect';
 import Commandes from 'containers/Commande';
@@ -43,10 +43,11 @@ class HomePage extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  auth: selectCompteUtilisateur(),
-  relais: selectRelais(),
+  auth: makeSelectCompteUtilisateur(),
+  relais: makeSelectRelais(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ push, loadRelais }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ push, loadRelais }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { buildHoursRanges } from './DistributionSelector';
 
-import { selectRelaisSelected, selectCommande } from 'containers/Commande/selectors';
+import {
+  makeSelectRelaisSelected,
+  makeSelectCommande,
+} from 'containers/Commande/selectors';
 import { createStructuredSelector } from 'reselect';
 import { format } from 'utils/dates';
 
@@ -20,9 +23,11 @@ class DistributionSelected extends Component {
     const { commande, noPlageHoraire, relais, livraisonId } = this.props;
 
     const distribution = commande.distributions.find(d => d.id === livraisonId);
-    const ranges = buildHoursRanges(distribution.debut, distribution.fin, relais.rangeDistribMinutes)[
-      noPlageHoraire
-    ];
+    const ranges = buildHoursRanges(
+      distribution.debut,
+      distribution.fin,
+      relais.rangeDistribMinutes
+    )[noPlageHoraire];
     return (
       <div>
         {format(distribution.debut, '[ Distribution le ] dddd Do MMMM [de] ')}
@@ -33,8 +38,8 @@ class DistributionSelected extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  relais: selectRelaisSelected(),
-  commande: selectCommande(),
+  relais: makeSelectRelaisSelected(),
+  commande: makeSelectCommande(),
 });
 
 export default connect(mapStateToProps)(DistributionSelected);

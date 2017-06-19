@@ -5,22 +5,29 @@ import { createSelector } from 'reselect';
 
 const selectUtilisateurId = () => (state, props) => props.params.utilisateurId;
 
-export const selectUtilisateurDomain = () => state =>
+export const makeSelectUtilisateurDomain = () => state =>
   state.admin && state.admin.utilisateurs ? state.admin.utilisateurs : null;
 
-export const selectUtilisateurs = () =>
-  createSelector(selectUtilisateurDomain(), utilisateurs => (utilisateurs ? utilisateurs.datas : null));
-
-/* l'utilisateur params userId */
-export const selectUtilisateur = () =>
+export const makeSelectUtilisateurs = () =>
   createSelector(
-    selectUtilisateurs(),
-    selectUtilisateurId(),
-    (utilisateurs, userId) => (utilisateurs ? utilisateurs.find(ut => ut.id === userId) : null)
+    makeSelectUtilisateurDomain(),
+    utilisateurs => (utilisateurs ? utilisateurs.datas : null)
   );
 
-export const selectUtilisateurStellarAdresse = () =>
+/* l'utilisateur params userId */
+export const makeSelectUtilisateur = () =>
   createSelector(
-    selectUtilisateur(),
-    utilisateur => (utilisateur && utilisateur.stellarKeys ? utilisateur.stellarKeys.adresse : null)
+    makeSelectUtilisateurs(),
+    selectUtilisateurId(),
+    (utilisateurs, userId) =>
+      utilisateurs ? utilisateurs.find(ut => ut.id === userId) : null
+  );
+
+export const makeSelectUtilisateurStellarAdresse = () =>
+  createSelector(
+    makeSelectUtilisateur(),
+    utilisateur =>
+      utilisateur && utilisateur.stellarKeys
+        ? utilisateur.stellarKeys.adresse
+        : null
   );

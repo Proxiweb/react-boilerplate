@@ -12,15 +12,15 @@ import { calculeTotauxCommande } from 'containers/Commande/utils';
 import api from 'utils/stellarApi';
 
 import {
-  selectFournisseursCommande,
-  selectCommandeProduits,
-  selectCommande,
-  selectOffres,
+  makeSelectFournisseursCommande,
+  makeSelectCommandeProduits,
+  makeSelectCommande,
+  makeSelectOffres,
 } from 'containers/Commande/selectors';
 
 import { payerCommandeUtilisateur } from 'containers/Commande/actions';
 
-import { selectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
+import { makeSelectCompteUtilisateur } from 'containers/CompteUtilisateur/selectors';
 
 import styles from './styles.css';
 
@@ -70,10 +70,13 @@ class ValidationCommandesAdherents extends Component {
         }
       }, 1000);
     } else {
-      const utilisateurCourant = commandeUtilisateurs[this.state.index].utilisateurId;
+      const utilisateurCourant =
+        commandeUtilisateurs[this.state.index].utilisateurId;
       const contenusUtilisateur = Object.keys(contenus)
         .filter(
-          id => contenus[id].utilisateurId === utilisateurCourant && contenus[id].commandeId === commandeId
+          id =>
+            contenus[id].utilisateurId === utilisateurCourant &&
+            contenus[id].commandeId === commandeId
         )
         .map(id => contenus[id]);
 
@@ -134,7 +137,9 @@ class ValidationCommandesAdherents extends Component {
     // const validees = commandeUtilisateurs.filter(cu => cu.datePaiement).length;
     let message;
     if (commandeUtilisateurs[index]) {
-      const utilisateur = utilisateurs.find(u => u.id === commandeUtilisateurs[index].utilisateurId);
+      const utilisateur = utilisateurs.find(
+        u => u.id === commandeUtilisateurs[index].utilisateurId
+      );
       message = `Validation paiement ${utilisateur.nom.toUpperCase()} ${capitalize(
         utilisateur.prenom
       )}${paiementEnCours !== null ? ` - ${paiementEnCours} € ...` : ''}`;
@@ -156,7 +161,11 @@ class ValidationCommandesAdherents extends Component {
             </div>
             <div className={`col-md-12 ${styles.mT}`}>
               {index < commandeUtilisateurs.length &&
-                <RaisedButton label="Effectuer les paiements" primary onClick={this.pay} />}
+                <RaisedButton
+                  label="Effectuer les paiements"
+                  primary
+                  onClick={this.pay}
+                />}
             </div>
           </div>
         </div>
@@ -166,14 +175,17 @@ class ValidationCommandesAdherents extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  fournisseurs: selectFournisseursCommande(),
-  produits: selectCommandeProduits(),
-  offres: selectOffres(),
-  auth: selectCompteUtilisateur(),
+  fournisseurs: makeSelectFournisseursCommande(),
+  produits: makeSelectCommandeProduits(),
+  offres: makeSelectOffres(),
+  auth: makeSelectCompteUtilisateur(),
   stellarKeys: makeSelectStellarKeys(),
-  commande: selectCommande(),
+  commande: makeSelectCommande(),
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ payerCommandeUtilisateur }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ payerCommandeUtilisateur }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ValidationCommandesAdherents);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  ValidationCommandesAdherents
+);

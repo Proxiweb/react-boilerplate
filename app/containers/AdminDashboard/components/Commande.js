@@ -6,7 +6,11 @@ import capitalize from 'lodash/capitalize';
 import { format } from 'utils/dates';
 import Panel from './Panel';
 
-import { selectCommandeContenus, selectOffres, selectProduits } from 'containers/Commande/selectors';
+import {
+  makeSelectCommandeContenus,
+  makeSelectOffres,
+  makeSelectProduits,
+} from 'containers/Commande/selectors';
 
 import DetailCommande from 'components/DetailCommande';
 
@@ -22,13 +26,22 @@ class Commande extends Component {
   };
 
   render() {
-    const { offres, produits, commandeUtilisateur, commandeContenus, commandeUtilisateurId } = this.props;
+    const {
+      offres,
+      produits,
+      commandeUtilisateur,
+      commandeContenus,
+      commandeUtilisateurId,
+    } = this.props;
 
     return (
       <Panel
         title={
           commandeUtilisateur
-            ? `Commande du ${format(commandeUtilisateur.createdAt, 'DD MMMM YYYY')}`
+            ? `Commande du ${format(
+                commandeUtilisateur.createdAt,
+                'DD MMMM YYYY'
+              )}`
             : 'Sélectionnez un utilisateur'
         }
       >
@@ -47,8 +60,8 @@ class Commande extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  commandeContenus: selectCommandeContenus(),
-  offres: selectOffres(),
-  produits: selectProduits(),
+  commandeContenus: makeSelectCommandeContenus(),
+  offres: makeSelectOffres(),
+  produits: makeSelectProduits(),
 });
 export default connect(mapStateToProps)(Commande);
